@@ -14,13 +14,13 @@
   <meta name="keywords" content="APC Progressive Support Group, APSG, inauguration 2026, Hon. Oluwafunmilayo Adejoke Ogunba-Koleowo, progressive movement Nigeria, Lagos political event, Preparation Participation Progress, Itesiwaju">
   <meta name="author" content="APC Progressive Support Group">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://yourdomain.com/">
+  <link rel="canonical" href="https://apsgnigeria.org/">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:title" content="APSG Inauguration | 12 February 2026">
   <meta property="og:description" content="Join the progressive movement built on Preparation, Participation, and Progress (Itesiwaju) at Hoare's Memorial Methodist Cathedral Church, Sabo Yaba.">
   <meta property="og:image" content="assets/images/apsg.png">
-  <meta property="og:url" content="https://yourdomain.com">
+  <meta property="og:url" content="https://apsgnigeria.org">
   <meta property="og:type" content="website">
 
   <!-- Twitter Cards -->
@@ -45,6 +45,39 @@
     }
   </script>
 
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    .hidden { display: none; }
+    body { zoom: 90%; }
+    @media (max-width: 640px) {
+      body { zoom: 85%; }
+      h2 { font-size: 1.75rem !important; }
+      p { font-size: 1rem !important; }
+    }
+    /* Premium iframe styling */
+    #google-form-iframe {
+      width: 100%;
+      border: none;
+      min-height: 1200px; /* Increased for full form visibility */
+      border-radius: 1rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    @media (max-width: 640px) {
+      #google-form-iframe { min-height: 1100px; }
+    }
+    /* Loading spinner for premium feel */
+    .spinner {
+      border: 4px solid rgba(0,128,0,0.1);
+      border-left-color: #008000;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
   <!-- Font Awesome -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
@@ -97,25 +130,25 @@
 </head>
 <body class="bg-white text-gray-900">
 
-  <!-- ===================== NAVBAR ===================== -->
-  <nav class="bg-white shadow-md sticky top-0 z-50">
+     <!-- ===================== NAVBAR ===================== -->
+  <nav class="bg-green text-white shadow-xl sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
 
         <div class="flex items-center gap-3">
           <img src="assets/images/apsg.png" alt="APSG Logo" class="h-9" loading="lazy">
-          <span class="text-green font-bold text-base">
+          <span class="font-bold text-base">
             APC Progressive Support Group
           </span>
         </div>
 
-        <div class="hidden md:flex space-x-6">
-          <a href="#leadership" class="text-gray-700 hover:text-green transition">Leadership</a>
-          <a href="#about" class="text-gray-700 hover:text-green transition">About</a>
-          <a href="#mission" class="text-gray-700 hover:text-green transition">Mission</a>
-          <a href="#event" class="text-gray-700 hover:text-green transition">Event</a>
-          <a href="#outfit" class="text-gray-700 hover:text-green transition">Official Outfit</a>
-          <a href="#rsvp" class="bg-green text-white px-5 py-2 rounded-full hover:bg-green-700 transition">
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="#leadership" class="text-white hover:text-green-100 transition font-medium">Leadership</a>
+          <a href="#about" class="text-white hover:text-green-100 transition font-medium">About</a>
+          <a href="#mission" class="text-white hover:text-green-100 transition font-medium">Mission</a>
+          <a href="#event" class="text-white hover:text-green-100 transition font-medium">Event</a>
+          <a href="#outfit" class="text-white hover:text-green-100 transition font-medium">Official Outfit</a>
+          <a href="#rsvp" class="bg-green-800 text-white px-7 py-3 rounded-full hover:bg-green-900 transition font-semibold shadow-lg">
             Join
           </a>
         </div>
@@ -123,7 +156,7 @@
         <div class="md:hidden">
           <button
             onclick="document.getElementById('mobile-menu').classList.toggle('hidden')"
-            class="text-2xl"
+            class="text-3xl text-white"
             aria-label="Toggle Menu">
             <i class="fas fa-bars"></i>
           </button>
@@ -132,20 +165,21 @@
       </div>
 
       <!-- Mobile Menu -->
-      <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
-        <div class="px-4 py-4 space-y-3 text-center">
-          <a href="#leadership" class="block text-gray-700 hover:text-green">Leadership</a>
-          <a href="#about" class="block text-gray-700 hover:text-green">About</a>
-          <a href="#mission" class="block text-gray-700 hover:text-green">Mission</a>
-          <a href="#event" class="block text-gray-700 hover:text-green">Event</a>
-          <a href="#outfit" class="block text-gray-700 hover:text-green">Official Outfit</a>
-          <a href="#rsvp" class="block bg-green text-white px-6 py-2 rounded-full">Join</a>
+      <div id="mobile-menu" class="hidden md:hidden bg-green">
+        <div class="px-4 py-6 space-y-5 text-center">
+          <a href="#leadership" class="block text-white hover:text-green-100 text-lg font-medium">Leadership</a>
+          <a href="#about" class="block text-white hover:text-green-100 text-lg font-medium">About</a>
+          <a href="#mission" class="block text-white hover:text-green-100 text-lg font-medium">Mission</a>
+          <a href="#event" class="block text-white hover:text-green-100 text-lg font-medium">Event</a>
+          <a href="#outfit" class="block text-white hover:text-green-100 text-lg font-medium">Official Outfit</a>
+          <a href="#rsvp" class="block bg-green-800 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-900 shadow-lg mt-4 inline-block">
+            Join
+          </a>
         </div>
       </div>
 
     </div>
   </nav>
-
  <!-- Hero Slider with Smooth Fade Transitions -->
 <section class="relative">
   <div class="swiper heroSwiper h-[400px] md:h-[550px] lg:h-[600px]">
@@ -512,8 +546,7 @@
 
 
 
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 </head>
 <body class="bg-gray-100 min-h-screen py-8 px-4">
   <div class="max-w-lg mx-auto">
@@ -524,12 +557,14 @@
         Confirm your attendance for the APSG Inauguration<br>
         <strong>Thursday, 12 February 2026</strong>
       </p>
-      <p class="text-sm text-gray-600 mt-4 italic">
-        Submission will open a WhatsApp message — please send it for confirmation.
+      <p class="text-sm text-gray-600 mt-4 italic leading-relaxed">
+        After clicking "Continue", your details will load below in the official form.<br>
+        Review them carefully, then click <strong>"Submit"</strong> at the bottom of the form.<br>
+        A WhatsApp message will also open — please send it for confirmation.
       </p>
     </div>
 
-    <!-- Registration Form -->
+    <!-- Custom Registration Form -->
     <form id="registration-form" class="grid gap-4 bg-white p-6 rounded-xl shadow-lg border border-gray-200">
       <input type="text" id="name" placeholder="Full Name *" required class="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green text-base">
 
@@ -549,46 +584,29 @@
 
       <input type="text" id="support" placeholder="How would you like to support? (e.g., Volunteer, Member)" class="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green text-base">
 
-      <button type="submit" class="bg-green text-white font-medium text-lg py-4 rounded-full hover:bg-green-700 transition flex items-center justify-center gap-3">
+      <button type="submit" class="bg-green text-white font-medium text-lg py-4 rounded-full hover:bg-green-700 transition flex items-center justify-center gap-3 shadow-md">
         <i class="fab fa-whatsapp text-2xl"></i>
-        Submit Registration
+        Continue to Confirmation
       </button>
     </form>
 
-    <p class="text-center text-xs text-gray-600 mt-6">
+    <!-- Embedded Google Form Section -->
+    <div id="embedded-section" class="hidden mt-12">
+      <div class="text-center mb-6">
+        <p class="text-base text-gray-700 font-medium">
+          <strong>Loading your pre-filled form...</strong><br>
+          Please wait a moment. Review your details and click "Submit" at the bottom.
+        </p>
+        <div class="spinner mx-auto mt-4"></div>
+      </div>
+      <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <iframe id="google-form-iframe" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <p class="text-center text-xs text-gray-600 mt-8">
       Your data is secure and used only for event coordination.
     </p>
-  </div>
-
-  <!-- Hidden iframe for silent Google Form submission -->
-  <iframe name="hidden_google_form" style="display:none;"></iframe>
-
-  <!-- Success Message -->
-  <div id="success-message" class="hidden max-w-lg mx-auto text-center py-12 px-4">
-    <h2 class="text-3xl font-semibold text-green-900 mb-6">Welcome Aboard The ProgressiveTeam! </h2>
-    <p class="text-xl text-gray-700 mb-8">
-      Thank you, <span id="success-name" class="font-medium text-green-800"></span>!<br>
-      Your registration is complete.
-    </p>
-    <div class="bg-green-50 rounded-xl p-8 text-left">
-      <p class="text-base text-gray-800 leading-relaxed">
-        • A WhatsApp message has opened — please send it to confirm.<br>
-        • Reminders will be sent via WhatsApp.<br>
-        • See you on 12 February 2026!
-      </p>
-    </div>
-
-    <div class="mt-8 text-base text-gray-700">
-      Share with others:
-    </div>
-    <div class="flex justify-center gap-4 mt-4">
-      <a href="#" id="share-whatsapp" target="_blank" class="bg-green text-white px-6 py-3 rounded-full font-medium hover:bg-green-700 transition">
-        <i class="fab fa-whatsapp mr-2"></i>WhatsApp
-      </a>
-      <a href="#" id="share-twitter" target="_blank" class="bg-blue-600 text-white px-6 py-3 rounded-full font-medium hover:bg-blue-700 transition">
-        <i class="fab fa-x-twitter mr-2"></i>X
-      </a>
-    </div>
   </div>
 
   <script>
@@ -617,57 +635,39 @@
 
       const attendance_full = attendance === 'Yes' ? 'Yes, I will attend physically' : 'No, virtual/online only';
 
-      // WhatsApp Message
+      // Open WhatsApp
       const message = `NEW APSG REGISTRATION 🚂%0A%0AFull Name: ${name}%0APhone: ${phone}%0AEmail: ${email}%0AState: ${state}%0ALGA: ${lga}%0AWard: ${ward}%0APhysical Attendance: ${attendance_full}%0ASupport: ${support}%0A%0AJoined the Progressive Movement! 🇳🇬`;
-      const whatsappURL = `https://wa.me/+2348023154308?text=${message}`;
-      window.open(whatsappURL, '_blank');
+      window.open(`https://wa.me/+2348023154308?text=${message}`, '_blank');
 
-      // Silent Google Form Submission
-      const formId = '1FAIpQLSeMQ24iEAemZJbZvcZRpGBJzEcLU1y6iEZO8YQubabATa8z7A';
-      const googleFormUrl = `https://docs.google.com/forms/d/e/${formId}/formResponse`;
+      // Build pre-filled embedded Google Form URL
+      const baseUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSeMQ24iEAemZJbZvcZRpGBJzEcLU1y6iEZO8YQubabATa8z7A/viewform?embedded=true';
+      const prefill = 
+        '&entry.877086558=' + encodeURIComponent("Yes, I'll be there") +
+        '&entry.1498135098=' + encodeURIComponent(name) +
+        '&entry.1424661284=' + encodeURIComponent(phone) +
+        '&entry.2041026669=' + encodeURIComponent(email) +
+        '&entry.136277616=' + encodeURIComponent(state) +
+        '&entry.1798128731=' + encodeURIComponent(lga) +
+        '&entry.776507753=' + encodeURIComponent(ward) +
+        '&entry.428389588=' + encodeURIComponent(attendance_full) +
+        '&entry.1082748972=' + encodeURIComponent(support);
 
-      const dynamicForm = document.createElement('form');
-      dynamicForm.method = 'POST';
-      dynamicForm.action = googleFormUrl;
-      dynamicForm.target = 'hidden_google_form';
-      dynamicForm.style.display = 'none';
+      const embeddedUrl = baseUrl + prefill;
 
-      const fields = [
-        { name: 'entry.877086558', value: "Yes, I'll be there" },
-        { name: 'entry.1498135098', value: name },
-        { name: 'entry.1424661284', value: phone },
-        { name: 'entry.2041026669', value: email },
-        { name: 'entry.136277616', value: state },
-        { name: 'entry.1798128731', value: lga },
-        { name: 'entry.776507753', value: ward },
-        { name: 'entry.428389588', value: attendance_full },
-        { name: 'entry.1082748972', value: support }
-      ];
+      // Load form and hide spinner on load
+      const iframe = document.getElementById('google-form-iframe');
+      iframe.src = embeddedUrl;
+      iframe.onload = function() {
+        // Hide loading spinner and text when form loads
+        document.querySelector('#embedded-section .text-center').classList.add('hidden');
+      };
 
-      fields.forEach(field => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = field.name;
-        input.value = field.value;
-        dynamicForm.appendChild(input);
-      });
-
-      document.body.appendChild(dynamicForm);
-      dynamicForm.submit();
-
-      // Success Message
-      document.getElementById('success-name').textContent = name;
+      // Show embedded section
       document.getElementById('registration-form').classList.add('hidden');
-      document.getElementById('success-message').classList.remove('hidden');
+      document.getElementById('embedded-section').classList.remove('hidden');
 
-      // Share Links
-      const pageUrl = encodeURIComponent(window.location.href);
-      const shareText = encodeURIComponent(`Join the APSG Chariot! Inauguration 12 Feb 2026 🚂🇳🇬 Register: `);
-      document.getElementById('share-whatsapp').href = `https://wa.me/?text=${shareText}${pageUrl}`;
-      document.getElementById('share-twitter').href = `https://twitter.com/intent/tweet?text=${shareText}&url=${pageUrl}`;
-
-      // Light confetti
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      // Confetti celebration
+      confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
     });
   </script>
 
