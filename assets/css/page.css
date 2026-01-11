@@ -1,0 +1,32 @@
+header {
+  background:#0b3c5d;
+  color:#fff;
+  padding:70px 20px 90px;
+  text-align:center;
+}
+
+.logo-wrap {
+  margin-bottom:20px;
+}
+
+.logo-wrap img {
+  max-width:120px;
+  height:auto;
+}
+
+.tagline {
+  font-size:1.2rem;
+  margin:10px 0;
+}
+
+.event-meta {
+  margin:15px 0 25px;
+  font-size:0.95rem;
+  opacity:0.95;
+}
+
+@media (max-width:600px) {
+  .logo-wrap img {
+    max-width:90px;
+  }
+}
