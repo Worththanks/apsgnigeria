@@ -1,195 +1,542 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- =====================================================
-       META & SEO
-  ====================================================== -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APC Progressive Support Group | Inauguration 12 February 2026</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Official inauguration of the APC Progressive Support Group (APSG) led by Hon. (Mrs) Oluwafunmilayo Adejoke Ogunba-Koleowo at Hoare's Memorial Methodist Cathedral Church, Sabo Yaba. Join the moving train to 2027 and beyond.">
+  <meta name="keywords" content="APC Progressive Support Group, APSG, inauguration 2026, Hon. Oluwafunmilayo Adejoke Ogunba-Koleowo, progressive movement Nigeria, Lagos political event, Preparation Participation Progress, Itesiwaju">
+  <meta name="author" content="APC Progressive Support Group">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yourdomain.com/">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content="APSG Inauguration | 12 February 2026">
+  <meta property="og:description" content="Join the progressive movement built on Preparation, Participation, and Progress (Itesiwaju) at Hoare's Memorial Methodist Cathedral Church, Sabo Yaba.">
+  <meta property="og:image" content="assets/images/apsg.png">
+  <meta property="og:url" content="https://yourdomain.com">
+  <meta property="og:type" content="website">
+  
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="APSG Inauguration | 12 February 2026">
+  <meta name="twitter:description" content="Join the progressive movement built on Preparation, Participation, and Progress (Itesiwaju).">
+  <meta name="twitter:image" content="assets/images/apsg.png">
 
-  <title>Inauguration & RSVP | Official Event</title>
-
-  <meta name="description"
-        content="Official inauguration ceremony. View event details, venue location, and confirm attendance (RSVP) for the historic gathering." />
-
-  <meta name="keywords"
-        content="Inauguration, RSVP, Event, Lagos Event, Official Ceremony, Church Event" />
-
-  <!-- TailwindCSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Tailwind Custom Theme -->
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            green: {
-              900: '#064e3b',
-              800: '#065f46',
-              700: '#047857',
-              600: '#059669',
-              100: '#d1fae5',
-              50: '#ecfdf5'
-            }
+            green: '#008000',
+            blue: '#3c78d8',
+            red: '#ff0000',
           }
         }
       }
     }
   </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  
+  <style>
+    html { scroll-behavior: smooth; }
+    .animate-fade { animation: fadeIn 1s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    /* Swiper custom styles for white controls on dark overlays */
+    .swiper-button-next,
+    .swiper-button-prev {
+      color: white !important;
+    }
+    .swiper-pagination-bullet {
+      background: white !important;
+      opacity: 0.7;
+    }
+    .swiper-pagination-bullet-active {
+      opacity: 1;
+    }
+  </style>
 </head>
+<body class="bg-white text-gray-900">
 
-<body class="bg-white text-gray-900 antialiased">
-
-  <!-- =====================================================
-       EVENT SECTION
-  ====================================================== -->
-  <section id="event" class="py-24 lg:py-32 bg-gradient-to-b from-white via-green-50 to-white">
-    <div class="max-w-7xl mx-auto px-6 lg:px-8">
-
-      <!-- Section Title -->
-      <div class="text-center mb-16 lg:mb-20">
-        <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-green-900">
-          Inauguration Details
-        </h2>
-        <div class="mt-6 w-32 h-1 bg-green-600 mx-auto rounded-full"></div>
-        <p class="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
-          Join us for a historic moment of inspiration and unity.
-        </p>
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center gap-3">
+          <img src="assets/images/apsg.png" alt="APSG Logo" class="h-9" loading="lazy">
+          <span class="text-green font-bold text-base">APC Progressive Support Group</span>
+        </div>
+        <div class="hidden md:flex space-x-6">
+          <a href="#leadership" class="text-gray-700 hover:text-green transition">Leadership</a>
+          <a href="#about" class="text-gray-700 hover:text-green transition">About</a>
+          <a href="#mission" class="text-gray-700 hover:text-green transition">Mission</a>
+          <a href="#event" class="text-gray-700 hover:text-green transition">Event</a>
+          <a href="#outfit" class="text-gray-700 hover:text-green transition">Official Outfit</a>
+          <a href="#rsvp" class="bg-green text-white px-5 py-2 rounded-full hover:bg-green-700 transition">Join</a>
+        </div>
+        <div class="md:hidden">
+          <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="text-2xl"><i class="fas fa-bars"></i></button>
+        </div>
       </div>
+      <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+        <div class="px-4 py-4 space-y-3 text-center">
+          <a href="#leadership" class="block text-gray-700 hover:text-green">Leadership</a>
+          <a href="#about" class="block text-gray-700 hover:text-green">About</a>
+          <a href="#mission" class="block text-gray-700 hover:text-green">Mission</a>
+          <a href="#event" class="block text-gray-700 hover:text-green">Event</a>
+          <a href="#outfit" class="block text-gray-700 hover:text-green">Official Outfit</a>
+          <a href="#rsvp" class="block bg-green text-white px-6 py-2 rounded-full">Join</a>
+        </div>
+      </div>
+    </div>
+  </nav>
 
-      <div class="grid md:grid-cols-2 gap-12 lg:gap-16 items-start">
+  <!-- SLIDER 1: HERO -->
+<div class="swiper-slide">
 
-        <!-- Event Details Card -->
-        <div class="bg-white rounded-3xl shadow-2xl border border-green-100 p-8 lg:p-12">
-          <h3 class="text-2xl lg:text-3xl font-semibold text-green-800 mb-10 text-center">
-            Event Information
-          </h3>
+  <section class="relative bg-gradient-to-br from-green via-green-700 to-green text-white overflow-hidden min-h-[90vh] flex items-center">
+    
+    <!-- Soft Overlay -->
+    <div class="absolute inset-0 bg-black/10"></div>
 
-          <div class="space-y-10">
+    <!-- Content -->
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-10 py-20 md:py-28 w-full">
+      <div class="flex flex-col md:flex-row items-center md:items-start gap-12 md:gap-20">
 
-            <!-- Date -->
-            <div class="flex gap-6">
-              <div class="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center">
-                📅
-              </div>
-              <div>
-                <p class="font-semibold text-green-700 text-lg">Date</p>
-                <p class="text-xl mt-1">12 February 2026</p>
-              </div>
-            </div>
-
-            <!-- Time -->
-            <div class="flex gap-6">
-              <div class="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center">
-                ⏰
-              </div>
-              <div>
-                <p class="font-semibold text-green-700 text-lg">Time</p>
-                <p class="text-xl mt-1">10:00 AM Prompt</p>
-              </div>
-            </div>
-
-            <!-- Venue -->
-            <div class="flex gap-6">
-              <div class="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center">
-                📍
-              </div>
-              <div>
-                <p class="font-semibold text-green-700 text-lg">Venue</p>
-                <p class="text-xl mt-1 leading-relaxed">
-                  Hoare's Memorial Methodist Cathedral Church,<br>
-                  Sabo Yaba, Lagos
-                </p>
-              </div>
-            </div>
-
-            <!-- Programme -->
-            <div class="flex gap-6">
-              <div class="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center">
-                📋
-              </div>
-              <div>
-                <p class="font-semibold text-green-700 text-lg">Programme</p>
-                <ul class="mt-3 space-y-2 text-lg">
-                  <li>• Keynote Address</li>
-                  <li>• Official Unveiling</li>
-                  <li>• Mobilisation Rally</li>
-                </ul>
-              </div>
-            </div>
-
-            <!-- RSVP Button -->
-            <div class="pt-8 text-center">
-              <a href="#rsvp"
-                 class="inline-block px-10 py-5 bg-green-600 text-white text-lg font-semibold rounded-full shadow-lg hover:bg-green-700 transition">
-                Confirm Attendance (RSVP)
-              </a>
-            </div>
-
+        <!-- Logo -->
+        <div class="flex-shrink-0 md:mt-1">
+          <div class="w-36 h-36 md:w-44 md:h-44 rounded-full bg-white/95 p-5 shadow-xl flex items-center justify-center">
+            <img
+              src="assets/images/apsg.png"
+              alt="APC Progressive Support Group Logo"
+              class="w-full h-full object-contain"
+              loading="lazy">
           </div>
         </div>
 
-        <!-- Map Card -->
-        <div class="bg-white rounded-3xl shadow-2xl border border-green-100 overflow-hidden">
-          <h3 class="text-2xl lg:text-3xl font-semibold text-green-800 p-8 text-center">
-            Venue Location
-          </h3>
+        <!-- Text -->
+        <div class="text-center md:text-left max-w-3xl">
+          <p class="text-sm md:text-base uppercase tracking-[0.3em] text-white/80 mb-6">
+            APC Progressive Support Group
+          </p>
 
-          <div class="aspect-video">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3964.373482956399!2d3.3789253!3d6.493926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8e1e9d6f6b6d%3A0x8e0c0c0c0c0c0c0c!2sHoare%27s%20Memorial%20Methodist%20Cathedral%20Church!5e0!3m2!1sen!2sng!4v1704912000000"
-              class="w-full h-full border-0"
-              loading="lazy"></iframe>
-          </div>
+          <h1 class="text-4xl sm:text-5xl md:text-6xl font-semibold leading-tight mb-6">
+            2027 and Beyond
+          </h1>
 
-          <div class="p-6 text-center bg-green-50">
-            <a href="https://www.google.com/maps/dir/?api=1&destination=Hoare%27s+Memorial+Methodist+Cathedral+Church,Sabo+Yaba,Lagos"
-               target="_blank"
-               class="inline-block mt-4 px-8 py-4 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition">
-              Get Directions
+          <p class="text-base md:text-lg text-white/90 max-w-2xl leading-relaxed">
+            A movement built on <strong>Preparation</strong>, <strong>Participation</strong>,
+            and <strong>Progress (Itesiwaju)</strong>.<br class="hidden sm:block">
+            Mobilising for sustainable leadership and national development.
+          </p>
+
+          <!-- CTAs -->
+          <div class="mt-12 flex flex-col sm:flex-row gap-6 justify-center md:justify-start">
+            <a href="#rsvp"
+               class="bg-white text-green px-10 py-4 rounded-full text-lg font-semibold shadow-md hover:bg-gray-100 transition">
+              Join the Movement
+            </a>
+
+            <a href="#event"
+               class="bg-blue/90 hover:bg-blue text-white px-10 py-4 rounded-full text-lg font-semibold shadow-md transition">
+              Event Details
             </a>
           </div>
         </div>
 
       </div>
     </div>
+
+    <!-- Bottom Wave -->
+    <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
+      <svg class="w-full h-12 md:h-16" viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <path fill="#f8fafc"
+              d="M0,144L120,160C240,176,480,208,720,213C960,218,1200,197,1320,186L1440,176L1440,0L0,0Z">
+        </path>
+      </svg>
+    </div>
+
   </section>
 
-  <!-- =====================================================
-       RSVP SECTION
-  ====================================================== -->
-  <section id="rsvp" class="py-24 bg-white">
-    <div class="max-w-4xl mx-auto px-6">
+</div>
 
-      <div class="text-center mb-12">
-        <h2 class="text-4xl font-bold text-green-900">
-          RSVP & Attendance Confirmation
-        </h2>
-        <p class="mt-4 text-lg text-gray-600">
-          Kindly confirm your attendance to help us plan effectively.
-        </p>
+
+        <!-- Slide 2: Inauguration Venue -->
+        <div class="swiper-slide relative">
+          <img src="https://lh5.googleusercontent.com/p/AF1QipPBrxM8jdwvNb1py5dybd13WMpflr6fK8u0M3Z4=w1024-h683-k-no" alt="Hoare's Memorial Methodist Cathedral Church, Sabo Yaba, Lagos" loading="lazy" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-black/50 flex items-end pb-12 px-10">
+            <div class="text-center w-full">
+              <p class="text-white text-3xl md:text-5xl font-bold">Inauguration Venue</p>
+              <p class="text-white text-2xl md:text-3xl font-semibold mt-2">Hoare's Memorial Methodist Cathedral</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3: APSG Logo -->
+        <div class="swiper-slide relative bg-white">
+          <div class="w-full h-full flex items-center justify-center">
+            <img src="assets/images/apsg.png" alt="APSG Logo" loading="lazy" class="h-64">
+          </div>
+          <div class="absolute inset-0 bg-black/40 flex items-end pb-12 px-10">
+            <div class="text-center w-full">
+              <p class="text-white text-3xl md:text-5xl font-bold">APC Progressive Support Group</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 4: Official Outfit -->
+        <div class="swiper-slide relative">
+          <img src="assets/images/outfit.jpeg" alt="Official APSG Inauguration Outfit" loading="lazy" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-black/50 flex items-end pb-12 px-10">
+            <div class="text-center w-full">
+              <p class="text-white text-3xl md:text-5xl font-bold">Official Outfit</p>
+              <p class="text-white text-2xl md:text-3xl font-semibold mt-2">Unity in Progress</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 5: Additional Highlight from Search (Tinubu Support Group Inauguration) -->
+        <div class="swiper-slide relative">
+          <img src="https://tribuneonlineng.com/wp-content/uploads/2022/10/65E49E00-F677-4D02-9578-D175B8E116A4-scaled.jpeg" alt="Tinubu support group inaugurated in South-East zone" loading="lazy" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-black/50 flex items-end pb-12 px-10">
+            <div class="text-center w-full">
+              <p class="text-white text-3xl md:text-5xl font-bold">Support Group Inauguration</p>
+              <p class="text-white text-2xl md:text-3xl font-semibold mt-2">Join the Movement</p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="bg-white rounded-3xl shadow-2xl border border-green-100 overflow-hidden">
-        <iframe
-          src="PASTE_YOUR_GOOGLE_FORM_EMBED_LINK_HERE"
-          class="w-full h-[900px] border-0"
-          loading="lazy">
-        </iframe>
-      </div>
-
+      <!-- Pagination & Navigation -->
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
     </div>
   </section>
 
-  <!-- =====================================================
-       FOOTER
-  ====================================================== -->
-  <footer class="py-10 bg-green-900 text-center text-white">
-    <p class="text-sm">
-      © 2026 • All Rights Reserved
-    </p>
+  <!-- Countdown -->
+  <section id="countdown-section" class="py-16 md:py-20 bg-gray-50">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+      <h2 class="text-3xl md:text-4xl font-semibold text-green mb-14">
+        Countdown to Inauguration
+      </h2>
+
+      <div id="countdown" class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 max-w-4xl mx-auto">
+        <div class="bg-white rounded-2xl p-8 md:p-10 shadow-lg border border-gray-200">
+          <span id="days" class="block text-5xl md:text-6xl font-bold text-green">00</span>
+          <p class="text-base md:text-lg mt-3 font-medium text-gray-600">Days</p>
+        </div>
+        <div class="bg-white rounded-2xl p-8 md:p-10 shadow-lg border border-gray-200">
+          <span id="hours" class="block text-5xl md:text-6xl font-bold text-green">00</span>
+          <p class="text-base md:text-lg mt-3 font-medium text-gray-600">Hours</p>
+        </div>
+        <div class="bg-white rounded-2xl p-8 md:p-10 shadow-lg border border-gray-200">
+          <span id="minutes" class="block text-5xl md:text-6xl font-bold text-green">00</span>
+          <p class="text-base md:text-lg mt-3 font-medium text-gray-600">Minutes</p>
+        </div>
+        <div class="bg-white rounded-2xl p-8 md:p-10 shadow-lg border border-gray-200">
+          <span id="seconds" class="block text-5xl md:text-6xl font-bold text-green">00</span>
+          <p class="text-base md:text-lg mt-3 font-medium text-gray-600">Seconds</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Pillars / Mission -->
+  <section id="mission" class="py-16 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-3xl md:text-4xl font-semibold text-green text-center mb-12">
+        Our Core Pillars
+      </h2>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-md text-center">
+          <div class="mx-auto mb-5 w-14 h-14 rounded-full bg-green/10 flex items-center justify-center">
+            <i class="fa-solid fa-layer-group text-green text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-green mb-3">Preparation</h3>
+          <p class="text-base text-gray-700 leading-relaxed">
+            Building strong structures, strategy, and people for sustainable progress.
+          </p>
+        </div>
+
+        <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-md text-center">
+          <div class="mx-auto mb-5 w-14 h-14 rounded-full bg-green/10 flex items-center justify-center">
+            <i class="fa-solid fa-users text-green text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-green mb-3">Participation</h3>
+          <p class="text-base text-gray-700 leading-relaxed">
+            Inclusive mobilisation of supporters at every level.
+          </p>
+        </div>
+
+        <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-md text-center">
+          <div class="mx-auto mb-5 w-14 h-14 rounded-full bg-green/10 flex items-center justify-center">
+            <i class="fa-solid fa-arrow-trend-up text-green text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-green mb-3">Progress (Itesiwaju)</h3>
+          <p class="text-base text-gray-700 leading-relaxed">
+            Delivering measurable progress through purposeful collaboration, partnerships, and impactful initiatives.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="h-12"></div>
+
+  <!-- Event with Map -->
+  <section id="event" class="py-20 bg-green-50">
+    <div class="max-w-6xl mx-auto px-6 animate-fade">
+      <h2 class="text-3xl md:text-4xl font-semibold text-green text-center mb-12">
+        Location Details
+      </h2>
+
+      <div class="grid md:grid-cols-2 gap-10 items-start">
+        <div class="space-y-6 text-base md:text-lg text-gray-800">
+          <div class="flex gap-3">
+            <span class="font-semibold text-green">Date:</span>
+            <span>12 February 2026</span>
+          </div>
+          <div class="flex gap-3">
+            <span class="font-semibold text-green">Time:</span>
+            <span>10:00 AM Prompt</span>
+          </div>
+          <div class="flex gap-3">
+            <span class="font-semibold text-green">Venue:</span>
+            <span>Hoare's Memorial Methodist Cathedral Church,<br>Sabo Yaba, Lagos</span>
+          </div>
+          <div class="flex gap-3">
+            <span class="font-semibold text-green">Programme:</span>
+            <span>Keynote Address • Official Unveiling • Mobilisation Rally</span>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-xl md:text-2xl font-semibold text-green mb-4 text-center md:text-left">
+            Venue Location
+          </h3>
+          <div class="w-full aspect-video rounded-xl overflow-hidden border border-gray-200 shadow-md">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3964.373482956399!2d3.3789253!3d6.493926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8e1e9d6f6b6d%3A0x8e0c0c0c0c0c0c0c!2sHoare%27s%20Memorial%20Methodist%20Cathedral%20Church!5e0!3m2!1sen!2sng!4v1704912000000" class="w-full h-full border-0" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+          <p class="text-center md:text-left text-gray-500 mt-3 text-sm">
+            Interactive map — zoom, get directions, or view street view
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RSVP Section — WhatsApp Submission -->
+  <section id="rsvp" class="py-20 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-6 text-center animate-fade">
+      <h2 class="text-3xl md:text-4xl font-semibold text-green mb-6">
+        Join the Chariot
+      </h2>
+
+      <p class="text-lg text-gray-700 mb-12">
+        Kindly confirm your attendance for the APC Progressive Support Group
+        Inauguration on <br><strong>12 February 2026</strong>.
+      </p>
+
+      <form id="registration-form" class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-md border border-gray-200">
+        <input type="text" id="name" placeholder="Full Name *" required class="p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green">
+        <input type="tel" id="phone" placeholder="Phone Number (WhatsApp) *" required class="p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green">
+        <input type="email" id="email" placeholder="Email Address" class="p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green">
+        <input type="text" id="location" placeholder="State / LGA" class="p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green">
+        <select id="attendance" required class="p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green md:col-span-2">
+          <option value="">Will you attend physically?</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+        <input type="text" id="support" placeholder="How would you like to support? (Volunteer, Member, Media)" class="p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green md:col-span-2">
+
+        <button type="submit" class="md:col-span-2 bg-green text-white font-semibold text-lg py-4 rounded-full hover:bg-green-700 transition">
+          Submit via WhatsApp
+        </button>
+
+        <p class="md:col-span-2 text-sm text-gray-500 mt-2">
+          Your information is secure and will only be used for APSG event coordination.
+        </p>
+      </form>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="py-20">
+    <div class="max-w-4xl mx-auto px-6 text-center animate-fade">
+      <h2 class="text-3xl md:text-4xl font-semibold text-green mb-8">
+        Who We Are
+      </h2>
+
+      <p class="text-lg leading-relaxed text-gray-800">
+        The APC Progressive Support Group (APSG) is a grassroots-driven mobilisation
+        platform committed to strengthening progressive ideals, promoting inclusive
+        participation, and supporting leadership focused on sustainable development
+        beyond 2027.
+        <br>
+        <span class="font-medium">
+          This is not just an event — it is a movement.
+        </span>
+      </p>
+    </div>
+  </section>
+
+  <!-- Leadership -->
+  <section id="leadership" class="py-20 bg-green-50">
+    <div class="max-w-5xl mx-auto px-6 text-center animate-fade">
+      <h2 class="text-3xl md:text-4xl font-semibold text-green mb-12">
+        Leadership
+      </h2>
+
+      <img src="assets/images/adejoke.jpeg" alt="Hon. (Mrs) Oluwafunmilayo Adejoke Ogunba-Koleowo" class="w-64 h-64 object-cover rounded-full border-4 border-green mx-auto shadow-lg" loading="lazy">
+
+      <h3 class="text-2xl md:text-3xl font-semibold text-green mt-8">
+        Hon. (Mrs) Oluwafunmilayo Adejoke Ogunba-Koleowo
+      </h3>
+
+      <p class="text-lg text-green font-medium mt-1">
+        Director-General, APC Progressive Support Group (APSG)
+      </p>
+
+      <div class="mt-12 max-w-3xl mx-auto bg-white p-8 md:p-10 rounded-xl shadow-md border-l-4 border-green text-left">
+        <p class="text-lg italic text-gray-800 leading-relaxed">
+          Fellow Progressives,
+        </p>
+
+        <p class="text-lg italic text-gray-800 leading-relaxed mt-4">
+          The train is moving, and the destination is a brighter future for our nation.
+        </p>
+
+        <p class="text-lg italic text-gray-800 leading-relaxed mt-4">
+          Built on the solid pillars of Preparation, Participation, and Progress (Itesiwaju),
+          APSG is more than a group — it is a movement of purpose-driven Nigerians ready
+          for 2027 and beyond.
+        </p>
+
+        <p class="text-lg italic text-gray-800 leading-relaxed mt-4">
+          I invite you to join us today. Together, we will deliver sustainable development
+          and inclusive leadership.
+        </p>
+
+        <p class="text-lg italic text-gray-800 leading-relaxed mt-4">
+          The journey begins now.
+        </p>
+
+        <p class="text-lg font-semibold text-green mt-8">
+          — Hon. (Mrs) Oluwafunmilayo Adejoke Ogunba-Koleowo<br>
+          Director-General, APC Progressive Support Group (APSG)
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-green-900 text-white py-10 text-center">
+    <div class="max-w-4xl mx-auto px-6">
+      <p class="text-lg font-semibold">
+        APC Progressive Support Group (APSG) © 2026
+      </p>
+
+      <p class="text-base mt-2 text-white/90">
+        Preparation • Participation • Progress (Itesiwaju)
+      </p>
+
+      <p class="text-base mt-4 text-white/90">
+        Contact: info@apsgnigeria.org | media@apsgnigeria.org | dg@apsgnigeria.org
+      </p>
+
+      <div class="mt-5 flex justify-center gap-6 text-xl">
+        <a href="https://wa.me/2348023154308" class="hover:text-blue transition" aria-label="WhatsApp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+        <a href="#" class="hover:text-blue transition" aria-label="Facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+        <a href="#" class="hover:text-blue transition" aria-label="Twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </div>
+    </div>
   </footer>
 
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <!-- Scripts -->
+  <script>
+    // Countdown
+    const targetDate = new Date("2026-02-12T10:00:00+01:00").getTime();
+
+    setInterval(() => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance < 0) {
+        document.getElementById("countdown").innerHTML = "<h3 class='col-span-4 text-3xl font-bold'>The Inauguration is Happening Now!</h3>";
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("days").innerText = days.toString().padStart(2, '0');
+      document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+      document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
+      document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+    }, 1000);
+
+    // WhatsApp Form Submission
+    document.getElementById('registration-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const email = document.getElementById('email').value.trim() || 'Not provided';
+      const location = document.getElementById('location').value.trim() || 'Not provided';
+      const attendance = document.getElementById('attendance').value || 'Not specified';
+      const support = document.getElementById('support').value.trim() || 'General Support';
+
+      const message = `NEW APSG REGISTRATION%0A%0A` +
+                      `Name: ${name}%0A` +
+                      `Phone: ${phone}%0A` +
+                      `Email: ${email}%0A` +
+                      `Location: ${location}%0A` +
+                      `Physical Attendance: ${attendance}%0A` +
+                      `Support: ${support}%0A%0A` +
+                      `Joined the Moving Train to 2027 and Beyond!`;
+
+      const whatsappNumber = "+2348023154308";
+      const whatsappURL = `https://wa.me/${whatsappNumber}?text=${message}`;
+
+      window.open(whatsappURL, '_blank');
+    });
+
+    // Initialise Swiper for Hero Slider
+    const heroSwiper = new Swiper('.hero-swiper', {
+      loop: true,
+      autoplay: {
+        delay: 4000,
+        disableOnInteraction: false,
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    });
+  </script>
 </body>
 </html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APSG Registration | Join the Progressive Movement</title>
+  <meta name="description" content="Register for the APC Progressive Support Group Inauguration on 12 February 2026 at Hoare's Memorial Cathedral, Sabo Yaba, Lagos">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { green: '#008000' } } }
+    }
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    .hidden { display: none; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade { animation: fadeIn 1s ease-out; }
+  </style>
+  <!-- Confetti for success celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- Hero Section -->
+  <section class="py-16 bg-gradient-to-b from-green-50 to-gray-50">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+      <img src="assets/images/apsg.png" alt="APSG Logo" class="h-40 mx-auto mb-8" loading="lazy">
+      <h1 class="text-5xl md:text-6xl font-bold text-green-900 mb-6">Join the Progressive Movement</h1>
+      <p class="text-2xl text-gray-700 mb-8">APSG Inauguration • Thursday, 12 February 2026</p>
+      <a href="#rsvp" class="inline-block bg-green text-white px-10 py-5 rounded-full font-bold text-xl hover:bg-green-700 transition shadow-xl">
+        Register Now <i class="fas fa-arrow-down ml-3"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- Venue & Map Section -->
+  <section class="py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+      <div>
+        <h2 class="text-4xl font-bold text-green-900 mb-6">Venue: Hoare's Memorial Cathedral</h2>
+        <p class="text-xl text-gray-700 mb-8">Sabo Yaba, Lagos<br>Thursday, 12 February 2026<br>Time: 10:00 AM (tentative)</p>
+        <div class="flex flex-col sm:flex-row gap-6">
+          <a href="https://www.google.com/maps/search/?api=1&query=Hoare%27s+Memorial+Methodist+Cathedral+Church+Sabo+Yaba+Lagos" target="_blank" class="bg-green text-white px-8 py-4 rounded-full font-semibold hover:bg-green-700 transition text-center">
+            <i class="fas fa-directions mr-2"></i>Get Directions
+          </a>
+          <a href="https://www.google.com/maps/search/?api=1&query=Hoare%27s+Memorial+Methodist+Cathedral+Church+Sabo+Yaba+Lagos" target="_blank" class="bg-gray-200 text-gray-800 px-8 py-4 rounded-full font-semibold hover:bg-gray-300 transition text-center">
+            <i class="fas fa-map-marked-alt mr-2"></i>Street View
+          </a>
+        </div>
+      </div>
+      <div class="w-full aspect-video rounded-2xl overflow-hidden shadow-2xl">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3964.373482956399!2d3.3789253!3d6.493926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8e1e9d6f6b6d%3A0x8e0c0c0c0c0c0c0c!2sHoare%27s%20Memorial%20Methodist%20Cathedral%20Church!5e0!3m2!1sen!2sng!4v1704912000000"
+          class="w-full h-full border-0"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- Countdown -->
+  <section class="py-16 bg-green-900 text-white text-center">
+    <h3 class="text-3xl font-bold mb-6">Countdown to the Historic Inauguration</h3>
+    <div id="countdown" class="text-5xl md:text-7xl font-bold mb-4"></div>
+    <p class="text-xl">Be Part of the Change 🚂🇳🇬</p>
+  </section>
+
+  <!-- RSVP Section -->
+  <section id="rsvp" class="py-20 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="text-4xl md:text-5xl font-bold text-green-900 mb-8">Confirm Your Attendance</h2>
+      <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto">
+        Join thousands of progressives at this landmark event. Register now and let's move Nigeria forward together!
+      </p>
+
+      <!-- Form -->
+      <form id="registration-form" class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto bg-white p-10 rounded-2xl shadow-2xl border border-gray-200">
+        <input type="text" id="name" placeholder="Full Name *" required class="p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green md:col-span-2">
+
+        <input type="tel" id="phone" placeholder="Phone Number (WhatsApp) *" required class="p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green md:col-span-2">
+
+        <input type="email" id="email" placeholder="Email Address" class="p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green md:col-span-2">
+
+        <input type="text" id="state" placeholder="State *" required class="p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green">
+        <input type="text" id="lga" placeholder="LGA *" required class="p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green">
+        <input type="text" id="ward" placeholder="Ward (Optional)" class="p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green md:col-span-2">
+
+        <select id="attendance" required class="p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green md:col-span-2">
+          <option value="">Will you attend physically? *</option>
+          <option value="Yes">Yes, I will attend physically</option>
+          <option value="No">No, virtual/online only</option>
+        </select>
+
+        <input type="text" id="support" placeholder="How would you like to support? (e.g., Volunteer, Member, Media, Donor, Planning)" class="p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green md:col-span-2">
+
+        <button type="submit" class="md:col-span-2 bg-green text-white font-bold text-xl py-6 rounded-full hover:bg-green-700 transition shadow-xl flex items-center justify-center gap-4">
+          <i class="fab fa-whatsapp text-3xl"></i>
+          Submit Registration
+        </button>
+      </form>
+
+      <p class="text-sm text-gray-600 mt-8">Your data is secure and used only for event coordination.</p>
+    </div>
+  </section>
+
+  <!-- Hidden iframe for silent Google Form submission -->
+  <iframe name="hidden_google_form" style="display:none;"></iframe>
+
+  <!-- Engaging Success Message -->
+  <div id="success-message" class="hidden max-w-5xl mx-auto px-6 py-20 text-center animate-fade">
+    <h2 class="text-5xl md:text-4xl font-bold text-green-900 mb-8">Welcome Aboard the Progressive Team!</h2>
+    <p class="text-2xl text-gray-700 mb-10">
+      Thank you, <span id="success-name" class="font-bold text-green-800"></span>!<br>
+      Your registration has been successfully recorded. You're now an official part of the movement!
+    </p>
+    <div class="bg-green-50 rounded-2xl p-10 max-w-4xl mx-auto mb-12 shadow-2xl border border-green-200">
+      <p class="text-xl text-gray-800 mb-8 leading-relaxed">
+        <strong>Congratulations on taking this bold step!</strong><br><br>
+        • A pre-filled WhatsApp message has opened — please tap "Send" to confirm and join our coordination group.<br>
+        • Reminders, venue updates, and live stream links (for virtual attendees) will be sent to your WhatsApp.<br>
+        • Together, we're building a stronger, progressive Nigeria.
+      </p>
+      <p class="text-lg font-semibold text-green-900">
+        Event Details:<br>
+        Thursday, 12 February 2026<br>
+        Hoare's Memorial Cathedral, Sabo Yaba, Lagos
+      </p>
+    </div>
+
+    <div class="text-xl mb-8 text-gray-700 font-medium">
+      Help us grow — share with fellow progressives!
+    </div>
+    <div class="flex flex-col sm:flex-row gap-6 justify-center">
+      <a href="#" id="share-whatsapp" target="_blank" class="bg-green text-white px-10 py-5 rounded-full font-bold hover:bg-green-700 transition text-lg">
+        <i class="fab fa-whatsapp mr-3 text-2xl"></i>Share on WhatsApp
+      </a>
+      <a href="#" id="share-twitter" target="_blank" class="bg-blue-600 text-white px-10 py-5 rounded-full font-bold hover:bg-blue-700 transition text-lg">
+        <i class="fab fa-x-twitter mr-3 text-2xl"></i>Share on X
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Countdown Timer
+    const eventDate = new Date('2026-02-12T10:00:00').getTime();
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = eventDate - now;
+      if (distance < 0) {
+        document.getElementById('countdown').innerHTML = 'Today is the Day! 🇳🇬🚂';
+        clearInterval(timer);
+        return;
+      }
+      const days = Math.floor(distance / (86400000));
+      const hours = Math.floor((distance % 86400000) / 3600000);
+      const minutes = Math.floor((distance % 3600000) / 60000);
+      const seconds = Math.floor((distance % 60000) / 1000);
+      document.getElementById('countdown').innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }, 1000);
+
+    // Form Submission
+    document.getElementById('registration-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const email = document.getElementById('email').value.trim() || '';
+      const state = document.getElementById('state').value.trim();
+      const lga = document.getElementById('lga').value.trim();
+      const ward = document.getElementById('ward').value.trim() || '';
+      const attendance = document.getElementById('attendance').value;
+      const support = document.getElementById('support').value.trim() || 'General Support';
+
+      if (!name || !phone || !state || !lga || !attendance) {
+        alert('Please fill all required fields (*).');
+        return;
+      }
+
+      const cleanPhone = phone.replace(/[^\d+]/g, '');
+      if (!(/^(\+234|0)[7-9][01]\d{8}$/.test(cleanPhone))) {
+        alert('Please enter a valid Nigerian phone number.');
+        return;
+      }
+
+      const attendance_full = attendance === 'Yes' ? 'Yes, I will attend physically' : 'No, virtual/online only';
+
+      // WhatsApp Notification
+      const message = `NEW APSG REGISTRATION 🚂%0A%0AFull Name: ${name}%0APhone: ${phone}%0AEmail: ${email}%0AState: ${state}%0ALGA: ${lga}%0AWard: ${ward}%0APhysical Attendance: ${attendance_full}%0ASupport: ${support}%0A%0AJoined the Progressive Movement! 🇳🇬`;
+      const whatsappURL = `https://wa.me/+2348023154308?text=${message}`;
+      window.open(whatsappURL, '_blank');
+
+      // Silent Google Form Submission
+      const formId = '1FAIpQLSeMQ24iEAemZJbZvcZRpGBJzEcLU1y6iEZO8YQubabATa8z7A';
+      const googleFormUrl = `https://docs.google.com/forms/d/e/${formId}/formResponse`;
+
+      const dynamicForm = document.createElement('form');
+      dynamicForm.method = 'POST';
+      dynamicForm.action = googleFormUrl;
+      dynamicForm.target = 'hidden_google_form';
+      dynamicForm.style.display = 'none';
+
+      // Mapped from your pre-filled URL (in form field order)
+      const fields = [
+        { name: 'entry.877086558', value: "Yes, I'll be there" },     // Fixed: Initial confirmation/attendance
+        { name: 'entry.1498135098', value: name },                   // Full Name
+        { name: 'entry.1424661284', value: phone },                  // Phone Number
+        { name: 'entry.2041026669', value: email },                  // Email
+        { name: 'entry.136277616', value: state },                   // State
+        { name: 'entry.1798128731', value: lga },                     // LGA
+        { name: 'entry.776507753', value: ward },                    // Ward
+        { name: 'entry.428389588', value: attendance_full },         // Physical Attendance
+        { name: 'entry.1082748972', value: support }                 // Support / Role (matches "Planning" in sample)
+        // Other fields (e.g., entry.914770007, entry.2606285) left blank
+      ];
+
+      fields.forEach(field => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = field.name;
+        input.value = field.value;
+        dynamicForm.appendChild(input);
+      });
+
+      document.body.appendChild(dynamicForm);
+      dynamicForm.submit();
+
+      // Show Success Message
+      document.getElementById('success-name').textContent = name;
+      document.getElementById('registration-form').classList.add('hidden');
+      document.getElementById('success-message').classList.remove('hidden');
+
+      // Dynamic Share Links
+      const pageUrl = encodeURIComponent(window.location.href);
+      const shareText = encodeURIComponent(`I'm joining the APSG Progressive Movement! Inauguration: 12 Feb 2026 🚂🇳🇬 Register here: `);
+      document.getElementById('share-whatsapp').href = `https://wa.me/?text=${shareText}${pageUrl}`;
+      document.getElementById('share-twitter').href = `https://twitter.com/intent/tweet?text=${shareText}&url=${pageUrl}`;
+
+      // Celebration Confetti
+      confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+    });
+  </script>
+</body>
+</html>
