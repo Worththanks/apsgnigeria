@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APSG Event Check-In Scanner</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- html5-qrcode library (best free web QR scanner) -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cormorant+Garamond:wght@400;500&family=Roboto&display=swap" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(to bottom, #f8f9fa, #e9f7ef); font-family: 'Roboto', sans-serif; }
+        .header-bg { background: linear-gradient(rgba(0,100,0,0.9), rgba(0,60,0,0.9)); color: white; }
+        .display-1 { font-family: 'Playfair Display', serif; }
+        #reader { width: 100%; max-width: 600px; margin: 20px auto; border: 3px solid #006400; border-radius: 15px; overflow: hidden; }
+        .result { font-size: 1.3em; padding: 20px; border-radius: 10px; margin: 20px auto; max-width: 600px; text-align: center; }
+        .success { background: #d4edda; color: #155724; border: 2px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 2px solid #f5c6cb; }
+        .checked-in-list { max-width: 800px; margin: 40px auto; }
+        .gold-accent { color: #d4af37; }
+        footer { background: #006400; color: white; }
+    </style>
+</head>
+<body>
+    <header class="header-bg py-5 text-center">
+        <div class="container">
+            <h1 class="display-1">APSG Check-In Scanner</h1>
+            <p class="lead fs-3">Inauguration Event • 12 February 2026</p>
+            <p class="fs-5">Hoare's Memorial Methodist Cathedral, Yaba, Lagos</p>
+        </div>
+    </header>
+
+    <div class="container my-5">
+        <div class="text-center mb-4">
+            <p class="fs-5">Point your device camera at the guest's QR code.<br>The system will instantly verify and log check-in.</p>
+        </div>
+
+        <!-- QR Scanner -->
+        <div id="reader"></div>
+
+        <!-- Result Display -->
+        <div id="result" class="result d-none"></div>
+
+        <!-- Checked-In List -->
+        <h2 class="text-center display-5 mb-4 gold-accent" style="font-family: 'Playfair Display', serif;">Checked-In Guests</h2>
+        <div class="checked-in-list">
+            <ul id="checkedInList" class="list-group"></ul>
+            <p class="text-center mt-3 text-muted" id="noCheckIns">No guests checked in yet.</p>
+        </div>
+    </div>
+
+    <footer class="py-4 text-center">
+        © 2026 APC Progressive Support Group Nigeria • dg@apsgnigeria.org
+    </footer>
+
+    <script>
+        // Valid guests (add ALL your guests here in this format)
+        const validGuests = [
+            "Ìyáàfin Oluwafunmilayo Adejoke Ogunba-Koleowo Director-General, APC Progressive Support Group (APSG) Host, 2027 and Beyond",
+            "Otunba Yeye Irmgard Modupe Okenla Grand matron VIP Guest Of Honour 2027 and Beyond",
+            // Add more guests exactly as they appear in the QR data, e.g.:
+            // "Hon. Mrs. Example Guest Title"
+        ];
+
+        // Load checked-in from localStorage (persists per device/browser)
+        let checkedIn = JSON.parse(localStorage.getItem('apsgCheckedIn') || '[]');
+        const listElement = document.getElementById('checkedInList');
+        const noCheckInsElement = document.getElementById('noCheckIns');
+
+        function updateCheckedInList() {
+            listElement.innerHTML = '';
+            if (checkedIn.length === 0) {
+                noCheckInsElement.classList.remove('d-none');
+                return;
+            }
+            noCheckInsElement.classList.add('d-none');
+            checkedIn.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                li.innerHTML = `<strong>${item.name}</strong><span class="badge bg-success rounded-pill">${item.time}</span>`;
+                listElement.appendChild(li);
+            });
+        }
+        updateCheckedInList();
+
+        // QR Scanner Setup
+        const html5QrCode = new Html5Qrcode("reader");
+        const config = { fps: 10, qrbox: { width: 300, height: 300 } };
+
+        html5QrCode.start(
+            { facingMode: "environment" }, // Use rear camera on mobile
+            config,
+            (decodedText, decodedResult) => {
+                // Expected format: "Access Granted: [Guest Info] – APC Progressive Support Group"
+                if (decodedText.startsWith("Access Granted:")) {
+                    const guestInfo = decodedText.replace("Access Granted:", "").replace(" – APC Progressive Support Group", "").trim();
+
+                    if (validGuests.some(g => g.includes(guestInfo))) {
+                        // Valid guest
+                        document.getElementById('result').innerHTML = `
+                            <strong class="text-success">✓ ACCESS GRANTED</strong><br>
+                            <strong>${guestInfo}</strong><br>
+                            Welcome to the APSG Inauguration!
+                        `;
+                        document.getElementById('result').className = 'result success';
+
+                        // Log check-in if not already
+                        if (!checkedIn.some(item => item.name.includes(guestInfo))) {
+                            const now = new Date().toLocaleTimeString('en-NG');
+                            checkedIn.push({ name: guestInfo, time: now });
+                            localStorage.setItem('apsgCheckedIn', JSON.stringify(checkedIn));
+                            updateCheckedInList();
+                        }
+                    } else {
+                        document.getElementById('result').innerHTML = `
+                            <strong class="text-danger">✗ INVALID QR CODE</strong><br>
+                            Guest not recognized.
+                        `;
+                        document.getElementById('result').className = 'result error';
+                    }
+                } else {
+                    document.getElementById('result').innerHTML = `
+                        <strong class="text-warning">Invalid Format</strong><br>
+                        Not a valid APSG access QR.
+                    `;
+                    document.getElementById('result').className = 'result error';
+                }
+
+                document.getElementById('result').classList.remove('d-none');
+                // Stop scanner temporarily (resume after 3 seconds)
+                html5QrCode.stop().then(() => {
+                    setTimeout(() => {
+                        html5QrCode.start({ facingMode: "environment" }, config, arguments.callee);
+                        document.getElementById('result').classList.add('d-none');
+                    }, 3000);
+                });
+            },
+            (errorMessage) => {
+                // Scan error (optional logging)
+                // console.warn(errorMessage);
+            }
+        ).catch(err => {
+            alert("Camera access denied or not available. Please allow camera permission.");
+        });
+    </script>
+</body>
+</html>

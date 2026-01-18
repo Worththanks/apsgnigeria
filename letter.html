@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APSG Invitation Letter - With Footer</title>
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'apsg-green': '#004d00',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .watermark {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            opacity: 0.08;
+            z-index: 0;
+        }
+        .watermark span {
+            font-size: 12rem;
+            font-weight: bold;
+            color: #004d00;
+            transform: rotate(-30deg);
+        }
+        .header-border {
+            height: 4px;
+            background: linear-gradient(to right, #004d00, #ff9900, #004d00);
+        }
+        /* Continuation Header */
+        .continuation-header {
+            background-color: rgba(0, 77, 0, 0.15);
+            padding: 4px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #004d00;
+            border-bottom: 2px solid #004d00;
+        }
+        /* Footer - Designed to mirror/complement the letterhead */
+        .letter-footer {
+            background-color: #004d00;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+        .footer-attire {
+            max-height: 120px;
+            object-fit: contain;
+        }
+        @media print {
+            @page { margin: 0; size: A4; }
+            body { margin: 0; }
+            .page { page-break-after: always; }
+            .page:last-child { page-break-after: avoid; }
+            .download-note { display: none; }
+        }
+    </style>
+</head>
+<body class="font-sans text-black antialiased">
+    <!-- Download Note -->
+    <div class="download-note text-center p-6 bg-green-50 border-2 border-green-300 rounded-lg mx-4 my-8">
+        <strong>Updated: Footer Added + Attire Integrated</strong><br>
+        • Removed "Recommended Attire" section from body.<br>
+        • Added footer that mirrors the letterhead style (green bar, contact repeat, attire cloth design on right).<br>
+        • Logo now fully covers/fills the circular area (object-cover + larger size).<br>
+        • Footer appears on all pages.<br>
+        • Save as PDF: Ctrl+P → Margins: None → Background graphics: On.
+    </div>
+
+    <!-- Page 1 (Full Header) -->
+    <div class="page relative flex flex-col min-h-screen">
+        <!-- Full Header -->
+        <header class="bg-apsg-green text-white py-6 px-10 flex items-center justify-between shadow-xl">
+            <div class="flex items-center gap-6">
+                <!-- Logo - Larger + object-cover to fully fill/cover the circle and any inner rings -->
+                <img src="assets/images/apsg.png" alt="APSG Logo" class="w-36 h-36 rounded-full border-8 border-white object-cover shadow-2xl">
+                <div class="text-5xl font-extrabold uppercase tracking-wide leading-tight">
+                    APC Progressive<br>Support Group
+                </div>
+            </div>
+            <div class="text-right text-sm leading-relaxed">
+                C/O Dr. Taiwo Owosina<br>
+                7, Aina Street, Ire Akari<br>
+                Isolo, Lagos State<br><br>
+                Flat 2, Block CY<br>
+                Danbade Millennium Park<br>
+                Arepo, Ogun State<br>
+                0805 561 5155<br>
+                info@apsgnigeria.org
+            </div>
+        </header>
+        <div class="header-border"></div>
+
+        <!-- Watermark -->
+        <div class="watermark">
+            <span>APC PROGRESSIVE SUPPORT GROUP</span>
+        </div>
+
+        <!-- Content -->
+        <main class="flex-1 px-16 pt-40 pb-20 relative z-10 text-lg">
+            <div class="flex justify-between mb-16">
+                <div>
+                    Hon. Cornelius Ojelabi<br>
+                    Chairman, Lagos State APC<br>
+                    Lagos, Nigeria
+                </div>
+                <div class="text-right">
+                    January 15, 2026
+                </div>
+            </div>
+
+            <h1 class="text-center text-2xl font-bold mb-16 uppercase leading-relaxed">
+                Letter of Invitation to the APC Progressive Support Group (APSG)<br>
+                Inaugural Ceremony and Flag-Off for Asiwaju Le’kan Si 2027 Mobilization
+            </h1>
+
+            <p class="mb-8">Dear Hon. Cornelius Ojelabi,</p>
+
+            <p class="mb-8">On behalf of the leadership and members of the APC Progressive Support Group (APSG), we are honoured to invite you to our Inaugural Ceremony and Flag-Off for Asiwaju Le’kan Si 2027 Mobilization.</p>
+
+            <p class="mb-8">We humbly request your presence as a Distinguished Guest of Honour to inspire and elevate this landmark event, drawing on your exemplary leadership in guiding the APC in Lagos State.</p>
+
+            <div class="mb-12 ml-12">
+                <strong>Event Details:</strong><br>
+                <span class="block ml-8">- <strong>Theme</strong>: 2027 & Beyond – Preparation • Participation • Opportunities</span>
+                <span class="block ml-8">- <strong>Date</strong>: Thursday, February 12, 2026</span>
+                <span class="block ml-8">- <strong>Time</strong>: 10:00 AM Prompt</span>
+                <span class="block ml-8">- <strong>Venue</strong>: Hoare’s Memorial Methodist Cathedral Church, Sabo, Yaba, Lagos State, Nigeria</span>
+            </div>
+
+            <p class="mb-8">APSG is an established political support and advocacy platform within the All Progressives Congress (APC), dedicated to promoting progressive ideals through grassroots mobilization, political education, youth empowerment, and leadership development.</p>
+
+            <p class="mb-8">This inauguration marks our formal launch as a national movement, focused on sustaining the progressive achievements under the leadership of President Asiwaju Bola Ahmed Tinubu GCFR as Nigeria looks toward 2027 and beyond to greater heights.</p>
+        </main>
+
+        <!-- Footer (appears on every page) -->
+        <footer class="letter-footer mt-auto">
+            <div class="flex items-center gap-4">
+                <img src="assets/images/apsg.png" alt="APSG Logo" class="w-16 h-16 rounded-full border-4 border-white object-cover">
+                <div>
+                    <strong>APC Progressive Support Group</strong><br>
+                    www.apsgnigeria.org | supports@apsgnigeria.org
+                </div>
+            </div>
+            <div class="text-right">
+                <img src="assets/images/outfit.jpeg" alt="Event Attire Design" class="footer-attire">
+            </div>
+        </footer>
+    </div>
+
+    <!-- Page 2 (Continuation) -->
+    <div class="page relative flex flex-col min-h-screen">
+        <!-- Light Continuation Header -->
+        <div class="continuation-header">
+            <div class="flex items-center gap-4">
+                <img src="assets/images/apsg.png" alt="APSG Logo" class="w-16 h-16 rounded-full border-2 border-apsg-green object-cover">
+                <span class="font-bold">APC Progressive Support Group - Continuation</span>
+            </div>
+            <div class="text-right">
+                Page 2 • January 15, 2026
+            </div>
+        </div>
+
+        <!-- Watermark -->
+        <div class="watermark">
+            <span>APC PROGRESSIVE SUPPORT GROUP</span>
+        </div>
+
+        <!-- Continuation Content -->
+        <main class="flex-1 px-16 pt-20 pb-20 relative z-10 text-lg">
+            <p class="mb-8">The event will convene prominent APC stakeholders, leadership, elected officials, professionals, youth and women representatives, and stakeholders from across Nigeria.</p>
+
+            <p class="mb-8">Your attendance would add immense prestige, drawing on your extensive expertise in party administration and dedication to progressive governance to motivate our members and reinforce APSG's mission.</p>
+
+            <p class="mb-8">We value your unwavering commitment to the progressive agenda and eagerly anticipate your participation. Please RSVP by February 1, 2026, via email at inaugural@apsgnigeria.org or by calling +234 802 315 4308.</p>
+
+            <p class="mb-8">Yours faithfully,</p>
+        </main>
+
+        <!-- Same Footer -->
+        <footer class="letter-footer mt-auto">
+            <div class="flex items-center gap-4">
+                <img src="assets/images/apsg.png" alt="APSG Logo" class="w-16 h-16 rounded-full border-4 border-white object-cover">
+                <div>
+                    <strong>APC Progressive Support Group</strong><br>
+                    www.apsgnigeria.org | supports@apsgnigeria.org
+                </div>
+            </div>
+            <div class="text-right">
+                <img src="assets/images/outfit.jpeg" alt="Event Attire Design" class="footer-attire">
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
