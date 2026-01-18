@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>APSG Admin Control</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="supabase-client.js"></script>
+</head>
+<body>
+
+<h1>🔐 APSG Admin Panel</h1>
+
+<input id="guestId" placeholder="APSG-2026-000123">
+<button onclick="revoke()">Revoke Check-In</button>
+
+<br><br>
+<button onclick="resetAll()" style="color:red;">RESET ALL CHECK-INS</button>
+
+<script type="module">
+  window.revoke = async () => {
+    const id = document.getElementById('guestId').value;
+    await supabase.from('checkins').delete().eq('guest_id', id);
+    alert('Check-in revoked');
+  };
+
+  window.resetAll = async () => {
+    if (!confirm('This will clear ALL check-ins. Continue?')) return;
+    await supabase.from('checkins').delete().neq('guest_id', '');
+    alert('All check-ins cleared');
+  };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>APSG Attendance Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="supabase-client.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 30px; }
+    .card { padding: 20px; border-radius: 10px; margin-bottom: 20px; background: #f8f9fa; }
+    .big { font-size: 2.5rem; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<h1>📊 APSG Live Attendance</h1>
+
+<div class="card">
+  <div>Total Checked-In</div>
+  <div id="total" class="big">0</div>
+</div>
+
+<div class="card">
+  <div>VIP Count</div>
+  <div id="vip" class="big">0</div>
+</div>
+
+<script type="module">
+  const { data } = await supabase
+    .from('attendance_summary')
+    .select('*')
+    .single();
+
+  document.getElementById('total').innerText = data.total_checked_in;
+  document.getElementById('vip').innerText = data.vip_count;
+
+  supabase
+    .channel('dashboard')
+    .on(
+      'postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'checkins' },
+      () => location.reload()
+    )
+    .subscribe();
+</script>
+
+</body>
+</html>

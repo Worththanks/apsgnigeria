@@ -1,180 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APSG Event Check-In Scanner</title>
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- html5-qrcode library (best free web QR scanner) -->
-    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cormorant+Garamond:wght@400;500&family=Roboto&display=swap" rel="stylesheet">
-    <style>
-        body { background: linear-gradient(to bottom, #f8f9fa, #e9f7ef); font-family: 'Roboto', sans-serif; }
-        .header-bg { background: linear-gradient(rgba(0,100,0,0.9), rgba(0,60,0,0.9)); color: white; }
-        .display-1 { font-family: 'Playfair Display', serif; }
-        #reader { width: 100%; max-width: 600px; margin: 20px auto; border: 3px solid #006400; border-radius: 15px; overflow: hidden; }
-        .result { 
-            font-size: 1.3em; padding: 20px; border-radius: 10px; margin: 20px auto; max-width: 600px; text-align: center; 
-            background: linear-gradient(135deg, #f9f7f3 0%, #e8e3d8 100%); /* Ivory to soft gold gradient */
-            box-shadow: 0 30px 80px rgba(212,175,55,0.4), inset 0 0 20px rgba(255,255,255,0.5); /* Enhanced shadow with inner glow */
-            border: 4px double #d4af37; /* Luxurious double gold border */
-            position: relative; overflow: hidden;
-        }
-        .result::before { 
-            content: ''; position: absolute; top: -60%; left: -60%; width: 220%; height: 220%; 
-            background: radial-gradient(circle, rgba(212,175,55,0.15) 0%, rgba(212,175,55,0) 70%); 
-            opacity: 0.6; animation: rotateGlow 25s linear infinite; /* Slower, more elegant rotation */
-            pointer-events: none;
-        }
-        @keyframes rotateGlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .result::after { 
-            content: ''; position: absolute; bottom: -50%; right: -50%; width: 200%; height: 200%; 
-            background: radial-gradient(circle, rgba(0,100,0,0.1) 0%, rgba(0,100,0,0) 70%); /* Subtle green accent glow */
-            opacity: 0.4; animation: rotateGlowReverse 30s linear infinite;
-            pointer-events: none;
-        }
-        @keyframes rotateGlowReverse { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
-        .result i { font-size: 5rem; margin-bottom: 20px; animation: elegantPulse 1.5s infinite; color: #d4af37; text-shadow: 0 0 30px rgba(212,175,55,0.7), 0 0 10px rgba(212,175,55,0.5); }
-        @keyframes elegantPulse { 0% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.25); opacity: 1; } 100% { transform: scale(1); opacity: 0.6; } }
-        .success i { color: #d4af37; }
-        .error i { color: #dc3545; }
-        .guest-info { font-family: 'Playfair Display', serif; font-size: 2rem; color: #006400; margin-bottom: 15px; text-shadow: 0 4px 8px rgba(0,0,0,0.2); letter-spacing: 1.5px; word-spacing: 3px; }
-        .welcome-msg { font-family: 'Cormorant Garamond', serif; font-size: 1.2em; font-style: italic; color: #333; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .checked-in-list { max-width: 800px; margin: 40px auto; }
-        .gold-accent { color: #d4af37; }
-        footer { background: #006400; color: white; }
-        /* Mobile Optimization */
-        @media (max-width: 576px) {
-            .result { padding: 15px; }
-            .result i { font-size: 4rem; }
-            .guest-info { font-size: 1.5rem; }
-            .welcome-msg { font-size: 1rem; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APSG Event Check-In Scanner</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- QR Scanner -->
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module" src="supabase-client.js"></script>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cormorant+Garamond&family=Roboto&display=swap" rel="stylesheet">
+
+<!-- Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+<style>
+body {
+  background: linear-gradient(to bottom, #f8f9fa, #e9f7ef);
+  font-family: 'Roboto', sans-serif;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.header img {
+  max-width: 120px;
+}
+
+.header h1 {
+  font-family: 'Playfair Display', serif;
+  color: #006400;
+  margin-top: 10px;
+}
+
+.header p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.2rem;
+}
+
+#reader {
+  max-width: 600px;
+  margin: 0 auto;
+  border: 3px solid #006400;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.result {
+  max-width: 600px;
+  margin: 25px auto;
+  padding: 25px;
+  text-align: center;
+  border-radius: 12px;
+  border: 4px double #d4af37;
+  background: linear-gradient(135deg, #f9f7f3, #e8e3d8);
+  box-shadow: 0 25px 60px rgba(212,175,55,0.35);
+}
+
+.result i {
+  font-size: 4.5rem;
+  margin-bottom: 15px;
+}
+
+.success i { color: #d4af37; }
+.error i { color: #dc3545; }
+
+.vip-highlight {
+  animation: vipGlow 1.8s ease-in-out infinite;
+}
+
+@keyframes vipGlow {
+  0% { box-shadow: 0 0 10px rgba(212,175,55,.4); }
+  50% { box-shadow: 0 0 40px rgba(212,175,55,.9); }
+  100% { box-shadow: 0 0 10px rgba(212,175,55,.4); }
+}
+
+.guest-info {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  color: #006400;
+}
+
+.welcome-msg {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+}
+
+footer {
+  background: #006400;
+  color: white;
+  text-align: center;
+  padding: 12px;
+  margin-top: 50px;
+}
+</style>
 </head>
+
 <body>
-    
 
-    <div class="container my-5">
-        <div class="text-center mb-4">
-            <p class="fs-5">Point your device camera at the guest's QR code.</p>
-        </div>
+<audio id="vipSound" src="assets/sounds/vip-chime.mp3" preload="auto"></audio>
 
-        <!-- QR Scanner -->
-        <div id="reader"></div>
+<div class="container my-5">
 
-        <!-- Luxurious Card Display -->
-        <div id="result" class="result d-none">
-            <i id="resultIcon" class="me-2"></i>
-            <span id="resultTitle" class="fs-3"></span>
-            <p class="guest-info" id="guestInfo"></p>
-            <p class="welcome-msg" id="welcomeMsg"></p>
-        </div>
+<div class="header">
+  <img src="assets/images/apsg.png" alt="APSG Logo">
+  <h1>APC Progressive Support Group</h1>
+  <p>2027 and Beyond</p>
+</div>
 
-        <!-- Checked-In List -->
-        <h2 class="text-center display-5 mb-4 gold-accent" style="font-family: 'Playfair Display', serif;">Checked-In Guests</h2>
-        <div class="checked-in-list">
-            <ul id="checkedInList" class="list-group"></ul>
-            <p class="text-center mt-3 text-muted" id="noCheckIns">No guests checked in yet.</p>
-        </div>
-    </div>
+<p class="text-center fs-5 mb-3">
+  Scan guest QR code to validate entry
+</p>
 
-    
-    <script>
-        // Valid guests (add ALL your guests here in this format)
-        const validGuests = [
-            "Ìyáàfin Oluwafunmilayo Adejoke Ogunba-Koleowo Director-General, APC Progressive Support Group (APSG) Host, 2027 and Beyond",
-            "Otunba Yeye Irmgard Modupe Okenla Grand matron VIP Guest Of Honour 2027 and Beyond",
-            // Add more guests exactly as they appear in the QR data, e.g.:
-            // "Hon. Mrs. Example Guest Title"
-        ];
+<div id="reader"></div>
 
-        // Load checked-in from localStorage (persists per device/browser)
-        let checkedIn = JSON.parse(localStorage.getItem('apsgCheckedIn') || '[]');
-        const listElement = document.getElementById('checkedInList');
-        const noCheckInsElement = document.getElementById('noCheckIns');
+<div id="result" class="result d-none">
+  <i id="resultIcon"></i>
+  <h3 id="resultTitle"></h3>
+  <p id="guestInfo" class="guest-info"></p>
+  <p id="welcomeMsg" class="welcome-msg"></p>
+</div>
 
-        function updateCheckedInList() {
-            listElement.innerHTML = '';
-            if (checkedIn.length === 0) {
-                noCheckInsElement.classList.remove('d-none');
-                return;
-            }
-            noCheckInsElement.classList.add('d-none');
-            checkedIn.forEach(item => {
-                const li = document.createElement('li');
-                li.className = 'list-group-item d-flex justify-content-between align-items-center';
-                li.innerHTML = `<strong>${item.name}</strong><span class="badge bg-success rounded-pill">${item.time}</span>`;
-                listElement.appendChild(li);
-            });
-        }
-        updateCheckedInList();
+</div>
 
-        // QR Scanner Setup
-        const html5QrCode = new Html5Qrcode("reader");
-        const config = { fps: 10, qrbox: { width: 300, height: 300 } };
+<footer>
+APSG Event Check-In System © 2026
+</footer>
 
-        html5QrCode.start(
-            { facingMode: "environment" }, // Use rear camera on mobile
-            config,
-            (decodedText, decodedResult) => {
-                // Expected format: "Access Granted: [Guest Info] – APC Progressive Support Group"
-                if (decodedText.startsWith("Access Granted:")) {
-                    const guestInfo = decodedText.replace("Access Granted:", "").replace(" – APC Progressive Support Group", "").trim();
+<script type="module">
+import supabase from './supabase-client.js';
 
-                    if (validGuests.some(g => g.includes(guestInfo))) {
-                        // Valid guest
-                        document.getElementById('resultIcon').className = 'fas fa-check-circle me-2';
-                        document.getElementById('resultTitle').innerText = 'Access Granted';
-                        document.getElementById('guestInfo').innerText = guestInfo;
-                        document.getElementById('welcomeMsg').innerText = 'Welcome to the APSG Inauguration!';
-                        document.getElementById('result').classList.add('success');
-                        document.getElementById('result').classList.remove('error');
+const validGuests = {
+  "APSG-2026-000001": {
+    name: "Ìyáàfin Oluwafunmilayo Adejoke Ogunba-Koleowo",
+    title: "Director-General",
+    role: "Host",
+    category: "VIP"
+  },
+  "APSG-2026-000002": {
+    name: "Otunba Yeye Irmgard Modupe Okenla",
+    title: "Grand Matron",
+    role: "Guest of Honour",
+    category: "VIP"
+  }
+};
 
-                        // Log check-in if not already
-                        if (!checkedIn.some(item => item.name.includes(guestInfo))) {
-                            const now = new Date().toLocaleTimeString('en-NG');
-                            checkedIn.push({ name: guestInfo, time: now });
-                            localStorage.setItem('apsgCheckedIn', JSON.stringify(checkedIn));
-                            updateCheckedInList();
-                        }
-                    } else {
-                        // Invalid guest
-                        document.getElementById('resultIcon').className = 'fas fa-times-circle me-2';
-                        document.getElementById('resultTitle').innerText = 'Invalid QR Code';
-                        document.getElementById('guestInfo').innerText = 'Guest not recognized.';
-                        document.getElementById('welcomeMsg').innerText = '';
-                        document.getElementById('result').classList.add('error');
-                        document.getElementById('result').classList.remove('success');
-                    }
-                } else {
-                    // Invalid format
-                    document.getElementById('resultIcon').className = 'fas fa-exclamation-circle me-2';
-                    document.getElementById('resultTitle').innerText = 'Invalid Format';
-                    document.getElementById('guestInfo').innerText = 'Not a valid APSG access QR.';
-                    document.getElementById('welcomeMsg').innerText = '';
-                    document.getElementById('result').classList.add('error');
-                    document.getElementById('result').classList.remove('success');
-                }
+const scanner = new Html5Qrcode("reader");
+const vipSound = document.getElementById("vipSound");
 
-                document.getElementById('result').classList.remove('d-none');
-                // Stop scanner temporarily (resume after 3 seconds)
-                html5QrCode.stop().then(() => {
-                    setTimeout(() => {
-                        html5QrCode.start({ facingMode: "environment" }, config, arguments.callee);
-                        document.getElementById('result').classList.add('d-none');
-                    }, 3000);
-                });
-            },
-            (errorMessage) => {
-                // Scan error (optional logging)
-                // console.warn(errorMessage);
-            }
-        ).catch(err => {
-            alert("Camera access denied or not available. Please allow camera permission.");
-        });
-    </script>
+function showResult(title, guest, success) {
+  const box = document.getElementById("result");
+  box.classList.remove("vip-highlight");
+
+  document.getElementById("resultIcon").className =
+    success ? "fas fa-check-circle success" : "fas fa-times-circle error";
+
+  document.getElementById("resultTitle").innerText = title;
+  document.getElementById("guestInfo").innerText =
+    guest ? `${guest.name} — ${guest.title}` : "";
+
+  document.getElementById("welcomeMsg").innerText =
+    success ? `Welcome, ${guest.role}.` : "";
+
+  if (guest && guest.category === "VIP" && success) {
+    vipSound.play();
+    box.classList.add("vip-highlight");
+  }
+
+  box.classList.remove("d-none");
+}
+
+scanner.start(
+  { facingMode: "environment" },
+  { fps: 10, qrbox: 300 },
+  async text => {
+    const guestId = text.trim();
+
+    if (!validGuests[guestId]) {
+      showResult("Invalid QR Code", null, false);
+      return;
+    }
+
+    const { data: existing } = await supabase
+      .from("checkins")
+      .select("guest_id")
+      .eq("guest_id", guestId)
+      .single();
+
+    if (existing) {
+      showResult("Already Checked In", validGuests[guestId], false);
+      return;
+    }
+
+    await supabase.from("checkins").insert([{
+      guest_id: guestId,
+      name: validGuests[guestId].name,
+      category: validGuests[guestId].category
+    }]);
+
+    showResult("Access Granted", validGuests[guestId], true);
+
+    scanner.stop().then(() => {
+      setTimeout(() => {
+        document.getElementById("result").classList.add("d-none");
+        scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: 300 }, arguments.callee);
+      }, 3000);
+    });
+  }
+).catch(() => alert("Camera permission required."));
+</script>
+
 </body>
 </html>
