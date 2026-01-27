@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content>
+    <title>Member Details - APSG Admin</title>
+    
+    <!-- Favicon (added multiple sizes for better mobile/browser support without affecting colors) -->
+  <link rel="icon" href="/assets/images/apsg.png" sizes="any" />
+  <link rel="apple-touch-icon" href="/assets/images/apsg.png" />
+  
+    <script>
+        if (localStorage.getItem("daynight-theme") === "carbon") {
+            document.documentElement.classList.add("carbon");
+        }
+    </script>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<link rel="icon" href="/assets/images/apsg.png" type="image/png">
+
+<style>
+    :root {
+        --primary: #3dd82f; --primary-light: #eef2ff; --gray-900: #000000; --radius: 12px; --shadow-md: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .page-header { background: linear-gradient(135deg, #09b104 0%, #d85c36 100%); color: white; border-radius: var(--radius); padding: 2.5rem 1.5rem; margin-bottom: 2rem; }
+    .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+    .detail-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow-md); padding: 1.5rem; }
+    .detail-item { display: flex; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #eee; }
+    .detail-item:last-child { border-bottom: none; }
+    .detail-icon { width: 50px; height: 50px; background: var(--primary-light); color: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .detail-label { font-weight: 600; min-width: 130px; color: var(--gray-900); }
+    .document-preview { width: 100%; height: 350px; object-fit: contain; border-radius: var(--radius); box-shadow: var(--shadow-md); cursor: pointer; transition: transform 0.3s; }
+    .document-preview:hover { transform: scale(1.03); }
+    .btn-large { background: var(--primary); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; }
+    @media (max-width: 768px) { .detail-grid { grid-template-columns: 1fr; } .detail-item { flex-direction: column; align-items: flex-start; } }
+</style>
+
+<!-- Navigation (same as members.html) -->
+<!-- ... (copy the full nav and mobile menu from members.html above for consistency) ... -->
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay"></div>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <div class="mobile-menu-header">
+            <a href="dashboard.html" class="logo">
+                <img src="/assets/images/apsg.png" alt="APSG Logo">
+                APSG Admin
+            </a>
+            <button class="mobile-menu-close" onclick="closeMobileMenu()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="mobile-menu-nav">
+            <a href="dashboard.html">
+                <i class="fas fa-gauge-high"></i>
+                Dashboard
+            </a>
+            <a href="members.html" class="active">
+                <i class="fas fa-users"></i>
+                Members
+            </a>
+        </nav>
+        <div class="mobile-menu-footer">
+            <a class="mobile-logout-btn" style="cursor:pointer;">
+                <i class="fas fa-arrow-right-from-bracket"></i>
+                Logout
+            </a>
+        </div>
+    </div>
+  
+<div class="app-container">
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="dashboard.html" class="logo">
+                 
+                    APSG Admin
+                </a>
+                    <div class="nav-menu">
+                        <div class="nav-item">
+                            <a href="dashboard.html" class="nav-link ">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="7" rx="1"/>
+                                    <rect x="14" y="3" width="7" height="7" rx="1"/>
+                                    <rect x="3" y="14" width="7" height="7" rx="1"/>
+                                    <rect x="14" y="14" width="7" height="7" rx="1"/>
+                                </svg>
+                                Dashboard
+                            </a>
+                        </div>
+                            </div>
+                            
+                        <div class="nav-item">
+                            <a href="members.html" class="nav-link ">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4-4v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                                Members
+                            </a>
+                            
+                        </div>
+                        
+                 
+               <div class="nav-item">
+            <a href="members.html" class="text-decoration-none d-inline-flex align-items-center gap-2 text-muted">
+                <i class="fas fa-arrow-left"></i> Back to Members List
+            </a>
+        </div>
+                </div>
+                <div class="nav-right">
+                    <div class="theme-toggle">
+                        <button class="theme-btn theme-btn-snow active" onclick="setTheme('snow')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="5"/>
+                                <line x1="12" y1="1" x2="12" y2="3"/>
+                                <line x1="12" y1="21" x2="12" y2="23"/>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                                <line x1="1" y1="12" x2="3" y2="12"/>
+                                <line x1="21" y1="12" x2="23" y2="12"/>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                            </svg>
+                        </button>
+                        <button class="theme-btn theme-btn-carbon" onclick="setTheme('carbon')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <button class="btn-logout" style="cursor:pointer;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+    <main class="main-content">
+        
+
+        <div class="page-header text-center text-md-start">
+            <h1 class="page-title">Member Details</h1>
+            <p class="fs-3 fw-bold" id="memberName">Loading...</p>
+        </div>
+
+        <div class="detail-grid">
+            <div class="detail-card">
+                <h3 class="mb-4">Personal Information</h3>
+                <div class="detail-item"><div class="detail-icon"><i class="fas fa-user"></i></div><div><div class="detail-label">Full Name</div><div id="detailName">-</div></div></div>
+                <div class="detail-item"><div class="detail-icon"><i class="fas fa-phone"></i></div><div><div class="detail-label">Phone</div><div id="detailPhone">-</div></div></div>
+                <div class="detail-item"><div class="detail-icon"><i class="fas fa-map-marker-alt"></i></div><div><div class="detail-label">State</div><div id="detailState">-</div></div></div>
+                <div class="detail-item"><div class="detail-icon"><i class="fas fa-building"></i></div><div><div class="detail-label">LGA</div><div id="detailLga">-</div></div></div>
+                <div class="detail-item"><div class="detail-icon"><i class="fas fa-home"></i></div><div><div class="detail-label">Ward</div><div id="detailWard">-</div></div></div>
+                <div class="detail-item"><div class="detail-icon"><i class="fas fa-calendar"></i></div><div><div class="detail-label">Date</div><div id="detailDate">-</div></div></div>
+            </div>
+
+            <div class="detail-card">
+                <h3 class="mb-4">Verification Documents</h3>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <h5>PVC Document</h5>
+                            <p><strong>PVC #:</strong> <span id="detailPvc">-</span></p>
+                            <img src="" alt="PVC Preview" class="document-preview" id="pvcPreview" onclick="openPreview(this.src, this.dataset.type)">
+                            <button class="btn btn-large mt-3" onclick="openPreview(document.getElementById('pvcPreview').src, document.getElementById('pvcPreview').dataset.type)">
+                                <i class="fas fa-eye"></i> View Full Size
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <h5>APC Membership Card</h5>
+                            <p><strong>APC Card #:</strong> <span id="detailApc">-</span></p>
+                            <img src="" alt="APC Preview" class="document-preview" id="apcPreview" onclick="openPreview(this.src, this.dataset.type)">
+                            <button class="btn btn-large mt-3" onclick="openPreview(document.getElementById('apcPreview').src, document.getElementById('apcPreview').dataset.type)">
+                                <i class="fas fa-eye"></i> View Full Size
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="previewTitle">Document Preview</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center p-0">
+                <iframe id="modalFrame" style="width:100%;height:80vh;border:none;display:none;"></iframe>
+                <img id="modalImage" src="" class="img-fluid" style="max-height:80vh;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/js/supabase-clients.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    async function loadMember() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const memberId = urlParams.get('id');
+        if (!memberId) {
+            document.body.innerHTML = '<div class="text-center mt-5"><h3>No member ID provided</h3></div>';
+            return;
+        }
+
+        const { data: member, error } = await supabaseClient.from('members').select('*').eq('id', memberId).single();
+        if (error || !member) {
+            document.body.innerHTML = '<div class="text-center mt-5"><h3>Member not found</h3></div>';
+            return;
+        }
+
+        document.getElementById('memberName').textContent = member.full_name;
+        document.getElementById('detailName').textContent = member.full_name;
+        document.getElementById('detailPhone').textContent = member.phone;
+        document.getElementById('detailState').textContent = member.state;
+        document.getElementById('detailLga').textContent = member.lga;
+        document.getElementById('detailWard').textContent = member.ward;
+        document.getElementById('detailDate').textContent = new Date(member.created_at).toLocaleDateString('en-NG');
+        document.getElementById('detailPvc').textContent = member.pvc_number || '-';
+        document.getElementById('detailApc').textContent = member.apc_card_number || '-';
+
+        // PVC
+        if (member.pvc_upload_path) {
+            const pvcUrl = supabaseClient.storage.from('uploads').getPublicUrl(member.pvc_upload_path).data.publicUrl;
+            const isPdfPvc = member.pvc_upload_path.toLowerCase().endsWith('.pdf');
+            document.getElementById('pvcPreview').src = isPdfPvc ? '/assets/images/pdf-placeholder.png' : pvcUrl;
+            document.getElementById('pvcPreview').dataset.type = isPdfPvc ? 'pdf' : 'image';
+            document.getElementById('pvcPreview').onclick = () => openPreview(pvcUrl, isPdfPvc ? 'pdf' : 'image');
+        }
+
+        // APC
+        if (member.apc_upload_path) {
+            const apcUrl = supabaseClient.storage.from('uploads').getPublicUrl(member.apc_upload_path).data.publicUrl;
+            const isPdfApc = member.apc_upload_path.toLowerCase().endsWith('.pdf');
+            document.getElementById('apcPreview').src = isPdfApc ? '/assets/images/pdf-placeholder.png' : apcUrl;
+            document.getElementById('apcPreview').dataset.type = isPdfApc ? 'pdf' : 'image';
+            document.getElementById('apcPreview').onclick = () => openPreview(apcUrl, isPdfApc ? 'pdf' : 'image');
+        }
+    }
+
+    function openPreview(url, type) {
+        const frame = document.getElementById('modalFrame');
+        const img = document.getElementById('modalImage');
+        document.getElementById('previewTitle').textContent = type === 'pdf' ? 'PDF Document' : 'Image Preview';
+        if (type === 'pdf') {
+            frame.src = url;
+            frame.style.display = 'block';
+            img.style.display = 'none';
+        } else {
+            img.src = url;
+            img.style.display = 'block';
+            frame.style.display = 'none';
+            frame.src = '';
+        }
+        new bootstrap.Modal(document.getElementById('previewModal')).show();
+    }
+
+    document.addEventListener('DOMContentLoaded', loadMember);
+</script>
+</body>
+</html>

@@ -2,83 +2,339 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Scanner</title>
-    <!-- Load the html5-qrcode library from CDN -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>APSG Event Guest Validation - 12 February 2027</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- html5-qrcode -->
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    
     <style>
         body {
-            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+            font-family: 'Roboto', sans-serif;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+        .container {
+            padding: 1rem;
+            max-width: 100%;
+        }
+        .header {
             text-align: center;
-            padding: 20px;
-            background: #f0f0f0;
+            margin-bottom: 1rem;
+        }
+        .header img {
+            width: 110px;
+            border-radius: 50%;
+            border: 3px solid #10b981;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #10b981;
+            margin: 0.6rem 0 0.3rem;
+        }
+        .header p, .header h2 {
+            font-size: 1rem;
+            color: #94a3b8;
+            margin: 0.2rem 0;
+        }
+        .scanner-container {
+            position: relative;
+            width: 100%;
+            max-width: 100vw;
+            margin: 1rem auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
         }
         #reader {
             width: 100%;
-            max-width: 500px;
-            margin: 20px auto;
-            border: 2px solid #333;
-            border-radius: 10px;
-            overflow: hidden;
+            height: auto;
+            display: block;
+        }
+        .scan-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            box-sizing: border-box;
+        }
+        .corner {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-color: #10b981;
+            border-style: solid;
+        }
+        .top-left { top: 15%; left: 15%; border-width: 6px 0 0 6px; }
+        .top-right { top: 15%; right: 15%; border-width: 6px 6px 0 0; }
+        .bottom-left { bottom: 15%; left: 15%; border-width: 0 0 6px 6px; }
+        .bottom-right { bottom: 15%; right: 15%; border-width: 0 6px 6px 0; }
+        .scan-hint {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.6);
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            color: #fff;
+            white-space: nowrap;
         }
         #result {
-            margin-top: 20px;
-            font-size: 18px;
-            word-break: break-all;
+            padding: 0 1rem;
+            min-height: 180px;
         }
-        button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
+        .guest-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 1.8rem 1.2rem;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            animation: fadeIn 0.7s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .guest-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            color: #34d399;
+        }
+        .access-badge {
+            font-size: 1.8rem;
+            padding: 0.7rem 1.8rem;
+        }
+        .torch-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            font-size: 1.8rem;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .controls {
+            margin: 1rem 0;
+        }
+        .btn-lg {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            min-height: 56px;
+            width: 100%;
+            margin-bottom: 0.8rem;
+        }
+
+        @media (max-width: 480px) {
+            .header h1 { font-size: 1.6rem; }
+            .guest-name { font-size: 2.1rem; }
+            .access-badge { font-size: 1.6rem; }
+            .corner { width: 40px; height: 40px; border-width: 5px; }
         }
     </style>
 </head>
 <body>
-    <h1>QR Code Scanner</h1>
-    <p>Point your camera at a QR code. Works best on mobile devices or laptops with a webcam.</p>
-    
-    <div id="reader"></div>
-    
-    <div id="result"></div>
-    
-    <button id="startBtn">Start Scanning</button>
-    <button id="stopBtn" style="display:none;">Stop Scanning</button>
+    <audio id="vipSound" src="assets/sounds/vip-chime.mp3" preload="auto"></audio>
+
+    <div class="container">
+        <div class="header">
+            <img src="assets/images/apsg.png" alt="APSG Logo">
+            <h1>APC Progressive Support Group</h1>
+            <p>2027 and Beyond</p>
+            <h2>Event: 12 February 2027</h2>
+        </div>
+
+        <p class="text-center text-light mb-3 fw-light">Scan guest QR code to validate entry</p>
+
+        <div class="scanner-container">
+            <div id="reader"></div>
+            <div class="scan-overlay">
+                <div class="corner top-left"></div>
+                <div class="corner top-right"></div>
+                <div class="corner bottom-left"></div>
+                <div class="corner bottom-right"></div>
+                <div class="scan-hint">Align QR code in frame</div>
+            </div>
+            <button id="torchBtn" class="torch-btn" style="display:none;">💡</button>
+        </div>
+
+        <div id="result" class="text-center">
+            <p class="ready-text text-light fs-5 fw-light">Start scanning to validate guests. Ready for next guest.</p>
+        </div>
+
+        <div class="controls text-center">
+            <button id="startBtn" class="btn btn-outline-light btn-lg shadow">Start Camera Scanner</button>
+            <button id="stopBtn" class="btn btn-outline-danger btn-lg" style="display:none;">Stop Scanner</button>
+        </div>
+
+        <div class="text-center text-light opacity-75 mt-3">
+            <h6>Or upload QR code image</h6>
+            <input type="file" id="qrInputFile" accept="image/*" class="form-control w-75 mx-auto">
+        </div>
+    </div>
 
     <script>
         const scanner = new Html5Qrcode("reader");
         const resultDiv = document.getElementById("result");
         const startBtn = document.getElementById("startBtn");
         const stopBtn = document.getElementById("stopBtn");
+        const torchBtn = document.getElementById("torchBtn");
+        const vipSound = document.getElementById("vipSound");
+
+        let isTorchOn = false;
+        let runningTrack = null;
+
+        function getQrbox(viewfinderWidth, viewfinderHeight) {
+            const size = Math.min(viewfinderWidth, viewfinderHeight) * 0.7;
+            return { width: Math.floor(size), height: Math.floor(size) };
+        }
 
         const config = {
-            fps: 10,
-            qrbox: { width: 250, height: 250 },
+            fps: 15,
+            qrbox: getQrbox,
             aspectRatio: 1.0,
-            // Prefer back camera on mobile
-            facingMode: "environment"
+            facingMode: "environment",
+            disableFlip: true
         };
 
-        function onScanSuccess(decodedText, decodedResult) {
-            console.log(`Scan result: ${decodedText}`, decodedResult);
-            
-            // Display the result
-            resultDiv.innerHTML = `
-                <strong>Scanned Result:</strong><br>
-                <a href="${decodedText}" target="_blank">${decodedText}</a>
-            `;
-            
-            // Optional: Stop scanning after first successful scan
-            scanner.stop().then(() => {
-                startBtn.style.display = "block";
-                stopBtn.style.display = "none";
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function triggerConfetti() {
+            confetti({
+                particleCount: 100,
+                spread: 90,
+                origin: { y: 0.7 },
+                colors: ['#10b981', '#34d399', '#6ee7b7', '#ffffff']
             });
         }
 
-        function onScanError(error) {
-            // Uncomment if you want to see errors in console
-            // console.warn(`QR scan error: ${error}`);
+        function vibrate() {
+            if (navigator.vibrate) {
+                navigator.vibrate(200);
+            }
         }
+
+        function showSuccess(decodedText) {
+            vipSound.play().catch(() => {});
+            triggerConfetti();
+            vibrate();
+
+            let name = "Distinguished Guest";
+            let detailsContent = "";
+            let extraContent = "";
+            let photoUrl = null;
+
+            const trimmedText = decodedText.trim();
+            const isUrl = /^https?:\/\//i.test(trimmedText);
+
+            if (isUrl) {
+                name = "Guest with External Profile";
+                extraContent = `<div class="mt-4"><a href="${trimmedText}" target="_blank" class="btn btn-outline-light btn-lg">View Profile / Ticket</a></div>`;
+            } else {
+                try {
+                    const data = JSON.parse(trimmedText);
+                    name = data.name || data.Name || data.fullName || data.full_name || name;
+                    if (data.photo || data.image) photoUrl = data.photo || data.image;
+
+                    detailsContent = '<dl class="row text-start details-list mt-3">';
+                    Object.keys(data).forEach(key => {
+                        if (!['name','Name','fullName','full_name','photo','image'].includes(key)) {
+                            detailsContent += `<dt class="col-5 text-light opacity-75">${escapeHtml(key.charAt(0).toUpperCase() + key.slice(1))}</dt>
+                                               <dd class="col-7">${escapeHtml(data[key])}</dd>`;
+                        }
+                    });
+                    detailsContent += '</dl>';
+                } catch (e) {
+                    const lines = trimmedText.split('\n').map(l => l.trim()).filter(l => l);
+                    if (lines.length > 0) {
+                        name = lines[0];
+                        if (lines.length > 1) {
+                            detailsContent = '<ul class="list-unstyled text-start mt-3">';
+                            lines.slice(1).forEach(line => {
+                                detailsContent += `<li class="mb-2 fs-4">${escapeHtml(line)}</li>`;
+                            });
+                            detailsContent += '</ul>';
+                        }
+                    }
+                }
+            }
+
+            const photoHtml = photoUrl ? `<img src="${photoUrl}" class="rounded-circle mb-3" style="width:120px;height:120px;object-fit:cover;border:4px solid #10b981;">` : '';
+
+            resultDiv.innerHTML = `
+                <div class="guest-card">
+                    <div class="text-center">
+                        ${photoHtml}
+                        <div class="badge access-badge bg-success">ACCESS GRANTED</div>
+                        <h2 class="guest-name">${escapeHtml(name)}</h2>
+                        <p class="lead fs-5 mb-4 fw-light">Welcome to the Event<br><em>12 February 2027</em></p>
+                        ${detailsContent}
+                        ${extraContent}
+                        <div class="mt-4">
+                            <button id="nextGuestBtn" class="btn btn-outline-light btn-lg">Ready for Next Guest</button>
+                        </div>
+                        <p class="mt-3 text-muted small">Checked in: ${new Date().toLocaleTimeString()}</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('nextGuestBtn')?.addEventListener('click', () => {
+                resultDiv.innerHTML = '<p class="ready-text text-light fs-5 fw-light">Ready for next guest.</p>';
+            });
+
+            setTimeout(() => {
+                if (resultDiv.querySelector('#nextGuestBtn')) {
+                    resultDiv.innerHTML = '<p class="ready-text text-light fs-5 fw-light">Ready for next guest.</p>';
+                }
+            }, 30000);
+        }
+
+        function onScanSuccess(decodedText) {
+            showSuccess(decodedText);
+        }
+
+        function onScanError() {}
+
+        // Torch toggle
+        torchBtn.addEventListener('click', () => {
+            if (!runningTrack) return;
+            const capabilities = runningTrack.getCapabilities();
+            if ('torch' in capabilities) {
+                isTorchOn = !isTorchOn;
+                runningTrack.applyConstraints({ advanced: [{ torch: isTorchOn }] });
+                torchBtn.textContent = isTorchOn ? '🔆' : '💡';
+            }
+        });
 
         startBtn.addEventListener("click", () => {
             scanner.start(
@@ -89,9 +345,18 @@
             ).then(() => {
                 startBtn.style.display = "none";
                 stopBtn.style.display = "block";
-                resultDiv.innerHTML = "Scanning...";
+                resultDiv.innerHTML = '<p class="ready-text text-light fs-5 fw-light">Scanning... Align QR code in frame.</p>';
+
+                // Get track and check torch support
+                runningTrack = scanner.getRunningTrack();
+                if (runningTrack) {
+                    const capabilities = runningTrack.getCapabilities();
+                    if ('torch' in capabilities) {
+                        torchBtn.style.display = "block";
+                    }
+                }
             }).catch(err => {
-                resultDiv.innerHTML = `<strong>Error:</strong> ${err}<br>Make sure you allow camera access.`;
+                resultDiv.innerHTML = `<div class="alert alert-danger p-3">Error: ${err}<br>Allow camera access.</div>`;
             });
         });
 
@@ -99,11 +364,26 @@
             scanner.stop().then(() => {
                 startBtn.style.display = "block";
                 stopBtn.style.display = "none";
-                resultDiv.innerHTML = "Scanner stopped.";
+                torchBtn.style.display = "none";
+                isTorchOn = false;
+                resultDiv.innerHTML = '<p class="ready-text text-light fs-5 fw-light">Scanner stopped. Ready for next guest.</p>';
             });
+        });
+
+        document.getElementById('qrInputFile').addEventListener('change', e => {
+            if (!e.target.files.length) return;
+            const file = e.target.files[0];
+            resultDiv.innerHTML = '<p class="ready-text text-light fs-5 fw-light">Processing image...</p>';
+            scanner.scanFile(file, true)
+                .then(decodedText => onScanSuccess(decodedText))
+                .catch(err => {
+                    resultDiv.innerHTML = `<div class="alert alert-danger p-3">Scan error: ${err}</div>`;
+                });
         });
     </script>
 
-    <p><small>Note: Camera access requires HTTPS or localhost. On mobile, open this page in your browser and allow camera permission.</small></p>
+    <div class="text-center text-light small opacity-75 fixed-bottom pb-3">
+        <p>Use back camera • Good lighting • Hold steady</p>
+    </div>
 </body>
 </html>
