@@ -272,23 +272,37 @@
                             <div class="text-center">
                                 <p class="font-medium mb-2">PVC Document</p>
                                 <p class="text-xs text-gray-600 mb-3"><strong>Number:</strong> <span id="detailPvc">-</span></p>
-                                <img src="/assets/images/apsg.png" alt="PVC Preview" class="upload-thumb mx-auto mb-4" id="pvcPreview">
+                                <img src="/assets/images/pdf-placeholder.png" alt="PVC Preview" class="upload-thumb mx-auto mb-4" id="pvcPreview">
                                 <div class="flex justify-center gap-3 mb-4">
                                     <button class="action-btn bg-green-600 text-white hover:bg-green-700" id="pvcViewBtn" disabled>View</button>
                                     <button class="action-btn bg-emerald-600 text-white hover:bg-emerald-700 hidden" id="pvcDownloadBtn">Download</button>
                                 </div>
-                                
+                                <div class="upload-area">
+                                    <p class="text-sm font-medium text-gray-700 mb-3">Upload / Replace PVC Document</p>
+                                    <input type="file" id="pvcFileInput" accept="image/*,application/pdf" class="hidden">
+                                    <button type="button" onclick="document.getElementById('pvcFileInput').click()" class="action-btn bg-indigo-600 text-white hover:bg-indigo-700 mb-2">Select File</button>
+                                    <p id="pvcFileName" class="text-xs text-gray-500 mb-3">No file chosen</p>
+                                    <button id="pvcUploadBtn" class="action-btn bg-green-600 text-white hover:bg-green-700" disabled>Upload</button>
+                                    <p id="pvcStatus" class="mt-3 text-xs font-medium"></p>
+                                </div>
                             </div>
                             <!-- APC Card -->
                             <div class="text-center">
                                 <p class="font-medium mb-2">APC Card</p>
                                 <p class="text-xs text-gray-600 mb-3"><strong>Number:</strong> <span id="detailApc">-</span></p>
-                                <img src="/assets/images/apsg.png" alt="APC Preview" class="upload-thumb mx-auto mb-4" id="apcPreview">
+                                <img src="/assets/images/pdf-placeholder.png" alt="APC Preview" class="upload-thumb mx-auto mb-4" id="apcPreview">
                                 <div class="flex justify-center gap-3 mb-4">
                                     <button class="action-btn bg-green-600 text-white hover:bg-green-700" id="apcViewBtn" disabled>View</button>
                                     <button class="action-btn bg-emerald-600 text-white hover:bg-emerald-700 hidden" id="apcDownloadBtn">Download</button>
                                 </div>
-                                
+                                <div class="upload-area">
+                                    <p class="text-sm font-medium text-gray-700 mb-3">Upload / Replace APC Card</p>
+                                    <input type="file" id="apcFileInput" accept="image/*,application/pdf" class="hidden">
+                                    <button type="button" onclick="document.getElementById('apcFileInput').click()" class="action-btn bg-indigo-600 text-white hover:bg-indigo-700 mb-2">Select File</button>
+                                    <p id="apcFileName" class="text-xs text-gray-500 mb-3">No file chosen</p>
+                                    <button id="apcUploadBtn" class="action-btn bg-green-600 text-white hover:bg-green-700" disabled>Upload</button>
+                                    <p id="apcStatus" class="mt-3 text-xs font-medium"></p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -353,32 +367,16 @@
         async function loadMember() {
             try {
                 const params = new URLSearchParams(location.search);
-                const memberId = params.get('id');
-                const regNumber = params.get('reg');
+                const id = params.get('id');
+                if (!id) throw new Error('No member ID');
 
-                let member;
+                const { data: member, error } = await supabaseClient
+                    .from('members')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
 
-                if (regNumber) {
-                    const { data, error } = await supabaseClient
-                        .from('members')
-                        .select('*')
-                        .eq('reg_number', regNumber)
-                        .single();
-
-                    if (error || !data) throw new Error('Member not found by registration number');
-                    member = data;
-                } else if (memberId) {
-                    const { data, error } = await supabaseClient
-                        .from('members')
-                        .select('*')
-                        .eq('id', memberId)
-                        .single();
-
-                    if (error || !data) throw new Error('Member not found by ID');
-                    member = data;
-                } else {
-                    throw new Error('No member ID or registration number provided');
-                }
+                if (error || !member) throw new Error('Member not found');
 
                 currentMember = member;
 
@@ -430,6 +428,7 @@
                 return;
             }
 
+            // Use public URL (for public bucket) or switch to signed if private
             const { data: { publicUrl } } = supabaseClient.storage.from('uploads').getPublicUrl(uploadPath);
 
             const isPdf = uploadPath.toLowerCase().endsWith('.pdf');
@@ -473,6 +472,7 @@
             statusEl.className = 'mt-3 text-xs font-medium text-gray-600';
             uploadBtn.disabled = true;
 
+            // Unique filename to avoid conflicts
             const ext = file.name.split('.').pop();
             const filename = `${currentMember.id}_${Date.now()}.${ext}`;
             const path = `${type}/${filename}`;
@@ -489,6 +489,7 @@
                 return;
             }
 
+            // Update member record
             const { error: updateError } = await supabaseClient
                 .from('members')
                 .update({ [`${type}_upload_path`]: path })
@@ -504,8 +505,10 @@
             statusEl.textContent = 'Uploaded successfully!';
             statusEl.className = 'mt-3 text-xs font-medium text-green-600';
 
+            // Refresh preview
             await setupDocument(path, type);
 
+            // Reset input
             input.value = '';
             document.getElementById(`${type}FileName`).textContent = 'No file chosen';
             uploadBtn.disabled = true;
