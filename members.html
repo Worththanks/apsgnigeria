@@ -4,313 +4,786 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Members - APSG Admin</title>
-    
-    <!-- Favicon (added multiple sizes for better mobile/browser support without affecting colors) -->
-  <link rel="icon" href="/assets/images/apsg.png" sizes="any" />
-  <link rel="apple-touch-icon" href="/assets/images/apsg.png" />
-  
-    <!-- Prevent flash of wrong theme -->
-    <script>
-        if (localStorage.getItem("daynight-theme") === "carbon") {
-            document.documentElement.classList.add("carbon");
-        }
-    </script>
-    <link rel="stylesheet" href="/assets/css/styles.css">
-    
-    <!-- Bootstrap CSS -->
+    <link rel="icon" href="/assets/images/apsg.png" sizes="any" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    
-    <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.css">
-    
-    <!-- Supabase CDN -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.4.0/css/fixedHeader.dataTables.min.css"> <!-- Added for FixedHeader -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Additional for DataTables advanced exports -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <style>
+  /* ===============================
+   HOVER-SAFE INTERACTIONS
+=============================== */
+@media (hover: hover) {
+  .zoom-btn:hover {
+    background-color: #f3f4f6;
+  }
+
+  .reg-number:hover {
+    background: linear-gradient(135deg, #bbf7d0, #86efac);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(34,197,94,0.15);
+  }
+
+  .reg-number:hover::before {
+    left: 100%;
+  }
+
+  .upload-thumb:hover {
+    transform: scale(1.2) translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    z-index: 10;
+  }
+
+  .page-slider-btn:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(34,197,94,0.4);
+  }
+
+  .action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+  }
+
+  .dt-button:hover {
+    background-color: #16a34a;
+  }
+
+  .dt-button-collection .dt-button:hover {
+    background-color: #ecfdf5;
+  }
+}
+
+/* ===============================
+   PAGE BASE
+=============================== */
+body {
+  background:
+    radial-gradient(circle at top left, #f0fdf4, #ecfdf5),
+    radial-gradient(circle at bottom right, #ecfdf5, #f0fdfa);
+  min-height: 100vh;
+}
+
+/* ===============================
+   CARDS
+=============================== */
+.lux-card {
+  background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(240,253,244,0.88));
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(34,197,94,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+/* ===============================
+   REG NUMBER
+=============================== */
+.reg-number {
+  font-family: ui-monospace, monospace;
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+  box-shadow: 0 1px 4px rgba(34,197,94,0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.reg-number::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  left: -100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.4s;
+}
+
+/* ===============================
+   UPLOAD THUMB
+=============================== */
+.upload-thumb {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  border: 2px solid #fff;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* ===============================
+   BADGES
+=============================== */
+.verified-badge {
+  font-size: 0.7rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(16,185,129,0.15);
+}
+
+.verified-badge.pending {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 2px 6px rgba(245,158,11,0.15);
+}
+
+/* ===============================
+   PAGINATION
+=============================== */
+.page-slider-btn {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 12px rgba(34,197,94,0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.page-slider-btn:disabled {
+  background: #94a3b8;
+  box-shadow: 0 2px 6px rgba(148,163,184,0.2);
+}
+
+/* ===============================
+   ACTION BUTTONS
+=============================== */
+.action-btn {
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.75rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 6px rgb(11, 26, 0);
+}
+
+/* ===============================
+   DATATABLES
+=============================== */
+.table thead {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(34,197,94,0.06) !important;
+}
+
+.dataTables_filter,
+.dataTables_paginate {
+  display: none;
+}
+
+.dt-buttons {
+  margin-bottom: 0.5rem;
+}
+
+.dt-button {
+  background-color: #22c55e;
+  color: #fff;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.dt-button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ===============================
+   TABLE FOOTER FILTERS
+=============================== */
+tfoot input {
+  width: 100%;
+  padding: 0.375rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+tfoot input:focus {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 2px rgba(34,197,94,0.35);
+}
+
+/* ===============================
+   ZOOM CONTROLS
+=============================== */
+.zoom-controls {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 0.75rem;
+  display: flex;
+  gap: 0.375rem;
+  background: rgba(255,255,255,0.8);
+  padding: 0.375rem;
+  border-radius: 9999px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.zoom-btn {
+  background-color: #fff;
+  color: #374151;
+  padding: 0.375rem;
+  border-radius: 9999px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  transition: background 0.2s, transform 0.2s;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+/* ===============================
+   STICKY HEADER + SORT ICONS
+=============================== */
+.dataTable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.sorting_asc::after,
+.sorting_desc::after {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  margin-left: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.sorting_asc::after { content: '\f0de'; }
+.sorting_desc::after { content: '\f0dd'; }
+
+/* ===============================
+   MOBILE
+=============================== */
+@media (max-width: 768px) {
+  .upload-thumb {
+    width: 32px;
+    height: 32px;
+  }
+
+  .page-slider-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+
+  tfoot input {
+    padding: 0.25rem;
+    font-size: 0.7rem;
+  }
+}
+
+/* ===============================
+   COLUMN VISIBILITY DROPDOWN FIX
+=============================== */
+.dt-button-collection {
+  background-color: white;
+  border: 1px solid rgba(34,197,94,0.2);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  box-shadow: 0 6px 20px rgba(34,197,94,0.15);
+  max-height: 50vh;
+  overflow-y: auto;
+  min-width: 200px;
+  z-index: 2001 !important;
+}
+
+.dt-button-collection .dt-button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  color: #15803d;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s, color 0.2s;
+  box-shadow: none;
+}
+
+.dt-button-collection .dt-button.active {
+  background-color: #d1fae5;
+  color: #065f46;
+  font-weight: 600;
+}
+
+.dt-button-collection .dt-button span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dt-button-collection .dt-button span::before {
+  content: '\f058'; /* Font Awesome check circle */
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.dt-button-collection .dt-button.active span::before {
+  opacity: 1;
+  color: #10b981;
+}
+/* Make table rows single-line */
+#membersTable td,
+#membersTable th {
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+/* Optional: smoother overflow handling */
+#membersTable {
+  table-layout: auto;
+}
+/* Horizontal spacing between columns */
+#membersTable th,
+#membersTable td {
+  padding-left: 0.9rem;
+  padding-right: 0.9rem;
+}
+
+/* Slightly tighter on mobile */
+@media (max-width: 768px) {
+  #membersTable th,
+  #membersTable td {
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+  }
+}
+
+    </style>
 </head>
 <body>
 
-    <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu-overlay"></div>
-    
-    <!-- Mobile Menu -->
-    <div class="mobile-menu">
-        <div class="mobile-menu-header">
-            <a href="dashboard.html" class="logo">
-                <img src="/assets/images/apsg.png" alt="APSG Logo">
-                APSG Admin
-            </a>
-            <button class="mobile-menu-close" onclick="closeMobileMenu()">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <nav class="mobile-menu-nav">
-            <a href="dashboard.html">
-                <i class="fas fa-gauge-high"></i>
-                Dashboard
-            </a>
-            <a href="members.html" class="active">
-                <i class="fas fa-users"></i>
-                Members
-            </a>
-        </nav>
-        <div class="mobile-menu-footer">
-            <a class="mobile-logout-btn" style="cursor:pointer;">
-                <i class="fas fa-arrow-right-from-bracket"></i>
-                Logout
-            </a>
-        </div>
+<div class="container-fluid py-4 px-3 max-w-screen-2xl mx-auto">
+  <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
+
+    <!-- Title + Logo -->
+    <div class="flex items-center gap-3">
+      <img
+        src="/assets/images/apsg.png"
+        alt="APSG Logo"
+        class="w-12 h-12 object-contain"
+      />
+      <div>
+        <h1 class="text-3xl font-bold text-green-900 mb-1">
+          Registered Members
+        </h1>
+        <p class="text-gray-600 text-base">
+          APC Progressive Support Group (APSG) Database
+        </p>
+      </div>
     </div>
 
-   
-<div class="app-container">
-    <!-- Top Navigation -->
-    <nav class="top-nav">
-        <div class="nav-container">
-            <div class="nav-left">
-                <a href="dashboard.html" class="logo">
-                 
-                    APSG Admin
-                </a>
-                    <div class="nav-menu">
-                        <div class="nav-item">
-                            <a href="dashboard.html" class="nav-link">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="3" width="7" height="7" rx="1"/>
-                                    <rect x="14" y="3" width="7" height="7" rx="1"/>
-                                    <rect x="3" y="14" width="7" height="7" rx="1"/>
-                                    <rect x="14" y="14" width="7" height="7" rx="1"/>
-                                </svg>
-                                Dashboard
-                            </a>
-                        </div>
-                        <div class="nav-item">
-                            <a href="members.html" class="nav-link active">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4-4v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/>
-                                    <circle cx="9" cy="7" r="4"/>
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                                </svg>
-                                Members
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="nav-right">
-                    <div class="theme-toggle">
-                        <button class="theme-btn theme-btn-snow active" onclick="setTheme('snow')">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="5"/>
-                                <line x1="12" y1="1" x2="12" y2="3"/>
-                                <line x1="12" y1="21" x2="12" y2="23"/>
-                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                                <line x1="1" y1="12" x2="3" y2="12"/>
-                                <line x1="21" y1="12" x2="23" y2="12"/>
-                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                            </svg>
-                        </button>
-                        <button class="theme-btn theme-btn-carbon" onclick="setTheme('carbon')">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <button class="btn-logout" style="cursor:pointer;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                            <polyline points="16 17 21 12 16 7"/>
-                            <line x1="21" y1="12" x2="9" y2="12"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </nav>
+    <!-- Actions -->
+    <div class="flex gap-2 items-center flex-wrap">
+      <a
+        href="dashboard.html"
+        class="btn btn-outline-success action-btn hover:bg-green-100"
+      >
+        Back to Dashboard
+      </a>
+
+      <span
+        class="inline-flex items-center gap-1 px-4 py-2 text-white font-bold text-base rounded-full shadow-md
+               bg-gradient-to-r from-green-500 to-emerald-600"
+      >
+        Total:
+        <strong id="totalMembers">0</strong>
+      </span>
+    </div>
+
+  </div>
+</div>
 
 
-        <main class="main-content">
-            <div class="page-header">
+    <div class="lux-card mb-3">
+        <div class="card-body p-3">
+            <div class="flex flex-wrap gap-3 items-center mb-3 filter-container">
+                <div class="flex-grow max-w-md">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
+                            <i class="fas fa-search text-green-700 text-sm"></i>
+                        </div>
+                        <input id="memberSearch" class="block w-full p-3 pl-8 text-sm text-gray-900 border border-green-200 rounded-lg bg-green-50 focus:ring-green-500 focus:border-green-500" placeholder="Search members..." type="text">
+                    </div>
+                </div>
                 <div>
-                    <h1 class="page-title">Registered Members</h1>
-                    <p class="page-subtitle">Full list of APC Progressive Support Group (APSG) members with PVC and APC Membership Card</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-3">
-                    <div>Total Members: <strong id="totalMembers">0</strong></div>
-                    <button id="exportCsv" class="btn btn-success btn-sm d-flex align-items-center gap-2">
-                        <i class="fas fa-download"></i> Export CSV
-                    </button>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table id="membersTable" class="table table-hover mb-0" style="width:100%">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Phone</th>
-                                    <th>State</th>
-                                    <th>LGA</th>
-                                    <th>Ward</th>
-                                    <th>PVC #</th>
-                                    <th>APC Card #</th>
-                                    <th>PVC Upload</th>
-                                    <th>APC Upload</th>
-                                    <th>Date</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                        </table>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
+                            <i class="fas fa-filter text-green-700 text-sm"></i>
+                        </div>
+                        <select id="stateFilter" class="block w-full p-3 pl-8 text-sm text-gray-900 border border-green-200 rounded-lg bg-green-50 focus:ring-green-500 focus:border-green-500">
+                            <option value="">All States</option>
+                        </select>
                     </div>
                 </div>
             </div>
-
-            <!-- No Data Message -->
-            <div id="noDataMessage" class="text-center mt-5" style="display:none;">
-                <p class="text-muted fs-4">No members registered yet.</p>
-            </div>
-        </main>
-
-        <footer class="footer">
-            <p>© 2026 APSG Nigeria Admin Dashboard</p>
-        </footer>
+            <!-- DataTables Buttons will be inserted here -->
+        </div>
     </div>
 
-    <!-- Document Preview Modal -->
-    <div class="modal fade" id="previewModal" tabindex="-1">
-        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">Document Preview</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body text-center p-0">
-                    <iframe id="previewFrame" style="width:100%;height:75vh;border:none;"></iframe>
-                    <img id="previewImage" src="" class="img-fluid d-none" style="max-height:75vh;">
-                </div>
+    <div class="lux-card">
+        <div class="card-body p-0">
+            <div class="table-responsive" style="max-height: 500px; overflow-y: auto;"> <!-- Scrollable table body -->
+                <table id="membersTable" class="table table-hover mb-0 text-sm" style="width:100%">
+                    <thead class="text-white text-sm">
+                        <tr>
+                            <th>Reg Number</th>
+                            <th>Full Name</th>
+                            <th>Designation</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>State</th>
+                            <th>LGA</th>
+                            <th>Ward</th>
+                            <th>PVC Number</th>
+                            <th>APC Card #</th>
+                            <th>PVC Upload</th>
+                            <th>APC Upload</th>
+                            <th>Verified</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Reg Number</th>
+                            <th>Full Name</th>
+                            <th>Designation</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>State</th>
+                            <th>LGA</th>
+                            <th>Ward</th>
+                            <th>PVC Number</th>
+                            <th>APC Card #</th>
+                            <th>PVC Upload</th>
+                            <th>APC Upload</th>
+                            <th>Verified</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </div>
     </div>
 
-    <!-- jQuery & DataTables -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom Page Slider -->
+    <div class="flex justify-center items-center gap-4 mt-4">
+        <button id="prevPage" class="page-slider-btn text-white flex items-center justify-center" disabled><i class="fas fa-chevron-left"></i></button>
+        <div id="pageInfo" class="text-base font-medium text-gray-700 min-w-24 text-center">Page 1 of 1</div>
+        <button id="nextPage" class="page-slider-btn text-white flex items-center justify-center" disabled><i class="fas fa-chevron-right"></i></button>
+    </div>
+</div>
+ </div>
+            </main>
+            <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-2 text-center text-xs text-gray-600 dark:text-gray-400">
+                © 2026 APC Progressive Support Group (APSG Nigeria) Admin Dashboard. All rights reserved.
+            </footer>
+        </div>
+<!-- Preview Modal with enhanced viewer -->
+<div class="modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content rounded-lg overflow-hidden shadow-xl">
+            <div class="modal-header bg-gradient-to-r from-green-600 to-emerald-700 text-white py-2 px-3">
+                <h5 class="modal-title font-bold text-base">Document Preview</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0 relative">
+                <iframe id="previewFrame" class="d-none"></iframe>
+                <div id="imageViewer" class="d-none w-full h-full flex items-center justify-center">
+                    <img id="previewImage" class="max-w-full max-h-full" style="transform: scale(1);">
+                </div>
+                <div class="zoom-controls">
+                    <button class="zoom-btn" onclick="zoomIn()"><i class="fas fa-search-plus"></i></button>
+                    <button class="zoom-btn" onclick="zoomOut()"><i class="fas fa-search-minus"></i></button>
+                    <button class="zoom-btn" onclick="resetZoom()"><i class="fas fa-sync-alt"></i></button>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
 
-    <!-- Shared Supabase Auth & Client -->
-    <script src="/assets/js/supabase-clients.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.colVis.min.js"></script>
+<script src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script> <!-- Added for FixedHeader -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/supabase-clients.js"></script>
 
-    <!-- Members Page Script -->
-    <script>
-        async function checkAuth() {
-            const { data, error } = await supabaseClient.auth.getSession();
-            if (error || !data.session) {
-                window.location.href = 'login.html';
-            }
+<script>
+    let table;
+    let states = new Set();
+    let zoomLevel = 1;
+
+    async function loadMembers() {
+        const { data: members, error } = await supabaseClient
+            .from('members')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error("Error loading members:", error);
+            return;
         }
 
-        async function logout() {
-            await supabaseClient.auth.signOut();
-            window.location.href = 'login.html';
-        }
+        document.getElementById('totalMembers').textContent = members.length;
 
-        document.querySelectorAll('.mobile-logout-btn, .btn-logout').forEach(el => {
-            el.addEventListener('click', logout);
+        members.forEach(m => {
+            if (m.state) states.add(m.state);
         });
 
-        async function loadMembers() {
-            const { data: members, error } = await supabaseClient
-                .from('members')
-                .select('*')
-                .order('created_at', { ascending: false });
+        const stateFilter = document.getElementById('stateFilter');
+        Array.from(states).sort().forEach(state => {
+            const option = document.createElement('option');
+            option.value = state;
+            option.textContent = state;
+            stateFilter.appendChild(option);
+        });
 
-            if (error) {
-                console.error('Load error:', error);
-                document.getElementById('noDataMessage').style.display = 'block';
-                return;
-            }
-
-            document.getElementById('totalMembers').textContent = members.length;
-
-            if (members.length === 0) {
-                document.getElementById('noDataMessage').style.display = 'block';
-                return;
-            }
-
-            const table = $('#membersTable').DataTable({
-                data: members,
-                dom: 'Bfrtip',
-                buttons: [{ extend: 'csv', text: 'Export CSV', className: 'btn btn-success btn-sm' }],
-                pageLength: 25,
-                responsive: true,
-                columnDefs: [{ targets: [7,8,10], orderable: false }],
-                columns: [
-                    { data: 'full_name', title: 'Name' },
-                    { data: 'phone', title: 'Phone' },
-                    { data: 'state', title: 'State' },
-                    { data: 'lga', title: 'LGA' },
-                    { data: 'ward', title: 'Ward' },
-                    { data: 'pvc_number', title: 'PVC #' },
-                    { data: 'apc_card_number', title: 'APC Card #' },
-                    { data: 'pvc_upload_path', title: 'PVC Upload', render: renderUpload },
-                    { data: 'apc_upload_path', title: 'APC Upload', render: renderUpload },
-                    { data: 'created_at', title: 'Date', render: d => new Date(d).toLocaleDateString('en-NG') },
-                    { data: null, title: 'Actions', render: (data, type, row) => `
-                        <div class="d-flex gap-2">
-                            <a href="member-details.html?id=${row.id}" class="btn btn-primary btn-sm">View</a>
-                            <button class="btn btn-danger btn-sm delete-btn" data-id="${row.id}">Delete</button>
+        table = $('#membersTable').DataTable({
+            data: members,
+            pageLength: 25,
+            responsive: true,
+            fixedHeader: true, // Enable fixed headers
+            dom: '<"mb-2"B>rt<"d-flex justify-content-between align-items-center"ip>',
+            buttons: [
+                { extend: 'copy', className: 'btn btn-outline-success action-btn hover:bg-green-100' },
+                { extend: 'csv', className: 'btn btn-outline-success action-btn hover:bg-green-100' },
+                { extend: 'excel', className: 'btn btn-outline-success action-btn hover:bg-green-100' },
+                { extend: 'pdf', className: 'btn btn-outline-success action-btn hover:bg-green-100' },
+                { extend: 'print', className: 'btn btn-outline-success action-btn hover:bg-green-100' },
+                { extend: 'colvis', className: 'btn btn-outline-success action-btn hover:bg-green-100', collectionLayout: 'fixed', text: 'Columns' }
+            ],
+            columns: [
+                { 
+                    data: 'reg_number',
+                    render: d => `<span class="reg-number" title="Click to copy">${d || '—'}</span>`
+                },
+                { 
+                    data: null,
+                    render: (data, type, row) => `${row.first_name || ''} ${row.last_name || ''}`.trim() || '<span class="text-muted">—</span>'
+                },
+                { data: 'designation', defaultContent: '<span class="text-muted">—</span>' },
+                { data: 'phone', defaultContent: '<span class="text-muted">—</span>' },
+                { 
+                    data: 'email',
+                    render: d => d ? d : '<span class="text-muted">—</span>'
+                },
+                { data: 'state', defaultContent: '<span class="text-muted">—</span>' },
+                { data: 'lga', defaultContent: '<span class="text-muted">—</span>' },
+                { data: 'ward', defaultContent: '<span class="text-muted">—</span>' },
+                { data: 'pvc_number', defaultContent: '<span class="text-muted">—</span>' },
+                { data: 'apc_card_number', defaultContent: '<span class="text-muted">—</span>' },
+                { 
+                    data: 'pvc_upload_path',
+                    render: renderUploadLink
+                },
+                { 
+                    data: 'apc_upload_path',
+                    render: renderUploadLink
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => {
+                        const isVerified = row.verified ?? false;
+                        return `<span class="verified-badge inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${isVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800 pending'}">
+                            ${isVerified ? 'Verified' : 'Pending'}
+                        </span>`;
+                    }
+                },
+                { 
+                    data: 'created_at',
+                    render: d => d ? new Date(d).toLocaleDateString('en-NG', { 
+                        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                    }) : '—'
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="flex gap-1">
+                            <a href="member-details.html?id=${row.id}" class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 hover:bg-green-200 action-btn">View</a>
+                         <a href="edit-member.html?id=${row.id}" class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 hover:bg-yellow-200 action-btn">Edit</a>
+                            <button class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 hover:bg-red-200 action-btn delete-btn" data-id="${row.id}">Delete</button>
                         </div>
-                    ` }
-                ]
-            });
-
-            function renderUpload(path) {
-                if (!path) return '<span class="text-muted">-</span>';
-                const { data: { publicUrl } } = supabaseClient.storage.from('uploads').getPublicUrl(path);
-                const isPdf = path.toLowerCase().endsWith('.pdf');
-                if (isPdf) {
-                    return `<a href="${publicUrl}" target="_blank" class="btn btn-sm btn-outline-secondary">View PDF</a>`;
+                    `
                 }
-                return `<img src="${publicUrl}" class="img-thumbnail" style="width:70px;height:70px;object-fit:cover;cursor:pointer;" onclick="openPreview('${publicUrl}', 'image')">`;
+            ],
+            initComplete: function () {
+                this.api()
+                    .columns()
+                    .every(function () {
+                        let column = this;
+                        let title = column.footer().textContent;
+ 
+                        // Create input element with Tailwind styles
+                        let input = document.createElement('input');
+                        input.placeholder = title;
+                        input.className = 'block w-full p-1.5 text-xs text-gray-900 border border-gray-300 rounded bg-gray-50 focus:ring-green-500 focus:border-green-500';
+                        column.footer().replaceChildren(input);
+ 
+                        // Event listener for user input
+                        input.addEventListener('keyup', () => {
+                            if (column.search() !== input.value) {
+                                column.search(input.value).draw();
+                            }
+                        });
+                    });
             }
-
-            window.openPreview = function(url, type = 'image') {
-                const frame = document.getElementById('previewFrame');
-                const img = document.getElementById('previewImage');
-                if (type === 'pdf' || url.toLowerCase().endsWith('.pdf')) {
-                    frame.src = url;
-                    frame.classList.remove('d-none');
-                    img.classList.add('d-none');
-                } else {
-                    img.src = url;
-                    img.classList.remove('d-none');
-                    frame.classList.add('d-none');
-                    frame.src = '';
-                }
-                new bootstrap.Modal(document.getElementById('previewModal')).show();
-            };
-
-            $('#membersTable').on('click', '.delete-btn', async function() {
-                if (!confirm('Permanently delete this member? This cannot be undone.')) return;
-                const id = this.dataset.id;
-                const { error } = await supabaseAdmin.from('members').delete().eq('id', id);
-                if (error) {
-                    alert('Delete failed: ' + error.message);
-                } else {
-                    table.row($(this).parents('tr')).remove().draw();
-                    document.getElementById('totalMembers').textContent = parseInt(document.getElementById('totalMembers').textContent) - 1;
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            await checkAuth();
-            loadMembers();
         });
-    </script>
+
+        // Move buttons to the filter container with Tailwind UI style
+        $('.dt-buttons').appendTo('.filter-container').addClass('flex flex-wrap gap-1');
+
+        // Adjust colvis dropdown position to open upwards
+        table.button('.buttons-colvis').nodes().on('click', function () {
+            setTimeout(function () {
+                var collection = $('.dt-button-collection');
+                collection.appendTo('body');
+                var button = $(this);
+                var buttonPos = button.offset();
+                var collectionHeight = collection.outerHeight();
+                var collectionWidth = collection.outerWidth();
+                var buttonWidth = button.outerWidth();
+                collection.css({
+                    position: 'absolute',
+                    top: (buttonPos.top - collectionHeight - 10) + 'px',
+                    left: (buttonPos.left + (buttonWidth - collectionWidth) / 2) + 'px'
+                });
+            }, 10);
+        });
+
+        updatePageSlider();
+        table.on('draw', updatePageSlider);
+
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (table.page.info().page > 0) table.page('previous').draw('page');
+        });
+
+        document.getElementById('nextPage').addEventListener('click', () => {
+            if (table.page.info().page < table.page.info().pages - 1) table.page('next').draw('page');
+        });
+
+        // Copy Reg Number
+        $('#membersTable tbody').on('click', '.reg-number', function() {
+            if (!this.textContent || this.textContent === '—') return;
+            navigator.clipboard.writeText(this.textContent);
+            const orig = this.style.background;
+            this.style.background = '#86efac';
+            setTimeout(() => this.style.background = orig, 1000);
+        });
+
+        // Delete
+        $('#membersTable tbody').on('click', '.delete-btn', async function() {
+            if (!confirm('Delete this member permanently?')) return;
+            const id = this.dataset.id;
+            const { error } = await supabaseClient.from('members').delete().eq('id', id);
+            if (!error) {
+                table.row($(this).parents('tr')).remove().draw();
+                document.getElementById('totalMembers').textContent = parseInt(document.getElementById('totalMembers').textContent) - 1;
+            } else {
+                alert('Delete failed: ' + error.message);
+            }
+        });
+
+        // Main (global) Search
+        document.getElementById('memberSearch').addEventListener('input', e => {
+            table.search(e.target.value).draw();
+        });
+
+        // State Filter (assuming column 5 is state)
+        stateFilter.addEventListener('change', e => {
+            table.column(5).search(e.target.value).draw();
+        });
+    }
+
+    function updatePageSlider() {
+        const info = table.page.info();
+        document.getElementById('pageInfo').textContent = `Page ${info.page + 1} of ${info.pages || 1}`;
+        document.getElementById('prevPage').disabled = info.page === 0;
+        document.getElementById('nextPage').disabled = info.page >= info.pages - 1;
+    }
+
+    function renderUploadLink(path) {
+        if (!path) return '<span class="text-muted">—</span>';
+        const { data: { publicUrl } } = supabaseClient.storage.from('uploads').getPublicUrl(path);
+        const isPdf = path.toLowerCase().endsWith('.pdf');
+
+        if (isPdf) {
+            return `<a href="#" class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 hover:bg-green-200 action-btn" onclick="openPreview('${publicUrl}', 'pdf'); return false;">View PDF</a>`;
+        }
+        return `<img src="${publicUrl}" class="upload-thumb" onclick="openPreview('${publicUrl}', 'image')">`;
+    }
+
+    window.openPreview = function(url, type) {
+        const frame = document.getElementById('previewFrame');
+        const imgViewer = document.getElementById('imageViewer');
+        const img = document.getElementById('previewImage');
+        const zoomControls = document.querySelector('.zoom-controls');
+
+        resetZoom();
+        if (type === 'pdf') {
+            frame.src = url;
+            frame.classList.remove('d-none');
+            imgViewer.classList.add('d-none');
+            zoomControls.style.display = 'none';
+        } else {
+            img.src = url;
+            imgViewer.classList.remove('d-none');
+            frame.classList.add('d-none');
+            zoomControls.style.display = 'flex';
+        }
+        new bootstrap.Modal(document.getElementById('previewModal')).show();
+    };
+
+    window.zoomIn = function() {
+        zoomLevel += 0.1;
+        document.getElementById('previewImage').style.transform = `scale(${zoomLevel})`;
+    };
+
+    window.zoomOut = function() {
+        if (zoomLevel > 0.1) {
+            zoomLevel -= 0.1;
+            document.getElementById('previewImage').style.transform = `scale(${zoomLevel})`;
+        }
+    };
+
+    window.resetZoom = function() {
+        zoomLevel = 1;
+        document.getElementById('previewImage').style.transform = `scale(1)`;
+    };
+
+    document.addEventListener('DOMContentLoaded', loadMembers);
+</script>
 </body>
 </html>

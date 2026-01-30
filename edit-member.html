@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Details - APSG Admin</title>
+    <title>Edit Member - APSG Admin</title>
     <link rel="icon" href="/assets/images/apsg.png" sizes="any">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -30,6 +30,19 @@
             font-weight: 700;
             letter-spacing: 0.02em;
             box-shadow: 0 2px 8px rgba(34,197,94,0.1);
+        }
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            transition: all 0.3s;
+        }
+        .profile-photo:hover {
+            transform: scale(1.1) translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.2);
         }
         .upload-thumb {
             width: 100%;
@@ -215,80 +228,103 @@
                 </div>
 
                 <div class="lux-card p-6 mb-6">
-                    <div class="flex flex-col md:flex-row items-start md:items-center gap-4 mb-6">
-                        <div>
+                    <div class="flex flex-col md:flex-row items-center gap-6 mb-6">
+                        <div class="text-center md:text-left">
+                            <img src="/assets/images/profile-placeholder.png" alt="Profile Photo" class="profile-photo mx-auto md:mx-0" id="profilePhoto">
+                            <div class="upload-area mt-4">
+                                <input type="file" id="profileFileInput" accept="image/*" class="hidden">
+                                <button type="button" onclick="document.getElementById('profileFileInput').click()" class="action-btn bg-indigo-600 text-white hover:bg-indigo-700">Upload Photo</button>
+                                <p id="profileFileName" class="text-xs text-gray-500 mt-2">No file chosen</p>
+                                <button id="profileUploadBtn" class="action-btn bg-green-600 text-white hover:bg-green-700 mt-2" disabled>Upload</button>
+                                <p id="profileStatus" class="mt-2 text-xs font-medium"></p>
+                            </div>
+                        </div>
+                        <div class="flex-1">
                             <div class="reg-number text-lg mb-2" id="detailRegNumber">—</div>
-                            <h1 class="text-3xl font-bold text-green-900" id="detailFullName">Loading...</h1>
-                            <p class="text-gray-600 mt-1" id="detailDesignation">—</p>
+                            <h1 class="text-3xl font-bold text-green-900 mb-4" id="detailFullName">Loading...</h1>
+                            <p class="text-gray-600 mb-4" id="detailDesignation">—</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Personal Information -->
+                    <!-- Edit Personal Information -->
                     <div class="lux-card p-6">
-                        <h3 class="text-xl font-semibold mb-4 text-green-800">Personal Information</h3>
-                        <dl class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <h3 class="text-xl font-semibold mb-4 text-green-800">Edit Personal Information</h3>
+                        <form class="space-y-4 text-sm">
                             <div>
-                                <dt class="font-medium text-gray-600">First Name</dt>
-                                <dd id="detailFirstName">-</dd>
+                                <label class="font-medium">First Name</label>
+                                <input type="text" id="firstNameInput" class="form-control">
                             </div>
                             <div>
-                                <dt class="font-medium text-gray-600">Last Name</dt>
-                                <dd id="detailLastName">-</dd>
+                                <label class="font-medium">Last Name</label>
+                                <input type="text" id="lastNameInput" class="form-control">
                             </div>
                             <div>
-                                <dt class="font-medium text-gray-600">Phone</dt>
-                                <dd id="detailPhone">-</dd>
+                                <label class="font-medium">Designation</label>
+                                <input type="text" id="designationInput" class="form-control">
                             </div>
                             <div>
-                                <dt class="font-medium text-gray-600">Email</dt>
-                                <dd id="detailEmail">-</dd>
+                                <label class="font-medium">Phone</label>
+                                <input type="tel" id="phoneInput" class="form-control">
                             </div>
                             <div>
-                                <dt class="font-medium text-gray-600">State</dt>
-                                <dd id="detailState">-</dd>
+                                <label class="font-medium">Email</label>
+                                <input type="email" id="emailInput" class="form-control">
                             </div>
                             <div>
-                                <dt class="font-medium text-gray-600">LGA</dt>
-                                <dd id="detailLga">-</dd>
+                                <label class="font-medium">State</label>
+                                <input type="text" id="stateInput" class="form-control">
                             </div>
                             <div>
-                                <dt class="font-medium text-gray-600">Ward</dt>
-                                <dd id="detailWard">-</dd>
+                                <label class="font-medium">LGA</label>
+                                <input type="text" id="lgaInput" class="form-control">
                             </div>
                             <div>
-                                <dt class="font-medium text-gray-600">Registration Date</dt>
-                                <dd id="detailDate">-</dd>
+                                <label class="font-medium">Ward</label>
+                                <input type="text" id="wardInput" class="form-control">
                             </div>
-                        </dl>
+                            <button type="button" id="savePersonalBtn" class="action-btn bg-green-600 text-white hover:bg-green-700 w-full">Save Personal Info</button>
+                        </form>
                     </div>
 
-                    <!-- Verification Documents -->
+                    <!-- Edit Verification -->
                     <div class="lux-card p-6">
-                        <h3 class="text-xl font-semibold mb-4 text-green-800">Verification Documents</h3>
+                        <h3 class="text-xl font-semibold mb-4 text-green-800">Edit Verification</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <!-- PVC Document -->
-                            <div class="text-center">
-                                <p class="font-medium mb-2">PVC Document</p>
-                                <p class="text-xs text-gray-600 mb-3"><strong>Number:</strong> <span id="detailPvc">-</span></p>
-                                <img src="/assets/images/apsg.png" alt="PVC Preview" class="upload-thumb mx-auto mb-4" id="pvcPreview">
-                                <div class="flex justify-center gap-3 mb-4">
+                            <div>
+                                <p class="font-medium mb-2">PVC</p>
+                                <input type="text" id="pvcNumberInput" class="form-control mb-3" placeholder="PVC Number">
+                                <img src="/assets/images/pdf-placeholder.png" alt="PVC Preview" class="upload-thumb mx-auto mb-4" id="pvcPreview">
+                                <div class="flex justify-center gap-2 mb-4">
                                     <button class="action-btn bg-green-600 text-white hover:bg-green-700" id="pvcViewBtn" disabled>View</button>
                                     <button class="action-btn bg-emerald-600 text-white hover:bg-emerald-700 hidden" id="pvcDownloadBtn">Download</button>
                                 </div>
-                                
+                                <div class="upload-area">
+                                    <p class="text-sm font-medium text-gray-700 mb-3">Upload / Replace PVC</p>
+                                    <input type="file" id="pvcFileInput" accept="image/*,application/pdf" class="hidden">
+                                    <button type="button" onclick="document.getElementById('pvcFileInput').click()" class="action-btn bg-indigo-600 text-white hover:bg-indigo-700 mb-2">Select File</button>
+                                    <p id="pvcFileName" class="text-xs text-gray-500 mb-3">No file chosen</p>
+                                    <button id="pvcUploadBtn" class="action-btn bg-green-600 text-white hover:bg-green-700" disabled>Upload</button>
+                                    <p id="pvcStatus" class="mt-3 text-xs font-medium"></p>
+                                </div>
                             </div>
-                            <!-- APC Card -->
-                            <div class="text-center">
+                            <div>
                                 <p class="font-medium mb-2">APC Card</p>
-                                <p class="text-xs text-gray-600 mb-3"><strong>Number:</strong> <span id="detailApc">-</span></p>
-                                <img src="/assets/images/apsg.png" alt="APC Preview" class="upload-thumb mx-auto mb-4" id="apcPreview">
-                                <div class="flex justify-center gap-3 mb-4">
+                                <input type="text" id="apcNumberInput" class="form-control mb-3" placeholder="APC Card Number">
+                                <img src="/assets/images/pdf-placeholder.png" alt="APC Preview" class="upload-thumb mx-auto mb-4" id="apcPreview">
+                                <div class="flex justify-center gap-2 mb-4">
                                     <button class="action-btn bg-green-600 text-white hover:bg-green-700" id="apcViewBtn" disabled>View</button>
                                     <button class="action-btn bg-emerald-600 text-white hover:bg-emerald-700 hidden" id="apcDownloadBtn">Download</button>
                                 </div>
-                                
+                                <div class="upload-area">
+                                    <p class="text-sm font-medium text-gray-700 mb-3">Upload / Replace APC Card</p>
+                                    <input type="file" id="apcFileInput" accept="image/*,application/pdf" class="hidden">
+                                    <button type="button" onclick="document.getElementById('apcFileInput').click()" class="action-btn bg-indigo-600 text-white hover:bg-indigo-700 mb-2">Select File</button>
+                                    <p id="apcFileName" class="text-xs text-gray-500 mb-3">No file chosen</p>
+                                    <button id="apcUploadBtn" class="action-btn bg-green-600 text-white hover:bg-green-700" disabled>Upload</button>
+                                    <p id="apcStatus" class="mt-3 text-xs font-medium"></p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -328,77 +364,60 @@
         let currentMember = null;
 
         const els = {
-            detailRegNumber: document.getElementById('detailRegNumber'),
-            detailFullName: document.getElementById('detailFullName'),
-            detailDesignation: document.getElementById('detailDesignation'),
-            detailFirstName: document.getElementById('detailFirstName'),
-            detailLastName: document.getElementById('detailLastName'),
-            detailPhone: document.getElementById('detailPhone'),
-            detailEmail: document.getElementById('detailEmail'),
-            detailState: document.getElementById('detailState'),
-            detailLga: document.getElementById('detailLga'),
-            detailWard: document.getElementById('detailWard'),
-            detailDate: document.getElementById('detailDate'),
-            detailPvc: document.getElementById('detailPvc'),
-            detailApc: document.getElementById('detailApc'),
+            profilePhoto: document.getElementById('profilePhoto'),
+            firstNameInput: document.getElementById('firstNameInput'),
+            lastNameInput: document.getElementById('lastNameInput'),
+            designationInput: document.getElementById('designationInput'),
+            phoneInput: document.getElementById('phoneInput'),
+            emailInput: document.getElementById('emailInput'),
+            stateInput: document.getElementById('stateInput'),
+            lgaInput: document.getElementById('lgaInput'),
+            wardInput: document.getElementById('wardInput'),
+            pvcNumberInput: document.getElementById('pvcNumberInput'),
+            apcNumberInput: document.getElementById('apcNumberInput'),
             pvcPreview: document.getElementById('pvcPreview'),
             pvcViewBtn: document.getElementById('pvcViewBtn'),
             pvcDownloadBtn: document.getElementById('pvcDownloadBtn'),
             apcPreview: document.getElementById('apcPreview'),
             apcViewBtn: document.getElementById('apcViewBtn'),
             apcDownloadBtn: document.getElementById('apcDownloadBtn'),
+            savePersonalBtn: document.getElementById('savePersonalBtn'),
             errorMessage: document.getElementById('errorMessage')
         };
 
         async function loadMember() {
             try {
                 const params = new URLSearchParams(location.search);
-                const memberId = params.get('id');
-                const regNumber = params.get('reg');
+                const id = params.get('id');
+                if (!id) throw new Error('No member ID');
 
-                let member;
+                const { data: member, error } = await supabaseClient
+                    .from('members')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
 
-                if (regNumber) {
-                    const { data, error } = await supabaseClient
-                        .from('members')
-                        .select('*')
-                        .eq('reg_number', regNumber)
-                        .single();
-
-                    if (error || !data) throw new Error('Member not found by registration number');
-                    member = data;
-                } else if (memberId) {
-                    const { data, error } = await supabaseClient
-                        .from('members')
-                        .select('*')
-                        .eq('id', memberId)
-                        .single();
-
-                    if (error || !data) throw new Error('Member not found by ID');
-                    member = data;
-                } else {
-                    throw new Error('No member ID or registration number provided');
-                }
+                if (error || !member) throw new Error('Member not found');
 
                 currentMember = member;
 
-                const fullName = `${member.first_name || ''} ${member.last_name || ''}`.trim() || 'N/A';
+                // Populate form fields
+                els.firstNameInput.value = member.first_name || '';
+                els.lastNameInput.value = member.last_name || '';
+                els.designationInput.value = member.designation || '';
+                els.phoneInput.value = member.phone || '';
+                els.emailInput.value = member.email || '';
+                els.stateInput.value = member.state || '';
+                els.lgaInput.value = member.lga || '';
+                els.wardInput.value = member.ward || '';
+                els.pvcNumberInput.value = member.pvc_number || '';
+                els.apcNumberInput.value = member.apc_card_number || '';
 
-                els.detailRegNumber.textContent = member.reg_number || '—';
-                els.detailFullName.textContent = fullName;
-                els.detailDesignation.textContent = member.designation || 'Member';
-                els.detailFirstName.textContent = member.first_name || '—';
-                els.detailLastName.textContent = member.last_name || '—';
-                els.detailPhone.textContent = member.phone || '—';
-                els.detailEmail.textContent = member.email || '—';
-                els.detailState.textContent = member.state || '—';
-                els.detailLga.textContent = member.lga || '—';
-                els.detailWard.textContent = member.ward || '—';
-                els.detailDate.textContent = member.created_at
-                    ? new Date(member.created_at).toLocaleDateString('en-NG', { year: 'numeric', month: 'short', day: 'numeric' })
-                    : '—';
-                els.detailPvc.textContent = member.pvc_number || '—';
-                els.detailApc.textContent = member.apc_card_number || '—';
+                // Profile Photo
+                if (member.profile_photo_path) {
+                    const { data: { publicUrl } } = supabaseClient.storage.from('uploads').getPublicUrl(member.profile_photo_path);
+                    els.profilePhoto.src = publicUrl;
+                }
 
                 await setupDocument(member.pvc_upload_path, 'pvc');
                 await setupDocument(member.apc_upload_path, 'apc');
@@ -408,20 +427,45 @@
             }
         }
 
+        async function savePersonalInfo() {
+            if (!currentMember) return;
+
+            const updates = {
+                first_name: els.firstNameInput.value.trim(),
+                last_name: els.lastNameInput.value.trim(),
+                designation: els.designationInput.value.trim(),
+                phone: els.phoneInput.value.trim(),
+                email: els.emailInput.value.trim(),
+                state: els.stateInput.value.trim(),
+                lga: els.lgaInput.value.trim(),
+                ward: els.wardInput.value.trim(),
+                pvc_number: els.pvcNumberInput.value.trim(),
+                apc_card_number: els.apcNumberInput.value.trim()
+            };
+
+            const { error } = await supabaseClient
+                .from('members')
+                .update(updates)
+                .eq('id', currentMember.id);
+
+            if (error) {
+                alert('Error saving changes: ' + error.message);
+            } else {
+                alert('Changes saved successfully!');
+                // Update displayed name and designation
+                currentMember = { ...currentMember, ...updates };
+                els.detailFullName.textContent = `${updates.first_name} ${updates.last_name}`.trim() || 'N/A';
+                els.detailDesignation.textContent = updates.designation || 'Member';
+            }
+        }
+
         async function setupDocument(uploadPath, type) {
             const previewEl = document.getElementById(`${type}Preview`);
             const viewBtn = document.getElementById(`${type}ViewBtn`);
             const downloadBtn = document.getElementById(`${type}DownloadBtn`);
-            const fileNameEl = document.getElementById(`${type}FileName`);
-            const uploadBtn = document.getElementById(`${type}UploadBtn`);
-            const statusEl = document.getElementById(`${type}Status`);
 
             const pdfPlaceholder = '/assets/images/pdf-placeholder.png';
             const noUpload = '/assets/images/no-upload.png';
-
-            fileNameEl.textContent = 'No file chosen';
-            uploadBtn.disabled = true;
-            statusEl.textContent = '';
 
             if (!uploadPath) {
                 previewEl.src = noUpload;
@@ -449,66 +493,65 @@
         }
 
         // Upload handlers
-        document.getElementById('pvcFileInput').addEventListener('change', function() { handleFileSelect('pvc', this); });
-        document.getElementById('apcFileInput').addEventListener('change', function() { handleFileSelect('apc', this); });
+        document.getElementById('profileFileInput').addEventListener('change', function() {
+            document.getElementById('profileFileName').textContent = this.files[0]?.name || 'No file chosen';
+            document.getElementById('profileUploadBtn').disabled = !this.files[0];
+        });
+        document.getElementById('profileUploadBtn').addEventListener('click', () => uploadFile('profile', 'profileFileInput', 'profile_photo_path', 'profilePhoto', 'profileStatus'));
 
-        document.getElementById('pvcUploadBtn').addEventListener('click', () => uploadDocument('pvc'));
-        document.getElementById('apcUploadBtn').addEventListener('click', () => uploadDocument('apc'));
+        document.getElementById('pvcFileInput').addEventListener('change', function() {
+            document.getElementById('pvcFileName').textContent = this.files[0]?.name || 'No file chosen';
+            document.getElementById('pvcUploadBtn').disabled = !this.files[0];
+        });
+        document.getElementById('pvcUploadBtn').addEventListener('click', () => uploadFile('pvc', 'pvcFileInput', 'pvc_upload_path', 'pvcPreview', 'pvcStatus'));
 
-        function handleFileSelect(type, input) {
-            if (input.files && input.files[0]) {
-                document.getElementById(`${type}FileName`).textContent = input.files[0].name;
-                document.getElementById(`${type}UploadBtn`).disabled = false;
-            }
-        }
+        document.getElementById('apcFileInput').addEventListener('change', function() {
+            document.getElementById('apcFileName').textContent = this.files[0]?.name || 'No file chosen';
+            document.getElementById('apcUploadBtn').disabled = !this.files[0];
+        });
+        document.getElementById('apcUploadBtn').addEventListener('click', () => uploadFile('apc', 'apcFileInput', 'apc_upload_path', 'apcPreview', 'apcStatus'));
 
-        async function uploadDocument(type) {
-            const input = document.getElementById(`${type}FileInput`);
+        async function uploadFile(type, inputId, column, previewId, statusId) {
+            const input = document.getElementById(inputId);
             const file = input.files[0];
             if (!file || !currentMember) return;
 
-            const statusEl = document.getElementById(`${type}Status`);
-            const uploadBtn = document.getElementById(`${type}UploadBtn`);
+            const statusEl = document.getElementById(statusId);
             statusEl.textContent = 'Uploading...';
-            statusEl.className = 'mt-3 text-xs font-medium text-gray-600';
-            uploadBtn.disabled = true;
+            statusEl.className = 'mt-2 text-xs font-medium text-gray-600';
 
             const ext = file.name.split('.').pop();
-            const filename = `${currentMember.id}_${Date.now()}.${ext}`;
-            const path = `${type}/${filename}`;
+            const filename = `${type}/${currentMember.id}_${Date.now()}.${ext}`;
 
-            const { error: uploadError } = await supabaseClient.storage.from('uploads').upload(path, file, {
-                cacheControl: '3600',
-                upsert: true
-            });
+            const { error: uploadError } = await supabaseClient.storage.from('uploads').upload(filename, file, { upsert: true });
 
             if (uploadError) {
-                statusEl.textContent = `Upload failed: ${uploadError.message}`;
-                statusEl.className = 'mt-3 text-xs font-medium text-red-600';
-                uploadBtn.disabled = false;
+                statusEl.textContent = 'Upload failed: ' + uploadError.message;
+                statusEl.className = 'mt-2 text-xs font-medium text-red-600';
                 return;
             }
 
             const { error: updateError } = await supabaseClient
                 .from('members')
-                .update({ [`${type}_upload_path`]: path })
+                .update({ [column]: filename })
                 .eq('id', currentMember.id);
 
             if (updateError) {
-                statusEl.textContent = `Update failed: ${updateError.message}`;
-                statusEl.className = 'mt-3 text-xs font-medium text-red-600';
-                uploadBtn.disabled = false;
+                statusEl.textContent = 'Update failed: ' + updateError.message;
+                statusEl.className = 'mt-2 text-xs font-medium text-red-600';
                 return;
             }
 
             statusEl.textContent = 'Uploaded successfully!';
-            statusEl.className = 'mt-3 text-xs font-medium text-green-600';
+            statusEl.className = 'mt-2 text-xs font-medium text-green-600';
 
-            await setupDocument(path, type);
+            // Refresh preview
+            const { data: { publicUrl } } = supabaseClient.storage.from('uploads').getPublicUrl(filename);
+            document.getElementById(previewId).src = publicUrl;
 
             input.value = '';
             document.getElementById(`${type}FileName`).textContent = 'No file chosen';
-            uploadBtn.disabled = true;
+            document.getElementById(`${type}UploadBtn`).disabled = true;
         }
 
         function openPreview(url, type) {
@@ -529,8 +572,8 @@
             new bootstrap.Modal(document.getElementById('previewModal')).show();
         }
 
-        window.zoomIn = () => { zoomLevel += 0.2; document.getElementById('previewImage').style.transform = `scale(${zoomLevel})`; };
-        window.zoomOut = () => { if (zoomLevel > 0.2) zoomLevel -= 0.2; document.getElementById('previewImage').style.transform = `scale(${zoomLevel})`; };
+        window.zoomIn = () => { zoomLevel += 0.1; document.getElementById('previewImage').style.transform = `scale(${zoomLevel})`; };
+        window.zoomOut = () => { if (zoomLevel > 0.1) zoomLevel -= 0.1; document.getElementById('previewImage').style.transform = `scale(${zoomLevel})`; };
         window.resetZoom = () => { zoomLevel = 1; document.getElementById('previewImage').style.transform = 'scale(1)'; };
 
         function toggleSidebar() {
@@ -547,6 +590,8 @@
             if (typeof supabaseClient !== 'undefined') await supabaseClient.auth.signOut();
             window.location.href = 'login.html';
         }
+
+        els.savePersonalBtn.addEventListener('click', savePersonalInfo);
 
         document.addEventListener('DOMContentLoaded', loadMember);
         window.toggleSidebar = toggleSidebar;

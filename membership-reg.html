@@ -4,337 +4,762 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>APC Progressive Support Group (APSG) Membership Registration | 2027 and Beyond</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
-    <!-- Favicon (added multiple sizes for better mobile/browser support without affecting colors) -->
-  <link rel="icon" href="/assets/images/apsg.png" sizes="any" />
-  <link rel="apple-touch-icon" href="/assets/images/apsg.png" />
-  
-    
-    <!-- Supabase CDN (must be in head, before your script) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#22c55e',  // Vibrant green
+                        'primary-dark': '#16a34a',
+                        accent: '#14b8a6',   // Vibrant teal
+                        'accent-light': '#d1fae5',
+                        secondary: '#eab308',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 0 rgba(34,197,94,0)' },
+                            '50%': { boxShadow: '0 0 20px rgba(34,197,94,0.4)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" href="/assets/images/apsg.png" sizes="any">
+    <link rel="apple-touch-icon" href="/assets/images/apsg.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- Your form handler -->
-    <script defer src="supabase-clients.js"></script>
-    
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f8f9fa; }
         .hero {
-            background: linear-gradient(rgba(0,51,160,0.85), rgba(0,100,0,0.85)), url('/assets/images/reg-hero.webp') center/cover;
-            color: white;
-            padding: 120px 0 200px;
+            background: linear-gradient(135deg, rgba(34,197,94,0.95), rgba(20,184,166,0.95)), url('/assets/images/reg-hero.webp') center/cover no-repeat;
+        }
+        .loading-note { font-size: 0.8rem; color: #22c55e; font-weight: 600; }
+        .spinner { display: none; }
+        .form-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+        }
+        .input-with-icon {
+            padding-left: 2.75rem !important;
+        }
+
+        .invalid-input {
+            border-color: #ff0000;                 /* red-500 */
+            box-shadow: 0 0 0 2px rgba(255, 1, 1, 0.6); /* ring-2 */
+        }
+        .upload-preview {
+            max-height: 300px;
+            object-fit: contain;
+            width: 100%;
+        }
+        .upload-slider {
+            position: relative;
+            overflow: hidden;
+        }
+        .slider-container {
+            display: flex;
+            transition: transform 0.3s ease;
+        }
+        .slider-item {
+            flex: 0 0 100%;
+            padding: 1rem;
             text-align: center;
         }
-        .form-section { background: white; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.1); padding: 1.5rem; }
-        .btn-apc { background: #006400; border: none; }
-        .btn-apc:hover { background: #004d00; }
-        .file-note, .loading-note { font-size: 0.875rem; color: #6c757d; }
-        .loading-note { color: #006400; font-weight: bold; }
-        @media (max-width: 576px) {
-            .hero { padding: 80px 0 150px; }
-            .display-3 { font-size: 2.5rem; }
-            .form-section { padding: 1rem; }
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .slider-btn-left { left: 0; }
+        .slider-btn-right { right: 0; }
+        @media (max-width: 640px) {
+            .upload-preview {
+                max-height: 200px;
+            }
+            .slider-btn {
+                padding: 0.3rem 0.7rem;
+            }
         }
     </style>
 </head>
-<body>
+<body class="bg-accent-light min-h-screen">
 
-<!-- Registration Form -->
-<section class="py-5 position-relative" style="background: radial-gradient(circle at top, #f1f4ff 0%, #eef2ff 45%, #f7f9fc 100%);">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-8 col-lg-9 col-12">
-                <div class="card border-0 shadow-lg rounded-4 overflow-hidden" style="backdrop-filter: blur(6px);">
-                    <div class="card-header text-center text-white py-5 position-relative overflow-hidden"
-                         style="background: linear-gradient(135deg, #0033A0 0%, #006400 40%, #640f00 100%);">
-                        <div class="position-absolute top-0 start-0 w-100 h-100 opacity-10"
-                             style="background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.15), rgba(255,255,255,0.15) 1px, transparent 1px, transparent 8px);"></div>
-                        <span class="badge bg-light text-primary px-4 py-3 rounded-pill fw-semibold mb-3">Official Progressive Support Group (APSG) Verification</span>
-                        <h2 class="fw-bold mb-1 fs-2">Submit Your Details for APSG Verification</h2>
-                    </div>
+<!-- Hero Header with Logo -->
+<header class="hero py-20 md:py-32 text-white text-center relative overflow-hidden">
+    <div class="absolute inset-0 bg-black opacity-10 animate-pulse-glow"></div>
+    <div class="relative z-10 container mx-auto px-4">
+        <img src="/assets/images/apsg.png" alt="APSG Logo" class="mx-auto h-28 md:h-40 mb-6 md:mb-10 rounded-full shadow-2xl border-4 border-white animate-fade-in">
+        <h1 class="text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg">APSG Membership Registration</h1>
+        <p class="text-lg md:text-2xl max-w-4xl mx-auto opacity-95 drop-shadow">Join the movement for progress. Secure your spot in APC's future today!</p>
+    </div>
+</header>
 
-                    <div class="card-body p-4 bg-white">
-                        
-                        <p class="text-center text-muted mb-5 lead">
-                            All information provided is used strictly for  
-                            <strong class="text-primary">official APSG membership verification</strong>.
-                            As required by the All Progressives Congress (APC), provide these details for official identification and mobilization. Your data is confidential.
-                        </p>
-                        
-                        <div id="lagosNote" class="alert alert-warning small mt-3" style="display:none;">
-                            <strong>Lagos State:</strong> Select your exact LGA or LCDA (all 57 shown). Wards loaded from parent LGA.
-                        </div>
+<!-- Form Section -->
+<section class="py-12 md:py-20 px-4 -mt-12 md:-mt-24 relative z-20">
+    <div class="container mx-auto max-w-5xl">
+        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-primary to-accent text-white p-6 md:p-10 text-center">
+                <h2 class="text-2xl md:text-4xl font-bold mb-2">Join APSG Now</h2>
+                <p class="text-base md:text-lg opacity-90">Official Verification Form - Quick & Secure</p>
+            </div>
 
-                        <form id="regForm">
-                            <div class="mb-3">
-                                <label for="fullName" class="form-label">Full Name *</label>
-                                <input type="text" class="form-control" id="fullName" name="fullName" placeholder="e.g., Adejoke Ikechukwu" required autocomplete="name" autocapitalize="words">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="phone" class="form-label">Phone Number (WhatsApp preferred) *</label>
-                                <input type="tel" class="form-control" id="phone" name="phone" placeholder="+2348012345678" inputmode="tel" required autocomplete="tel">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="email" name="email" placeholder="yourname@example.com" autocomplete="email">
-                            </div>
-
-                            <div class="row g-3">
-                                <div class="col-md-4 col-12">
-                                    <label for="state" class="form-label">State of Residence *</label>
-                                    <select class="form-select" id="state" name="state" required>
-                                        <option value="">Select State</option>
-                                        <option value="Abia">Abia</option>
-                                        <option value="Adamawa">Adamawa</option>
-                                        <option value="Akwa Ibom">Akwa Ibom</option>
-                                        <option value="Anambra">Anambra</option>
-                                        <option value="Bauchi">Bauchi</option>
-                                        <option value="Bayelsa">Bayelsa</option>
-                                        <option value="Benue">Benue</option>
-                                        <option value="Borno">Borno</option>
-                                        <option value="Cross River">Cross River</option>
-                                        <option value="Delta">Delta</option>
-                                        <option value="Ebonyi">Ebonyi</option>
-                                        <option value="Edo">Edo</option>
-                                        <option value="Ekiti">Ekiti</option>
-                                        <option value="Enugu">Enugu</option>
-                                        <option value="Gombe">Gombe</option>
-                                        <option value="Imo">Imo</option>
-                                        <option value="Jigawa">Jigawa</option>
-                                        <option value="Kaduna">Kaduna</option>
-                                        <option value="Kano">Kano</option>
-                                        <option value="Katsina">Katsina</option>
-                                        <option value="Kebbi">Kebbi</option>
-                                        <option value="Kogi">Kogi</option>
-                                        <option value="Kwara">Kwara</option>
-                                        <option value="Lagos">Lagos</option>
-                                        <option value="Nasarawa">Nasarawa</option>
-                                        <option value="Niger">Niger</option>
-                                        <option value="Ogun">Ogun</option>
-                                        <option value="Ondo">Ondo</option>
-                                        <option value="Osun">Osun</option>
-                                        <option value="Oyo">Oyo</option>
-                                        <option value="Plateau">Plateau</option>
-                                        <option value="Rivers">Rivers</option>
-                                        <option value="Sokoto">Sokoto</option>
-                                        <option value="Taraba">Taraba</option>
-                                        <option value="Yobe">Yobe</option>
-                                        <option value="Zamfara">Zamfara</option>
-                                        <option value="FCT">Federal Capital Territory (FCT)</option>
-                                    </select>
-                               </div>
-
-                                <div class="col-md-4 col-12">
-                                    <label for="lga" class="form-label">Local Government Area *</label>
-                                    <select class="form-select" id="lga" name="lga" disabled required>
-                                        <option value="">Select LGA/LCDA</option>
-                                    </select>
-                                    <div class="loading-note mt-1" id="lga-loading">Loading LGAs...</div>
-                                </div>
-
-                                <div class="col-md-4 col-12">
-                                    <label for="ward" class="form-label">Ward *</label>
-                                    <select class="form-select" id="ward" name="ward" disabled required>
-                                        <option value="">Select Ward</option>
-                                    </select>
-                                    <div class="loading-note mt-1" id="ward-loading"></div>
-                                </div>
-                            </div>
-
-                            <div class="mb-3 mt-4">
-                                <label for="pvc" class="form-label">Permanent Voter's Card Number (VIN) *</label>
-                                <input type="text" class="form-control" id="pvc" name="pvc" placeholder="e.g., 1234567890123456789" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="apcCard" class="form-label">APC Membership Card Number *</label>
-                                <input type="text" class="form-control" id="apcCard" name="apcCard" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="pvcUpload" class="form-label">Upload Your PVC (Optional - Recommended)</label>
-                                <input type="file" class="form-control" id="pvcUpload" name="pvcUpload" accept="image/*,application/pdf">
-                                <div class="file-note mt-1">Clear photo or scan (JPEG, PNG, PDF). Max 5MB.</div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="apcUpload" class="form-label">Upload Your APC Membership Card (Optional - Recommended)</label>
-                                <input type="file" class="form-control" id="apcUpload" name="apcUpload" accept="image/*,application/pdf">
-                                <div class="file-note mt-1">Clear photo or scan (JPEG, PNG, PDF). Max 5MB.</div>
-                            </div>
-
-                            <div class="form-check mb-4">
-                                <input class="form-check-input" type="checkbox" id="consent" name="consent" required>
-                                <label class="form-check-label small" for="consent">
-                                    I consent to APC Progressive Support Group APSG/All Progressives Congress (APC) using my details (including uploads) for official membership verification and mobilization only. Data is confidential.
-                                </label>
-                            </div>
-
-                            <button type="submit" class="btn btn-apc btn-lg w-100 text-white">
-                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" style="display:none;"></span>
-                                Submit & Join APSG
-                            </button>
-                        </form>
-
-                        <div id="formMessage" class="mt-3"></div>
-
-                        <p class="text-center mt-4 small text-muted">
-                            For questions or upload issues, WhatsApp: +2348023154308
-                        </p>
-                    </div>
+            <div class="p-6 md:p-12">
+                <div id="lagosNote" class="bg-secondary/10 border border-secondary rounded-xl p-4 mb-8 hidden text-secondary-800 text-sm md:text-base">
+                    <strong>Lagos State:</strong> Select your exact LGA or LCDA (all 57 shown). Wards loaded from parent LGA.
                 </div>
+
+                <form id="regForm" class="space-y-8" novalidate>
+                    <!-- Name Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="relative">
+                            <label for="firstName" class="block text-sm font-semibold text-gray-700 mb-2">First Name *</label>
+                            <i class="fas fa-user form-icon text-primary"></i>
+                            <input type="text" id="firstName" required class="input-with-icon w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                        </div>
+                        <div class="relative">
+                            <label for="lastName" class="block text-sm font-semibold text-gray-700 mb-2">Last Name *</label>
+                            <i class="fas fa-user form-icon text-primary"></i>
+                            <input type="text" id="lastName" required class="input-with-icon w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                        </div>
+                    </div>
+
+                    <!-- Level & Designation Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="relative">
+                            <label for="level" class="block text-sm font-semibold text-gray-700 mb-2">Level *</label>
+                            <i class="fas fa-sitemap form-icon text-primary"></i>
+                            <select id="level" required class="input-with-icon w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                                <option value="">Select Level</option>
+                                <option value="national">National</option>
+                                <option value="state">State</option>
+                                <option value="lga">LGA</option>
+                                <option value="ward">Ward</option>
+                                <option value="pu">Polling Unit</option>
+                                <option value="volunteer">Volunteer</option>
+                            </select>
+                        </div>
+                        <div class="relative">
+                            <label for="designation" class="block text-sm font-semibold text-gray-700 mb-2">Designation *</label>
+                            <i class="fas fa-badge-check form-icon text-primary"></i>
+                            <select id="designation" required disabled class="input-with-icon w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                                <option value="">Select Designation</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="relative">
+                            <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">Phone Number (WhatsApp preferred) *</label>
+                            <i class="fas fa-phone form-icon text-primary"></i>
+                            <input type="tel" id="phone" required pattern="\+?[0-9]{10,15}" class="input-with-icon w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                        </div>
+                        <div class="relative">
+                            <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                            <i class="fas fa-envelope form-icon text-primary"></i>
+                            <input type="email" id="email" class="input-with-icon w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="space-y-6">
+                        <h3 class="text-lg font-bold text-primary">Location Details</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="relative">
+                                <label for="state" class="block text-sm font-semibold text-gray-700 mb-2">State *</label>
+                                <i class="fas fa-map-marker-alt form-icon text-primary"></i>
+                                <select id="state" required class="input-with-icon w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                                    <option value="">Select State</option>
+                                    <option value="Abia">Abia</option>
+                                    <option value="Adamawa">Adamawa</option>
+                                    <option value="Akwa Ibom">Akwa Ibom</option>
+                                    <option value="Anambra">Anambra</option>
+                                    <option value="Bauchi">Bauchi</option>
+                                    <option value="Bayelsa">Bayelsa</option>
+                                    <option value="Benue">Benue</option>
+                                    <option value="Borno">Borno</option>
+                                    <option value="Cross River">Cross River</option>
+                                    <option value="Delta">Delta</option>
+                                    <option value="Ebonyi">Ebonyi</option>
+                                    <option value="Edo">Edo</option>
+                                    <option value="Ekiti">Ekiti</option>
+                                    <option value="Enugu">Enugu</option>
+                                    <option value="Gombe">Gombe</option>
+                                    <option value="Imo">Imo</option>
+                                    <option value="Jigawa">Jigawa</option>
+                                    <option value="Kaduna">Kaduna</option>
+                                    <option value="Kano">Kano</option>
+                                    <option value="Katsina">Katsina</option>
+                                    <option value="Kebbi">Kebbi</option>
+                                    <option value="Kogi">Kogi</option>
+                                    <option value="Kwara">Kwara</option>
+                                    <option value="Lagos">Lagos</option>
+                                    <option value="Nasarawa">Nasarawa</option>
+                                    <option value="Niger">Niger</option>
+                                    <option value="Ogun">Ogun</option>
+                                    <option value="Ondo">Ondo</option>
+                                    <option value="Osun">Osun</option>
+                                    <option value="Oyo">Oyo</option>
+                                    <option value="Plateau">Plateau</option>
+                                    <option value="Rivers">Rivers</option>
+                                    <option value="Sokoto">Sokoto</option>
+                                    <option value="Taraba">Taraba</option>
+                                    <option value="Yobe">Yobe</option>
+                                    <option value="Zamfara">Zamfara</option>
+                                    <option value="FCT">Federal Capital Territory (FCT)</option>
+                                </select>
+                            </div>
+                            <div class="relative">
+                                <label for="lga" class="block text-sm font-semibold text-gray-700 mb-2">LGA/LCDA *</label>
+                                <i class="fas fa-city form-icon text-primary"></i>
+                                <select id="lga" disabled required class="input-with-icon w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                                    <option value="">Select LGA/LCDA</option>
+                                </select>
+                                <div class="loading-note mt-1" id="lga-loading">Loading LGAs...</div>
+                            </div>
+                            <div class="relative">
+                                <label for="ward" class="block text-sm font-semibold text-gray-700 mb-2">Ward *</label>
+                                <i class="fas fa-map-pin form-icon text-primary"></i>
+                                <select id="ward" disabled required class="input-with-icon w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                                    <option value="">Select Ward</option>
+                                </select>
+                                <div class="loading-note mt-1" id="ward-loading"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PVC & APC Numbers -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="relative">
+                            <label for="pvc" class="block text-sm font-semibold text-gray-700 mb-2">PVC Number (VIN) *</label>
+                            <i class="fas fa-id-card form-icon text-primary"></i>
+                            <input type="text" id="pvc" required placeholder="Enter your PVC/VIN number" class="input-with-icon w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                        </div>
+                        <div class="relative">
+                            <label for="apcCard" class="block text-sm font-semibold text-gray-700 mb-2">APC Card Number *</label>
+                            <i class="fas fa-id-badge form-icon text-primary"></i>
+                            <input type="text" id="apcCard" required class="input-with-icon w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                        </div>
+                    </div>
+
+                    <!-- Uploads -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="pvcUpload" class="block text-sm font-semibold text-gray-700 mb-2">Upload PVC (Recommended)</label>
+                            <input type="file" id="pvcUpload" accept="image/*,application/pdf" class="w-full px-4 py-3 border border-gray-300 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-primary file:text-white hover:file:bg-primary-dark cursor-pointer transition">
+                            <p class="text-xs text-gray-500 mt-2">JPEG, PNG, PDF (max 5MB)</p>
+                        </div>
+                        <div>
+                            <label for="apcUpload" class="block text-sm font-semibold text-gray-700 mb-2">Upload APC Card (Recommended)</label>
+                            <input type="file" id="apcUpload" accept="image/*,application/pdf" class="w-full px-4 py-3 border border-gray-300 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-primary file:text-white hover:file:bg-primary-dark cursor-pointer transition">
+                            <p class="text-xs text-gray-500 mt-2">JPEG, PNG, PDF (max 5MB)</p>
+                        </div>
+                    </div>
+
+                    <!-- Consent -->
+                    <div class="bg-accent-light rounded-xl p-6 border border-accent">
+                        <div class="flex items-start gap-3">
+                            <input type="checkbox" id="consent" required class="mt-1 w-5 h-5 text-primary rounded focus:ring-primary">
+                            <label for="consent" class="text-sm text-gray-700">
+                                I consent to APSG/APC using my details for official verification and mobilization only. Data is confidential.
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <button type="button" id="previewBtn" class="flex-1 bg-secondary hover:bg-secondary/80 text-gray-900 font-bold py-4 rounded-xl transition text-lg shadow-lg hover:shadow-xl">Preview Details</button>
+                        <button type="button" id="directSubmitBtn" class="flex-1 bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-3 text-lg shadow-lg hover:shadow-xl">
+                            <span class="spinner"><i class="fas fa-spinner fa-spin"></i></span>
+                            Submit Directly
+                        </button>
+                    </div>
+                </form>
+
+                <div id="formMessage" class="mt-8"></div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    
+<!-- Detailed Preview Modal -->
+<div id="previewModal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 hidden px-4">
+    <div class="bg-white rounded-3xl max-w-4xl w-full my-8 shadow-2xl max-h-[90vh] overflow-hidden animate-fade-in">
+        <div class="bg-gradient-to-r from-primary to-accent text-white p-6 md:p-8 text-center">
+            <h3 class="text-2xl md:text-3xl font-bold">Registration Preview</h3>
+            <p class="opacity-90 mt-2">Please review your details carefully before submitting</p>
+        </div>
+        <div class="p-6 md:p-10 overflow-y-auto max-h-[60vh]">
+            <div id="previewContent" class="space-y-8 text-gray-700">
+                <!-- Content populated dynamically -->
+            </div>
+            <div class="mt-8 p-6 bg-accent-light rounded-xl">
+                <p class="text-center font-semibold text-primary">Your unique APSG Registration Number will be generated upon successful submission.</p>
+            </div>
+        </div>
+        <div class="p-6 border-t border-gray-200 flex flex-col md:flex-row gap-4">
+            <button onclick="closePreview()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-4 rounded-xl transition">Edit Details</button>
+            <button onclick="submitForm()" class="flex-1 bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-3">
+                <span class="spinner"><i class="fas fa-spinner fa-spin"></i></span>
+                Confirm & Submit
+            </button>
+        </div>
+    </div>
+</div>
 
-    <!-- Dynamic Location Data Script (Local JSON + Lagos 57) -->
-    <script>
-        let nigeriaData = null;
-        const stateSelect = document.getElementById('state');
-        const lgaSelect = document.getElementById('lga');
-        const wardSelect = document.getElementById('ward');
-        const lgaLoading = document.getElementById('lga-loading');
-        const wardLoading = document.getElementById('ward-loading');
-        const lagosNote = document.getElementById('lagosNote');
+<!-- Full Scripts -->
+<script>
+    // Nigerian States
+    const states = [
+        "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue", "Borno",
+        "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", "Gombe", "Imo",
+        "Jigawa", "Kaduna", "Kano", "Katsina", "Kebbi", "Kogi", "Kwara", "Lagos",
+        "Nasarawa", "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau", "Rivers",
+        "Sokoto", "Taraba", "Yobe", "Zamfara", "FCT"
+    ];
 
-        // All 57 Lagos councils (sorted)
-        const lagosAll = [
-            "Agege", "Orile-Agege", "Ajeromi-Ifelodun", "Ifelodun", "Alimosho", "Agbado/Oke-Odo", "Ayobo/Ipaja", "Egbe-Idimu", "Igando-Ikotun", "Mosan-Okunola",
-            "Amuwo-Odofin", "Oriade", "Apapa", "Apapa-Iganmu", "Badagry", "Badagry West", "Oto-Awori", "Olorunda", "Epe", "Eredo",
-            "Eti-Osa", "Eti-Osa East", "Eti-Osa West", "Iru/Victoria Island", "Ikoyi-Obalende", "Lekki", "Ibeju-Lekki",
-            "Ifako-Ijaiye", "Ojodu", "Ojokoro", "Ikeja", "Onigbongbo", "Ikorodu", "Igbogbo-Bayeku", "Ijede", "Imota", "Ikorodu North", "Ikorodu West",
-            "Kosofe", "Agboyi-Ketu", "Ikosi-Isheri", "Lagos Island", "Lagos Island East", "Lagos Mainland", "Yaba", "Mushin", "Odi-Olowo/Ojuwoye",
-            "Ojo", "Iba", "Oshodi-Isolo", "Ejigbo", "Isolo", "Shomolu", "Bariga", "Surulere", "Coker-Aguda", "Itire-Ikate"
-        ].sort();
+    const stateSelect = document.getElementById('state');
+    states.forEach(state => {
+        const option = document.createElement('option');
+        option.value = state;
+        option.textContent = state === "FCT" ? "Federal Capital Territory (FCT)" : state;
+        stateSelect.appendChild(option);
+    });
 
-        // Mapping LCDA to parent official LGA
-        const lagosMapping = {
-            "Orile-Agege": "Agege",
-            "Ifelodun": "Ajeromi-Ifelodun",
-            "Agbado/Oke-Odo": "Alimosho",
-            "Ayobo/Ipaja": "Alimosho",
-            "Egbe-Idimu": "Alimosho",
-            "Igando-Ikotun": "Alimosho",
-            "Mosan-Okunola": "Alimosho",
-            "Oriade": "Amuwo-Odofin",
-            "Apapa-Iganmu": "Apapa",
-            "Badagry West": "Badagry",
-            "Oto-Awori": "Badagry",
-            "Olorunda": "Badagry",
-            "Eredo": "Epe",
-            "Eti-Osa East": "Eti-Osa",
-            "Eti-Osa West": "Eti-Osa",
-            "Iru/Victoria Island": "Eti-Osa",
-            "Ikoyi-Obalende": "Eti-Osa",
-            "Lekki": "Eti-Osa",
-            "Ojodu": "Ifako-Ijaiye",
-            "Ojokoro": "Ifako-Ijaiye",
-            "Onigbongbo": "Ikeja",
-            "Igbogbo-Bayeku": "Ikorodu",
-            "Ijede": "Ikorodu",
-            "Imota": "Ikorodu",
-            "Ikorodu North": "Ikorodu",
-            "Ikorodu West": "Ikorodu",
-            "Agboyi-Ketu": "Kosofe",
-            "Ikosi-Isheri": "Kosofe",
-            "Lagos Island East": "Lagos Island",
-            "Yaba": "Lagos Mainland",
-            "Odi-Olowo/Ojuwoye": "Mushin",
-            "Iba": "Ojo",
-            "Ejigbo": "Oshodi-Isolo",
-            "Isolo": "Oshodi-Isolo",
-            "Bariga": "Shomolu",
-            "Coker-Aguda": "Surulere",
-            "Itire-Ikate": "Surulere"
+    // Location loading
+    let nigeriaData = null;
+    const lgaSelect = document.getElementById('lga');
+    const wardSelect = document.getElementById('ward');
+    const lgaLoading = document.getElementById('lga-loading');
+    const wardLoading = document.getElementById('ward-loading');
+    const lagosNote = document.getElementById('lagosNote');
+
+    const lagosAll = ["Agege","Orile-Agege","Ajeromi-Ifelodun","Ifelodun","Alimosho","Agbado/Oke-Odo","Ayobo/Ipaja","Egbe-Idimu","Igando-Ikotun","Mosan-Okunola","Amuwo-Odofin","Oriade","Apapa","Apapa-Iganmu","Badagry","Badagry West","Oto-Awori","Olorunda","Epe","Eredo","Eti-Osa","Eti-Osa East","Eti-Osa West","Iru/Victoria Island","Ikoyi-Obalende","Lekki","Ibeju-Lekki","Ifako-Ijaiye","Ojodu","Ojokoro","Ikeja","Onigbongbo","Ikorodu","Igbogbo-Bayeku","Ijede","Imota","Ikorodu North","Ikorodu West","Kosofe","Agboyi-Ketu","Ikosi-Isheri","Lagos Island","Lagos Island East","Lagos Mainland","Yaba","Mushin","Odi-Olowo/Ojuwoye","Ojo","Iba","Oshodi-Isolo","Ejigbo","Isolo","Shomolu","Bariga","Surulere","Coker-Aguda","Itire-Ikate"].sort();
+
+    const lagosMapping = {
+        "Orile-Agege": "Agege",
+        "Ifelodun": "Ajeromi-Ifelodun",
+        "Agbado/Oke-Odo": "Alimosho",
+        "Ayobo/Ipaja": "Alimosho",
+        "Egbe-Idimu": "Alimosho",
+        "Igando-Ikotun": "Alimosho",
+        "Mosan-Okunola": "Alimosho",
+        "Oriade": "Amuwo-Odofin",
+        "Apapa-Iganmu": "Apapa",
+        "Badagry West": "Badagry",
+        "Oto-Awori": "Badagry",
+        "Olorunda": "Badagry",
+        "Eredo": "Epe",
+        "Eti-Osa East": "Eti-Osa",
+        "Eti-Osa West": "Eti-Osa",
+        "Iru/Victoria Island": "Eti-Osa",
+        "Ikoyi-Obalende": "Eti-Osa",
+        "Lekki": "Eti-Osa",
+        "Ojodu": "Ifako-Ijaiye",
+        "Ojokoro": "Ifako-Ijaiye",
+        "Onigbongbo": "Ikeja",
+        "Igbogbo-Bayeku": "Ikorodu",
+        "Ijede": "Ikorodu",
+        "Imota": "Ikorodu",
+        "Ikorodu North": "Ikorodu",
+        "Ikorodu West": "Ikorodu",
+        "Agboyi-Ketu": "Kosofe",
+        "Ikosi-Isheri": "Kosofe",
+        "Lagos Island East": "Lagos Island",
+        "Yaba": "Lagos Mainland",
+        "Odi-Olowo/Ojuwoye": "Mushin",
+        "Iba": "Ojo",
+        "Ejigbo": "Oshodi-Isolo",
+        "Isolo": "Oshodi-Isolo",
+        "Bariga": "Shomolu",
+        "Coker-Aguda": "Surulere",
+        "Itire-Ikate": "Surulere"
+    };
+
+    const stateCodes = {
+        "Abia": "AB", "Adamawa": "AD", "Akwa Ibom": "AK", "Anambra": "AN", "Bauchi": "BA",
+        "Bayelsa": "BY", "Benue": "BE", "Borno": "BO", "Cross River": "CR", "Delta": "DE",
+        "Ebonyi": "EB", "Edo": "ED", "Ekiti": "EK", "Enugu": "EN", "Gombe": "GO",
+        "Imo": "IM", "Jigawa": "JI", "Kaduna": "KD", "Kano": "KN", "Katsina": "KT",
+        "Kebbi": "KE", "Kogi": "KO", "Kwara": "KW", "Lagos": "LA", "Nasarawa": "NA",
+        "Niger": "NI", "Ogun": "OG", "Ondo": "ON", "Osun": "OS", "Oyo": "OY",
+        "Plateau": "PL", "Rivers": "RI", "Sokoto": "SO", "Taraba": "TA", "Yobe": "YO",
+        "Zamfara": "ZA", "FCT": "FC"
+    };
+
+    fetch('/assets/files/lgas-with-wards.json')
+        .then(r => r.ok ? r.json() : Promise.reject('File not found'))
+        .then(data => { nigeriaData = data; lgaLoading.textContent = ''; })
+        .catch(() => lgaLoading.textContent = 'Error loading data');
+
+    stateSelect.addEventListener('change', () => {
+        const s = stateSelect.value;
+        lgaSelect.innerHTML = '<option value="">Select LGA/LCDA</option>';
+        wardSelect.innerHTML = '<option value="">Select Ward</option>';
+        lgaSelect.disabled = true;
+        wardSelect.disabled = true;
+        wardLoading.textContent = 'Select LGA/LCDA first';
+        lagosNote.style.display = 'none';
+
+        if (s && nigeriaData) {
+            let lgas = s === 'Lagos' ? lagosAll : Object.keys(nigeriaData[s] || {}).sort();
+            if (s === 'Lagos') lagosNote.style.display = 'block';
+            lgas.forEach(n => {
+                const o = document.createElement('option');
+                o.value = n;
+                o.textContent = n;
+                lgaSelect.appendChild(o);
+            });
+            lgaSelect.disabled = false;
+            lgaLoading.textContent = '';
+        }
+    });
+
+    lgaSelect.addEventListener('change', () => {
+        const s = stateSelect.value;
+        let l = lgaSelect.value;
+        wardSelect.innerHTML = '<option value="">Select Ward</option>';
+        wardSelect.disabled = true;
+        wardLoading.textContent = 'Loading wards...';
+
+        if (s && l && nigeriaData && nigeriaData[s]) {
+            let parent = s === 'Lagos' && lagosMapping[l] ? lagosMapping[l] : l;
+            if (nigeriaData[s][parent]) {
+                const wards = nigeriaData[s][parent].map(w => w.name).sort();
+                wards.forEach(w => {
+                    const o = document.createElement('option');
+                    o.value = w;
+                    o.textContent = w;
+                    wardSelect.appendChild(o);
+                });
+                wardSelect.disabled = false;
+                wardLoading.textContent = '';
+            }
+        }
+    });
+
+    // Designation cascading
+    const roles = {
+        national: ["Member","National Coordinator","Deputy National Coordinator","National Secretary","National Organising Coordinator","National Mobilization Coordinator","National Women Coordinator","National Youth Coordinator","National Media & Communications Coordinator","National Digital Coordinator","National Finance Coordinator","National Strategy & Planning Coordinator","National Legal & Compliance Coordinator"],
+        state: ["Member","State Coordinator","Deputy State Coordinator","State Secretary","State Organising Coordinator","State Mobilization Coordinator","State Women Coordinator","State Youth Coordinator","State Media Coordinator","State Digital Coordinator","State Finance Coordinator"],
+        lga: ["Member","LGA Coordinator","Deputy LGA Coordinator","LGA Secretary","LGA Mobilization Coordinator","LGA Women Coordinator","LGA Youth Coordinator","LGA Media Coordinator"],
+        ward: ["Member","Ward Coordinator","Ward Secretary","Ward Mobilization Coordinator","Ward Women Coordinator","Ward Youth Coordinator"],
+        pu: ["Member","Polling Unit Coordinator","Polling Unit Mobilizer"],
+        volunteer: ["Member","Volunteer","Mobilization Volunteer","Campaign Volunteer","Media Volunteer"]
+    };
+
+    const levelSelect = document.getElementById("level");
+    const designationSelect = document.getElementById("designation");
+
+    levelSelect.addEventListener("change", () => {
+        const level = levelSelect.value;
+        designationSelect.innerHTML = '<option value="">Select Designation</option>';
+        designationSelect.disabled = !level;
+        if (roles[level]) {
+            roles[level].forEach(role => {
+                const option = document.createElement("option");
+                option.value = role;
+                option.textContent = role;
+                designationSelect.appendChild(option);
+            });
+        }
+    });
+</script>
+
+<script src="/assets/js/supabase-clients.js"></script>
+<script type="module">
+    const form = document.getElementById('regForm');
+    const messageDiv = document.getElementById('formMessage');
+    const directSubmitBtn = document.getElementById('directSubmitBtn');
+    const previewBtn = document.getElementById('previewBtn');
+    const previewModal = document.getElementById('previewModal');
+    const previewContent = document.getElementById('previewContent');
+    let formData = null;
+    let currentSlide = 0;
+
+    // Concise validation
+    function validateForm() {
+        let valid = true;
+        const fields = form.querySelectorAll('[required]');
+        fields.forEach(f => {
+            const isValid = f.value.trim() && (!f.pattern || new RegExp(f.pattern).test(f.value.trim()));
+            f.classList.toggle('invalid-input', !isValid);
+            valid = valid && isValid;
+        });
+        const consent = document.getElementById('consent');
+        consent.classList.toggle('invalid-input', !consent.checked);
+        valid = valid && consent.checked;
+        return valid;
+    }
+
+    previewBtn.addEventListener('click', () => {
+        if (validateForm()) {
+            populatePreview();
+            previewModal.classList.remove('hidden');
+        } else {
+            messageDiv.innerHTML = '<div class="bg-red-50 text-red-800 p-4 rounded-xl">Please correct the highlighted fields before previewing.</div>';
+        }
+    });
+
+    directSubmitBtn.addEventListener('click', () => {
+        if (validateForm()) {
+            submitForm(true); // true for direct submit
+        } else {
+            messageDiv.innerHTML = '<div class="bg-red-50 text-red-800 p-4 rounded-xl">Please correct the highlighted fields before submitting.</div>';
+        }
+    });
+
+    function closePreview() {
+        previewModal.classList.add('hidden');
+    }
+
+    function populatePreview() {
+        formData = {
+            firstName: document.getElementById('firstName').value.trim(),
+            lastName: document.getElementById('lastName').value.trim(),
+            level: levelSelect.options[levelSelect.selectedIndex].text,
+            designation: designationSelect.value,
+            phone: document.getElementById('phone').value.trim(),
+            email: document.getElementById('email').value.trim() || 'Not provided',
+            state: stateSelect.value,
+            lga: lgaSelect.value,
+            ward: wardSelect.value,
+            pvc: document.getElementById('pvc').value.trim(),
+            apcCard: document.getElementById('apcCard').value.trim(),
+            pvcFile: document.getElementById('pvcUpload').files[0]?.name || 'No file selected',
+            apcFile: document.getElementById('apcUpload').files[0]?.name || 'No file selected'
         };
 
-        // Fetch local JSON (place lgas-with-wards.json in /assets/files/ on your server)
-        fetch('/assets/files/lgas-with-wards.json')
-            .then(response => {
-                if (!response.ok) throw new Error('File not found');
-                return response.json();
-            })
-            .then(data => {
-                nigeriaData = data;
-                lgaLoading.textContent = '';
-            })
-            .catch(err => {
-                lgaLoading.textContent = 'Error loading local data – check file path';
-                console.error(err);
-            });
+        previewContent.innerHTML = `
+            <div class="space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-gray-50 p-6 rounded-xl"><strong class="text-primary">First Name</strong><br><span class="text-lg">${formData.firstName}</span></div>
+                    <div class="bg-gray-50 p-6 rounded-xl"><strong class="text-primary">Last Name</strong><br><span class="text-lg">${formData.lastName}</span></div>
+                    <div class="bg-gray-50 p-6 rounded-xl"><strong class="text-primary">Level</strong><br><span class="text-lg">${formData.level}</span></div>
+                    <div class="bg-gray-50 p-6 rounded-xl"><strong class="text-primary">Designation</strong><br><span class="text-lg">${formData.designation}</span></div>
+                    <div class="bg-gray-50 p-6 rounded-xl"><strong class="text-primary">Phone</strong><br><span class="text-lg">${formData.phone}</span></div>
+                    <div class="bg-gray-50 p-6 rounded-xl"><strong class="text-primary">Email</strong><br><span class="text-lg">${formData.email}</span></div>
+                </div>
+                <div class="bg-accent-light p-8 rounded-xl">
+                    <h4 class="font-bold text-primary text-xl mb-6 text-center">Location Details</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                        <div class="bg-white p-4 rounded-xl shadow"><strong>State</strong><br><span class="text-lg font-semibold">${formData.state}</span></div>
+                        <div class="bg-white p-4 rounded-xl shadow"><strong>LGA/LCDA</strong><br><span class="text-lg font-semibold">${formData.lga}</span></div>
+                        <div class="bg-white p-4 rounded-xl shadow"><strong>Ward</strong><br><span class="text-lg font-semibold">${formData.ward}</span></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-gray-50 p-6 rounded-xl"><strong class="text-primary">PVC Number</strong><br><span class="text-lg">${formData.pvc}</span></div>
+                    <div class="bg-gray-50 p-6 rounded-xl"><strong class="text-primary">APC Card Number</strong><br><span class="text-lg">${formData.apcCard}</span></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-gray-50 p-6 rounded-xl"><strong class="text-primary">PVC Upload</strong><br><span class="text-lg">${formData.pvcFile}</span></div>
+                    <div class="bg-gray-50 p-6 rounded-xl"><strong class="text-primary">APC Card Upload</strong><br><span class="text-lg">${formData.apcFile}</span></div>
+                </div>
+            </div>
+        `;
+    }
 
-        stateSelect.addEventListener('change', () => {
-            const selectedState = stateSelect.value;
-            lgaSelect.innerHTML = '<option value="">Select LGA/LCDA</option>';
-            wardSelect.innerHTML = '<option value="">Select Ward</option>';
-            lgaSelect.disabled = true;
-            wardSelect.disabled = true;
-            wardLoading.textContent = 'Select LGA/LCDA first';
-            lagosNote.style.display = 'none';
+    async function submitForm(isDirect = false) {
+        const spinner = isDirect ? directSubmitBtn.querySelector('.spinner') : previewModal.querySelector('.spinner');
+        spinner.style.display = 'inline-block';
+        messageDiv.innerHTML = '';
 
-            if (selectedState && nigeriaData) {
-                let lgas = [];
-                if (selectedState === 'Lagos') {
-                    lgas = lagosAll;
-                    lagosNote.style.display = 'block';
-                } else if (nigeriaData[selectedState]) {
-                    lgas = Object.keys(nigeriaData[selectedState]).sort();
-                }
+        try {
+            let pvcPath = null;
+            let apcPath = null;
 
-                lgas.forEach(name => {
-                    const option = document.createElement('option');
-                    option.value = name;
-                    option.textContent = name;
-                    lgaSelect.appendChild(option);
-                });
-                lgaSelect.disabled = false;
-                lgaLoading.textContent = '';
+            const pvcFile = document.getElementById('pvcUpload').files[0];
+            if (pvcFile) {
+                const fileExt = pvcFile.name.split('.').pop();
+                const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+                const { data, error } = await supabaseClient.storage.from('uploads').upload(`pvc/${fileName}`, pvcFile);
+                if (error) throw error;
+                const { data: urlData } = supabaseClient.storage.from('uploads').getPublicUrl(`pvc/${fileName}`);
+                pvcPath = urlData.publicUrl;
             }
-        });
 
-        lgaSelect.addEventListener('change', () => {
-            const selectedState = stateSelect.value;
-            let selectedLga = lgaSelect.value;
-            wardSelect.innerHTML = '<option value="">Select Ward</option>';
-            wardSelect.disabled = true;
-            wardLoading.textContent = 'Loading wards...';
-
-            if (selectedState && selectedLga && nigeriaData && nigeriaData[selectedState]) {
-                let parentLga = selectedLga;
-                if (selectedState === 'Lagos' && lagosMapping[selectedLga]) {
-                    parentLga = lagosMapping[selectedLga];
-                }
-
-                if (nigeriaData[selectedState][parentLga]) {
-                    const wards = nigeriaData[selectedState][parentLga]
-                        .map(w => w.name)
-                        .sort();
-                    wards.forEach(ward => {
-                        const option = document.createElement('option');
-                        option.value = ward;
-                        option.textContent = ward;
-                        wardSelect.appendChild(option);
-                    });
-                    wardSelect.disabled = false;
-                    wardLoading.textContent = '';
-                } else {
-                    wardLoading.textContent = 'No wards found';
-                }
+            const apcFile = document.getElementById('apcUpload').files[0];
+            if (apcFile) {
+                const fileExt = apcFile.name.split('.').pop();
+                const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+                const { data, error } = await supabaseClient.storage.from('uploads').upload(`apc/${fileName}`, apcFile);
+                if (error) throw error;
+                const { data: urlData } = supabaseClient.storage.from('uploads').getPublicUrl(`apc/${fileName}`);
+                apcPath = urlData.publicUrl;
             }
-        });
-    </script>
 
+            const selectedState = formData ? formData.state : stateSelect.value;
+            const selectedLga = formData ? formData.lga : lgaSelect.value;
+            const stateCode = stateCodes[selectedState] || 'XX';
+            const parentLga = selectedState === 'Lagos' && lagosMapping[selectedLga] ? lagosMapping[selectedLga] : selectedLga;
+            const lgaCode = parentLga.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 3) || 'XXX';
+            const year = new Date().getFullYear();
+            const prefix = `APSG/${stateCode}/${lgaCode}/${year}/`;
 
-</Script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Shared Supabase Auth & Client -->
-    <script src="/supabase-clients.js"></script>
-</body>
-    
+            let seq = 1;
+            const { data: existing, error: qError } = await supabaseClient
+                .from('members')
+                .select('reg_number')
+                .like('reg_number', `${prefix}%`)
+                .order('reg_number', { ascending: false })
+                .limit(1);
+            if (qError) throw qError;
+            if (existing && existing.length > 0) {
+                const lastNum = parseInt(existing[0].reg_number.split('/')[4] || '0', 10);
+                seq = lastNum + 1;
+            }
+            const regNumber = `${prefix}${seq.toString().padStart(6, '0')}`;
+
+            const firstName = formData ? formData.firstName : document.getElementById('firstName').value.trim();
+            const lastName = formData ? formData.lastName : document.getElementById('lastName').value.trim();
+
+            const insertData = {
+                reg_number: regNumber,
+                first_name: firstName,
+                last_name: lastName,
+                designation: formData ? formData.designation : designationSelect.value,
+                phone: formData ? formData.phone : document.getElementById('phone').value.trim(),
+                email: formData ? formData.email : (document.getElementById('email').value.trim() || null),
+                state: formData ? formData.state : stateSelect.value,
+                lga: formData ? formData.lga : lgaSelect.value,
+                ward: formData ? formData.ward : wardSelect.value,
+                pvc_number: formData ? formData.pvc : document.getElementById('pvc').value.trim(),
+                apc_card_number: formData ? formData.apcCard : document.getElementById('apcCard').value.trim(),
+                pvc_upload_path: pvcPath,
+                apc_upload_path: apcPath,
+                state_code: stateCode,
+                lga_code: lgaCode
+            };
+
+            const { data: inserted, error: insertError } = await supabaseClient
+                .from('members')
+                .insert(insertData)
+                .select()
+                .single();
+
+            if (insertError) throw insertError;
+
+            if (!isDirect) closePreview();
+
+            // Enhanced success with uploads preview and slider
+            let uploadsHTML = '';
+            const uploads = [];
+            if (pvcPath) uploads.push({ url: pvcPath, type: pvcPath.endsWith('.pdf') ? 'pdf' : 'image', label: 'PVC Upload' });
+            if (apcPath) uploads.push({ url: apcPath, type: apcPath.endsWith('.pdf') ? 'pdf' : 'image', label: 'APC Card Upload' });
+
+            if (uploads.length > 0) {
+                uploadsHTML = `
+                    <div class="upload-slider mt-8 bg-white p-4 rounded-2xl shadow">
+                        <h5 class="font-bold text-primary mb-4 text-center">Your Uploads</h5>
+                        <div class="relative">
+                            <div class="slider-container flex" id="sliderContainer">
+                                ${uploads.map((u, i) => `
+                                    <div class="slider-item">
+                                        <p class="font-semibold mb-2">${u.label}</p>
+                                        ${u.type === 'pdf' ? 
+                                            `<iframe src="${u.url}" class="upload-preview border border-gray-300 rounded-lg" style="height: 300px;"></iframe>
+                                             <p class="mt-2 text-sm"><a href="${u.url}" target="_blank" class="text-primary hover:underline">View/Download PDF</a></p>` : 
+                                            `<img src="${u.url}" alt="${u.label}" class="upload-preview rounded-lg mx-auto">
+                                             <p class="mt-2 text-sm"><a href="${u.url}" target="_blank" class="text-primary hover:underline">View/Download Image</a></p>`}
+                                    </div>
+                                `).join('')}
+                            </div>
+                            ${uploads.length > 1 ? `
+                                <button class="slider-btn slider-btn-left" onclick="slideLeft()"><i class="fas fa-chevron-left"></i></button>
+                                <button class="slider-btn slider-btn-right" onclick="slideRight()"><i class="fas fa-chevron-right"></i></button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            } else {
+                uploadsHTML = '<p class="text-center text-gray-500 mt-4">No uploads provided.</p>';
+            }
+
+            messageDiv.innerHTML = `
+                <div class="bg-accent-light p-10 md:p-16 rounded-3xl shadow-2xl text-center max-w-4xl mx-auto">
+                    <i class="fas fa-check-circle text-primary text-8xl mb-8 animate-pulse"></i>
+                    <h3 class="text-4xl md:text-5xl font-extrabold text-primary mb-6">Congratulations! Registration Successful</h3>
+                    <p class="text-xl mb-8 text-gray-700">Welcome to the APC Progressive Support Group (APSG). Your membership has been successfully recorded and is now pending official verification.</p>
+                    <div class="bg-white p-8 md:p-12 rounded-3xl shadow-inner mb-10">
+                        <p class="text-gray-600 text-lg mb-4">Your Official APSG Membership Registration Number:</p>
+                        <h3
+  class="
+    text-2xl sm:text-3xl md:text-5xl
+    font-extrabold text-primary
+    mb-4 md:mb-6
+    text-center
+    max-w-full md:max-w-4xl
+    mx-auto
+    break-all sm:break-words
+    px-2
+  "
+>
+  ${regNumber}
+</h3>
+
+                        <p class="text-sm text-gray-500">Please save or screenshot this number for your records. It is your unique identifier in APSG.</p>
+                    </div>
+                    ${uploadsHTML}
+                    <div class="space-y-4 text-left bg-white p-6 rounded-2xl shadow mt-8">
+                        <p class="font-semibold text-primary">Next Steps:</p>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li>Your details will be verified by APSG coordinators within 48-72 hours.</li>
+                            <li>You will receive a confirmation message via WhatsApp or email.</li>
+                            <li>Once verified, you will be added to official APSG mobilization groups.</li>
+                            <li>Keep your registration number safe — you may need it for future updates or events.</li>
+                        </ul>
+                    </div>
+                    <p class="mt-8 text-gray-600">Thank you for your commitment to progress. Together, we build a stronger APC!</p>
+                </div>
+            `;
+            form.reset();
+            levelSelect.dispatchEvent(new Event('change'));
+
+            // Initialize slider if exists
+            if (uploads.length > 1) {
+                currentSlide = 0;
+            }
+        } catch (err) {
+            console.error(err);
+            messageDiv.innerHTML = `<div class="bg-red-50 text-red-800 p-6 rounded-xl">Error: ${err.message || 'Submission failed. Please try again.'}</div>`;
+        } finally {
+            spinner.style.display = 'none';
+        }
+    }
+
+    window.slideLeft = function() {
+        const container = document.getElementById('sliderContainer');
+        currentSlide = (currentSlide > 0) ? currentSlide - 1 : container.children.length - 1;
+        container.style.transform = `translateX(-${currentSlide * 100}%)`;
+    };
+
+    window.slideRight = function() {
+        const container = document.getElementById('sliderContainer');
+        currentSlide = (currentSlide < container.children.length - 1) ? currentSlide + 1 : 0;
+        container.style.transform = `translateX(-${currentSlide * 100}%)`;
+    };
+
+    window.closePreview = closePreview;
+    window.submitForm = submitForm;
+</script>
 </body>
 </html>

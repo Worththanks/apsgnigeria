@@ -3,577 +3,481 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - APSG Admin</title>
-    
-    <!-- Favicon (added multiple sizes for better mobile/browser support without affecting colors) -->
-  <link rel="icon" href="/assets/images/apsg.png" sizes="any" />
-  <link rel="apple-touch-icon" href="/assets/images/apsg.png" />
-  
-    <!-- Prevent flash of wrong theme -->
+    <title>APSG Admin Dashboard</title>
+    <link rel="icon" href="/assets/images/apsg.png" sizes="any">
+    <link rel="apple-touch-icon" href="/assets/images/apsg.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#79ecd9',
+                        'primary-light': '#eef2ff',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>
         if (localStorage.getItem("daynight-theme") === "carbon") {
-            document.documentElement.classList.add("carbon");
+            document.documentElement.classList.add("dark");
         }
     </script>
-    <link rel="stylesheet" href="/assets/css/styles.css">
-    
-    <!-- Supabase CDN (load once) -->
+    <style>
+        /* Sidebar links */
+        :root {
+          --primary: #1db609;
+          --primary-light: #dbeafe;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;              /* gap-2 */
+            padding: 0.5rem 0.75rem;  /* px-3 py-2 */
+            border-radius: 0.375rem; /* rounded-md */
+            font-size: 0.875rem;     /* text-sm */
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-link:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .sidebar-link.active {
+            background-color: var(--primary);
+            color: #ffffff;
+        }
+
+        /* Cards */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 0.75rem;      /* p-3 */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .dark .card {
+            background-color: #1f2937; /* gray-800 */
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 15px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Stat icon */
+        .stat-icon {
+            width: 2.5rem;   /* w-10 */
+            height: 2.5rem;  /* h-10 */
+            border-radius: 0.375rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.125rem; /* text-lg */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* Chart container */
+        .chart-container {
+            height: 10rem; /* h-40 */
+        }
+
+        /* Mobile overlay */
+        #mobile-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 40;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Hide overlay on md and above */
+        @media (min-width: 768px) {
+            #mobile-overlay {
+                display: none;
+            }
+        }
+    </style>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body>
-<link rel="icon" href="/assets/images/apsg.png" type="image/png">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    </script>
-    <link rel="stylesheet" href="/assets/css/styles.css">
-<style>
-    /* Enhanced Premium Dashboard Styles - Compact version with black text */
-    :root {
-        --primary: #79ecd9;
-       
-
- --primary-light: #eef2ff;
-        --success: #10b981;
-        --success-light: #d1fae5;
-        --warning: #f59e0b;
-        --warning-light: #fffbeb;
-        --danger: #ef4444;
-        --danger-light: #fee2e2;
-        --gray-100: #f8fafc;
-        --gray-200: #e2e8f0;
-        --gray-900: #000000; /* Pure black text */
-        --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.08);
-        --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.1);
-        --radius: 12px; /* Slightly reduced radius for tighter look */
-        --transition: all 0.3s ease;
-    }
-
-    body, .app-container {
-        background: var(--gray-100);
-        font-family: 'Inter', system-ui, sans-serif;
-        color: var(--gray-900); /* Ensure all text inherits pure black */
-    }
-
-    .top-nav {
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(12px);
-       
-
- border-bottom: 1px solid var(--gray-200);
-        box-shadow: var(--shadow-sm);
-        position: sticky;
-        top: 0;
-        z-index: 40;
-    }
-
-    .logo img {
-        height: 36px; /* Slightly smaller logo */
-        width: auto;
-    }
-
-    .nav-link, .mobile-menu-nav a {
-        display: flex;
-        align-items: center;
-        gap: 8px; /* Reduced gap */
-        padding: 8px 12px; /* Reduced padding */
-        border-radius: 10px;
-        transition: var(--transition);
-        color: var(--gray-900);
-        font-weight: 500;
-    }
-
-    .nav-link:hover, .mobile-menu-nav a:hover {
-        background: var(--primary-light);
-        color: var(--primary);
-    }
-
-    .nav-link.active, .mobile-menu-nav a.active {
-        background: var(--primary);
-        color: white;
-    }
-
-    .nav-link i, .mobile-menu-nav a i {
-        font-size: 1.1rem; /* Slightly smaller icons */
-    }
-
-    .card {
-        background: white;
-        border-radius: var(--radius);
-        box-shadow: var(--shadow-md);
-        padding: 1rem; /* Reduced from 1.5rem */
-        transition: var(--transition);
-    }
-
-    .card:hover {
-        transform: translateY(-4px); /* Reduced lift */
-        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
-    }
-
-    .stat-icon {
-        width: 48px; /* Reduced from 64px */
-        height: 48px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.4rem; /* Reduced icon size */
-        box-shadow: var(--shadow-sm);
-    }
-
-    .page-header {
-        background: linear-gradient(135deg, #fdfdfd 0%, #d5dbd1 100%);
-        color: black;
-        border-radius: var(--radius);
-        padding: 2rem 1.5rem; /* Reduced from 3rem 2rem */
-        margin-bottom: 1.5rem; /* Reduced from 2rem */
-        box-shadow: var(--shadow-md);
-    }
-
-    .page-title {
-        font-size: 2rem; /* Reduced from 2.5rem */
-        font-weight: 800;
-        margin: 0 0 0.5rem 0;
-    }
-
-    .page-subtitle {
-        font-size: 1rem; /* Reduced from 1.125rem */
-        opacity: 0.95;
-    }
-
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1rem; /* Reduced from 1.5rem */
-        margin-bottom: 1.5rem; /* Reduced from 2rem */
-    }
-
-    .two-col {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1 appreciative; /* Reduced from 1.5rem */
-    }
-
-    @media (max-width: 1024px) {
-        .two-col {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .bar {
-        background: linear-gradient(to top, var(--primary), #a78bfa);
-        border-radius: 8px;
-        transition: height 0.6s ease;
-    }
-
-    /* Additional compact adjustments */
-    .card-title {
-        font-size: 1.25rem;
-        margin-bottom: 0.5rem;
-    }
-    .card-subtitle {
-        font-size: 0.875.rem;
-        color: var(--gray-900);
-    }
-    .stat-label {
-        font-size: 0.875rem;
-        color: var(--gray-900);
-    }
-    .stat-value {
-        font-size: 1.75rem;
-        font-weight: 700;
-        color: var(--gray-900);
-    }
-    .bar-label {
-        font-size: 0.8rem;
-        color: var(--gray-900);
-    }
-</style>
-
-<!-- Mobile Menu Overlay -->
-<div class="mobile-menu-overlay"></div>
-
-<!-- Mobile Menu -->
-<div class="mobile-menu">
-    <div class="mobile-menu-header">
-        <a href="dashboard.html" class="logo">
-            <img src="/assets/images/apsg.png" alt="APSG Logo">
-            APSG Admin
-        </a>
-        <button class="mobile-menu-close" onclick="closeMobileMenu()">
-            <i class="fas fa-times"></i>
-        </button>
-    </div>
-      <nav class="mobile-menu-nav">
-            <a href="dashboard.html">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="7" height="7" rx="1"/>
-                    <rect x="14" y="3" width="7" height="7" rx="1"/>
-                    <rect x="3" y="14" width="7" height="7" rx="1"/>
-                    <rect x="14" y="14" width="7" height="7" rx="1"/>
-                </svg>
-                Dashboard
-            </a>
-            <a href="members.html" class="active">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4-4v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
-                Members
-            </a>
-        </nav>
-        <div class="mobile-menu-footer">
-            <a class="mobile-logout-btn" style="cursor:pointer;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    <polyline points="16 17 21 12 16 7"/>
-                    <line x1="21" y1="12" x2="9" y2="12"/>
-                </svg>
-                Logout
-            </a>
-            <div class="theme-toggle">
-                <button class="theme-btn theme-btn-snow active" onclick="setTheme('snow')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <line x1="12" y1="1" x2="12" y2="3"/>
-                        <line x1="12" y1="21" x2="12" y2="23"/>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                        <line x1="1" y1="12" x2="3" y2="12"/>
-                        <line x1="21" y1="12" x2="23" y2="12"/>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                    </svg>
-                </button>
-                <button class="theme-btn theme-btn-carbon" onclick="setTheme('carbon')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </div>
-
-<div class="app-container">
-    <!-- Top Navigation -->
-    <nav class="top-nav">
-        <div class="nav-container">
-            <div class="nav-left">
-                <a href="dashboard.html" class="logo">
-                    <img src="/assets/images/apsg.png" alt="APSG Logo">
-                    APSG Admin
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col text-sm">
+    <div id="mobile-overlay" class="hidden" onclick="closeSidebar()"></div>
+    <div class="flex flex-1">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-56 bg-white dark:bg-gray-800 shadow-md transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto">
+            <div class="p-3 border-b border-gray-200 dark:border-gray-700">
+                <a href="dashboard.html" class="flex items-center gap-2">
+                    <img src="/assets/images/apsg.png" alt="APSG Logo" class="h-8 w-auto">
+                    <span class="text-lg font-semibold">APSG Admin</span>
                 </a>
-                    <div class="nav-menu">
-                        <div class="nav-item">
-                            <a href="dashboard.html" class="nav-link active">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="3" width="7" height="7" rx="1"/>
-                                    <rect x="14" y="3" width="7" height="7" rx="1"/>
-                                    <rect x="3" y="14" width="7" height="7" rx="1"/>
-                                    <rect x="14" y="14" width="7" height="7" rx="1"/>
-                                </svg>
-                                Dashboard
-                            </a>
+            </div>
+            <nav class="p-2 space-y-1">
+                <a href="dashboard.html" class="sidebar-link active">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7" rx="1"/>
+                        <rect x="14" y="3" width="7" height="7" rx="1"/>
+                        <rect x="3" y="14" width="7" height="7" rx="1"/>
+                        <rect x="14" y="14" width="7" height="7" rx="1"/>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="members.html" class="sidebar-link">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4-4v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    Members
+                </a>
+            </nav>
+            <div class="absolute bottom-0 left-0 right-0 p-2 border-t border-gray-200 dark:border-gray-700">
+                <button onclick="logout()" class="w-full sidebar-link text-left text-red-600 dark:text-red-400">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    Logout
+                </button>
+            </div>
+        </aside>
+        <div class="flex-1 flex flex-col md:ml-56">
+            <header class="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-40">
+                <div class="flex items-center justify-between px-3 py-2">
+                    <div class="flex items-center gap-2">
+                        <button id="mobile-toggle" onclick="toggleSidebar()" class="md:hidden text-lg">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <a href="dashboard.html" class="md:hidden flex items-center gap-1">
+                            <img src="/assets/images/apsg.png" alt="APSG" class="h-6">
+                            <span class="font-medium">APSG</span>
+                        </a>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="flex bg-gray-200 dark:bg-gray-700 rounded-md p-0.5">
+                            <button onclick="setTheme('snow')" class="theme-btn-snow px-2 py-0.5 rounded transition-all">
+                                <i class="fas fa-sun text-sm"></i>
+                            </button>
+                            <button onclick="setTheme('carbon')" class="theme-btn-carbon px-2 py-0.5 rounded transition-all">
+                                <i class="fas fa-moon text-sm"></i>
+                            </button>
                         </div>
-                        <div class="nav-item">
-                            <a href="members.html" class="nav-link ">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4-4v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/>
-                                    <circle cx="9" cy="7" r="4"/>
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                                </svg>
-                                Members
-                            </a>
+                        <button onclick="logout()" class="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <i class="fas fa-sign-out-alt text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            <main class="flex-1 p-3 overflow-auto">
+                <div class="mb-4">
+                    <h1 class="text-2xl font-semibold">APSG Dashboard</h1>
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">Overview of APC Progressive Support Group (APSG) With PVC and APC Membership Card</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
+                    <div class="card flex items-start gap-2">
+                        <div class="stat-icon bg-primary-light text-primary">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">Total Members</p>
+                            <p class="text-xl font-semibold mt-0.5" id="totalMembers">0</p>
+                        </div>
+                    </div>
+                    <div class="card flex items-start gap-2">
+                        <div class="stat-icon bg-green-100 dark:bg-green-900/20 text-success">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">Today's Registrations</p>
+                            <p class="text-xl font-semibold mt-0.5" id="todaysRegistrations">0</p>
+                        </div>
+                    </div>
+                    <div class="card flex items-start gap-2">
+                        <div class="stat-icon bg-primary-light text-primary">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">Top Three States</p>
+                            <p class="text-xs font-medium mt-0.5" id="topStatesValue">Loading...</p>
+                        </div>
+                    </div>
+                    <div class="card flex items-start gap-2">
+                        <div class="stat-icon bg-warning/20 text-warning">
+                            <i class="fas fa-city"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">Top Three LGAs</p>
+                            <p class="text-xs font-medium mt-0.5" id="topLgasValue">Loading...</p>
+                        </div>
+                    </div>
+                    <div class="card flex items-start gap-2">
+                        <div class="stat-icon bg-red-100 dark:bg-red-900/20 text-danger">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">Active States</p>
+                            <p class="text-xl font-semibold mt-0.5" id="activeStates">0</p>
                         </div>
                     </div>
                 </div>
-                <div class="nav-right">
-                    <div class="theme-toggle">
-                        <button class="theme-btn theme-btn-snow active" onclick="setTheme('snow')">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="5"/>
-                                <line x1="12" y1="1" x2="12" y2="3"/>
-                                <line x1="12" y1="21" x2="12" y2="23"/>
-                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                                <line x1="1" y1="12" x2="3" y2="12"/>
-                                <line x1="21" y1="12" x2="23" y2="12"/>
-                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                    <div class="card">
+                        <h3 class="text-base font-medium mb-1">Registrations by State</h3>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">Top states (others grouped)</p>
+                        <div class="chart-container flex justify-center relative">
+                            <svg viewBox="0 0 36 36" class="w-40 h-40">
+                                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#e5e7eb" stroke-width="3" stroke-dasharray="100 100"/>
+                                <circle class="donut-segment" cx="18" cy="18" r="15.9" fill="none" stroke="#79ecd9" stroke-width="3" stroke-dasharray="0 100" stroke-dashoffset="0"/>
+                                <circle class="donut-segment" cx="18" cy="18" r="15.9" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="0 100" stroke-dashoffset="0"/>
+                                <circle class="donut-segment" cx="18" cy="18" r="15.9" fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="0 100" stroke-dashoffset="0"/>
+                                <circle class="donut-segment" cx="18" cy="18" r="15.9" fill="none" stroke="#ef4444" stroke-width="3" stroke-dasharray="0 100" stroke-dashoffset="0"/>
+                                <circle class="donut-segment" cx="18" cy="18" r="15.9" fill="none" stroke="#a855f7" stroke-width="3" stroke-dasharray="0 100" stroke-dashoffset="0"/>
+                                <text x="18" y="18" text-anchor="middle" dy=".3em" class="text-lg font-semibold fill-gray-900 dark:fill-gray-100" id="donut-value">0</text>
                             </svg>
-                        </button>
-                        <button class="theme-btn theme-btn-carbon" onclick="setTheme('carbon')">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                            </svg>
-                        </button>
+                            
+                            <div id="donut-legend" class="absolute right-0 top-0 text-xs space-y-1"></div>
+                        </div>
                     </div>
-                    <button class="btn-logout" style="cursor:pointer;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                            <polyline points="16 17 21 12 16 7"/>
-                            <line x1="21" y1="12" x2="9" y2="12"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </nav>
-
-
-    <main class="main-content">
-        <div class="page-header">
-            <div>
-                <h1 class="page-title">APSG Dashboard</h1>
-                <p class="page-subtitle">Overview of APC Progressive Support Group (APSG) With PVC and APC Membership Card</p>
-            </div>
-        </div>
-
-        <!-- Stats Grid -->
-        <div class="stats-grid">
-            <div class="card">
-                <div class="stat-icon" style="background: var(--primary-light); color: var(--primary);">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="stat-info">
-                    <p class="stat-label">Total Members</p>
-                    <p class="stat-value">0</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="stat-icon" style="background: var(--success-light); color: var(--success);">
-                    <i class="fas fa-calendar-day"></i>
-                </div>
-                <div class="stat-info">
-                    <p class="stat-label">Today's Registrations</p>
-                    <p class="stat-value">0</p>
-                </div>
-            </div>
-
-<div class="card">
-    <div class="stat-icon" style="background: var(--primary-light); color: var(--primary);">
-        <i class="fas fa-trophy"></i>
-    </div>
-    <div class="stat-info">
-        <p class="stat-label">Top Three States</p>
-        <p class="stat-value" id="topStatesValue">Loading...</p>
-    </div>
-</div>
-
-            <div class="card">
-                <div class="stat-icon" style="background: var(--danger-light); color: var(--danger);">
-                    <i class="fas fa-map-marker-alt"></i>
-                </div>
-                <div class="stat-info">
-                    <p class="stat-label">Active States</p>
-                    <p class="stat-value">0</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Charts Row -->
-        <div class="two-col">
-            <!-- State Distribution Donut Chart -->
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Registrations by State</h3>
-                    <p class="card-subtitle">Top states (others grouped)</p>
-                </div>
-                <div class="chart-scroll">
-                    <div class="chart-scroll-inner">
-                        <div class="donut-chart">
-                            <svg viewBox="0 0 36 36">
-                                <circle class="donut-ring" cx="18" cy="18" r="15.9" fill="none" stroke="#e2e8f0" stroke-width="3"/>
-                                <circle class="donut-segment" cx="18" cy="18" r="15.9" fill="none" stroke="#4f46e5" stroke-width="3" stroke-dasharray="60 100"/>
-                                <circle class="donut-segment" cx="18" cy="18" r="15.9" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="25 100" stroke-dashoffset="-60"/>
-                                <circle class="donut-segment" cx="18" cy="18" r="15.9" fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="10 100" stroke-dashoffset="-85"/>
-                                <circle class="donut-segment" cx="18" cy="18" r="15.9" fill="none" stroke="#ef4444" stroke-width="3" stroke-dasharray="5 100" stroke-dashoffset="-95"/>
-                            </svg>
-                            <div class="donut-center">
-                                <div class="donut-value">0</div>
-                                <div class="donut-label">Total</div>
+                    <div class="card">
+                        <h3 class="text-base font-medium mb-1">Recent Registrations</h3>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">Last 7 days</p>
+                        <div class="chart-container flex items-end justify-between gap-1">
+                            <div class="flex-1 flex flex-col items-center">
+                                <div class="bar w-full bg-primary rounded-t" style="height:0px;transition:height 0.6s ease;"></div>
+                                <span class="text-xs mt-1 text-gray-600 dark:text-gray-400">6d</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center">
+                                <div class="bar w-full bg-primary rounded-t" style="height:0px;transition:height 0.6s ease;"></div>
+                                <span class="text-xs mt-1 text-gray-600 dark:text-gray-400">5d</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center">
+                                <div class="bar w-full bg-primary rounded-t" style="height:0px;transition:height 0.6s ease;"></div>
+                                <span class="text-xs mt-1 text-gray-600 dark:text-gray-400">4d</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center">
+                                <div class="bar w-full bg-primary rounded-t" style="height:0px;transition:height 0.6s ease;"></div>
+                                <span class="text-xs mt-1 text-gray-600 dark:text-gray-400">3d</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center">
+                                <div class="bar w-full bg-primary rounded-t" style="height:0px;transition:height 0.6s ease;"></div>
+                                <span class="text-xs mt-1 text-gray-600 dark:text-gray-400">2d</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center">
+                                <div class="bar w-full bg-primary rounded-t" style="height:0px;transition:height 0.6s ease;"></div>
+                                <span class="text-xs mt-1 text-gray-600 dark:text-gray-400">1d</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center">
+                                <div class="bar w-full bg-primary rounded-t" style="height:0px;transition:height 0.6s ease;"></div>
+                                <span class="text-xs mt-1 text-gray-600 dark:text-gray-400">Today</span>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Recent Registrations Bar Chart -->
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Recent Registrations</h3>
-                    <p class="card-subtitle">Last 7 days</p>
+                
+                <div id="noDataMessage" class="hidden text-center mt-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                    <i class="fas fa-inbox text-2xl text-gray-400 mb-1"></i>
+                    <p class="text-base">No registrations yet. Data will appear here once members start registering.</p>
                 </div>
-                <div class="bar-chart">
-                    <div class="bar-container">
-                        <div class="bar-group">
-                            <div class="bar-wrapper"><div class="bar"></div></div>
-                            <span class="bar-label">6 days ago</span>
-                        </div>
-                        <div class="bar-group">
-                            <div class="bar-wrapper"><div class="bar"></div></div>
-                            <span class="bar-label">5 days ago</span>
-                        </div>
-                        <div class="bar-group">
-                            <div class="bar-wrapper"><div class="bar"></div></div>
-                            <span class="bar-label">4 days ago</span>
-                        </div>
-                        <div class="bar-group">
-                            <div class="bar-wrapper"><div class="bar"></div></div>
-                            <span class="bar-label">3 days ago</span>
-                        </div>
-                        <div class="bar-group">
-                            <div class="bar-wrapper"><div class="bar"></div></div>
-                            <span class="bar-label">2 days ago</span>
-                        </div>
-                        <div class="bar-group">
-                            <div class="bar-wrapper"><div class="bar"></div></div>
-                            <span class="bar-label">Yesterday</span>
-                        </div>
-                        <div class="bar-group">
-                            <div class="bar-wrapper"><div class="bar"></div></div>
-                            <span class="bar-label">Today</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </main>
+            <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-2 text-center text-xs text-gray-600 dark:text-gray-400">
+                © 2026 APC Progressive Support Group (APSG Nigeria) Admin Dashboard. All rights reserved.
+            </footer>
         </div>
-
-        <!-- No Data Message -->
-        <div id="noDataMessage" class="text-center mt-4" style="display:none;">
-            <p class="text-muted fs-5">No registrations yet. Data will appear here once members start registering.</p>
-        </div>
-    </main>
-
-    <footer class="footer">
-        <p>© 2026 APSG Nigeria Admin Dashboard</p>
-    </footer>
-</div>
-    <!-- Shared Supabase Auth & Client (from supabase-clients.js) -->
+    </div>
     <script src="/assets/js/supabase-clients.js"></script>
+    <script type="module">
+         const els = {
+            sidebar: document.getElementById('sidebar'),
+            overlay: document.getElementById('mobile-overlay'),
+            totalMembers: document.getElementById('totalMembers'),
+            todaysRegistrations: document.getElementById('todaysRegistrations'),
+            activeStates: document.getElementById('activeStates'),
+            topStatesValue: document.getElementById('topStatesValue'),
+            topLgasValue: document.getElementById('topLgasValue'),
+            donutValue: document.getElementById('donut-value'),
+            donutSegments: document.querySelectorAll('.donut-segment'),
+            donutLegend: document.getElementById('donut-legend'),
+            lgaDonutValue: document.getElementById('lga-donut-value'),
+            lgaDonutSegments: document.querySelectorAll('.lga-donut-segment'),
+            lgaDonutLegend: document.getElementById('lga-donut-legend'),
+            genderDonutValue: document.getElementById('gender-donut-value'),
+            genderDonutSegments: document.querySelectorAll('.gender-donut-segment'),
+            genderDonutLegend: document.getElementById('gender-donut-legend'),
+            bars: document.querySelectorAll('.bar'),
+            noDataMessage: document.getElementById('noDataMessage')
+        };
 
-    <!-- Dashboard-Specific Data Loading Script -->
-    <script>
-        async function loadDashboard() {
-            const { data: members, error } = await supabaseClient.from('members').select('*');
-            
-            if (error) {
-                console.error('Error loading members:', error);
-                document.getElementById('noDataMessage').innerHTML = '<p class="text-danger">Error loading data. Check console for details.</p>';
-                document.getElementById('noDataMessage').style.display = 'block';
-                return;
+        // === UI Module ===
+        const ui = {
+            toggleSidebar() {
+                els.sidebar.classList.toggle('-translate-x-full');
+                els.overlay.classList.toggle('hidden');
+            },
+            closeSidebar() {
+                els.sidebar.classList.add('-translate-x-full');
+                els.overlay.classList.add('hidden');
+            },
+            setTheme(mode) {
+                if (mode === 'carbon') {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('daynight-theme', 'carbon');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('daynight-theme', 'snow');
+                }
+                // Update active button highlight
+                document.querySelectorAll('.theme-btn-snow, .theme-btn-carbon').forEach(btn => {
+                    btn.classList.toggle('bg-gray-300', btn.classList.contains(`theme-btn-${mode}`));
+                    btn.classList.toggle('dark:bg-gray-600', btn.classList.contains(`theme-btn-${mode}`));
+                });
             }
+        };
 
-            if (!members || members.length === 0) {
-                document.getElementById('noDataMessage').style.display = 'block';
-                return;
+        // === Auth Module ===
+        const auth = {
+            async logout() {
+                if (typeof supabaseClient !== 'undefined') {
+                    await supabaseClient.auth.signOut();
+                }
+                window.location.href = 'login.html';
             }
+        };
 
-            const total = members.length;
-            const today = new Date().toISOString().slice(0, 10);
-            const todaysCount = members.filter(m => m.created_at?.slice(0, 10) === today).length;
+        // === Data Module ===
+        const data = {
+            async loadDashboard() {
+                try {
+                    const { data: members, error } = await supabaseClient
+                        .from('members')
+                        .select('*');
 
-            // Update stats
-            document.querySelectorAll('.stat-value')[0].textContent = total.toLocaleString();
-            document.querySelectorAll('.stat-value')[1].textContent = todaysCount;
+                    if (error) throw error;
+                    if (!members || members.length === 0) {
+                        els.noDataMessage.classList.remove('hidden');
+                        return;
+                    }
 
-            // State donut chart
-            const stateCounts = {};
-            members.forEach(m => stateCounts[m.state] = (stateCounts[m.state] || 0) + 1);
-            const sortedStates = Object.entries(stateCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
-            const others = total - sortedStates.reduce((s, [_, c]) => s + c, 0);
-            if (others > 0) sortedStates.push(['Others', others]);
+                    const total = members.length;
+                    const today = new Date().toISOString().slice(0, 10);
+                    const todaysCount = members.filter(m => m.created_at?.slice(0, 10) === today).length;
 
-            const donutSegments = document.querySelectorAll('.donut-segment');
-            let offset = 0;
-            const colors = ['var(--accent)', 'var(--success)', 'var(--warning)', '#A855F7', '#EC4899', '#94A3B8'];
-            donutSegments.forEach(segment => {
-                segment.style.strokeDasharray = '0 100';
-                segment.style.strokeDashoffset = '0';
-            });
-            sortedStates.forEach(([state, count], i) => {
-                const percent = (count / total * 100);
-                donutSegments[i].style.strokeDasharray = `${percent} 100`;
-                donutSegments[i].style.strokeDashoffset = -offset;
-                donutSegments[i].style.stroke = colors[i % colors.length];
-                offset += percent;
-            });
-            document.querySelector('.donut-value').textContent = total;
+                    els.totalMembers.textContent = total.toLocaleString();
+                    els.todaysRegistrations.textContent = todaysCount;
 
-            // Last 7 days bar chart (oldest to newest)
-            const last7Days = [];
-            for (let i = 6; i >= 0; i--) {
-                const date = new Date();
-                date.setDate(date.getDate() - i);
-                last7Days.push(date.toISOString().slice(0, 10));
+                    // Active States
+                    const uniqueStates = new Set(members.map(m => m.state?.trim()).filter(Boolean));
+                    els.activeStates.textContent = uniqueStates.size;
+
+                    // State Counts for Donut and Top States
+                    const stateCounts = {};
+                    members.forEach(m => {
+                        const state = m.state?.trim();
+                        if (state) stateCounts[state] = (stateCounts[state] || 0) + 1;
+                    });
+                    const sortedStates = Object.entries(stateCounts).sort((a, b) => b[1] - a[1]);
+                    const topThree = sortedStates.slice(0, 3);
+                    const topThreeStr = topThree.map(([state, count], idx) => `${idx + 1}. ${state} (${count})`).join(' • ');
+                    els.topStatesValue.textContent = topThreeStr || 'No data';
+
+                     // Top Three LGAs
+                    const lgaCounts = {};
+                    members.forEach(m => {
+                        const lga = m.lga?.trim();
+                        if (lga) lgaCounts[lga] = (lgaCounts[lga] || 0) + 1;
+                    });
+                    const sortedLGAs = Object.entries(lgaCounts).sort((a, b) => b[1] - a[1]);
+                    const topThreeLGAs = sortedLGAs.slice(0, 3);
+                    const topThreeLGAsStr = topThreeLGAs.map(([l, c], i) => `${i+1}. ${l} (${c})`).join(' • ');
+                    els.topLgasValue.textContent = topThreeLGAsStr || 'No data';
+
+
+                    // Group for Donut: Top 4 + Others
+                    const topFour = sortedStates.slice(0, 4);
+                    const othersCount = total - topFour.reduce((sum, [_, c]) => sum + c, 0);
+                    const donutData = [...topFour];
+                    if (othersCount > 0) donutData.push(['Others', othersCount]);
+
+                    // Donut Chart
+                    const colors = ['#79ecd9', '#10b981', '#f59e0b', '#ef4444', '#94a3b8'];
+                    let offset = 0;
+                    els.donutSegments.forEach((seg, i) => {
+                        if (i < donutData.length) {
+                            const [name, count] = donutData[i];
+                            const percent = (count / total * 100) || 0;
+                            seg.style.strokeDasharray = `${percent} 100`;
+                            seg.style.strokeDashoffset = -offset;
+                            seg.style.stroke = colors[i % colors.length];
+                            offset += percent;
+
+
+
+                            
+                            // Legend Item
+                            const legendItem = document.createElement('div');
+                            legendItem.classList.add('flex', 'items-center', 'gap-1');
+                            legendItem.innerHTML = `
+                                <div class="w-2 h-2 rounded-full" style="background-color: ${colors[i % colors.length]}"></div>
+                                <span>${name}: ${count}</span>
+                            `;
+                            els.donutLegend.appendChild(legendItem);
+                        } else {
+                            seg.style.strokeDasharray = '0 100';
+                        }
+                    });
+                    els.donutValue.textContent = total;
+
+
+                    
+
+                    // Recent 7 Days Bar Chart
+                const last7Days = [];
+                for (let i = 6; i >= 0; i--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    last7Days.push(date.toISOString().slice(0, 10));
+                }
+                const counts = last7Days.map(date => 
+                    members.filter(m => m.created_at?.slice(0, 10) === date).length
+                );
+                const bars = document.querySelectorAll('.bar');
+                bars.forEach((bar, i) => {
+                    const count = counts[i] || 0;
+                    bar.style.height = Math.max(8, count * 12) + 'px';
+                });
+
+            } catch (err) {
+                console.error('Error:', err);
+                document.getElementById('noDataMessage').innerHTML = '<p class="text-red-600">Error loading data. Please check console.</p>';
+                document.getElementById('noDataMessage').classList.remove('hidden');
             }
-            const counts = last7Days.map(date => 
-                members.filter(m => m.created_at?.slice(0, 10) === date).length
-            );
-
-            const bars = document.querySelectorAll('.bar');
-            bars.forEach((bar, i) => {
-                const count = counts[i] || 0;
-                bar.style.height = Math.max(20, count * 15) + 'px';
-            });
         }
+        };
 
-        async function loadTopStates() {
-    const { data: members, error } = await supabaseClient
-        .from('members')
-        .select('state');
-
-    if (error) {
-        console.error('Error loading top states:', error);
-        document.getElementById('topStatesValue').textContent = 'Error';
-        return;
-    }
-
-    if (!members || members.length === 0) {
-        document.getElementById('topStatesValue').textContent = 'No registrations yet';
-        return;
-    }
-
-    // Count registrations per state
-    const stateCounts = members.reduce((acc, member) => {
-        const state = member.state?.trim();
-        if (state) {
-            acc[state] = (acc[state] || 0) + 1;
-        }
-        return acc;
-    }, {});
-
-    // Sort by count descending and take top 3
-    const topThree = Object.entries(stateCounts)
-        .sort(([, a], [, b]) => b - a)
-        .slice(0, 3)
-        .map(([state, count], index) => `${index + 1}. ${state} (${count})`)
-        .join('   •   ');  // Nice separator for readability
-
-    document.getElementById('topStatesValue').textContent = topThree || 'No data';
-}
-
-// Call this function in your main dashboard load (e.g., after loading total/today stats)
-document.addEventListener('DOMContentLoaded', async () => {
-    await checkAuth();
-    // ... your existing loads (total members, today, etc.)
-    await loadTopStates();  // Add this line
-});
-
-        // Run after auth check
+        // === Init ===
         document.addEventListener('DOMContentLoaded', async () => {
-            await checkAuth(); // From supabase-clients.js
-            loadDashboard();
+            if (typeof checkAuth === 'function') await checkAuth();
+            await data.loadDashboard();
+
+            // Initial theme button highlight
+            const isDark = document.documentElement.classList.contains('dark');
+            ui.setTheme(isDark ? 'carbon' : 'snow');
         });
+
+        // Expose to global for onclick
+        window.toggleSidebar = ui.toggleSidebar;
+        window.closeSidebar = ui.closeSidebar;
+        window.setTheme = ui.setTheme;
+        window.logout = auth.logout;
     </script>
-
-    <!-- DayNight Theme Script -->
-    <script src="/assets/js/styles.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/assets/js/supabase-clients.js"></script>
-<script src="/assets/js/dashboard.js"></script>
-<script src="/assets/js/styles.js"></script>
-
 </body>
 </html>
