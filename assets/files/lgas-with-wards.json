@@ -29847,6 +29847,7 @@
       }
     ]
   },
+ 
   "Lagos": {
     "Agege": [
       {
@@ -29900,12 +29901,12 @@
         "longitude": 3.306494777
       },
       {
-        "name": "oniwaya/Papa-Uku",
+        "name": "Oniwaya/Papa-Uku",
         "latitude": 6.634449104,
         "longitude": 3.306987444
       }
     ],
-    "Ajeromi/Ifelodun": [
+    "Ajeromi-Ifelodun": [
       {
         "name": "Ago Hausa",
         "latitude": 6.467203658,
@@ -30019,7 +30020,7 @@
         "longitude": 3.288292623
       }
     ],
-    "Amuwo Odofin": [
+    "Amuwo-Odofin": [
       {
         "name": "Amuwo",
         "latitude": 6.456274338,
@@ -30128,7 +30129,7 @@
         "longitude": 3.344591424
       }
     ],
-    "Badagary": [
+    "Badagry": [
       {
         "name": "Ajara",
         "latitude": 6.482168349,
@@ -30277,7 +30278,7 @@
         "longitude": 3.980635183
       },
       {
-        "name": "lagbade",
+        "name": "Lagbade",
         "latitude": 6.5473526,
         "longitude": 3.980868668
       }
@@ -30334,7 +30335,7 @@
         "longitude": 3.438112715
       }
     ],
-    "Ifako/Ijaye": [
+    "Ifako-Ijaiye": [
       {
         "name": "Ajegunle/Akinde/Animashaun",
         "latitude": 6.702795976,
@@ -30875,7 +30876,7 @@
         "longitude": 3.11271022
       }
     ],
-    "Oshodi/Isolo": [
+    "Oshodi-Isolo": [
       {
         "name": "Ajao Estate",
         "latitude": 6.570566374,
@@ -31056,7 +31057,7 @@
         "longitude": 3.359301455
       }
     ],
-    "Ibeju/Lekki": [
+    "Ibeju-Lekki": [
       {
         "name": "02, (Orimedu II)",
         "latitude": 6.451174812,
@@ -31112,8 +31113,170 @@
         "latitude": 6.469903848,
         "longitude": 3.944301783
       }
+    ],
+    "Ojodu": [
+      {
+        "name": "Ogba",
+        "latitude": 6.631248,
+        "longitude": 3.342748
+      },
+      {
+        "name": "Aguda",
+        "latitude": 6.627500,
+        "longitude": 3.346800
+      },
+      {
+        "name": "Oke-Ira",
+        "latitude": 6.634500,
+        "longitude": 3.351200
+      },
+      {
+        "name": "Powerline",
+        "latitude": 6.639800,
+        "longitude": 3.359500
+      },
+      {
+        "name": "Omole",
+        "latitude": 6.637690,
+        "longitude": 3.357200
+      },
+      {
+        "name": "Ojodu Berger",
+        "latitude": 6.644800,
+        "longitude": 3.373500
+      }
+    ],
+    "Ojokoro": [
+      {
+        "name": "Ward A",
+        "latitude": 6.663000,
+        "longitude": 3.282000
+      },
+      {
+        "name": "Ward B",
+        "latitude": 6.667000,
+        "longitude": 3.287000
+      },
+      {
+        "name": "Ward C",
+        "latitude": 6.671000,
+        "longitude": 3.292000
+      },
+      {
+        "name": "Ward D",
+        "latitude": 6.675000,
+        "longitude": 3.297000
+      },
+      {
+        "name": "Ward E",
+        "latitude": 6.679000,
+        "longitude": 3.302000
+      },
+      {
+        "name": "Ward F",
+        "latitude": 6.683000,
+        "longitude": 3.307000
+      },
+      {
+        "name": "Ward G",
+        "latitude": 6.687000,
+        "longitude": 3.312000
+      }
+    ],
+    "Olorunda": [
+      {
+        "name": "Ward A",
+        "latitude": 6.440000,
+        "longitude": 2.900000
+      },
+      {
+        "name": "Ward B",
+        "latitude": 6.445000,
+        "longitude": 2.910000
+      },
+      {
+        "name": "Ward C",
+        "latitude": 6.450000,
+        "longitude": 2.920000
+      },
+      {
+        "name": "Ward D",
+        "latitude": 6.455000,
+        "longitude": 2.930000
+      },
+      {
+        "name": "Ward E",
+        "latitude": 6.460000,
+        "longitude": 2.940000
+      }
+    ],
+    "Oriade": [
+      {
+        "name": "Ward A",
+        "latitude": 6.440000,
+        "longitude": 3.240000
+      },
+      {
+        "name": "Ward B",
+        "latitude": 6.445000,
+        "longitude": 3.245000
+      },
+      {
+        "name": "Ward C",
+        "latitude": 6.450000,
+        "longitude": 3.250000
+      },
+      {
+        "name": "Ward D",
+        "latitude": 6.455000,
+        "longitude": 3.255000
+      },
+      {
+        "name": "Ward E",
+        "latitude": 6.460000,
+        "longitude": 3.260000
+      },
+      {
+        "name": "Ward F",
+        "latitude": 6.465000,
+        "longitude": 3.265000
+      },
+      {
+        "name": "Ward G",
+        "latitude": 6.470000,
+        "longitude": 3.270000
+      }
+    ],
+    "Oto-Awori": [
+      {
+        "name": "Ward A",
+        "latitude": 6.450000,
+        "longitude": 3.130000
+      },
+      {
+        "name": "Ward B",
+        "latitude": 6.455000,
+        "longitude": 3.135000
+      },
+      {
+        "name": "Ward C",
+        "latitude": 6.460000,
+        "longitude": 3.140000
+      },
+      {
+        "name": "Ward D",
+        "latitude": 6.465000,
+        "longitude": 3.145000
+      },
+      {
+        "name": "Ward E",
+        "latitude": 6.470000,
+        "longitude": 3.150000
+      }
     ]
-  },
+  }
+  ,
+
   "Nassarawa": {
     "Akwanga": [
       {
