@@ -439,28 +439,67 @@
 
                     
 
-                    // Recent 7 Days Bar Chart
-                const last7Days = [];
-                for (let i = 6; i >= 0; i--) {
-                    const date = new Date();
-                    date.setDate(date.getDate() - i);
-                    last7Days.push(date.toISOString().slice(0, 10));
-                }
-                const counts = last7Days.map(date => 
-                    members.filter(m => m.created_at?.slice(0, 10) === date).length
-                );
-                const bars = document.querySelectorAll('.bar');
-                bars.forEach((bar, i) => {
-                    const count = counts[i] || 0;
-                    bar.style.height = Math.max(8, count * 12) + 'px';
-                });
+                 // Recent 7 Days Bar Chart
+const last7Days = [];
+const dayNames = []; // Optional: for labels if you have .day-label elements
 
-            } catch (err) {
-                console.error('Error:', err);
-                document.getElementById('noDataMessage').innerHTML = '<p class="text-red-600">Error loading data. Please check console.</p>';
-                document.getElementById('noDataMessage').classList.remove('hidden');
+for (let i = 6; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    
+    // Local date string (YYYY-MM-DD)
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateStr = `${year}-${month}-${day}`;
+    
+    last7Days.push(dateStr);
+    
+    // Optional short day name (e.g., "Mon", "Feb 3")
+    dayNames.push(date.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }));
+}
+
+// Count members per day using local dates
+const counts = last7Days.map(dateStr => 
+    members.filter(m => {
+        if (!m.created_at) return false;
+        const d = new Date(m.created_at);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}` === dateStr;
+    }).length
+);
+
+// Auto-scale bars
+const maxCount = Math.max(...counts, 1); // Avoid divide-by-zero
+const maxBarHeight = 180; // Adjust to fit your chart container (px)
+
+const bars = document.querySelectorAll('.bar');
+
+bars.forEach((bar, i) => {
+    const count = counts[i] || 0;
+    const height = count === 0 ? 4 : (count / maxCount) * maxBarHeight;
+    bar.style.height = height + 'px';
+});
+
+// Optional: Update day labels if you have elements with class .day-label
+const dayLabels = document.querySelectorAll('.day-label');
+dayLabels.forEach((label, i) => {
+    label.textContent = dayNames[i];
+});
+
+// Optional: Update count labels if you have elements with class .count-label
+const countLabels = document.querySelectorAll('.count-label');
+countLabels.forEach((label, i) => {
+    label.textContent = counts[i] || 0;
+});
+
+                } catch (error) {
+                    console.error('Error loading dashboard data:', error);
+                    els.noDataMessage.classList.remove('hidden');
+                }
             }
-        }
         };
 
         // === Init ===

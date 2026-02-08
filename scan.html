@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>APSG Event Guest Validation - 12 February 2027</title>
+    <meta name="apple-mobile-web-app-status-style" content="black-translucent">
+    <meta name="theme-color" content="#006400">
+    <title>APSG Guest Scanner</title>
+    <link rel="icon" href="/assets/images/apsg.png" sizes="any">
+    <link rel="apple-touch-icon" href="/assets/images/apsg.png">
     
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -22,155 +25,341 @@
     
     <style>
         body {
+            margin: 0;
+            padding: 0;
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
             min-height: 100vh;
             color: #e2e8f0;
             font-family: 'Roboto', sans-serif;
-            overflow: hidden;
+            overflow-y: auto;
             touch-action: manipulation;
         }
-        .container {
-            padding: 1rem;
-            max-width: 100%;
+        .container-fluid {
+            padding: 0.8rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
         }
         .header {
             text-align: center;
-            margin-bottom: 1rem;
+            padding: 0.6rem 0;
+            flex-shrink: 0;
         }
         .header img {
-            width: 110px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
-            border: 3px solid #10b981;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            border: 4px solid #10b981;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+            object-fit: cover;
         }
         .header h1 {
             font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
             color: #10b981;
-            margin: 0.6rem 0 0.3rem;
+            margin: 0.5rem 0 0.2rem;
+            word-break: break-word;
         }
-        .header p, .header h2 {
+        .header p {
             font-size: 1rem;
             color: #94a3b8;
             margin: 0.2rem 0;
         }
         .scanner-container {
+            flex: 1;
             position: relative;
-            width: 100%;
-            max-width: 100vw;
-            margin: 1rem auto;
-            border-radius: 20px;
+            min-height: 45vh;
+            margin: 0.5rem 0;
+            border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.8);
+            background: #000;
         }
         #reader {
             width: 100%;
-            height: auto;
-            display: block;
+            height: 100%;
+            object-fit: cover;
         }
         .scan-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             pointer-events: none;
-            box-sizing: border-box;
         }
         .corner {
             position: absolute;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-color: #10b981;
             border-style: solid;
+            border-width: 8px;
         }
-        .top-left { top: 15%; left: 15%; border-width: 6px 0 0 6px; }
-        .top-right { top: 15%; right: 15%; border-width: 6px 6px 0 0; }
-        .bottom-left { bottom: 15%; left: 15%; border-width: 0 0 6px 6px; }
-        .bottom-right { bottom: 15%; right: 15%; border-width: 0 6px 6px 0; }
+        .top-left { top: 12%; left: 12%; border-width: 8px 0 0 8px; }
+        .top-right { top: 12%; right: 12%; border-width: 8px 8px 0 0; }
+        .bottom-left { bottom: 12%; left: 12%; border-width: 0 0 8px 8px; }
+        .bottom-right { bottom: 12%; right: 12%; border-width: 0 8px 8px 0; }
         .scan-hint {
             position: absolute;
-            bottom: 10%;
+            bottom: 8%;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.6);
-            padding: 0.8rem 1.5rem;
-            border-radius: 30px;
-            font-size: 1.1rem;
+            background: rgba(0,0,0,0.7);
+            padding: 0.9rem 1.8rem;
+            border-radius: 50px;
+            font-size: 1.2rem;
             color: #fff;
+            backdrop-filter: blur(4px);
             white-space: nowrap;
         }
         #result {
-            padding: 0 1rem;
-            min-height: 180px;
-        }
-        .guest-card {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(16px);
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 1.8rem 1.2rem;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-            animation: fadeIn 0.7s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .guest-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.4rem;
-            color: #34d399;
-        }
-        .access-badge {
-            font-size: 1.8rem;
-            padding: 0.7rem 1.8rem;
+            flex-shrink: 0;
+            padding: 0.8rem;
+            min-height: 160px;
+            width: 100%;
         }
         .torch-btn {
             position: absolute;
-            bottom: 20px;
-            right: 20px;
-            z-index: 10;
-            width: 60px;
-            height: 60px;
+            bottom: 24px;
+            right: 24px;
+            z-index: 20;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.7);
             color: #fff;
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             border: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
         }
         .controls {
-            margin: 1rem 0;
+            flex-shrink: 0;
+            padding: 0.5rem 0;
         }
         .btn-lg {
-            padding: 1rem 2rem;
-            font-size: 1.2rem;
-            min-height: 56px;
+            padding: 1.2rem;
+            font-size: 1.3rem;
+            min-height: 64px;
+            border-radius: 50px;
             width: 100%;
             margin-bottom: 0.8rem;
         }
+        .upload-btn {
+            padding: 1.2rem;
+            font-size: 1.3rem;
+            min-height: 64px;
+            border-radius: 50px;
+            width: 100%;
+        }
+        .ready-text {
+            font-size: 1.2rem;
+            padding: 1rem;
+        }
 
         @media (max-width: 480px) {
+            .header img { width: 80px; height: 80px; }
             .header h1 { font-size: 1.6rem; }
-            .guest-name { font-size: 2.1rem; }
-            .access-badge { font-size: 1.6rem; }
-            .corner { width: 40px; height: 40px; border-width: 5px; }
+            .corner { width: 50px; height: 50px; border-width: 6px; }
+            .torch-btn { width: 64px; height: 64px; font-size: 2rem; }
+            .scan-hint { font-size: 1.1rem; padding: 0.7rem 1.4rem; }
         }
+        @media (orientation: landscape) and (max-height: 600px) {
+            .scanner-container { min-height: 50vh; }
+        }
+
+        /* ==================== PREMIUM ACCESS CARD ==================== */
+        .premium-access-card {
+            background: linear-gradient(135deg, #0a1a2f 0%, #112240 100%);
+            border-radius: 28px;
+            border: 2px solid #d4af37;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8), inset 0 0 20px rgba(212,175,55,0.15);
+            padding: 2rem 1.5rem;
+            max-width: 100%;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        .premium-access-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(212,175,55,0.15), transparent 70%);
+            pointer-events: none;
+        }
+        .card-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        .logo-circle {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #d4af37;
+            box-shadow: 0 8px 25px rgba(212,175,55,0.4);
+        }
+        .logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .ribbon {
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+        }
+        .ribbon-top-left::before,
+        .ribbon-top-left::after {
+            content: '';
+            position: absolute;
+            border: 50px solid #d4af37;
+        }
+        .ribbon-top-left::before { top: 0; left: 0; border-left-color: transparent; border-bottom-color: transparent; }
+        .ribbon-top-left::after { top: 0; right: 0; border-right-color: transparent; border-bottom-color: transparent; }
+        .ribbon span {
+            position: absolute;
+            top: 18px;
+            left: -28px;
+            transform: rotate(-45deg);
+            background: #d4af37;
+            color: #000;
+            font-weight: bold;
+            padding: 6px 40px;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .premium-badge {
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin: 1.5rem 0;
+            box-shadow: 0 10px 30px rgba(16,185,129,0.4);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        .badge-icon { font-size: 2.4rem; }
+        .premium-guest-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.6rem;
+            color: #d4af37;
+            margin: 1.5rem 0 1.8rem;
+            line-height: 1.2;
+            word-break: break-word;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+        }
+        .premium-welcome {
+            font-size: 1.6rem;
+            color: #e2e8f0;
+            margin: 0 0 0.5rem;
+            line-height: 1.6;
+        }
+        .premium-role {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            font-weight: bold;
+            color: #d4af37;
+            margin: 0 0 2.5rem;
+            line-height: 1.3;
+            word-break: break-word;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+        }
+        .org-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #34d399;
+            margin: 0.5rem 0;
+        }
+        .event-date {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #d4af37;
+            margin: 0.5rem 0;
+        }
+        .event-slogan {
+            font-size: 1.5rem;
+            color: #94a3b8;
+            margin: 0.5rem 0 2rem;
+        }
+        .checkin-info {
+            margin: 2rem 0 0;
+            color: #94a3b8;
+            font-size: 1.2rem;
+        }
+        .checkin-info .label {
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+        .checkin-info .time {
+            color: #d4af37;
+            font-weight: bold;
+            font-size: 1.6rem;
+        }
+        .premium-next-btn {
+            background: transparent;
+            border: 3px solid #d4af37;
+            color: #d4af37;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            min-height: 64px;
+            transition: all 0.3s ease;
+        }
+        .premium-next-btn:hover,
+        .premium-next-btn:active {
+            background: #d4af37;
+            color: #000;
+        }
+        .card-footer {
+            margin-top: 2.5rem;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(212,175,55,0.2);
+        }
+        /* Mobile adjustments */
+        @media (max-width: 480px) {
+            .premium-access-card { padding: 1.8rem 1.2rem; border-radius: 24px; }
+            .logo-circle { width: 80px; height: 80px; }
+            .premium-badge { font-size: 1.8rem; padding: 0.9rem 2rem; }
+            .badge-icon { font-size: 2.1rem; }
+            .premium-guest-name { font-size: 2.3rem; margin-bottom: 1.5rem; }
+            .premium-role { font-size: 2.1rem; margin-bottom: 2rem; }
+            .premium-welcome { font-size: 1.5rem; }
+            .org-name { font-size: 1.6rem; }
+            .event-date { font-size: 1.5rem; }
+            .event-slogan { font-size: 1.4rem; }
+            .premium-next-btn { font-size: 1.3rem; padding: 1rem 2.5rem; }
+            .checkin-info .time { font-size: 1.5rem; }
+        }
+        .premium-welcome { font-size: 1.2em; font-weight: bold; margin-bottom: 0.5em; }
+.premium-our { font-size: 1em; margin: 0; }
+.event-type { font-style: italic; margin-top: 1em; }
     </style>
 </head>
 <body>
-    <audio id="vipSound" src="assets/sounds/vip-chime.mp3" preload="auto"></audio>
+    <audio id="vipSound" src="https://apsgnigeria.org/assets/sounds/vip-chime.mp3" preload="auto"></audio>
 
-    <div class="container">
+    <div class="container-fluid">
         <div class="header">
-            <img src="assets/images/apsg.png" alt="APSG Logo">
+            <img src="https://apsgnigeria.org/assets/images/apsg.png" alt="APSG Logo">
             <h1>APC Progressive Support Group</h1>
             <p>2027 and Beyond</p>
-            <h2>Event: 12 February 2027</h2>
         </div>
 
-        <p class="text-center text-light mb-3 fw-light">Scan guest QR code to validate entry</p>
+        <p class="text-center text-light mb-3 fw-medium">Scan QRCode to Validate Entry</p>
 
         <div class="scanner-container">
             <div id="reader"></div>
@@ -179,23 +368,26 @@
                 <div class="corner top-right"></div>
                 <div class="corner bottom-left"></div>
                 <div class="corner bottom-right"></div>
-                <div class="scan-hint">Align QR code in frame</div>
+                <div class="scan-hint">Position QR code inside frame</div>
             </div>
             <button id="torchBtn" class="torch-btn" style="display:none;">💡</button>
         </div>
 
         <div id="result" class="text-center">
-            <p class="ready-text text-light fs-5 fw-light">Start scanning to validate guests. Ready for next guest.</p>
+            <p class="ready-text">Ready – tap Start to begin scanning</p>
         </div>
 
-        <div class="controls text-center">
-            <button id="startBtn" class="btn btn-outline-light btn-lg shadow">Start Camera Scanner</button>
-            <button id="stopBtn" class="btn btn-outline-danger btn-lg" style="display:none;">Stop Scanner</button>
+        <div class="controls">
+            <button id="startBtn" class="btn btn-success btn-lg shadow">Start Camera Scanner</button>
+            <button id="stopBtn" class="btn btn-danger btn-lg" style="display:none;">Stop Scanner</button>
         </div>
 
-        <div class="text-center text-light opacity-75 mt-3">
-            <h6>Or upload QR code image</h6>
-            <input type="file" id="qrInputFile" accept="image/*" class="form-control w-75 mx-auto">
+        <div class="text-center">
+            <label for="qrInputFile" class="btn btn-outline-light btn-lg upload-btn shadow">
+                📷 Upload QR Code Image<br>
+                <small class="opacity-75">From gallery or take photo</small>
+            </label>
+            <input type="file" id="qrInputFile" accept="image/*" capture="environment" style="display:none;">
         </div>
     </div>
 
@@ -209,18 +401,19 @@
 
         let isTorchOn = false;
         let runningTrack = null;
+        let isCameraActive = false; // Flag to track if camera is running
 
         function getQrbox(viewfinderWidth, viewfinderHeight) {
-            const size = Math.min(viewfinderWidth, viewfinderHeight) * 0.7;
+            const size = Math.min(viewfinderWidth, viewfinderHeight) * 0.75;
             return { width: Math.floor(size), height: Math.floor(size) };
         }
 
         const config = {
-            fps: 15,
+            fps: 20,
             qrbox: getQrbox,
-            aspectRatio: 1.0,
+            aspectRatio: 1,
             facingMode: "environment",
-            disableFlip: true
+            disableFlip: false
         };
 
         function escapeHtml(text) {
@@ -231,101 +424,146 @@
 
         function triggerConfetti() {
             confetti({
-                particleCount: 100,
-                spread: 90,
-                origin: { y: 0.7 },
-                colors: ['#10b981', '#34d399', '#6ee7b7', '#ffffff']
+                particleCount: 120,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: ['#10b981', '#34d399', '#6ee7b7', '#d4af37', '#ffffff']
             });
         }
 
         function vibrate() {
-            if (navigator.vibrate) {
-                navigator.vibrate(200);
-            }
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
         }
 
         function showSuccess(decodedText) {
-            vipSound.play().catch(() => {});
-            triggerConfetti();
-            vibrate();
+    vipSound.play().catch(() => {});
+    triggerConfetti();
+    vibrate();
 
-            let name = "Distinguished Guest";
-            let detailsContent = "";
-            let extraContent = "";
-            let photoUrl = null;
+    if (isCameraActive) {
+        scanner.pause(true); // Only pause if camera is active
+    }
 
-            const trimmedText = decodedText.trim();
-            const isUrl = /^https?:\/\//i.test(trimmedText);
+    let name = "";
+    let role = "";
 
-            if (isUrl) {
-                name = "Guest with External Profile";
-                extraContent = `<div class="mt-4"><a href="${trimmedText}" target="_blank" class="btn btn-outline-light btn-lg">View Profile / Ticket</a></div>`;
-            } else {
-                try {
-                    const data = JSON.parse(trimmedText);
-                    name = data.name || data.Name || data.fullName || data.full_name || name;
-                    if (data.photo || data.image) photoUrl = data.photo || data.image;
+    const trimmedText = decodedText.trim();
 
-                    detailsContent = '<dl class="row text-start details-list mt-3">';
-                    Object.keys(data).forEach(key => {
-                        if (!['name','Name','fullName','full_name','photo','image'].includes(key)) {
-                            detailsContent += `<dt class="col-5 text-light opacity-75">${escapeHtml(key.charAt(0).toUpperCase() + key.slice(1))}</dt>
-                                               <dd class="col-7">${escapeHtml(data[key])}</dd>`;
-                        }
-                    });
-                    detailsContent += '</dl>';
-                } catch (e) {
-                    const lines = trimmedText.split('\n').map(l => l.trim()).filter(l => l);
-                    if (lines.length > 0) {
-                        name = lines[0];
-                        if (lines.length > 1) {
-                            detailsContent = '<ul class="list-unstyled text-start mt-3">';
-                            lines.slice(1).forEach(line => {
-                                detailsContent += `<li class="mb-2 fs-4">${escapeHtml(line)}</li>`;
-                            });
-                            detailsContent += '</ul>';
-                        }
-                    }
+    const apsgMatch = trimmedText.match(/Access Granted:\s*(.+?)\s*[–-]\s*APC Progressive Support Group/i);
+    if (apsgMatch) {
+        let guestInfo = apsgMatch[1].trim();
+
+        // Split by the last occurrence of ' - ' or ' – ' to separate name and role
+        const dashRegex = /\s*[\-\–]\s*/;
+        const lastDashIndex = guestInfo.lastIndexOf(' - ');
+        const lastEnDashIndex = guestInfo.lastIndexOf(' – ');
+        const splitIndex = Math.max(lastDashIndex, lastEnDashIndex);
+
+        if (splitIndex > -1) {
+            name = guestInfo.substring(0, splitIndex).trim();
+            role = guestInfo.substring(splitIndex + 3).trim(); // +3 to skip ' - ' or ' – '
+        } else {
+            // Fallback to keyword-based split if no dash found
+            const levelKeywords = ['National', 'State', 'Local', 'Zonal', 'Ward', 'Special', 'Guest']; // Expanded keywords for better matching
+            let keywordSplitIndex = -1;
+            let bestKeyword = '';
+
+            levelKeywords.forEach(keyword => {
+                const idx = guestInfo.lastIndexOf(` ${keyword} `);
+                if (idx > keywordSplitIndex) {
+                    keywordSplitIndex = idx;
+                    bestKeyword = keyword;
                 }
-            }
-
-            const photoHtml = photoUrl ? `<img src="${photoUrl}" class="rounded-circle mb-3" style="width:120px;height:120px;object-fit:cover;border:4px solid #10b981;">` : '';
-
-            resultDiv.innerHTML = `
-                <div class="guest-card">
-                    <div class="text-center">
-                        ${photoHtml}
-                        <div class="badge access-badge bg-success">ACCESS GRANTED</div>
-                        <h2 class="guest-name">${escapeHtml(name)}</h2>
-                        <p class="lead fs-5 mb-4 fw-light">Welcome to the Event<br><em>12 February 2027</em></p>
-                        ${detailsContent}
-                        ${extraContent}
-                        <div class="mt-4">
-                            <button id="nextGuestBtn" class="btn btn-outline-light btn-lg">Ready for Next Guest</button>
-                        </div>
-                        <p class="mt-3 text-muted small">Checked in: ${new Date().toLocaleTimeString()}</p>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('nextGuestBtn')?.addEventListener('click', () => {
-                resultDiv.innerHTML = '<p class="ready-text text-light fs-5 fw-light">Ready for next guest.</p>';
             });
 
-            setTimeout(() => {
-                if (resultDiv.querySelector('#nextGuestBtn')) {
-                    resultDiv.innerHTML = '<p class="ready-text text-light fs-5 fw-light">Ready for next guest.</p>';
-                }
-            }, 30000);
+            if (keywordSplitIndex > -1) {
+                name = guestInfo.substring(0, keywordSplitIndex).trim();
+                role = guestInfo.substring(keywordSplitIndex + 1).trim(); // +1 to include the keyword in role
+            } else {
+                name = guestInfo;
+                role = "";
+            }
+        }
+
+        // Clean up any trailing dashes or spaces from name and role
+        name = name.replace(/[\s\-\–]+$/g, '').trim();
+        role = role.replace(/^[\s\-\–]+/g, '').trim();
+    } else {
+        name = trimmedText || name;
+        role = "";
+    }
+
+    if (!role) role = "";
+
+    const checkInTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+    resultDiv.innerHTML = `
+        <div class="premium-access-card">
+            <div class="card-header">
+                <div class="ribbon ribbon-top-left"><span>VIP</span></div>
+                <div class="logo-circle">
+                    <img src="https://apsgnigeria.org/assets/images/apsg.png" alt="APSG">
+                </div>
+            </div>
+
+            <div class="card-body text-center">
+                <div class="access-badge premium-badge" aria-live="polite">
+                    <span class="badge-text">ACCESS GRANTED</span>
+                    <span class="badge-icon">✓</span>
+                </div>
+
+                <p class="premium-welcome">Welcome to 2027 and Beyond</p>
+                <h1 class="premium-guest-name">${escapeHtml(name)}</h1>
+                <p class="premium-our">our</p>
+                <h2 class="premium-role">${escapeHtml(role)}</h2>
+                <br><br> <!-- Blank lines for spacing -->
+
+                <div class="org-name">APC Progressive Support Group</div>
+                <div class="event-type">Inaugural Ceremony</div>
+                <div class="event-slogan">2027 and Beyond</div>
+                <div class="event-date">12 February 2027</div>
+
+                <div class="checkin-info">
+                    <span class="label">Validated at:</span>
+                    <span class="time">${checkInTime}</span>
+                </div>
+
+                <div class="mt-5">
+                    <button id="nextGuestBtn" class="btn premium-next-btn" type="button">
+                        Ready for Next Guest
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="footer-text">APC Progressive Support Group Nigeria • 2027 & Beyond</div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('nextGuestBtn')?.addEventListener('click', resetResult);
+
+    // Auto reset only if camera is active
+    if (isCameraActive) {
+        setTimeout(resetResult, 40000);
+    }
+}
+
+        function resetResult() {
+            resultDiv.innerHTML = '<p class="ready-text">Ready for next guest</p>';
+            if (isCameraActive) {
+                scanner.resume();
+            }
         }
 
         function onScanSuccess(decodedText) {
             showSuccess(decodedText);
         }
 
-        function onScanError() {}
+        function onScanError() {
+            // Silent
+        }
 
-        // Torch toggle
         torchBtn.addEventListener('click', () => {
             if (!runningTrack) return;
             const capabilities = runningTrack.getCapabilities();
@@ -337,6 +575,7 @@
         });
 
         startBtn.addEventListener("click", () => {
+            isCameraActive = true;
             scanner.start(
                 { facingMode: "environment" },
                 config,
@@ -345,18 +584,15 @@
             ).then(() => {
                 startBtn.style.display = "none";
                 stopBtn.style.display = "block";
-                resultDiv.innerHTML = '<p class="ready-text text-light fs-5 fw-light">Scanning... Align QR code in frame.</p>';
+                resultDiv.innerHTML = '<p class="ready-text">Scanning... Hold steady</p>';
 
-                // Get track and check torch support
                 runningTrack = scanner.getRunningTrack();
-                if (runningTrack) {
-                    const capabilities = runningTrack.getCapabilities();
-                    if ('torch' in capabilities) {
-                        torchBtn.style.display = "block";
-                    }
+                if (runningTrack?.getCapabilities()?.torch) {
+                    torchBtn.style.display = "block";
                 }
             }).catch(err => {
-                resultDiv.innerHTML = `<div class="alert alert-danger p-3">Error: ${err}<br>Allow camera access.</div>`;
+                isCameraActive = false;
+                resultDiv.innerHTML = `<div class="alert alert-danger rounded-pill p-3 mx-2">Camera error: ${err}<br><small>Allow permission & reload</small></div>`;
             });
         });
 
@@ -366,24 +602,25 @@
                 stopBtn.style.display = "none";
                 torchBtn.style.display = "none";
                 isTorchOn = false;
-                resultDiv.innerHTML = '<p class="ready-text text-light fs-5 fw-light">Scanner stopped. Ready for next guest.</p>';
+                isCameraActive = false;
+                resetResult();
             });
         });
 
         document.getElementById('qrInputFile').addEventListener('change', e => {
             if (!e.target.files.length) return;
             const file = e.target.files[0];
-            resultDiv.innerHTML = '<p class="ready-text text-light fs-5 fw-light">Processing image...</p>';
-            scanner.scanFile(file, true)
-                .then(decodedText => onScanSuccess(decodedText))
+            resultDiv.innerHTML = '<p class="ready-text">Processing uploaded image...</p>';
+            scanner.scanFileV2(file, true)
+                .then(res => onScanSuccess(res.decodedText))
                 .catch(err => {
-                    resultDiv.innerHTML = `<div class="alert alert-danger p-3">Scan error: ${err}</div>`;
+                    resultDiv.innerHTML = `<div class="alert alert-danger rounded-pill p-3 mx-2">Scan failed: ${err}<br><small>Try a clearer image or different angle</small></div>`;
                 });
         });
     </script>
 
-    <div class="text-center text-light small opacity-75 fixed-bottom pb-3">
-        <p>Use back camera • Good lighting • Hold steady</p>
+    <div class="text-center text-light small opacity-70 fixed-bottom pb-3 px-2">
+        <p>Back camera • Good light • Hold 15–20cm away</p>
     </div>
 </body>
 </html>
