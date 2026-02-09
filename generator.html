@@ -54,7 +54,7 @@
                 <p class="text-center fs-5" id="qrText"></p>
                 <img id="qrImage" class="qr-img img-fluid" alt="Guest QR Code">
                 <div class="text-center mt-4">
-                    <a id="downloadLink" class="btn btn-primary btn-lg share-btn" download="apsg-qr-code.png">Download Image</a>
+                    <a id="downloadLink" class="btn btn-primary btn-lg share-btn" download="inaugural-qr-code.png">Download Image</a>
                     <button class="btn btn-success btn-lg share-btn" onclick="shareOnWhatsApp()">Share on WhatsApp</button>
                     <p class="text-muted mt-3">Save the image → Open WhatsApp → Attach → Send to guest</p>
                 </div>
@@ -63,7 +63,7 @@
     </div>
 
     <footer class="py-4 text-center">
-        © 2026 APC Progressive Support Group Nigeria • dg@apsgnigeria.org
+        © 2026 APC Progressive Support Group Nigeria • Inaugural@apsgnigeria.org
     </footer>
 
     <script>
@@ -77,7 +77,7 @@
         // Pre-load logo separately for reliability
         const logo = new Image();
         logo.crossOrigin = 'anonymous';
-        logo.src = 'assets/images/apsg.png';
+        logo.src = 'assets/images/qr-apsgt.png';
 
         logo.onload = () => {
             logoStatus.textContent = 'APSG logo loaded – ready for QR branding!';
@@ -121,7 +121,7 @@
 
                 // Overlay logo (very small: 15% ≈ 120px, centered)
                 if (logo.complete && logo.naturalWidth > 0) {
-                    const logoSize = 800 * 0.15; // 10% of QR size for a more subtle look
+                    const logoSize = 800 * 0.20; // 10% of QR size for a more subtle look
                     const logoX = (800 - logoSize) / 2;
                     const logoY = (800 - logoSize) / 2;
                     ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
@@ -132,7 +132,7 @@
                 const finalUrl = canvas.toDataURL('image/png');
                 qrImage.src = finalUrl;
                 downloadLink.href = finalUrl;
-                downloadLink.download = `apsg-qr-${name.replace(/\s+/g, '-').toLowerCase()}.png`;
+                downloadLink.download = `${name.replace(/\s+/g, '-').toLowerCase()}-inaugural-qrcode.png`;
 
                 qrResult.classList.remove('d-none');
                 qrResult.scrollIntoView({ behavior: 'smooth' });
