@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-labelledby="t">
+  <title id="t">PDF document placeholder</title>
+  <rect width="800" height="1000" rx="48" fill="#fffaf0"/>
+  <path d="M560 0v220h220" fill="#f7e2a7"/>
+  <rect x="110" y="310" width="580" height="80" rx="20" fill="#05351f"/>
+  <rect x="110" y="440" width="460" height="40" rx="20" fill="#0f7a3d" opacity=".82"/>
+  <rect x="110" y="520" width="530" height="40" rx="20" fill="#0f7a3d" opacity=".58"/>
+  <rect x="110" y="600" width="380" height="40" rx="20" fill="#0f7a3d" opacity=".44"/>
+  <text x="400" y="835" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="86" font-weight="900" fill="#d8ad34">PDF</text>
+</svg>

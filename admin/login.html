@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="robots" content="noindex,nofollow">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#05351f" />
+  <meta name="description" content="Unified APSG secure login portal for members and administrators." />
+  <meta property="og:title" content="APSG Unified Login Portal" />
+  <meta property="og:description" content="One secure login gateway for APSG members and administrators." />
+  <meta property="og:type" content="website" />
+  <title>APSG Unified Login Portal</title>
+
+  <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any" />
+  <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="/assets/css/tailwind-static.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+  <script>
+    if (localStorage.getItem('daynight-theme') === 'carbon') {
+      document.documentElement.classList.add('carbon');
+    }
+
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Playfair Display', 'Georgia', 'serif']
+          },
+          colors: {
+            apsgDeep: '#05351f',
+            apsgGreen: '#0f7a3d',
+            apsgEmerald: '#0f766e',
+            apsgGold: '#d8ad34',
+            apsgCream: '#fffaf0',
+            apsgInk: '#07140e'
+          },
+          boxShadow: {
+            luxury: '0 28px 90px rgba(5, 53, 31, 0.18)',
+            gold: '0 16px 40px rgba(216, 173, 52, 0.22)',
+            card: '0 18px 50px rgba(5, 53, 31, 0.10)',
+            soft: '0 12px 30px rgba(5, 53, 31, 0.08)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+   
+  </style>
+  <link rel="stylesheet" href="/assets/css/admin-unified.css">
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+</head>
+<body class="min-h-screen overflow-x-hidden">
+  <div class="theme-toggle" aria-label="Theme toggle">
+    <button type="button" id="snowThemeBtn" class="theme-btn" onclick="setTheme('snow')" title="Light mode" aria-label="Light mode"><i class="fa-solid fa-sun"></i></button>
+    <button type="button" id="carbonThemeBtn" class="theme-btn" onclick="setTheme('carbon')" title="Dark mode" aria-label="Dark mode"><i class="fa-solid fa-moon"></i></button>
+  </div>
+
+  <main class="login-hero px-3 md:px-6 py-8 md:py-10">
+    <div class="luxury-orb -top-28 -left-24"></div>
+    <div class="luxury-orb bottom-0 -right-20"></div>
+
+    <section class="relative z-10 max-w-7xl mx-auto grid lg:grid-cols-[0.95fr_1.05fr] gap-6 md:gap-8 items-center min-h-[calc(100vh-5rem)]">
+      <div class="text-center lg:text-left text-white">
+        <a href="/" class="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs md:text-sm font-black shadow-lg backdrop-blur-md no-underline text-white">
+          <span class="grid h-8 w-8 place-items-center rounded-full bg-white/90">
+            <img src="/assets/images/logo/apsg.png" alt="APSG Logo" class="h-6 w-6 object-contain" onerror="this.onerror=null;this.src='/assets/images/logo/apsg1.png';" width="96" height="96" decoding="async">
+          </span>
+          APSG Unified Access Portal
+        </a>
+
+        <h1 id="heroTitle" class="display-font mt-6 text-4xl sm:text-5xl md:text-7xl font-black leading-[0.95] tracking-tight drop-shadow-2xl">
+          One Secure Login for Members & Admin
+        </h1>
+
+        <p id="heroSubtitle" class="mt-6 max-w-2xl mx-auto lg:mx-0 text-base md:text-xl text-white/82 leading-relaxed">
+          Choose your access type. Members verify with Registration Number and Phone Number. Administrators sign in with email and password to manage APSG operations.
+        </p>
+
+        <div class="mt-7 grid sm:grid-cols-3 gap-3 text-left">
+          <div class="access-card p-4">
+            <i class="fas fa-id-card text-apsgGold"></i>
+            <p class="mt-2 text-xs uppercase tracking-[0.2em] text-white/55 font-black">Member</p>
+            <p class="font-black">Profile details</p>
+          </div>
+          <div class="access-card p-4">
+            <i class="fas fa-user-shield text-apsgGold"></i>
+            <p class="mt-2 text-xs uppercase tracking-[0.2em] text-white/55 font-black">Admin</p>
+            <p class="font-black">Command access</p>
+          </div>
+          <div class="access-card p-4">
+            <i class="fas fa-file-shield text-apsgGold"></i>
+            <p class="mt-2 text-xs uppercase tracking-[0.2em] text-white/55 font-black">Secure</p>
+            <p class="font-black">Supabase login</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="premium-panel p-4 md:p-6 lg:p-7">
+        <div class="text-center">
+          <div class="mx-auto grid h-20 w-20 place-items-center rounded-3xl bg-white shadow-gold border border-apsgGold/35">
+            <img src="/assets/images/logo/apsg.png" alt="APSG Logo" class="h-14 w-14 object-contain" onerror="this.onerror=null;this.src='/assets/images/logo/apsg1.png';" width="96" height="96" decoding="async">
+          </div>
+          <p class="mt-4 text-xs uppercase tracking-[0.28em] text-apsgGold font-black">Official APSG Access</p>
+          <h2 id="panelTitle" class="display-font mt-1 text-3xl md:text-4xl font-black text-apsgDeep carbon:text-white">Secure Login Portal</h2>
+          <p id="panelSubtitle" class="mt-2 text-sm text-gray-600 max-w-lg mx-auto">Select Member or Admin to continue.</p>
+        </div>
+
+        <div class="mt-6 grid grid-cols-2 gap-2 rounded-full bg-apsgDeep/5 p-1">
+          <button type="button" id="memberTab" class="portal-tab active" data-mode="member">
+            <i class="fas fa-id-card"></i> Member
+          </button>
+          <button type="button" id="adminTab" class="portal-tab" data-mode="admin">
+            <i class="fas fa-user-shield"></i> Admin
+          </button>
+        </div>
+
+        <div class="mt-6">
+          <form id="memberForm" class="space-y-4" novalidate>
+            <div>
+              <label for="regInput" class="block text-xs font-black uppercase tracking-[0.16em] text-gray-600 mb-2">Registration Number</label>
+              <div class="relative">
+                <i class="fas fa-hashtag absolute left-4 top-1/2 -translate-y-1/2 text-apsgGreen"></i>
+                <input type="text" id="regInput" placeholder="e.g. APSG/LG/IDO/2026/000000" autocomplete="off" class="form-input py-3 pl-11 pr-4 text-sm md:text-base" />
+              </div>
+            </div>
+
+            <div>
+              <label for="phoneInput" class="block text-xs font-black uppercase tracking-[0.16em] text-gray-600 mb-2">Phone Number</label>
+              <div class="relative">
+                <i class="fas fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-apsgGreen"></i>
+                <input type="tel" id="phoneInput" placeholder="e.g. 07012345678" autocomplete="tel" class="form-input py-3 pl-11 pr-4 text-sm md:text-base" />
+              </div>
+            </div>
+
+            <button id="memberLoginBtn" type="submit" class="portal-btn w-full bg-gradient-to-r from-apsgGreen to-apsgEmerald text-white py-4 shadow-luxury text-base md:text-lg">
+              <i class="fas fa-shield-halved mr-2"></i> Verify & Open Member Details
+            </button>
+          </form>
+
+          <form id="adminForm" class="hidden space-y-4" novalidate>
+            <div>
+              <label for="emailInput" class="block text-xs font-black uppercase tracking-[0.16em] text-gray-600 mb-2">Admin Email Address</label>
+              <div class="relative">
+                <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-apsgGreen"></i>
+                <input type="email" id="emailInput" placeholder="admin@apsg.ng" autocomplete="email" class="form-input py-3 pl-11 pr-4 text-sm md:text-base" />
+              </div>
+            </div>
+
+            <div>
+              <label for="passwordInput" class="block text-xs font-black uppercase tracking-[0.16em] text-gray-600 mb-2">Password</label>
+              <div class="relative">
+                <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-apsgGreen"></i>
+                <input type="password" id="passwordInput" placeholder="Enter your password" autocomplete="current-password" class="form-input py-3 pl-11 pr-12 text-sm md:text-base" />
+                <button type="button" id="togglePasswordBtn" class="absolute right-3 top-1/2 -translate-y-1/2 grid h-9 w-9 place-items-center rounded-full text-gray-500 hover:bg-apsgGold/15 hover:text-apsgDeep" aria-label="Show password">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <button id="adminLoginBtn" type="submit" class="portal-btn w-full bg-gradient-to-r from-apsgDeep to-apsgGreen text-white py-4 shadow-luxury text-base md:text-lg">
+              <i class="fas fa-right-to-bracket mr-2"></i> Sign In to Admin Dashboard
+            </button>
+          </form>
+
+          <p id="loginError" class="hidden mt-4 rounded-2xl border border-red-200 bg-red-50 p-3 text-center text-sm font-bold text-red-700"></p>
+
+          <div id="successNotice" class="hidden mt-4 notice-card p-4 text-sm text-gray-700">
+            <p class="font-black text-apsgDeep"><i class="fas fa-circle-check text-apsgGreen mr-1"></i> Login successful</p>
+            <p id="successText" class="mt-1">Opening secure dashboard...</p>
+          </div>
+
+          <div id="helperNotice" class="mt-5 notice-card p-4 text-sm text-gray-700">
+            <p class="font-black text-apsgDeep"><i class="fas fa-circle-info text-apsgGold mr-1"></i> Access note</p>
+            <p id="helperText" class="mt-1 leading-relaxed">Members continue to <strong>member-details.html</strong> after verification. Admins continue to the admin dashboard after Supabase authentication.</p>
+          </div>
+
+          <div class="mt-5 flex flex-wrap items-center justify-center gap-3 text-xs font-black uppercase tracking-[0.15em]">
+            <a href="/pages/register.html" class="text-apsgGreen hover:text-apsgDeep no-underline">Register</a>
+            <span class="text-gray-300">•</span>
+            <a href="/" class="text-apsgGreen hover:text-apsgDeep no-underline">Home</a>
+            <span class="text-gray-300">•</span>
+            <a href="/pages/contact.html" class="text-apsgGreen hover:text-apsgDeep no-underline">Support</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/assets/js/supabase-clients.js"></script>
+  <script src="/assets/js/apsg-settings.js"></script>
+  <script>
+    const MEMBER_DETAILS_URL = '/admin/member-details.html?mode=member';
+    const ADMIN_DASHBOARD_URL = '/admin/dashboard.html';
+
+    const $ = id => document.getElementById(id);
+    const els = {
+      memberTab: $('memberTab'),
+      adminTab: $('adminTab'),
+      memberForm: $('memberForm'),
+      adminForm: $('adminForm'),
+      regInput: $('regInput'),
+      phoneInput: $('phoneInput'),
+      emailInput: $('emailInput'),
+      passwordInput: $('passwordInput'),
+      memberLoginBtn: $('memberLoginBtn'),
+      adminLoginBtn: $('adminLoginBtn'),
+      togglePasswordBtn: $('togglePasswordBtn'),
+      loginError: $('loginError'),
+      successNotice: $('successNotice'),
+      successText: $('successText'),
+      panelTitle: $('panelTitle'),
+      panelSubtitle: $('panelSubtitle'),
+      heroTitle: $('heroTitle'),
+      heroSubtitle: $('heroSubtitle'),
+      helperText: $('helperText'),
+      snowThemeBtn: $('snowThemeBtn'),
+      carbonThemeBtn: $('carbonThemeBtn')
+    };
+
+    let activeMode = new URLSearchParams(location.search).get('portal') === 'admin' ? 'admin' : 'member';
+
+    function setTheme(theme) {
+      localStorage.setItem('daynight-theme', theme);
+      document.documentElement.classList.toggle('carbon', theme === 'carbon');
+      els.snowThemeBtn.classList.toggle('active', theme !== 'carbon');
+      els.carbonThemeBtn.classList.toggle('active', theme === 'carbon');
+    }
+
+    function resetMessages() {
+      els.loginError.classList.add('hidden');
+      els.loginError.textContent = '';
+      els.successNotice.classList.add('hidden');
+      els.successText.textContent = '';
+    }
+
+    function setPortal(mode) {
+      activeMode = mode;
+      resetMessages();
+      els.memberTab.classList.toggle('active', mode === 'member');
+      els.adminTab.classList.toggle('active', mode === 'admin');
+      els.memberForm.classList.toggle('hidden', mode !== 'member');
+      els.adminForm.classList.toggle('hidden', mode !== 'admin');
+
+      if (mode === 'admin') {
+        document.title = 'Admin Login | APSG Nigeria';
+        els.heroTitle.textContent = 'Admin Command Login';
+        els.heroSubtitle.textContent = 'Sign in with your authorised APSG admin email and password to manage members, review documents and access the control dashboard.';
+        els.panelTitle.textContent = 'Admin Access';
+        els.panelSubtitle.textContent = 'Use your APSG administrator credentials.';
+        els.helperText.innerHTML = 'Admin access uses Supabase authentication and opens the admin dashboard. Use <strong>?portal=admin</strong> to open this tab by default.';
+        setTimeout(() => els.emailInput.focus(), 80);
+      } else {
+        document.title = 'Member Login | APSG Nigeria';
+        els.heroTitle.textContent = 'Member Verification Login';
+        els.heroSubtitle.textContent = 'Verify your APSG Registration Number and Phone Number to open your official member details page and document record.';
+        els.panelTitle.textContent = 'Member Access';
+        els.panelSubtitle.textContent = 'Enter your registration number and registered phone number.';
+        els.helperText.innerHTML = 'Members continue securely to <strong>member-details.html</strong> after successful verification.';
+        setTimeout(() => els.regInput.focus(), 80);
+      }
+    }
+
+    function showError(message) {
+      els.loginError.textContent = message;
+      els.loginError.classList.remove('hidden');
+      els.successNotice.classList.add('hidden');
+    }
+
+    function showSuccess(message) {
+      els.successText.innerHTML = message;
+      els.successNotice.classList.remove('hidden');
+      els.loginError.classList.add('hidden');
+    }
+
+    function normalizePhone(value) {
+      return String(value || '').replace(/[\s\-()]/g, '').trim();
+    }
+
+    function phoneCandidates(value) {
+      const raw = normalizePhone(value);
+      const digits = raw.replace(/\D/g, '');
+      const list = [raw, digits];
+      if (digits.startsWith('234')) list.push('0' + digits.slice(3), '+234' + digits.slice(3));
+      if (digits.startsWith('0')) list.push('234' + digits.slice(1), '+234' + digits.slice(1));
+      return [...new Set(list.filter(Boolean))];
+    }
+
+    function getSafeReturnUrl(fallback) {
+      const params = new URLSearchParams(location.search);
+      const candidate = params.get('redirect') || params.get('next');
+      if (!candidate) return fallback;
+      try {
+        const url = new URL(candidate, location.origin);
+        if (url.origin === location.origin) return url.pathname + url.search + url.hash;
+      } catch (error) {
+        if (candidate.startsWith('/') && !candidate.startsWith('//')) return candidate;
+      }
+      return fallback;
+    }
+
+    async function verifyMember(event) {
+      event.preventDefault();
+      const reg = els.regInput.value.trim();
+      const phone = els.phoneInput.value.trim();
+
+      if (!reg || !phone) {
+        showError('Please enter both Registration Number and Phone Number.');
+        return;
+      }
+
+      if (typeof supabaseClient === 'undefined') {
+        showError('Supabase client is not available. Please check /assets/js/supabase-clients.js.');
+        return;
+      }
+
+      resetMessages();
+      els.memberLoginBtn.disabled = true;
+      els.memberLoginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Verifying member...';
+
+      try {
+        let member = null;
+        let lastError = null;
+        const candidates = phoneCandidates(phone);
+
+        for (const candidate of candidates) {
+          const response = await supabaseClient
+            .from('members')
+            .select('*')
+            .eq('reg_number', reg)
+            .eq('phone', candidate)
+            .maybeSingle();
+
+          if (response.data) {
+            member = response.data;
+            break;
+          }
+          lastError = response.error;
+        }
+
+        if (!member) throw lastError || new Error('Invalid member credentials');
+
+        sessionStorage.setItem('apsg_member_portal_verified', '1');
+        sessionStorage.setItem('apsg_member_portal_member_id', member.id || '');
+        sessionStorage.setItem('apsg_member_portal_member', JSON.stringify(member));
+        sessionStorage.setItem('apsg_member_portal_access_at', new Date().toISOString());
+
+        const destination = getSafeReturnUrl(MEMBER_DETAILS_URL);
+        showSuccess(`Verification successful. Opening <strong>member-details.html</strong>...`);
+        setTimeout(() => { window.location.href = destination; }, 450);
+      } catch (error) {
+        showError('Invalid Registration Number or Phone Number. Please check and try again.');
+      } finally {
+        els.memberLoginBtn.disabled = false;
+        els.memberLoginBtn.innerHTML = '<i class="fas fa-shield-halved mr-2"></i> Verify & Open Member Details';
+      }
+    }
+
+    async function loginAdmin(event) {
+      event.preventDefault();
+      const email = els.emailInput.value.trim();
+      const password = els.passwordInput.value;
+
+      if (!email || !password) {
+        showError('Please enter admin email and password.');
+        return;
+      }
+
+      if (typeof supabaseClient === 'undefined' || !supabaseClient.auth) {
+        showError('Supabase auth client is not available. Please check /assets/js/supabase-clients.js.');
+        return;
+      }
+
+      resetMessages();
+      els.adminLoginBtn.disabled = true;
+      els.adminLoginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Signing in...';
+
+      try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error || !data?.session) throw error || new Error('No admin session returned');
+
+        localStorage.setItem('apsg_admin_login_at', new Date().toISOString());
+        const destination = getSafeReturnUrl(ADMIN_DASHBOARD_URL);
+        showSuccess('Admin login successful. Opening dashboard...');
+        setTimeout(() => { window.location.href = destination; }, 450);
+      } catch (error) {
+        showError(error?.message || 'Invalid admin email or password. Please try again.');
+      } finally {
+        els.adminLoginBtn.disabled = false;
+        els.adminLoginBtn.innerHTML = '<i class="fas fa-right-to-bracket mr-2"></i> Sign In to Admin Dashboard';
+      }
+    }
+
+    els.memberTab.addEventListener('click', () => setPortal('member'));
+    els.adminTab.addEventListener('click', () => setPortal('admin'));
+    els.memberForm.addEventListener('submit', verifyMember);
+    els.adminForm.addEventListener('submit', loginAdmin);
+
+    els.regInput.addEventListener('keypress', event => { if (event.key === 'Enter') els.phoneInput.focus(); });
+    els.emailInput.addEventListener('keypress', event => { if (event.key === 'Enter') els.passwordInput.focus(); });
+
+    els.togglePasswordBtn.addEventListener('click', () => {
+      const isPassword = els.passwordInput.type === 'password';
+      els.passwordInput.type = isPassword ? 'text' : 'password';
+      els.togglePasswordBtn.innerHTML = isPassword ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setTheme(localStorage.getItem('daynight-theme') === 'carbon' ? 'carbon' : 'snow');
+      setPortal(activeMode);
+    });
+
+    window.setTheme = setTheme;
+  </script>
+  <script src="/assets/js/admin-unified.js" defer></script>
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

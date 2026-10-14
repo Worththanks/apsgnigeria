@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="robots" content="noindex,nofollow">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APSG VIP QR Code Generator</title>
+
+        <!-- Favicon -->
+    <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any" />
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png" />
+    <link rel="icon" href="/assets/images/logo/apsg.png" sizes="any">
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg.png">
+
+
+    <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any">
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cormorant+Garamond:wght@400;500&family=Roboto&display=swap" rel="stylesheet">
+    
+       <link rel="stylesheet" href="/assets/css/styles.css">
+        <link rel="stylesheet" href="/assets/css/dashboard.css">
+    
+    <style>
+        
+    </style>
+  <link rel="stylesheet" href="/assets/css/admin-unified.css">
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase-clients.js"></script>
+</head>
+<body>
+    <header class="header-bg py-5 text-center">
+        <div class="container">
+            <h1 class="display-1">APSG QR Generator</h1>
+            <p class="lead fs-3">Generate & Share VIP Access QR Codes</p>
+            <p class="fs-5">Archived access tool • update active event details before use</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="form-container">
+            <h2 class="text-center mb-4 gold-accent" style="font-family: 'Playfair Display', serif;">Add New Guest & Generate QR</h2>
+            <div id="logoStatus" class="status mb-3">Loading APSG logo...</div>
+
+            <form id="qrForm">
+                <div class="mb-3">
+                    <label class="form-label">Full Name (e.g. Ìyáàfin Oluwafunmilayo Adejoke Ogunba-Koleowo)</label>
+                    <input type="text" class="form-control" id="guestName" required placeholder="Enter exact name with titles">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Title / Role (e.g. Director-General, APSG • Host, 2027 and Beyond)</label>
+                    <input type="text" class="form-control" id="guestTitle" required placeholder="Enter title/role">
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success btn-lg">Generate QR Code</button>
+                </div>
+            </form>
+
+            <div id="qrResult" class="qr-display d-none">
+                <h3 class="text-center mb-4">QR Code Ready – Scan shows:</h3>
+                <p class="text-center fs-5" id="qrText"></p>
+                <img id="qrImage" class="qr-img img-fluid" alt="Guest QR Code">
+                <div class="text-center mt-4">
+                    <a id="downloadLink" class="btn btn-primary btn-lg share-btn" download="inaugural-qr-code.png">Download Image</a>
+                    <button class="btn btn-success btn-lg share-btn" onclick="shareOnWhatsApp()">Share on WhatsApp</button>
+                    <p class="text-muted mt-3">Save the image → Open WhatsApp → Attach → Send to guest</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="py-4 text-center">
+        © 2026 APC Progressive Support Group Nigeria • Inaugural@apsgnigeria.org
+    </footer>
+
+    <script>
+        const form = document.getElementById('qrForm');
+        const qrResult = document.getElementById('qrResult');
+        const qrImage = document.getElementById('qrImage');
+        const qrText = document.getElementById('qrText');
+        const downloadLink = document.getElementById('downloadLink');
+        const logoStatus = document.getElementById('logoStatus');
+
+        // Pre-load logo separately for reliability
+        const logo = new Image();
+        logo.crossOrigin = 'anonymous';
+        logo.src = '/assets/images/logo/qr-apsgt.png';
+
+        logo.onload = () => {
+            logoStatus.textContent = 'APSG logo loaded – ready for QR branding!';
+            logoStatus.style.color = '#006400';
+        };
+
+        logo.onerror = () => {
+            logoStatus.textContent = 'Warning: Logo failed to load (check URL/path). QR will generate without logo.';
+            logoStatus.style.color = '#dc3545';
+        };
+
+        form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('guestName').value.trim();
+    const title = document.getElementById('guestTitle').value.trim();
+    
+    let fullInfo = name;
+    if (title) {
+        fullInfo = `${name} – ${title}`;  // Adds clear separator with en dash and spaces
+    }
+    
+    const qrData = `Access Granted: ${fullInfo} – APC Progressive Support Group`;
+    
+    qrText.textContent = qrData;
+
+            const plainQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=800x800&ecc=H&margin=40&data=${encodeURIComponent(qrData)}`;
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 800;
+            canvas.height = 800;
+            const ctx = canvas.getContext('2d');
+
+            const plainQrImg = new Image();
+            plainQrImg.crossOrigin = 'anonymous';
+            plainQrImg.src = plainQrUrl;
+
+            plainQrImg.onload = () => {
+                // Draw plain QR base
+                ctx.drawImage(plainQrImg, 0, 0, 800, 800);
+
+                // Overlay logo (very small: 15% ≈ 120px, centered)
+                if (logo.complete && logo.naturalWidth > 0) {
+                    const logoSize = 800 * 0.20; // 10% of QR size for a more subtle look
+                    const logoX = (800 - logoSize) / 2;
+                    const logoY = (800 - logoSize) / 2;
+                    ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
+                } else {
+                    console.warn('Logo not ready – skipping overlay');
+                }
+
+                const finalUrl = canvas.toDataURL('image/png');
+                qrImage.src = finalUrl;
+                downloadLink.href = finalUrl;
+                downloadLink.download = `${name.replace(/\s+/g, '-').toLowerCase()}-inaugural-qrcode.png`;
+
+                qrResult.classList.remove('d-none');
+                qrResult.scrollIntoView({ behavior: 'smooth' });
+            };
+
+            plainQrImg.onerror = () => {
+                alert('QR generation failed – check your internet connection.');
+            };
+        });
+
+        function shareOnWhatsApp() {
+            if (/Android|iPhone|iPad/i.test(navigator.userAgent)) {
+                alert("Save the QR image first → Open WhatsApp → Attach image → Send to guest");
+            } else {
+                alert("On desktop: Right-click the QR image → Save → Share via WhatsApp Web/Desktop");
+            }
+        }
+    </script>
+  <script src="/assets/js/admin-auth.js"></script>
+  <script src="/assets/js/admin-unified.js" defer></script>
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

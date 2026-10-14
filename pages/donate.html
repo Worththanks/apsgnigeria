@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#05351f" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any" />
+  <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <link rel="stylesheet" href="/components/navbar.css" />
+  <link rel="stylesheet" href="/components/footer.css" />
+  <link rel="stylesheet" href="/assets/css/apsg-involvement.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase-clients.js"></script>
+  <script src="/assets/js/apsg-settings.js"></script>
+  <script src="/assets/js/apsg-analytics-tracker.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+  <script src="/assets/js/apsg-involvement-system.js" defer></script>
+  <meta name="description" content="Redirect-compatible APSG donation page." />
+  <meta property="og:title" content="Donate | APSG Nigeria" />
+  <meta property="og:description" content="Redirect-compatible APSG donation page." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://apsgnigeria.org/assets/images/logo/apsg1.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href="https://apsgnigeria.org/pages/donation.html" />
+  <title>Donate | APSG Nigeria</title>
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+  <meta name="keywords" content="APSG Nigeria, APC Progressive Support Group, APC support group, grassroots mobilisation, CWDI, Nigeria politics, APSG membership">
+  <meta property="og:site_name" content="APSG Nigeria">
+  <meta property="og:url" content="https://apsgnigeria.org/pages/donation.html">
+  <meta name="twitter:title" content="Donate | APSG Nigeria">
+  <meta name="twitter:description" content="Redirect-compatible APSG donation page.">
+  <meta name="twitter:image" content="https://apsgnigeria.org/assets/images/og-image.jpg">
+  <script type="application/ld+json" data-apsg-static-schema>[{"@context":"https://schema.org","@type":"Organization","name":"APC Progressive Support Group (APSG)","alternateName":"APSG Nigeria","url":"https://apsgnigeria.org/","logo":"https://apsgnigeria.org/assets/images/logo/apsg1.png","sameAs":[]},{"@context":"https://schema.org","@type":"WebPage","name":"Donate | APSG Nigeria","description":"Redirect-compatible APSG donation page.","url":"https://apsgnigeria.org/pages/donation.html","isPartOf":{"@type":"WebSite","name":"APSG Nigeria","url":"https://apsgnigeria.org/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://apsgnigeria.org/"},{"@type":"ListItem","position":2,"name":"Pages","item":"https://apsgnigeria.org/pages"},{"@type":"ListItem","position":3,"name":"Donate","item":"https://apsgnigeria.org/pages/donate.html"}]}]</script>
+</head>
+<body class="page-shell soft-bg">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div id="navbar" role="navigation" aria-label="Main Navigation"></div>
+  <main id="main">
+<section class="premium-hero"><div class="container hero-grid"><div><span class="status-chip"><i class="fa-solid fa-shield-halved"></i> Verified Donation Checkout</span><h1 class="display-font hero-title">Donate Cash or Materials to APSG</h1><p class="hero-copy">Generate official references, view APSG bank transfer details from Supabase settings, submit transfer confirmation, and receive a pending receipt until APSG verifies payment.</p><div class="hero-actions"><a class="premium-btn gold" href="#donationForm"><i class="fa-solid fa-heart-circle-check"></i>Start Donation</a><a class="premium-btn white" href="/pages/sponsor.html"><i class="fa-solid fa-award"></i>Sponsor Event</a></div></div><div class="glass-card" style="padding:1.1rem"><p class="section-kicker">Payment Policy</p><h2 class="display-font section-title" style="font-size:2.1rem">No automatic confirmation.</h2><p class="section-copy">Transfers are saved as pending verification. APSG admins must manually verify bank payments before final receipts are issued.</p><div class="notice" style="margin-top:1rem"><i class="fa-solid fa-lock"></i><div>Bank details are loaded from APSG Supabase settings. Run the included SQL setup and update settings from the admin dashboard.</div></div></div></div></section>
+<section class="section"><div class="container"><div class="form-card" style="padding:1rem"><div class="section-head"><div><p class="section-kicker">Donation Details</p><h2 class="display-font section-title">Donation checkout flow</h2><p class="section-copy">Cash, item pledges, campaign materials, media/ICT, welfare, office space, vehicle and custom support.</p></div><span class="badge pending">Pending until verified</span></div><div class="payment-journey"><div class="journey-card"><span>1</span><strong>Submit details</strong><p>Generate official APSG references before any transfer is marked as complete.</p></div><div class="journey-card"><span>2</span><strong>Transfer safely</strong><p>Use the displayed APSG bank details and narration for finance matching.</p></div><div class="journey-card"><span>3</span><strong>Pending PDF receipt</strong><p>After confirmation, download and share the pending PDF receipt while APSG verifies payment.</p></div></div>
+<form id="donationForm" class="form-grid">
+  <div class="field"><label>Donation Type</label><select id="donationType" name="donation_type" required></select></div>
+  <div class="field"><label>Impact Area</label><select id="impactArea" name="impact_area" required></select></div>
+  <div class="field"><label>Campaign Item / Material Category</label><select id="itemCategory" name="item_category"></select></div>
+  <div class="field"><label>Recognition Preference</label><select name="recognition_preference"><option>Public recognition</option><option>Private donation</option><option>Anonymous donation</option></select></div>
+  <div class="span-2"><label class="field label" style="display:block;margin-bottom:.35rem;color:var(--deep);font-size:.66rem;font-weight:950;text-transform:uppercase;letter-spacing:.11em">Preset Donation Amount</label><div id="donationAmountGrid" class="amount-grid"><button type="button" class="amount-btn" data-donation-amount="50000">50,000</button><button type="button" class="amount-btn" data-donation-amount="100000">100,000</button><button type="button" class="amount-btn" data-donation-amount="250000">250,000</button><button type="button" class="amount-btn" data-donation-amount="500000">500,000</button><button type="button" class="amount-btn" data-donation-amount="1000000">1,000,000</button><button type="button" class="amount-btn" data-donation-amount="5000000">5,000,000</button><button type="button" class="amount-btn" data-donation-amount="10000000">10,000,000</button></div></div>
+  <div class="field"><label>Custom Amount</label><input id="donationCustomAmount" name="custom_amount" placeholder="Enter any amount"></div><div class="field"><label>Selected Amount</label><div class="notice"><i class="fa-solid fa-naira-sign"></i><div><strong id="donationAmountPreview">₦0</strong></div></div></div>
+  <div class="field"><label>Full Name</label><input name="full_name" required></div><div class="field"><label>Phone Number</label><input id="donorPhone" name="phone" required></div><div id="donorMemberMatch" class="span-2"></div>
+  <div class="field"><label>Email Address</label><input name="email" type="email"></div><div class="field"><label>Member Status</label><select name="member_status"><option>APSG member</option><option>Public supporter</option></select></div>
+  <div class="field"><label>Membership ID if available</label><input name="membership_id"></div><div class="field"><label>State Chapter</label><input name="state_chapter"></div><div class="field"><label>Local Government</label><input name="lga"></div><div class="field"><label>Ward</label><input name="ward"></div>
+  <div class="field span-2"><label>Donation Note</label><textarea name="donation_note" placeholder="Describe item quantity, pledge details, or purpose."></textarea></div>
+  <div class="span-2 button-row"><button class="premium-btn green" type="submit"><i class="fa-solid fa-receipt"></i>Generate Refs & Payment Step</button></div>
+</form><div id="donationBankPanel" class="bank-panel"></div><div id="donationConfirmWrap" class="receipt-card hidden"><h3>Transfer Confirmation</h3><div id="donationPdfNotice" class="transfer-note"><i class="fa-solid fa-file-pdf"></i> After submission, the system generates a pending receipt PDF. On supported devices, use the share sheet to choose WhatsApp; otherwise the PDF downloads so it can be attached manually.</div><form id="donationConfirmForm" class="form-grid" style="margin-top:.75rem"><div class="field"><label>Transfer Sender Name</label><input name="transfer_sender_name" required></div><div class="field"><label>Bank Transaction Reference</label><input name="bank_transaction_ref" required></div><div class="field"><label>Payment Proof Upload</label><input type="file" name="payment_proof" accept="image/*,.pdf"></div><div class="field"><label>Payment Note</label><input name="payment_note"></div><div class="span-2 button-row"><button class="premium-btn gold" type="submit"><i class="fa-solid fa-paper-plane"></i>Submit Pending Verification & Share PDF Receipt</button></div></form></div><div id="donationReceipt" class="hidden"></div></div></div></section>
+</main>
+  <div id="footer"></div>
+  <script src="/components/navbar.js" defer></script>
+  <script src="/components/footer.js" defer></script>
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

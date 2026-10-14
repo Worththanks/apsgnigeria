@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content="#05351f">
+  <base href="/">
+
+  <title>Official Dossier | APSG Nigeria</title>
+  <meta name="description" content="Premium APSG official dossier connected to Supabase leadership records.">
+  <meta property="og:title" content="APSG Official Dossier">
+  <meta property="og:description" content="View the official APSG leadership profile, image, designation, credentials, biography and public dossier.">
+  <meta property="og:type" content="profile">
+
+  <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any">
+  <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="stylesheet" href="/components/navbar.css">
+  <link rel="stylesheet" href="/components/footer.css">
+
+  <link rel="stylesheet" href="/assets/css/tailwind-static.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'], display: ['Playfair Display','Georgia','serif'] },
+          colors: {
+            apsgDeep: '#05351f', apsgForest: '#082716', apsgGreen: '#0f7a3d', apsgEmerald: '#0f766e',
+            apsgGold: '#d8ad34', apsgCream: '#fffaf0', apsgMist: '#f6fbf7', apsgInk: '#07140e'
+          },
+          boxShadow: {
+            palace: '0 34px 110px rgba(5, 53, 31, 0.22)',
+            luxury: '0 26px 80px rgba(5, 53, 31, 0.18)',
+            gold: '0 16px 42px rgba(216, 173, 52, 0.24)',
+            card: '0 18px 52px rgba(5, 53, 31, 0.12)',
+            soft: '0 10px 30px rgba(5, 53, 31, 0.08)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root { --deep:#05351f; --green:#0f7a3d; --gold:#d8ad34; --cream:#fffaf0; --mist:#f6fbf7; }
+    html { scroll-behavior: smooth; }
+    body.official-details-page {
+      font-family: Inter, system-ui, sans-serif;
+      color: #102017;
+      background:
+        radial-gradient(circle at 8% 8%, rgba(216,173,52,.18), transparent 28rem),
+        radial-gradient(circle at 92% 0%, rgba(15,122,61,.16), transparent 30rem),
+        linear-gradient(180deg, #fffdf5 0%, #f7fbf6 45%, #ffffff 100%);
+    }
+    .display-font { font-family: 'Playfair Display', Georgia, serif; }
+    .dossier-hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(5,53,31,.98), rgba(7,20,14,.94) 48%, rgba(15,118,110,.9)),
+        url('/assets/images/hero-bg.jpg') center/cover;
+      isolation: isolate;
+    }
+    .dossier-hero::before,
+    .dossier-hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .dossier-hero::before {
+      width: 34rem; height: 34rem; left: -15rem; top: -12rem;
+      background: radial-gradient(circle, rgba(216,173,52,.34), transparent 68%);
+      filter: blur(4px);
+    }
+    .dossier-hero::after {
+      width: 28rem; height: 28rem; right: -10rem; bottom: -13rem;
+      background: radial-gradient(circle, rgba(255,255,255,.14), transparent 70%);
+    }
+    .hero-grid-pattern {
+      position: absolute; inset: 0; opacity: .12; z-index: -1;
+      background-image: linear-gradient(rgba(255,255,255,.28) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.28) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(180deg, black, transparent 86%);
+    }
+    .premium-shell {
+      border: 1px solid rgba(216,173,52,.22);
+      background: rgba(255,255,255,.88);
+      box-shadow: 0 34px 110px rgba(5,53,31,.15);
+      backdrop-filter: blur(20px);
+    }
+    .glass-card {
+      border: 1px solid rgba(255,255,255,.18);
+      background: linear-gradient(145deg, rgba(255,255,255,.13), rgba(255,255,255,.06));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 22px 70px rgba(0,0,0,.20);
+      backdrop-filter: blur(18px);
+    }
+    .official-chip {
+      display:inline-flex; align-items:center; gap:.55rem; border-radius:999px; padding:.62rem .9rem;
+      font-size:.72rem; line-height:1; font-weight:900; letter-spacing:.18em; text-transform:uppercase;
+      border:1px solid rgba(216,173,52,.32); background:rgba(216,173,52,.12); color:#8a6616;
+    }
+    .official-chip.dark { color:#f8dc7a; background:rgba(255,255,255,.09); border-color:rgba(255,255,255,.18); }
+    .gold-line { height:1px; background:linear-gradient(90deg, transparent, rgba(216,173,52,.9), transparent); }
+    .portrait-frame {
+      position: relative; overflow: hidden; border-radius: 2.25rem; min-height: 35rem;
+      border: 1px solid rgba(216,173,52,.35); background: #052414;
+      box-shadow: 0 30px 90px rgba(0,0,0,.32), 0 0 0 10px rgba(255,255,255,.06);
+    }
+    .portrait-frame img { width:100%; height:100%; min-height:35rem; object-fit:cover; object-position:top center; display:block; }
+    .portrait-frame::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg, transparent 45%, rgba(0,0,0,.68)); pointer-events:none; }
+    .stat-card, .info-card, .content-card {
+      border: 1px solid rgba(15,122,61,.10); background: rgba(255,255,255,.82);
+      box-shadow: 0 18px 52px rgba(5,53,31,.08);
+    }
+    .side-nav a { display:flex; align-items:center; justify-content:space-between; gap:.75rem; border-radius:1rem; padding:.85rem .95rem; color:rgba(255,255,255,.76); font-weight:850; font-size:.82rem; border:1px solid rgba(255,255,255,.09); background:rgba(255,255,255,.07); transition:.22s ease; }
+    .side-nav a:hover, .side-nav a.active { color:#f8dc7a; background:rgba(216,173,52,.13); border-color:rgba(216,173,52,.25); transform: translateX(2px); }
+    .action-btn { display:inline-flex; align-items:center; justify-content:center; gap:.55rem; border-radius:999px; padding:.86rem 1.05rem; font-weight:950; font-size:.82rem; transition:.22s ease; }
+    .action-btn:hover { transform: translateY(-1px); }
+    .skeleton { position:relative; overflow:hidden; background:rgba(255,255,255,.16); }
+    .skeleton::after { content:""; position:absolute; inset:0; transform:translateX(-100%); background:linear-gradient(90deg, transparent, rgba(255,255,255,.25), transparent); animation: shimmer 1.35s infinite; }
+    @keyframes shimmer { 100% { transform: translateX(100%); } }
+
+
+    /* Compact world-class enhancement layer */
+    .official-details-page .dossier-hero { min-height: auto; }
+    .official-details-page .official-chip { padding: .48rem .72rem; font-size: .62rem; letter-spacing: .15em; }
+    .official-details-page .action-btn { min-height: 2.45rem; padding: .62rem .86rem; font-size: .74rem; box-shadow: 0 10px 26px rgba(5,53,31,.10); }
+    .compact-hero-card { border-radius: 1.55rem; padding: .72rem; }
+    .compact-portrait-frame {
+      border-radius: 1.55rem !important;
+      min-height: clamp(22rem, 38vw, 30rem) !important;
+      box-shadow: 0 24px 72px rgba(0,0,0,.28), 0 0 0 7px rgba(255,255,255,.055) !important;
+    }
+    .compact-portrait-frame img { min-height: clamp(22rem, 38vw, 30rem) !important; }
+    .compact-profile-caption { left: .85rem !important; right: .85rem !important; bottom: .85rem !important; border-radius: 1.05rem !important; padding: .78rem !important; }
+    .compact-profile-caption p:first-child { font-size: .56rem !important; letter-spacing: .18em !important; }
+    .compact-profile-caption p:last-child { font-size: 1rem !important; }
+    .compact-shell { border-radius: 1.55rem !important; }
+    .compact-dossier-sidebar { padding: .78rem !important; }
+    .compact-sidebar-head { margin-bottom: .7rem !important; }
+    .compact-sidebar-icon { height: 2.45rem !important; width: 2.45rem !important; border-radius: .9rem !important; }
+    .compact-side-nav { display: grid; gap: .36rem !important; }
+    .compact-side-nav a { min-height: 2.15rem; padding: .5rem .64rem !important; border-radius: .82rem !important; font-size: .68rem !important; }
+    .compact-status-card { margin-top: .65rem !important; border-radius: 1rem !important; padding: .68rem !important; }
+    .compact-status-card p:nth-child(2) { font-size: 1.28rem !important; }
+    .compact-main { padding: .95rem !important; gap: .75rem !important; }
+    .compact-section-head { margin-bottom: .72rem !important; }
+    .compact-section-title { font-size: clamp(1.45rem, 3vw, 2.55rem) !important; line-height: .98 !important; }
+    .compact-info-grid { gap: .62rem !important; }
+    .compact-content-card { border-radius: 1.15rem !important; padding: .9rem !important; }
+    .compact-content-card .gold-line { margin-top: .65rem !important; margin-bottom: .65rem !important; }
+    .compact-summary-text { font-size: .95rem !important; line-height: 1.65 !important; }
+    .compact-prose { font-size: .88rem !important; line-height: 1.72 !important; }
+    .compact-placement-grid { gap: .65rem !important; }
+    .compact-mini-grid { margin-top: .72rem !important; gap: .5rem !important; }
+    .premium-divider-badge { display:inline-flex; align-items:center; gap:.45rem; border-radius:999px; padding:.42rem .65rem; border:1px solid rgba(216,173,52,.25); background:rgba(216,173,52,.09); color:#72530b; font-size:.62rem; font-weight:950; text-transform:uppercase; letter-spacing:.14em; }
+    @media (min-width: 1024px) {
+      .compact-dossier-layout { grid-template-columns: 13.5rem 1fr !important; }
+      .compact-hero-layout { grid-template-columns: 1fr .72fr !important; gap: 1.35rem !important; }
+      .compact-main { padding: 1.1rem 1.2rem !important; }
+    }
+    @media (max-width: 767px) {
+      .compact-main { padding: .8rem !important; }
+      .compact-content-card { padding: .78rem !important; }
+    }
+
+
+
+    /* Premium overview correction and polish */
+    .overview-premium-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1.35rem;
+      padding: .95rem;
+      border: 1px solid rgba(216,173,52,.22);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.96), rgba(255,250,240,.86)),
+        radial-gradient(circle at top right, rgba(216,173,52,.16), transparent 18rem);
+      box-shadow: 0 20px 58px rgba(5,53,31,.09);
+    }
+    .overview-premium-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 3px;
+      background: linear-gradient(90deg, #05351f, #d8ad34, #0f766e);
+    }
+    .overview-title-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+    .overview-title-icon {
+      display: grid;
+      place-items: center;
+      width: 2.65rem;
+      height: 2.65rem;
+      border-radius: 1rem;
+      color: #d8ad34;
+      background: linear-gradient(145deg, #05351f, #082716);
+      box-shadow: 0 14px 32px rgba(5,53,31,.18);
+      flex: 0 0 auto;
+    }
+    .overview-verification-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      width: fit-content;
+      border-radius: 999px;
+      padding: .5rem .72rem;
+      border: 1px solid rgba(15,122,61,.14);
+      background: rgba(15,122,61,.075);
+      color: #05351f;
+      font-size: .64rem;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      white-space: nowrap;
+    }
+    .overview-grid-premium {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: .62rem;
+    }
+    .overview-grid-premium .info-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 8.2rem;
+      border-radius: 1.05rem;
+      padding: .85rem;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.98), rgba(248,250,252,.9));
+      border: 1px solid rgba(5,53,31,.08);
+      box-shadow: 0 14px 32px rgba(5,53,31,.065);
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+    .overview-grid-premium .info-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(216,173,52,.24);
+      box-shadow: 0 22px 50px rgba(5,53,31,.11);
+    }
+    .overview-grid-premium .info-card::after {
+      content: "";
+      position: absolute;
+      width: 5.4rem;
+      height: 5.4rem;
+      right: -2.7rem;
+      bottom: -2.8rem;
+      border-radius: 999px;
+      background: rgba(216,173,52,.10);
+    }
+    .overview-grid-premium .info-icon {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 2.35rem;
+      height: 2.35rem;
+      border-radius: .85rem;
+      color: #d8ad34;
+      background: linear-gradient(145deg, #05351f, #0a4327);
+      box-shadow: 0 10px 24px rgba(5,53,31,.16);
+    }
+    .overview-grid-premium .info-label {
+      position: relative;
+      z-index: 1;
+      margin-top: .75rem;
+      color: #64746a;
+      font-size: .58rem;
+      font-weight: 950;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .overview-grid-premium .info-value {
+      position: relative;
+      z-index: 1;
+      margin-top: .28rem;
+      color: #05351f;
+      font-size: .88rem;
+      line-height: 1.2;
+      font-weight: 950;
+    }
+    .summary-premium-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1.25rem !important;
+      border-color: rgba(216,173,52,.22) !important;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.98), rgba(255,250,240,.78)),
+        radial-gradient(circle at 96% 0%, rgba(216,173,52,.15), transparent 16rem) !important;
+    }
+    .summary-premium-card::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, #d8ad34, #0f7a3d, #05351f);
+    }
+    .section-label-premium {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      border-radius: 999px;
+      padding: .4rem .62rem;
+      background: rgba(216,173,52,.10);
+      border: 1px solid rgba(216,173,52,.20);
+      color: #72530b;
+      font-size: .62rem;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: .15em;
+    }
+    @media (max-width: 1180px) { .overview-grid-premium { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 640px) {
+      .overview-premium-card { padding: .78rem; }
+      .overview-title-wrap { align-items: flex-start; }
+      .overview-grid-premium { grid-template-columns: 1fr; }
+      .overview-verification-badge { white-space: normal; }
+    }
+
+
+    /* FIX: premium readable dossier side tools */
+    .official-details-page .compact-dossier-sidebar {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(216,173,52,.22), transparent 8rem),
+        linear-gradient(180deg, #042617 0%, #05351f 54%, #03170c 100%) !important;
+      border-right: 1px solid rgba(216,173,52,.18);
+    }
+    .official-details-page .compact-dossier-sidebar::before {
+      content: "";
+      position: absolute;
+      inset: .45rem;
+      border-radius: 1.15rem;
+      border: 1px solid rgba(255,255,255,.07);
+      pointer-events: none;
+    }
+    .official-details-page .compact-sidebar-head {
+      position: relative;
+      z-index: 1;
+    }
+    .official-details-page .compact-sidebar-head p {
+      color: rgba(255,255,255,.58) !important;
+      text-shadow: 0 1px 1px rgba(0,0,0,.22);
+    }
+    .official-details-page .compact-sidebar-head h2 {
+      color: #ffffff !important;
+      text-shadow: 0 2px 12px rgba(0,0,0,.25);
+    }
+    .official-details-page .compact-side-nav {
+      position: relative;
+      z-index: 1;
+      padding: .38rem;
+      border-radius: 1.05rem;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 18px 48px rgba(0,0,0,.16);
+    }
+    .official-details-page .compact-side-nav a,
+    .official-details-page .side-nav a {
+      color: rgba(255,255,255,.92) !important;
+      background: rgba(255,255,255,.055) !important;
+      border: 1px solid rgba(255,255,255,.11) !important;
+      text-shadow: 0 1px 2px rgba(0,0,0,.28);
+      box-shadow: none !important;
+    }
+    .official-details-page .compact-side-nav a span,
+    .official-details-page .side-nav a span {
+      color: inherit !important;
+      opacity: 1 !important;
+    }
+    .official-details-page .compact-side-nav a i,
+    .official-details-page .side-nav a i {
+      color: rgba(248,220,122,.9) !important;
+      opacity: .95 !important;
+    }
+    .official-details-page .compact-side-nav a:hover,
+    .official-details-page .compact-side-nav a.active,
+    .official-details-page .side-nav a:hover,
+    .official-details-page .side-nav a.active {
+      color: #05351f !important;
+      background: linear-gradient(135deg, #fff8df, #f8dc7a) !important;
+      border-color: rgba(248,220,122,.9) !important;
+      text-shadow: none !important;
+      transform: translateX(0) scale(1.01);
+      box-shadow: 0 12px 28px rgba(216,173,52,.18) !important;
+    }
+    .official-details-page .compact-side-nav a:hover i,
+    .official-details-page .compact-side-nav a.active i,
+    .official-details-page .side-nav a:hover i,
+    .official-details-page .side-nav a.active i {
+      color: #d6a92b !important;
+    }
+    .official-details-page .compact-status-card {
+      position: relative;
+      z-index: 1;
+      background: rgba(255,255,255,.09) !important;
+      border-color: rgba(216,173,52,.18) !important;
+      color: #ffffff !important;
+    }
+    .official-details-page .compact-status-card p {
+      color: rgba(255,255,255,.72) !important;
+    }
+    .official-details-page .compact-status-card p:nth-child(2) {
+      color: #f8dc7a !important;
+    }
+
+
+
+    /* Profile-mapped dossier display */
+    .dossier-rich-content { color:#33443a; }
+    .dossier-rich-content p { margin:0 0 .95rem; line-height:1.78; }
+    .dossier-rich-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.55rem .7rem; margin:0; padding:0; list-style:none; }
+    .dossier-rich-list li { position:relative; min-height:2.6rem; padding:.65rem .78rem .65rem 2.25rem; border-radius:.9rem; border:1px solid rgba(15,122,61,.09); background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(255,250,240,.72)); color:#34483c; font-size:.82rem; font-weight:720; line-height:1.38; box-shadow:0 10px 24px rgba(5,53,31,.045); }
+    .dossier-rich-list li::before { content:""; position:absolute; left:.78rem; top:.92rem; width:.62rem; height:.62rem; border-radius:999px; background:linear-gradient(135deg,#d8ad34,#0f7a3d); box-shadow:0 0 0 4px rgba(216,173,52,.12); }
+    .placement-stack { display:grid; gap:.65rem; }
+    .placement-card { border:1px solid rgba(216,173,52,.22); background:linear-gradient(135deg,#fff,#fffaf0); border-radius:1.05rem; padding:.82rem; box-shadow:0 12px 28px rgba(5,53,31,.055); }
+    .placement-card strong { display:block; color:#05351f; font-size:.9rem; line-height:1.2; }
+    .placement-card small { display:block; margin-top:.28rem; color:#64746a; font-weight:800; line-height:1.35; }
+    .profile-map-badge { display:inline-flex; align-items:center; gap:.45rem; border-radius:999px; padding:.42rem .65rem; border:1px solid rgba(15,122,61,.14); background:rgba(15,122,61,.08); color:#05351f; font-size:.62rem; font-weight:950; text-transform:uppercase; letter-spacing:.13em; }
+    @media (max-width:900px){ .dossier-rich-list{grid-template-columns:1fr;} }
+
+    @media print { .no-print,#navbar,#footer { display:none!important; } body { background:white!important; } .premium-shell, .content-card, .info-card { box-shadow:none!important; } }
+  </style>
+  <link rel="canonical" href="https://apsgnigeria.org/pages/official-details.html">
+  <meta property="og:url" content="https://apsgnigeria.org/pages/official-details.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="https://apsgnigeria.org/assets/images/logo/apsg1.png">
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+  <meta name="keywords" content="APSG Nigeria, APC Progressive Support Group, APC support group, grassroots mobilisation, CWDI, Nigeria politics, APSG membership">
+  <meta property="og:site_name" content="APSG Nigeria">
+  <meta name="twitter:title" content="Official Dossier | APSG Nigeria">
+  <meta name="twitter:description" content="Premium APSG official dossier connected to Supabase leadership records.">
+  <meta name="twitter:image" content="https://apsgnigeria.org/assets/images/og-image.jpg">
+  <script type="application/ld+json" data-apsg-static-schema>[{"@context":"https://schema.org","@type":"Organization","name":"APC Progressive Support Group (APSG)","alternateName":"APSG Nigeria","url":"https://apsgnigeria.org/","logo":"https://apsgnigeria.org/assets/images/logo/apsg1.png","sameAs":[]},{"@context":"https://schema.org","@type":"WebPage","name":"Official Dossier | APSG Nigeria","description":"Premium APSG official dossier connected to Supabase leadership records.","url":"https://apsgnigeria.org/pages/official-details.html","isPartOf":{"@type":"WebSite","name":"APSG Nigeria","url":"https://apsgnigeria.org/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://apsgnigeria.org/"},{"@type":"ListItem","position":2,"name":"Pages","item":"https://apsgnigeria.org/pages"},{"@type":"ListItem","position":3,"name":"Official Details","item":"https://apsgnigeria.org/pages/official-details.html"}]}]</script>
+</head>
+<body class="official-details-page min-h-screen flex flex-col overflow-x-hidden">
+  <div id="navbar" role="navigation" aria-label="Main Navigation"></div>
+
+  <main id="officialDetailsRoot" class="flex-grow">
+    <section class="dossier-hero text-white pt-24 md:pt-28 pb-16">
+      <div class="hero-grid-pattern"></div>
+      <div class="relative z-10 max-w-7xl mx-auto px-4 md:px-6">
+        <div class="grid lg:grid-cols-[1fr_.72fr] gap-5 items-center compact-hero-layout">
+          <div>
+            <span class="official-chip dark"><i class="fa-solid fa-spinner fa-spin"></i> Loading Official Dossier</span>
+            <h2 class="display-font mt-4 text-4xl md:text-5xl lg:text-6xl font-black leading-[.95] tracking-tight">Preparing premium profile...</h2>
+            <p class="mt-3 max-w-2xl text-white/72 text-sm md:text-base leading-relaxed">Connecting to APSG leadership records and building the official public dossier.</p>
+            <div class="mt-5 grid sm:grid-cols-3 gap-2 max-w-2xl">
+              <div class="skeleton h-16 rounded-2xl"></div><div class="skeleton h-16 rounded-2xl"></div><div class="skeleton h-16 rounded-2xl"></div>
+            </div>
+          </div>
+          <div class="glass-card compact-hero-card">
+            <div class="skeleton h-[25rem] rounded-[1.2rem]"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+  <script>
+    window.APSG_OFFICIALS_TABLES = window.APSG_OFFICIALS_TABLES || ['apsg_officials','officials','leadership_officials'];
+    const FALLBACK_IMAGE = '/assets/images/logo/apsg.png';
+
+    const qs = new URLSearchParams(window.location.search);
+    const requestedId = qs.get('id') || '';
+    const requestedSlug = qs.get('slug') || '';
+    const requestedProfile = qs.get('profile') || qs.get('profile_slug') || '';
+    const root = document.getElementById('officialDetailsRoot');
+
+    function escapeHtml(value) {
+      return String(value || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    }
+    function text(value, fallback = 'Not specified') { return String(value || '').trim() || fallback; }
+    function pretty(value) {
+      return text(value, '').replace(/_/g, ' ').replace(/\b\w/g, s => s.toUpperCase()) || 'Official';
+    }
+    function slugify(value) {
+      return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'official';
+    }
+    function profileKey(record) {
+      return String(record.profile_slug || record.profile_key || '').trim() || slugify(String(record.slug || record.full_name || '').replace(/^(apsg|cwdi)[-_](board[-_]bot|patrons|matrons|executive[-_]directors|executive[-_]leadership)[-_]/i, ''));
+    }
+    function formatCredentialList(value) {
+      const lines = String(value || '').split(/\n+/).map(line => line.replace(/^[-•*]+\s*/, '').trim()).filter(Boolean);
+      if (!lines.length) return '<p>Credentials and appointment notes will appear here once updated from the Admin Leadership Desk.</p>';
+      if (lines.length < 3) return lines.map(line => `<p>${escapeHtml(line)}</p>`).join('');
+      return '<ul class="dossier-rich-list">' + lines.map(line => `<li>${escapeHtml(line)}</li>`).join('') + '</ul>';
+    }
+    function formatParagraphs(value) {
+      const paragraphs = String(value || '').split(/\n\s*\n+/).map(block => block.trim()).filter(Boolean);
+      if (!paragraphs.length) return '<p>Full biography and official dossier will appear here once updated from the Admin Leadership Desk.</p>';
+      return paragraphs.map(block => `<p>${escapeHtml(block).replace(/\n/g, '<br>')}</p>`).join('');
+    }
+    function getClient() {
+      return window.supabaseClient || window.apsgSupabase || window.APSG_SUPABASE || window.supabase;
+    }
+    function getImage(record) {
+      return record.image_url || record.photo_url || record.avatar_url || record.image || record.photo || FALLBACK_IMAGE;
+    }
+    function getTargets(record) {
+      const raw = record.publish_targets || record.publishTargets || record.targets || [];
+      if (Array.isArray(raw)) return raw;
+      if (typeof raw === 'string') {
+        try { const parsed = JSON.parse(raw); return Array.isArray(parsed) ? parsed : raw.split(',').map(x=>x.trim()).filter(Boolean); }
+        catch { return raw.split(',').map(x=>x.trim()).filter(Boolean); }
+      }
+      return [];
+    }
+    function buildBackLink(record) {
+      const targets = getTargets(record);
+      if (targets.includes('mp')) return '/pages/mp.html';
+      if (targets.includes('national_executive')) return '/pages/nat-exec.html';
+      if (targets.includes('state_executive')) return '/pages/state.html';
+      return '/pages/leadership.html';
+    }
+    function copyDossier(record) {
+      const body = [
+        text(record.full_name || record.name, 'Official'),
+        text(record.position || record.designation || record.role, ''),
+        text(record.short_info || record.excerpt || record.summary, ''),
+        text(record.credentials, ''),
+        text(record.biography || record.bio || record.dossier, ''),
+        'Placements:',
+        ...(record.__placements || []).map(item => `- ${(item.organization_key || item.organization || 'APSG').toUpperCase()} / ${pretty(item.leadership_group || item.section_key || item.category)} / ${item.position || 'Official'}`)
+      ].filter(Boolean).join('\n\n');
+      navigator.clipboard?.writeText(body).then(() => showToast('Dossier copied'));
+    }
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'fixed bottom-5 left-1/2 z-[200] -translate-x-1/2 rounded-full bg-[#05351f] px-5 py-3 text-sm font-black text-white shadow-2xl no-print';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 1700);
+    }
+
+    async function queryTable(table, id, slug) {
+      const client = getClient();
+      if (!client || !client.from) throw new Error('Supabase client is not available.');
+      if (requestedProfile) {
+        const byProfile = await client.from(table).select('*').eq('profile_slug', requestedProfile).order('canonical_profile', { ascending: false }).limit(1);
+        if (!byProfile.error && byProfile.data && byProfile.data[0]) return byProfile.data[0];
+      }
+      if (id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
+        const byId = await client.from(table).select('*').eq('id', id).maybeSingle();
+        if (byId.data) return byId.data;
+      }
+      if (slug) {
+        const bySlug = await client.from(table).select('*').eq('slug', slug).maybeSingle();
+        if (bySlug.data) return bySlug.data;
+      }
+      if (id) {
+        const bySlugId = await client.from(table).select('*').eq('slug', id).maybeSingle();
+        if (bySlugId.data) return bySlugId.data;
+      }
+      return null;
+    }
+
+    async function loadProfilePlacements(table, record) {
+      const client = getClient();
+      const key = profileKey(record);
+      if (!client || !client.from || !key) return [record];
+      try {
+        const res = await client.from(table).select('*').eq('profile_slug', key).order('display_order', { ascending: true });
+        if (!res.error && Array.isArray(res.data) && res.data.length) {
+          const seen = new Set();
+          return res.data.filter(item => {
+            const pkey = item.placement_key || item.id || `${item.organization_key || item.organization}:${item.leadership_group || item.section_key}:${item.position}`;
+            if (seen.has(pkey)) return false;
+            seen.add(pkey);
+            return true;
+          });
+        }
+      } catch (error) {}
+      return [record];
+    }
+
+    async function loadOfficial() {
+      let lastError = null;
+      await new Promise(resolve => setTimeout(resolve, 120));
+      for (const table of window.APSG_OFFICIALS_TABLES) {
+        try {
+          const record = await queryTable(table, requestedId, requestedSlug);
+          if (record) { const placements = await loadProfilePlacements(table, record); renderOfficial(record, table, placements); return; }
+        } catch (error) { lastError = error; }
+      }
+      renderError(lastError);
+    }
+
+    function renderOfficial(record, table, placements = [record]) {
+      const name = text(record.full_name || record.name, 'APSG Official');
+      const role = text(record.position || record.designation || record.role, 'Leadership Official');
+      const category = pretty(record.category || record.level || 'leadership');
+      const seat = text(record.seat || record.council || record.level, 'APSG Leadership Council');
+      const state = text(record.state, 'National / Not state specific');
+      const zone = text(record.zone, 'National structure');
+      const lga = text(record.lga, 'Not specified');
+      const ward = text(record.ward, 'Not specified');
+      const excerpt = text(record.short_info || record.excerpt || record.summary, 'Official leadership profile published by APSG Nigeria.');
+      const credentials = text(record.credentials, 'Credentials and appointment notes will appear here once updated from the Admin Leadership Desk.');
+      const biography = text(record.biography || record.bio || record.dossier, 'Full biography and official dossier will appear here once updated from the Admin Leadership Desk.');
+      const image = getImage(record);
+      const backLink = buildBackLink(record);
+      const targets = getTargets(record);
+      const updated = record.updated_at || record.created_at || '';
+      const status = text(record.status, 'published');
+      const profileSlug = profileKey(record);
+      const placementCount = Array.isArray(placements) ? placements.length : 1;
+      const placementHtml = (placements && placements.length ? placements : [record]).map(item => {
+        const itemTargets = getTargets(item);
+        return `<div class="placement-card"><strong>${escapeHtml(item.position || 'Official')}</strong><small>${escapeHtml(String(item.organization_key || item.organization || 'APSG').toUpperCase())} • ${escapeHtml(pretty(item.leadership_group || item.section_key || item.category || 'leadership'))} • ${escapeHtml(item.seat || 'Leadership Council')}</small><small>Targets: ${escapeHtml((itemTargets.length ? itemTargets : ['leadership']).map(pretty).join(', '))}</small></div>`;
+      }).join('');
+
+      document.title = `${name} | APSG Official Dossier`;
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) metaDesc.setAttribute('content', `${name} - ${role}. APSG official dossier.`);
+
+      root.innerHTML = `
+        <section class="dossier-hero text-white pt-24 md:pt-28 pb-14">
+          <div class="hero-grid-pattern"></div>
+          <div class="relative z-10 max-w-7xl mx-auto px-4 md:px-6">
+            <div class="grid lg:grid-cols-[1fr_.72fr] gap-5 items-center compact-hero-layout">
+              <div>
+                <div class="flex flex-wrap gap-2">
+                  <span class="official-chip dark"><i class="fa-solid fa-certificate"></i> Official Public Dossier</span>
+                  <span class="official-chip dark"><i class="fa-solid fa-database"></i> ${escapeHtml(table)}</span>
+                  <span class="official-chip dark"><i class="fa-solid fa-layer-group"></i> ${placementCount} Placement${placementCount === 1 ? '' : 's'}</span>
+                </div>
+                <h1 class="display-font mt-4 text-4xl md:text-5xl lg:text-6xl font-black leading-[.95] tracking-tight">${escapeHtml(name)}</h1>
+                <p class="mt-3 inline-flex rounded-full border border-[#d8ad34]/35 bg-[#d8ad34]/15 px-4 py-2 text-xs md:text-sm font-black text-[#f8dc7a]">${escapeHtml(role)}</p>
+                <p class="mt-3 max-w-2xl text-white/76 text-sm md:text-base leading-relaxed">${escapeHtml(excerpt)}</p>
+                <div class="mt-5 flex flex-wrap gap-2 no-print">
+                  <a href="${backLink}" class="action-btn bg-[#d8ad34] text-[#05351f] shadow-gold"><i class="fa-solid fa-arrow-left"></i> Back to Directory</a>
+                  <button id="copyDossierBtn" type="button" class="action-btn border border-white/15 bg-white/10 text-white hover:bg-white/15"><i class="fa-solid fa-copy"></i> Copy Dossier</button>
+                  <button type="button" onclick="window.print()" class="action-btn border border-white/15 bg-white/10 text-white hover:bg-white/15"><i class="fa-solid fa-print"></i> Print</button>
+                </div>
+              </div>
+              <div class="glass-card compact-hero-card">
+                <figure class="portrait-frame compact-portrait-frame">
+                  <img src="${escapeHtml(image)}" alt="${escapeHtml(name)}" onerror="this.src='${FALLBACK_IMAGE}'">
+                  <figcaption class="compact-profile-caption absolute left-5 right-5 bottom-5 z-10 rounded-[1.5rem] border border-white/15 bg-black/35 p-4 backdrop-blur-md">
+                    <p class="text-[10px] uppercase tracking-[.25em] text-[#f8dc7a] font-black">Leadership Identity</p>
+                    <p class="mt-1 text-xl font-black text-white">${escapeHtml(category)}</p>
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="relative z-20 -mt-7 px-3 md:px-5 pb-10">
+          <div class="max-w-7xl mx-auto premium-shell compact-shell rounded-[2.2rem] overflow-hidden">
+            <div class="grid lg:grid-cols-[18rem_1fr] compact-dossier-layout">
+              <aside class="compact-dossier-sidebar bg-gradient-to-b from-[#05351f] to-[#07140e] text-white p-5 lg:min-h-full no-print">
+                <div class="lg:sticky lg:top-6">
+                  <div class="compact-sidebar-head flex items-center gap-3 mb-5">
+                    <div class="compact-sidebar-icon grid h-12 w-12 place-items-center rounded-2xl bg-[#d8ad34] text-[#05351f] shadow-gold"><i class="bi bi-person-badge-fill text-lg"></i></div>
+                    <div>
+                      <p class="text-[10px] uppercase tracking-[.24em] text-white/45 font-black">Dossier Desk</p>
+                      <h2 class="text-lg font-black">Profile Tools</h2>
+                    </div>
+                  </div>
+                  <nav class="side-nav compact-side-nav space-y-2" aria-label="Dossier navigation">
+                    <a class="active" href="#overview"><span>Overview</span><i class="fa-solid fa-chevron-right text-xs"></i></a>
+                    <a href="#credentials"><span>Credentials</span><i class="fa-solid fa-chevron-right text-xs"></i></a>
+                    <a href="#biography"><span>Biography</span><i class="fa-solid fa-chevron-right text-xs"></i></a>
+                    <a href="#placements"><span>All Placements</span><i class="fa-solid fa-chevron-right text-xs"></i></a>
+                    <a href="#placement"><span>Public Placement</span><i class="fa-solid fa-chevron-right text-xs"></i></a>
+                  </nav>
+                  <div class="compact-status-card mt-5 rounded-3xl border border-[#d8ad34]/25 bg-[#d8ad34]/10 p-4">
+                    <p class="text-[10px] uppercase tracking-[.24em] text-[#f8dc7a] font-black">Status</p>
+                    <p class="mt-2 text-2xl font-black">${escapeHtml(pretty(status))}</p>
+                    <p class="mt-1 text-xs text-white/58">Live official profile from Admin Leadership Desk.</p>
+                  </div>
+                </div>
+              </aside>
+
+              <main class="compact-main p-5 md:p-8 lg:p-10 space-y-8">
+                <section id="overview" class="overview-premium-card">
+                  <div class="compact-section-head mb-4 flex flex-col md:flex-row md:items-end md:justify-between gap-3">
+                    <div class="overview-title-wrap">
+                      <span class="overview-title-icon"><i class="fa-solid fa-id-card-clip"></i></span>
+                      <div>
+                        <p class="section-label-premium"><i class="fa-solid fa-circle-check"></i> Official Overview</p>
+                        <h2 class="display-font compact-section-title mt-2 text-3xl md:text-5xl font-black text-[#05351f] tracking-tight">Leadership Profile</h2>
+                      </div>
+                    </div>
+                    <span class="overview-verification-badge"><i class="fa-solid fa-shield-halved"></i> Verified Display</span>
+                  </div>
+                  <div class="overview-grid-premium compact-info-grid">
+                    ${infoCard('Designation', role, 'fa-user-tie')}
+                    ${infoCard('Category', category, 'fa-layer-group')}
+                    ${infoCard('Council / Seat', seat, 'fa-landmark')}
+                    ${infoCard('State', state, 'fa-location-dot')}
+                  </div>
+                </section>
+
+                <section class="content-card compact-content-card summary-premium-card rounded-[2rem] p-5 md:p-7">
+                  <p class="section-label-premium"><i class="fa-solid fa-scroll"></i> Executive Summary</p>
+                  <div class="gold-line my-4"></div>
+                  <p class="compact-summary-text text-lg leading-8 text-slate-700 font-semibold">${escapeHtml(excerpt)}</p>
+                </section>
+
+                <section id="credentials" class="content-card compact-content-card rounded-[2rem] p-5 md:p-7">
+                  <p class="text-xs uppercase tracking-[.28em] text-[#8a6616] font-black">Credentials & Recognition</p>
+                  <h3 class="display-font mt-1 text-2xl md:text-3xl font-black text-[#05351f]">Official Credentials</h3>
+                  <div class="gold-line my-5"></div>
+                  <div class="prose-content compact-prose dossier-rich-content">${formatCredentialList(credentials)}</div>
+                </section>
+
+                <section id="biography" class="content-card compact-content-card rounded-[2rem] p-5 md:p-7">
+                  <p class="text-xs uppercase tracking-[.28em] text-[#8a6616] font-black">Full Biography / Dossier</p>
+                  <h3 class="display-font mt-1 text-2xl md:text-3xl font-black text-[#05351f]">Public Leadership Dossier</h3>
+                  <div class="gold-line my-5"></div>
+                  <div class="prose-content compact-prose dossier-rich-content">${formatParagraphs(biography)}</div>
+                </section>
+
+                <section id="placements" class="content-card compact-content-card rounded-[2rem] p-5 md:p-7">
+                  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                    <div>
+                      <p class="text-xs uppercase tracking-[.28em] text-[#8a6616] font-black">Profile Map</p>
+                      <h3 class="display-font mt-1 text-2xl md:text-3xl font-black text-[#05351f]">All Leadership Placements</h3>
+                    </div>
+                    <span class="profile-map-badge"><i class="fa-solid fa-fingerprint"></i> ${escapeHtml(profileSlug)}</span>
+                  </div>
+                  <div class="gold-line my-5"></div>
+                  <div class="placement-stack">${placementHtml}</div>
+                </section>
+
+                <section id="placement" class="compact-placement-grid grid lg:grid-cols-2 gap-4">
+                  <div class="content-card compact-content-card rounded-[2rem] p-5 md:p-7">
+                    <p class="text-xs uppercase tracking-[.28em] text-[#8a6616] font-black">Territory Details</p>
+                    <div class="compact-mini-grid mt-5 grid sm:grid-cols-2 gap-3">
+                      ${miniCard('Zone', zone)}${miniCard('LGA / LCDA', lga)}${miniCard('Ward', ward)}${miniCard('Display Order', text(record.display_order, '999'))}
+                    </div>
+                  </div>
+                  <div class="content-card compact-content-card rounded-[2rem] p-5 md:p-7">
+                    <p class="text-xs uppercase tracking-[.28em] text-[#8a6616] font-black">Publish Targets</p>
+                    <div class="mt-5 flex flex-wrap gap-2">${(targets.length ? targets : ['leadership']).map(t => `<span class="rounded-full border border-[#0f7a3d]/15 bg-[#0f7a3d]/10 px-4 py-2 text-xs font-black uppercase tracking-[.14em] text-[#05351f]">${escapeHtml(pretty(t))}</span>`).join('')}</div>
+                    <p class="mt-5 text-sm text-slate-500">${updated ? `Last updated: ${escapeHtml(new Date(updated).toLocaleString())}` : 'Update timestamp unavailable.'}</p>
+                  </div>
+                </section>
+              </main>
+            </div>
+          </div>
+        </section>`;
+
+      record.__placements = placements;
+      document.getElementById('copyDossierBtn')?.addEventListener('click', () => copyDossier(record));
+    }
+
+    function infoCard(label, value, icon) {
+      return `<div class="info-card"><div class="info-icon"><i class="fa-solid ${icon} text-sm"></i></div><p class="info-label">${escapeHtml(label)}</p><p class="info-value">${escapeHtml(value)}</p></div>`;
+    }
+    function miniCard(label, value) {
+      return `<div class="rounded-xl border border-[#0f7a3d]/10 bg-slate-50 p-3"><p class="text-[9px] uppercase tracking-[.18em] text-slate-400 font-black">${escapeHtml(label)}</p><p class="mt-1 text-sm font-black text-[#05351f]">${escapeHtml(value)}</p></div>`;
+    }
+    function renderError(error) {
+      root.innerHTML = `<section class="dossier-hero text-white pt-32 pb-24"><div class="relative z-10 max-w-4xl mx-auto px-4 md:px-6 text-center"><span class="official-chip dark"><i class="fa-solid fa-triangle-exclamation"></i> Dossier Not Found</span><h2 class="display-font mt-5 text-4xl md:text-6xl font-black">Official profile could not be loaded.</h2><p class="mt-5 text-white/72 leading-relaxed">Check that the URL contains a valid UUID id and slug, and that the official is published in the Admin Leadership Desk.</p><a href="/pages/leadership.html" class="action-btn mt-8 bg-[#d8ad34] text-[#05351f]"><i class="fa-solid fa-arrow-left"></i> Back to Leadership</a><p class="mt-5 text-xs text-white/38">${escapeHtml(error?.message || '')}</p></div></section>`;
+    }
+
+    document.addEventListener('DOMContentLoaded', loadOfficial);
+  </script>
+  <script src="/assets/js/supabase-clients.js"></script>
+  <script src="/assets/js/apsg-settings.js"></script>
+  <script type="module" src="/components/navbar.js"></script>
+  <script type="module" src="/components/footer.js"></script>
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

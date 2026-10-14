@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="robots" content="noindex,nofollow,noarchive">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#05351f">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Members Control Room - APSG Admin</title>
+    <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any">
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png">
+
+        <!-- Favicon -->
+    <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any" />
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png" />
+    <link rel="icon" href="/assets/images/logo/apsg.png" sizes="any">
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.4.0/css/fixedHeader.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="/assets/css/tailwind-static.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+        <link rel="stylesheet" href="/assets/css/dashboard.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0f8a4b',
+                        'primary-dark': '#06391f',
+                        emeraldRoyal: '#0b5f3a',
+                        accent: '#0f766e',
+                        secondary: '#d6a92b',
+                        ink: '#07140e',
+                        cream: '#fffaf0',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444'
+                    },
+                    boxShadow: {
+                        'royal': '0 18px 55px rgba(5, 53, 31, 0.18)',
+                        'gold': '0 14px 34px rgba(214, 169, 43, 0.22)'
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        if (localStorage.getItem('daynight-theme') === 'carbon') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+    <style>
+
+    :root {
+      --deep:#05351f;
+      --green:#0f8a4b;
+      --emerald:#14a861;
+      --gold:#d6a92b;
+      --cream:#fffaf0;
+      --paper:#ffffff;
+      --ink:#07140e;
+      --muted:#64746a;
+      --danger:#991b1b;
+      --border:rgba(5,53,31,.10);
+      --gold-border:rgba(214,169,43,.25);
+      --shadow-card:0 18px 52px rgba(5,53,31,.10);
+      --shadow-premium:0 34px 110px rgba(5,53,31,.20);
+    }
+    *{box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body.members-admin-page{
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 100% 0,rgba(214,169,43,.14),transparent 28rem),
+        radial-gradient(circle at 0 12%,rgba(15,138,75,.12),transparent 32rem),
+        linear-gradient(180deg,#f8fbf7 0%,#eef6ef 100%);
+      overflow-x:hidden;
+    }
+    .dark body.members-admin-page,
+    body.members-admin-page.dark{background:#06150d;}
+    .skip-link{position:fixed;left:1rem;top:.75rem;z-index:1000;transform:translateY(-150%);border-radius:999px;background:var(--gold);color:var(--deep);padding:.65rem .95rem;font-weight:950;text-decoration:none;box-shadow:var(--shadow-card);transition:transform .18s ease;}
+    .skip-link:focus{transform:translateY(0);outline:3px solid rgba(214,169,43,.35);outline-offset:2px;}
+    .member-access-notice{position:fixed;left:50%;top:.8rem;z-index:900;width:min(92vw,42rem);transform:translateX(-50%);border:1px solid rgba(214,169,43,.30);border-radius:1.15rem;background:rgba(255,255,255,.96);color:var(--deep);padding:.85rem 1rem;font-weight:850;box-shadow:var(--shadow-premium);}
+    .member-access-notice.danger{border-color:#fecaca;background:#fff1f2;color:var(--danger);}
+    .sidebar-link{display:flex;align-items:center;gap:.6rem;min-height:2.4rem;padding:.58rem .72rem;border-radius:1rem;color:rgba(255,255,255,.82);font-size:.75rem;font-weight:850;text-decoration:none;transition:.18s ease;}
+    .sidebar-link:hover,.sidebar-link.active,.sidebar-link:focus-visible{background:rgba(214,169,43,.14);color:#f8dc7a;transform:translateX(2px);outline:0;}
+    .sidebar-link.danger-link{color:#fecaca;background:rgba(239,68,68,.10);}
+    .role-chip{margin-left:auto;padding:.16rem .38rem;border-radius:999px;background:rgba(214,169,43,.14);color:#f8dc7a;font-size:.5rem;font-weight:950;text-transform:uppercase;letter-spacing:.12em;}
+    .role-chip.editor{background:rgba(20,168,97,.13);color:#abf5ce;}
+    .role-level{display:grid;place-items:center;min-height:1.45rem;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);font-weight:950;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.08em;}
+    .role-level.active{border-color:rgba(214,169,43,.38);background:rgba(214,169,43,.18);color:#f8dc7a;}
+    .pulse-dot{width:.45rem;height:.45rem;border-radius:999px;background:#10b981;box-shadow:0 0 0 5px rgba(16,185,129,.15);}
+    .page-shell{width:min(100%,1680px);}
+    .lux-hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#031b0f 0%,#05351f 48%,#0f8a4b 100%);box-shadow:0 24px 80px rgba(5,53,31,.22);border:1px solid rgba(214,169,43,.18);}
+    .lux-hero::after{content:"";position:absolute;right:-5rem;top:-6rem;width:17rem;height:17rem;border-radius:999px;background:rgba(214,169,43,.25);filter:blur(38px);}
+    .members-hero-title{margin:.28rem 0 0;color:#fff;font-family:"Playfair Display",Georgia,serif;font-size:clamp(1.45rem,3vw,2.5rem);font-weight:950;line-height:1;letter-spacing:-.035em;}
+    .members-hero-copy{max-width:48rem;margin:.45rem 0 0;color:rgba(255,255,255,.72);font-size:.84rem;font-weight:650;line-height:1.5;}
+    .status-pill{display:inline-flex;align-items:center;gap:.45rem;min-height:2.15rem;padding:.48rem .8rem;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(255,255,255,.10);color:#fff;font-size:.72rem;font-weight:950;white-space:nowrap;}
+    .metric-card,.audit-card,.lux-card{position:relative;overflow:hidden;border:1px solid rgba(214,169,43,.17);background:rgba(255,255,255,.92);box-shadow:0 16px 44px rgba(5,53,31,.08);}
+    .metric-card{border-radius:1.2rem;padding:.8rem;}
+    .metric-card::after{content:"";position:absolute;right:-1.2rem;bottom:-1.2rem;width:4.4rem;height:4.4rem;border-radius:999px;background:rgba(214,169,43,.10);}
+    .metric-icon{display:grid;place-items:center;width:2.35rem;height:2.35rem;border-radius:.9rem;background:linear-gradient(135deg,rgba(5,53,31,.10),rgba(214,169,43,.16));color:var(--deep);}
+    .audit-strip{display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:.6rem;}
+    .audit-card{border-radius:1rem;padding:.82rem;}
+    .lux-card{border-radius:1.35rem;}
+    .premium-input,.premium-select{min-height:2.6rem;border:1px solid rgba(5,53,31,.12);border-radius:1rem;background:#fff;color:#102017;font-weight:750;box-shadow:0 10px 28px rgba(5,53,31,.035);}
+    .premium-input:focus,.premium-select:focus,.dt-input:focus,.form-control:focus{border-color:rgba(214,169,43,.62)!important;box-shadow:0 0 0 4px rgba(214,169,43,.14)!important;outline:0!important;}
+    .filter-chip{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;min-height:2.25rem;border:1px solid rgba(5,53,31,.10);border-radius:999px;background:#fff;color:var(--deep);padding:.5rem .78rem;font-size:.72rem;font-weight:950;text-transform:uppercase;letter-spacing:.045em;transition:.18s ease;}
+    .filter-chip:hover,.filter-chip.active,.filter-chip.active-view{transform:translateY(-1px);background:linear-gradient(135deg,rgba(5,53,31,.08),rgba(214,169,43,.14));border-color:rgba(214,169,43,.30);}
+    .toolbar-btn,.action-btn,.dt-button,.mini-action-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:.42rem!important;min-height:2.15rem!important;border:1px solid rgba(5,53,31,.10)!important;border-radius:999px!important;background:#fff!important;color:var(--deep)!important;padding:.48rem .75rem!important;font-size:.72rem!important;font-weight:950!important;text-decoration:none!important;box-shadow:0 8px 18px rgba(5,53,31,.055)!important;transition:.18s ease!important;}
+    .toolbar-btn:hover,.action-btn:hover,.dt-button:hover{transform:translateY(-1px);filter:brightness(1.02);}
+    .table-shell{overflow:auto;border-radius:0 0 1.35rem 1.35rem;}
+    #membersTable{border-collapse:separate!important;border-spacing:0 .48rem!important;margin-top:.3rem!important;}
+    #membersTable thead th,#membersTable tfoot th{border:0!important;color:#64746a!important;font-size:.62rem!important;font-weight:950!important;text-transform:uppercase!important;letter-spacing:.12em!important;background:transparent!important;white-space:nowrap;}
+    #membersTable tbody tr{box-shadow:0 8px 24px rgba(5,53,31,.04);}
+    #membersTable tbody td{border-top:1px solid rgba(5,53,31,.08)!important;border-bottom:1px solid rgba(5,53,31,.08)!important;background:#fff!important;vertical-align:middle!important;padding:.72rem!important;}
+    #membersTable tbody td:first-child{border-left:1px solid rgba(5,53,31,.08)!important;border-radius:1rem 0 0 1rem!important;}
+    #membersTable tbody td:last-child{border-right:1px solid rgba(5,53,31,.08)!important;border-radius:0 1rem 1rem 0!important;}
+    .member-mini-profile{display:flex;align-items:center;gap:.7rem;min-width:13rem;}
+    .member-mini-avatar,.quick-avatar{display:grid;place-items:center;flex:0 0 auto;border-radius:1rem;background:linear-gradient(135deg,#05351f,#0f8a4b);color:#f8dc7a;font-weight:950;box-shadow:0 10px 26px rgba(5,53,31,.16);object-fit:contain;object-position:top center;}
+    .member-mini-avatar{width:2.7rem;height:2.7rem;font-size:.8rem;}
+    .quick-avatar{width:5.8rem;height:5.8rem;font-size:1.35rem;border:1px solid rgba(214,169,43,.28);background-color:#f8fbf7;}
+    .upload-thumb{width:3.4rem;height:3.4rem;border-radius:.85rem;object-fit:contain;object-position:center;background:#f6fbf7;border:1px solid rgba(5,53,31,.10);cursor:pointer;}
+    .reg-number{display:inline-flex;align-items:center;gap:.35rem;border:1px solid rgba(214,169,43,.26);border-radius:999px;background:rgba(214,169,43,.13);color:#73540c;padding:.42rem .68rem;font-size:.72rem;font-weight:950;text-decoration:none;white-space:nowrap;}
+    .quick-open-icon{margin-left:.22rem;opacity:.6;font-size:.65rem;}
+    .verified-badge{display:inline-flex;align-items:center;gap:.35rem;border-radius:999px;background:rgba(16,185,129,.10);color:#047857;border:1px solid rgba(16,185,129,.18);padding:.38rem .62rem;font-size:.7rem;font-weight:950;white-space:nowrap;}
+    .verified-badge.pending{background:#fff7ed;color:#b45309;border-color:#fed7aa;}
+    .account-number-pill{display:inline-flex;align-items:center;gap:.35rem;border-radius:999px;background:rgba(5,53,31,.07);color:var(--deep);border:1px solid rgba(5,53,31,.10);padding:.38rem .62rem;font-weight:950;white-space:nowrap;}
+    .page-slider-btn{width:2.45rem;height:2.45rem;border:0;border-radius:999px;background:linear-gradient(135deg,#05351f,#0f8a4b);box-shadow:0 10px 24px rgba(5,53,31,.15);}
+    .page-slider-btn:disabled{opacity:.45;cursor:not-allowed;}
+    .gold-line{width:min(38rem,72vw);height:1px;margin-inline:auto;background:linear-gradient(90deg,transparent,rgba(214,169,43,.7),transparent);}
+    .preview-modal-content{border:1px solid rgba(214,169,43,.22)!important;border-radius:1.4rem!important;overflow:hidden!important;box-shadow:var(--shadow-premium)!important;}
+    #previewFrame{width:100%;height:min(74vh,820px);border:0;background:#fff;}
+    #imageViewer{min-height:min(74vh,820px);overflow:auto;background:#06150d;}
+    #previewImage{max-width:100%;max-height:74vh;object-fit:contain;transition:transform .18s ease;transform-origin:center center;}
+    .zoom-controls{position:absolute;right:1rem;bottom:1rem;display:flex;gap:.45rem;}
+    .zoom-btn{display:grid;place-items:center;width:2.35rem;height:2.35rem;border:1px solid rgba(214,169,43,.25);border-radius:999px;background:#fff;color:var(--deep);box-shadow:0 10px 28px rgba(0,0,0,.14);}
+    .member-modal-card,.quick-stat-card{border:1px solid rgba(214,169,43,.16);border-radius:1.2rem;background:rgba(255,255,255,.90);box-shadow:0 14px 36px rgba(5,53,31,.07);}
+    .quick-stat-card{padding:.78rem;}
+    .account-receipt-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;}
+    .account-receipt-strip>div{border:1px solid rgba(5,53,31,.08);border-radius:1rem;background:#fff;padding:.8rem;}
+    .account-receipt-strip p{margin:0;color:#64746a;font-size:.62rem;font-weight:950;text-transform:uppercase;letter-spacing:.14em;}
+    .account-receipt-strip strong{display:block;margin-top:.15rem;color:var(--deep);font-weight:950;word-break:break-word;}
+    .toast-copy{position:fixed;left:50%;bottom:1.1rem;z-index:2000;display:none;transform:translateX(-50%);}
+    .toast-copy.show{display:block;}
+    .member-cards-view{display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:.85rem;padding:1rem;background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,250,240,.40));}
+    .member-cards-view[hidden]{display:none!important;}
+    .member-card{display:grid;gap:.82rem;border:1px solid rgba(214,169,43,.18);border-radius:1.28rem;background:linear-gradient(145deg,#fff,#fffaf0);box-shadow:0 16px 38px rgba(5,53,31,.08);padding:.9rem;min-width:0;}
+    .member-card-head{display:grid;grid-template-columns:4.65rem minmax(0,1fr);gap:.78rem;align-items:center;min-width:0;}
+    .member-card-avatar{position:relative;z-index:0;display:grid;place-items:center;width:4.65rem;height:4.65rem;min-width:4.65rem;overflow:hidden;border:1px solid rgba(214,169,43,.28);border-radius:1.15rem;background:linear-gradient(135deg,#05351f,#0f8a4b);color:#f8dc7a;font-size:1rem;font-weight:950;line-height:1;box-shadow:0 12px 28px rgba(5,53,31,.15);object-fit:cover;object-position:top center;}
+    .member-card-avatar.avatar-fallback{font-size:1rem;letter-spacing:.04em;text-align:center;}
+    .member-card-avatar img,.member-card-avatar.member-photo{width:100%;height:100%;object-fit:cover;object-position:top center;}
+    .member-card-main{position:relative;z-index:1;min-width:0;overflow:hidden;}
+    .member-card h3{position:relative;z-index:2;margin:.45rem 0 0;color:var(--deep);font-family:"Playfair Display",Georgia,serif;font-size:clamp(1.12rem,2.2vw,1.42rem);font-weight:950;line-height:1.06;letter-spacing:-.025em;overflow-wrap:anywhere;word-break:normal;}
+    .member-card-meta{position:relative;z-index:2;margin:.32rem 0 0;color:#64746a;font-size:.78rem;font-weight:750;line-height:1.35;overflow-wrap:anywhere;}
+    .member-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem;}
+    .member-card-field{border:1px solid rgba(5,53,31,.08);border-radius:.9rem;background:#f8fbf7;padding:.58rem;min-width:0;}
+    .member-card-field span{display:block;color:#64746a;font-size:.58rem;font-weight:950;letter-spacing:.12em;text-transform:uppercase;}
+    .member-card-field strong{display:block;margin-top:.12rem;color:var(--deep);font-size:.78rem;font-weight:900;word-break:break-word;}
+    .member-card-actions{display:flex;flex-wrap:wrap;gap:.45rem;}
+    .density-compact #membersTable tbody td{padding:.45rem!important;font-size:.78rem;}
+    .density-compact .member-mini-avatar{width:2.25rem;height:2.25rem;border-radius:.75rem;}
+    .dataTables_info,.dt-info{font-size:.75rem!important;color:#64746a!important;font-weight:800!important;}
+    .dt-paging,.dataTables_paginate{display:none!important;}
+    @media(min-width:640px){.audit-strip{grid-template-columns:repeat(2,minmax(0,1fr));}.member-cards-view{grid-template-columns:repeat(2,minmax(0,1fr));}}
+    @media(min-width:1180px){.member-cards-view{grid-template-columns:repeat(3,minmax(0,1fr));}}
+    @media(max-width:767px){.lux-hero .relative.z-10{align-items:flex-start}.metric-card{padding:.68rem}.table-shell{border-radius:0}.account-receipt-strip{grid-template-columns:1fr}.member-card-grid{grid-template-columns:1fr}.member-card-head{grid-template-columns:4.15rem minmax(0,1fr);gap:.65rem;align-items:center}.member-card-avatar{width:4.15rem;height:4.15rem;min-width:4.15rem;border-radius:1rem}.member-card h3{font-size:1.18rem}.status-pill{width:100%;justify-content:center}.dt-buttons{margin-top:.6rem}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;}}
+
+    </style>
+  <link rel="stylesheet" href="/assets/css/admin-unified.css">
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+</head>
+<body class="members-admin-page min-h-screen bg-slate-50 text-sm text-gray-900 antialiased dark:bg-[#06150d] dark:text-gray-100">
+  <a class="skip-link" href="#membersMainContent">Skip to member registry</a>
+  <div id="memberAccessNotice" class="member-access-notice" role="status" aria-live="polite" hidden></div>
+  <div
+    id="mobile-overlay"
+    class="fixed inset-0 z-40 hidden bg-black/45 backdrop-blur-sm md:hidden"
+    onclick="closeSidebar()"
+    aria-hidden="true">
+  </div>
+
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside
+      id="sidebar"
+      class="fixed inset-y-0 left-0 z-50 flex w-64 -translate-x-full flex-col overflow-hidden border-r border-white/10 bg-[#041f12] text-white shadow-2xl transition-transform duration-300 ease-in-out md:translate-x-0">
+
+      <!-- Brand -->
+      <div class="relative shrink-0 overflow-hidden border-b border-white/10 p-3.5">
+        <div class="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-warning/20 blur-xl"></div>
+
+        <a href="/admin/dashboard.html" class="relative z-10 flex items-center gap-2.5" aria-label="APSG Admin Dashboard">
+          <span class="grid h-9 w-9 place-items-center rounded-2xl border border-warning/30 bg-white/10 shadow-gold">
+            <img
+              src="/assets/images/logo/apsg.png"
+              alt="APSG Logo"
+              class="h-6 w-auto"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" width="96" height="96" decoding="async">
+            <i class="fas fa-shield-halved hidden text-warning"></i>
+          </span>
+
+          <span class="min-w-0">
+            <span class="block text-sm font-black leading-none">APSG Admin</span>
+            <span class="mt-1 block text-[9px] font-black uppercase tracking-[0.22em] text-warning">
+              Control Room
+            </span>
+          </span>
+        </a>
+      </div>
+
+       <!-- Navigation -->
+      <nav class="apsg-role-sidebar flex-1 space-y-1.5 overflow-y-auto p-2.5 pb-4" aria-label="Admin navigation">
+        <p class="px-2 py-1.5 text-[9px] font-black uppercase tracking-[0.28em] text-white/40">
+          Command Center
+        </p>
+
+        <a href="/admin/dashboard.html" class="sidebar-link" data-access="viewer,editor,admin,superadmin">
+          <i class="fas fa-chart-pie w-4 text-center"></i>
+          <span>Dashboard</span>
+           <span class="role-chip">Admin</span>
+        </a>
+
+        <a href="/admin/members.html" class="sidebar-link active" data-access="admin,superadmin">
+          <i class="fas fa-users w-4 text-center"></i>
+          <span>Members</span>
+          <span class="role-chip">Admin</span>
+        </a>
+
+        <a href="/admin/account-details.html" class="sidebar-link" data-access="admin,superadmin">
+          <i class="fas fa-building-columns w-4 text-center"></i>
+          <span>Account Details</span>
+          <span class="role-chip">Admin</span>
+        </a>
+
+<a href="/admin/admin-leadership.html" class="sidebar-link" data-access="admin,superadmin">
+          <i class="fa-solid fa-users-viewfinder w-4 text-center"></i>Leadership Desk<span class="role-chip">Admin</span>
+        </a>
+
+
+        <p class="px-2 pt-4 pb-1.5 text-[9px] font-black uppercase tracking-[0.28em] text-warning/80">
+          Publishing Desk
+        </p>
+
+        <a href="/admin/admin-blog.html" class="sidebar-link" data-access="editor,admin,superadmin">
+          <i class="fas fa-newspaper w-4 text-center"></i>
+          <span>News & Updates</span>
+          <span class="role-chip editor">Editor</span>
+        </a>
+
+        <a href="/admin/admin-meeting.html" class="sidebar-link" data-access="editor,admin,superadmin">
+          <i class="fas fa-users-line w-4 text-center"></i>
+          <span>Meetings</span>
+          <span class="role-chip editor">Editor</span>
+        </a>
+
+        <a href="/admin/admin-event.html" class="sidebar-link" data-access="editor,admin,superadmin">
+          <i class="fas fa-calendar-check w-4 text-center"></i>
+          <span>Events</span>
+          <span class="role-chip editor">Editor</span>
+        </a>
+
+        <a href="/admin/admin-gallery.html" class="sidebar-link" data-access="editor,admin,superadmin">
+          <i class="fa-solid fa-images w-4 text-center"></i>
+          <span>Gallery Albums</span>
+          <span class="role-chip editor">Editor</span>
+        </a>
+
+        <p class="px-2 pt-4 pb-1.5 text-[9px] font-black uppercase tracking-[0.28em] text-white/40">
+          Public Review
+        </p>
+
+        <a href="/pages/blog.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin">
+          <i class="fas fa-arrow-up-right-from-square w-4 text-center"></i>
+          <span>View Blog</span>
+        </a>
+
+        <a href="/pages/meetings.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin">
+          <i class="fas fa-arrow-up-right-from-square w-4 text-center"></i>
+          <span>View Meetings</span>
+        </a>
+
+        <a href="/pages/events.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin">
+          <i class="fas fa-arrow-up-right-from-square w-4 text-center"></i>
+          <span>View Events</span>
+        </a>
+        <a href="/pages/gallery.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin">
+                    <i class="fas fa-arrow-up-right-from-square w-4 text-center"></i>
+                    View Gallery
+                </a>
+      </nav>
+
+      <!-- Role Card -->
+      <div class="apsg-role-card mx-2.5 mb-3 rounded-2xl border border-warning/20 bg-white/[0.06] p-3">
+        <div class="flex items-center gap-2.5">
+          <div class="grid h-8 w-8 place-items-center rounded-xl bg-warning text-[#062112]">
+            <i class="fas fa-user-shield text-sm"></i>
+          </div>
+
+          <div class="min-w-0">
+            <p class="text-[11px] font-black">Role Access</p>
+            <p class="text-[10px] text-white/50">
+              <span id="adminRoleLabel">Resolving role</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-3 grid grid-cols-2 gap-1.5 text-[9px]">
+          <span class="role-level active" data-role-level="viewer">Viewer</span>
+          <span class="role-level" data-role-level="editor">Editor</span>
+          <span class="role-level" data-role-level="admin">Admin</span>
+          <span class="role-level" data-role-level="superadmin">Superadmin</span>
+        </div>
+
+        <div class="mt-3 flex items-center gap-2 rounded-xl bg-black/20 px-2.5 py-2 text-[10px] text-white/60">
+          <span class="pulse-dot"></span>
+          <span>Authenticated admin session</span>
+        </div>
+      </div>
+
+      <!-- Logout -->
+      <div class="shrink-0 border-t border-white/10 bg-[#041f12] p-2.5">
+        <button onclick="logout()" class="sidebar-link danger-link w-full text-left" type="button">
+          <i class="fas fa-right-from-bracket w-4 text-center"></i>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Area -->
+    <div class="flex min-w-0 flex-1 flex-col md:ml-64">
+      <header class="sticky top-0 z-30 border-b border-green-900/10 bg-white/80 backdrop-blur-xl dark:border-white/10 dark:bg-[#07170e]/85">
+        <div class="flex items-center justify-between gap-3 px-3.5 py-2">
+          <div class="flex min-w-0 items-center gap-2.5">
+            <button
+              id="mobile-toggle"
+              onclick="toggleSidebar()"
+              class="grid h-9 w-9 place-items-center rounded-2xl border border-green-900/10 bg-white/85 shadow-sm transition hover:bg-white md:hidden dark:border-white/10 dark:bg-white/10"
+              type="button"
+              aria-label="Open admin sidebar">
+              <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="min-w-0">
+              <p class="text-[9px] font-black uppercase tracking-[0.26em] text-warning">
+                APSG Nigeria
+              </p>
+              <h1 class="truncate text-sm font-black tracking-tight md:text-lg">
+                Admin Command Center
+              </h1>
+            </div>
+          </div>
+
+          <div class="no-print flex shrink-0 items-center gap-2">
+            <button onclick="window.location.reload()" class="toolbar-btn hidden sm:inline-flex" type="button">
+              <i class="fas fa-rotate-right text-warning"></i>
+              <span>Refresh</span>
+            </button>
+
+            <div class="flex rounded-2xl border border-green-900/10 bg-white/70 p-1 shadow-sm dark:border-white/10 dark:bg-white/10">
+              <button
+                onclick="setTheme('snow')"
+                class="theme-btn-snow h-7 w-7 rounded-xl transition-all"
+                type="button"
+                aria-label="Switch to light mode">
+                <i class="fas fa-sun text-xs"></i>
+              </button>
+
+              <button
+                onclick="setTheme('carbon')"
+                class="theme-btn-carbon h-7 w-7 rounded-xl transition-all"
+                type="button"
+                aria-label="Switch to dark mode">
+                <i class="fas fa-moon text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+    <main id="membersMainContent" class="page-shell mx-auto px-3 md:px-5 py-3 md:py-5" tabindex="-1">
+        <section class="lux-hero rounded-[1.65rem] text-white px-4 md:px-6 py-4 md:py-5 mb-3">
+            <div class="relative z-10 flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md shadow-gold">
+                        <img src="/assets/images/logo/apsg.png" alt="APSG Logo" class="h-10 w-10 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" width="96" height="96" decoding="async">
+                        <i class="fas fa-shield-halved text-secondary text-2xl hidden"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-[0.68rem] md:text-xs uppercase tracking-[0.26em] text-secondary font-black">APC Progressive Support Group Member Registry</p>
+                        <h2 class="members-hero-title">Members Control Room</h2>
+                        <p class="members-hero-copy">Verify registrations, inspect uploads, audit bank details, export records, and manage APSG membership data from one premium command table.</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2 xl:justify-end">
+                    <span class="status-pill"><span class="h-2 w-2 rounded-full bg-secondary animate-pulse"></span> Live database</span>
+                    <span class="status-pill"><i class="fas fa-users text-secondary"></i> Total: <strong id="totalMembers">0</strong></span>
+                    <a href="/admin/dashboard.html" class="inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-2 text-xs font-black text-[#05351f] shadow-gold hover:brightness-105 no-underline">
+                        <i class="fas fa-arrow-left"></i> Dashboard
+                    </a>
+                    <a href="/admin/account-details.html" class="inline-flex items-center gap-2 rounded-full bg-white/12 px-4 py-2 text-xs font-black text-white border border-white/15 hover:bg-white/20 no-underline">
+                        <i class="fas fa-building-columns text-secondary"></i> Account Details
+                    </a>
+                    <button type="button" onclick="exportMemberAccountDetailsReport()" class="inline-flex items-center gap-2 rounded-full bg-white/12 px-4 py-2 text-xs font-black text-white border border-white/15 hover:bg-white/20">
+                        <i class="fas fa-file-export text-secondary"></i> Account Report
+                    </button>
+                    <button onclick="setTheme('snow')" class="grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-white/10 text-white hover:bg-white/20" title="Light mode"><i class="fas fa-sun"></i></button>
+                    <button onclick="setTheme('carbon')" class="grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-white/10 text-white hover:bg-white/20" title="Dark mode"><i class="fas fa-moon"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-2 xl:grid-cols-7 gap-2 md:gap-3 mb-3">
+            <div class="metric-card">
+                <div class="relative z-10 flex items-center gap-3">
+                    <div class="metric-icon"><i class="fas fa-id-card"></i></div>
+                    <div>
+                        <p class="text-[0.68rem] uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 font-black mb-0">Records</p>
+                        <p class="text-xl font-black text-[#05351f] dark:text-white mb-0" id="summaryRecords">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="relative z-10 flex items-center gap-3">
+                    <div class="metric-icon"><i class="fas fa-circle-check"></i></div>
+                    <div>
+                        <p class="text-[0.68rem] uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 font-black mb-0">Verified</p>
+                        <p class="text-xl font-black text-[#05351f] dark:text-white mb-0" id="summaryVerified">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="metric-card account-metric-card">
+                <div class="relative z-10 flex items-center gap-3">
+                    <div class="metric-icon"><i class="fas fa-building-columns"></i></div>
+                    <div>
+                        <p class="text-[0.68rem] uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 font-black mb-0">Accounts</p>
+                        <p class="text-xl font-black text-[#05351f] dark:text-white mb-0" id="summaryAccounts">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="relative z-10 flex items-center gap-3">
+                    <div class="metric-icon"><i class="fas fa-clock"></i></div>
+                    <div>
+                        <p class="text-[0.68rem] uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 font-black mb-0">Pending</p>
+                        <p class="text-xl font-black text-[#05351f] dark:text-white mb-0" id="summaryPending">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="relative z-10 flex items-center gap-3">
+                    <div class="metric-icon"><i class="fas fa-cloud-arrow-up"></i></div>
+                    <div>
+                        <p class="text-[0.68rem] uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 font-black mb-0">Uploads</p>
+                        <p class="text-xl font-black text-[#05351f] dark:text-white mb-0" id="summaryUploads">0%</p>
+                    </div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="relative z-10 flex items-center gap-3">
+                    <div class="metric-icon"><i class="fas fa-map-location-dot"></i></div>
+                    <div>
+                        <p class="text-[0.68rem] uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 font-black mb-0">States</p>
+                        <p class="text-xl font-black text-[#05351f] dark:text-white mb-0" id="summaryStates">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="relative z-10 flex items-center gap-3">
+                    <div class="metric-icon"><i class="fas fa-calendar-day"></i></div>
+                    <div>
+                        <p class="text-[0.68rem] uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 font-black mb-0">Today</p>
+                        <p class="text-xl font-black text-[#05351f] dark:text-white mb-0" id="summaryToday">0</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="audit-strip mb-3">
+            <div class="audit-card">
+                <p class="text-[0.64rem] uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 font-black mb-1">PVC Upload Coverage</p>
+                <p class="text-lg font-black text-[#05351f] dark:text-white mb-0" id="summaryPvcUploads">0%</p>
+            </div>
+            <div class="audit-card">
+                <p class="text-[0.64rem] uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 font-black mb-1">APC Upload Coverage</p>
+                <p class="text-lg font-black text-[#05351f] dark:text-white mb-0" id="summaryApcUploads">0%</p>
+            </div>
+            <div class="audit-card">
+                <p class="text-[0.64rem] uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 font-black mb-1">Latest Record</p>
+                <p class="text-sm font-black text-[#05351f] dark:text-white mb-0" id="summaryLatest">—</p>
+            </div>
+            
+            <div class="audit-card">
+                <p class="text-[0.64rem] uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 font-black mb-1">Filtered View</p>
+                <p class="text-lg font-black text-[#05351f] dark:text-white mb-0" id="summaryFiltered">0</p>
+            </div>
+        </section>
+
+        <section class="lux-card mb-3">
+            <div class="px-3 md:px-4 py-3">
+                <div class="flex flex-col 2xl:flex-row 2xl:items-center 2xl:justify-between gap-3 filter-container">
+                    <div class="flex flex-col lg:flex-row gap-2 flex-1">
+                        <div class="relative flex-1 min-w-[240px] max-w-2xl">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <i class="fas fa-search text-primary text-sm"></i>
+                            </div>
+                            <input id="memberSearch" class="premium-input block w-full pl-9 pr-3 text-sm" placeholder="Search name, phone, registration number, LGA, ward..." type="text">
+                        </div>
+                        <div class="relative min-w-[170px]">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <i class="fas fa-map text-primary text-sm"></i>
+                            </div>
+                            <select id="stateFilter" class="premium-select block w-full pl-9 pr-8 text-sm">
+                                <option value="">All States</option>
+                            </select>
+                        </div>
+                        <div class="relative min-w-[160px]">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <i class="fas fa-circle-check text-primary text-sm"></i>
+                            </div>
+                            <select id="verificationFilter" class="premium-select block w-full pl-9 pr-8 text-sm">
+                                <option value="">All Status</option>
+                                <option value="verified">Verified</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+                        <div class="relative min-w-[170px]">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <i class="fas fa-file-shield text-primary text-sm"></i>
+                            </div>
+                            <select id="documentFilter" class="premium-select block w-full pl-9 pr-8 text-sm">
+                                <option value="">All Documents</option>
+                                <option value="complete">Both Uploads</option>
+                                <option value="partial">One Upload</option>
+                                <option value="missing">Missing Uploads</option>
+                            </select>
+                        </div>
+                        <div class="relative min-w-[190px]">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <i class="fas fa-building-columns text-primary text-sm"></i>
+                            </div>
+                            <select id="accountFilter" class="premium-select block w-full pl-9 pr-8 text-sm">
+                                <option value="">All Accounts</option>
+                                <option value="with">With Account Number</option>
+                                <option value="missing">Missing Account Number</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 text-[0.72rem] font-extrabold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
+                        <span class="hidden md:inline">Exports</span>
+                    </div>
+                </div>
+                <div class="mt-3 flex flex-wrap items-center gap-2">
+                    <button type="button" class="filter-chip active" data-chip="all"><i class="fas fa-layer-group"></i>All</button>
+                    <button type="button" class="filter-chip" data-chip="verified"><i class="fas fa-circle-check"></i>Verified</button>
+                    <button type="button" class="filter-chip" data-chip="pending"><i class="fas fa-clock"></i>Pending</button>
+                    <button type="button" class="filter-chip" data-chip="complete"><i class="fas fa-file-circle-check"></i>Complete Docs</button>
+                    <button type="button" class="filter-chip" data-chip="missing"><i class="fas fa-file-circle-exclamation"></i>Needs Docs</button>
+                    <button type="button" class="filter-chip" data-chip="account"><i class="fas fa-building-columns"></i>With Account</button>
+                    <button type="button" class="filter-chip" data-chip="today"><i class="fas fa-calendar-day"></i>Today</button>
+                    <button type="button" id="resetFiltersBtn" class="filter-chip"><i class="fas fa-rotate-left"></i>Reset</button>
+                    <button type="button" id="densityBtn" class="filter-chip"><i class="fas fa-compress"></i>Compact Rows</button>
+                    <button type="button" id="refreshMembersBtn" class="filter-chip"><i class="fas fa-rotate"></i>Refresh</button>
+                    <button type="button" id="tableViewBtn" class="filter-chip active-view" data-registry-view="table"><i class="fas fa-table-list"></i>Table View</button>
+                    <button type="button" id="cardViewBtn" class="filter-chip" data-registry-view="cards"><i class="fas fa-grip"></i>Card View</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="lux-card">
+            <div class="px-3 md:px-4 py-3 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 border-b border-[rgba(15,138,75,0.10)] dark:border-[rgba(214,169,43,0.10)]">
+                <div>
+                    <p class="text-[0.68rem] uppercase tracking-[0.22em] text-secondary font-black mb-1">Member Registry Command Table</p>
+                    <h2 class="text-base md:text-lg font-black text-[#05351f] dark:text-white mb-0">Registry Records & Document Verification</h2>
+                </div>
+                <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 font-bold">
+                    <i class="fas fa-circle-info text-secondary"></i>
+                    Click registration number to open Quick View. Click uploads to preview.
+                </div>
+            </div>
+
+            <div id="tableRegistryView" class="table-shell">
+                <table id="membersTable" class="table table-hover mb-0 text-sm" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Reg Number</th>
+                            <th>Full Name</th>
+                            <th>Account Number</th>
+                            <th>Bank</th>
+                            <th>Designation</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>State</th>
+                            <th>LGA</th>
+                            <th>Ward</th>
+                            <th>PVC Number</th>
+                            <th>APC Card #</th>
+                            <th>PVC Upload</th>
+                            <th>APC Upload</th>
+                            <th>Verified</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Reg Number</th>
+                            <th>Full Name</th>
+                            <th>Account Number</th>
+                            <th>Bank</th>
+                            <th>Designation</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>State</th>
+                            <th>LGA</th>
+                            <th>Ward</th>
+                            <th>PVC Number</th>
+                            <th>APC Card #</th>
+                            <th>PVC Upload</th>
+                            <th>APC Upload</th>
+                            <th>Verified</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div id="memberCardsView" class="member-cards-view" hidden></div>
+        </section>
+
+        <div class="flex flex-wrap justify-center items-center gap-3 mt-3 mb-2">
+            <button id="prevPage" class="page-slider-btn text-white flex items-center justify-center" disabled><i class="fas fa-chevron-left"></i></button>
+            <div id="pageInfo" class="rounded-full border border-[rgba(214,169,43,0.25)] bg-white/75 dark:bg-[#082113]/80 px-4 py-2 text-xs md:text-sm font-black text-[#05351f] dark:text-white shadow-sm min-w-28 text-center">Page 1 of 1</div>
+            <button id="nextPage" class="page-slider-btn text-white flex items-center justify-center" disabled><i class="fas fa-chevron-right"></i></button>
+        </div>
+
+        <footer class="mt-3 text-center text-[0.68rem] md:text-xs text-gray-500 dark:text-gray-400">
+            <div class="gold-line mb-3"></div>
+            © 2026 APC Progressive Support Group (APSG Nigeria) Admin Members Database. All rights reserved.
+        </footer>
+    </main>
+
+    <div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content preview-modal-content">
+                <div class="modal-header text-white py-3 px-4 border-0" style="background: linear-gradient(135deg, #05351f, #0f8a4b 58%, #0f766e);">
+                    <div>
+                        <p class="text-[0.68rem] uppercase tracking-[0.24em] text-[#d6a92b] font-black mb-1">Secure Document Viewer</p>
+                        <h5 class="modal-title font-black text-lg">Document Preview</h5>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0 relative">
+                    <iframe id="previewFrame" class="d-none"></iframe>
+                    <div id="imageViewer" class="d-none w-full h-full flex items-center justify-center">
+                        <img id="previewImage" alt="Document Preview" style="transform: scale(1);">
+                    </div>
+                    <div class="zoom-controls">
+                        <button class="zoom-btn" onclick="zoomIn()" title="Zoom in"><i class="fas fa-search-plus"></i></button>
+                        <button class="zoom-btn" onclick="zoomOut()" title="Zoom out"><i class="fas fa-search-minus"></i></button>
+                        <button class="zoom-btn" onclick="resetZoom()" title="Reset zoom"><i class="fas fa-rotate-right"></i></button>
+                        <a id="openOriginalLink" href="#" target="_blank" class="zoom-btn no-underline" title="Open original"><i class="fas fa-up-right-from-square"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="memberQuickModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content preview-modal-content">
+                <div class="modal-header text-white py-3 px-4 border-0" style="background: linear-gradient(135deg, #05351f, #0f8a4b 58%, #0f766e);">
+                    <div>
+                        <p class="text-[0.68rem] uppercase tracking-[0.24em] text-[#d6a92b] font-black mb-1">Member Intelligence Receipt</p>
+                        <h5 class="modal-title font-black text-lg" id="quickMemberName">Member Record</h5>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-3 md:p-4 bg-[#f8fbf7] dark:bg-[#04170d]">
+                    <div id="quickMemberContent" class="grid lg:grid-cols-[0.9fr_1.1fr] gap-3"></div>
+                </div>
+                <div class="modal-footer border-0 bg-white dark:bg-[#071f13] px-4 py-3 flex flex-wrap gap-2 justify-between">
+                    <div class="text-xs text-gray-500 dark:text-gray-400 font-bold">Registration number opens this Quick View for fast admin review before opening details or editing.</div>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" id="copyMemberSummaryBtn" class="action-btn bg-green-50 text-green-800 hover:bg-green-100"><i class="fas fa-copy"></i>Copy Summary</button>
+                        <a id="quickViewDetailsLink" href="#" class="action-btn bg-green-50 text-green-800 hover:bg-green-100 no-underline" data-member-details-link="true" aria-label="Open full member details dossier" onclick="return openCurrentQuickMemberDetails(event)"><i class="fas fa-eye"></i>Open Details</a>
+                        <a id="quickEditMemberLink" href="#" class="action-btn bg-yellow-50 text-yellow-800 hover:bg-yellow-100 no-underline" data-member-edit-link="true" aria-label="Edit member profile" onclick="return openCurrentQuickMemberEdit(event)"><i class="fas fa-pen"></i>Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="copyToast" class="toast-copy rounded-2xl bg-[#05351f] text-white shadow-royal border border-secondary/30 px-4 py-3 text-sm font-bold">
+        <i class="fas fa-check-circle text-secondary mr-2"></i>Copied to clipboard
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.colVis.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/supabase-clients.js"></script>
+  <script src="/assets/js/apsg-settings.js"></script>
+  <script src="/assets/js/admin-auth.js"></script>
+
+    <script>
+        let table;
+        let states = new Set();
+        let zoomLevel = 1;
+        let allMembers = [];
+        let currentQuickMember = null;
+        let advancedFilters = { verification: '', documents: '', account: '', date: '' };
+        let registryViewMode = localStorage.getItem('apsg-members-view') || 'table';
+        let canWriteMembers = false;
+
+        function describeSupabaseError(error) {
+            const message = String(error?.message || error || 'Unknown Supabase error.');
+            const code = String(error?.code || '');
+            if (!navigator.onLine) return 'Network appears offline. Check the internet connection and refresh.';
+            if (code === '42P01' || /relation .* does not exist/i.test(message)) return 'The members table was not found. Confirm the Supabase table name is members.';
+            if (code === '42501' || /permission denied|row-level security|rls/i.test(message)) return 'Supabase RLS denied this request. Confirm this admin has an active admin_profiles role and the required RLS policy.';
+            if (/failed to fetch|network|timeout/i.test(message)) return 'Network or Supabase connection issue. Check the Supabase project status and try again.';
+            return message;
+        }
+
+        function showAccessNotice(message, type = 'info') {
+            const notice = document.getElementById('memberAccessNotice');
+            if (!notice) return;
+            notice.textContent = message;
+            notice.className = 'member-access-notice' + (type === 'danger' ? ' danger' : '');
+            notice.hidden = false;
+            clearTimeout(showAccessNotice.timer);
+            if (type !== 'danger') showAccessNotice.timer = setTimeout(() => { notice.hidden = true; }, 3600);
+        }
+
+        async function waitForSupabaseClient() {
+            for (let attempt = 0; attempt < 35; attempt += 1) {
+                const client = window.supabaseClient || window.apsgSupabase || window.APSG_SUPABASE || (window.APSG && window.APSG.supabase);
+                if (client && typeof client.from === 'function') {
+                    window.supabaseClient = client;
+                    return client;
+                }
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            return null;
+        }
+
+        async function resolveAdminProfile(user) {
+            const client = await waitForSupabaseClient();
+            if (!client || !user) return null;
+            const email = String(user.email || '').toLowerCase();
+            const fields = 'id,user_id,email,role,is_active,status';
+            let result = await client.from('admin_profiles').select(fields).eq('id', user.id).limit(1).maybeSingle();
+            if (!result.error && result.data) return result.data;
+            result = await client.from('admin_profiles').select(fields).eq('user_id', user.id).limit(1).maybeSingle();
+            if (!result.error && result.data) return result.data;
+            result = await client.from('admin_profiles').select(fields).ilike('email', email).limit(1).maybeSingle();
+            if (result.error) throw result.error;
+            return result.data || null;
+        }
+
+        function updateRoleUi(role) {
+            const label = document.getElementById('adminRoleLabel');
+            if (label) label.textContent = role || 'No role';
+            document.querySelectorAll('[data-role-level]').forEach(el => {
+                el.classList.toggle('active', el.dataset.roleLevel === role);
+            });
+            document.querySelectorAll('[data-access]').forEach(link => {
+                const allowed = String(link.dataset.access || '').split(',').map(x => x.trim().toLowerCase());
+                if (role && allowed.length && !allowed.includes(role)) link.hidden = true;
+            });
+        }
+
+        async function requireMembersAdminAccess() {
+            const client = await waitForSupabaseClient();
+            if (!client?.auth?.getSession) {
+                showAccessNotice('Supabase Auth is unavailable. Confirm /assets/js/supabase-clients.js is loaded.', 'danger');
+                return false;
+            }
+            const { data, error } = await client.auth.getSession();
+            if (error) {
+                showAccessNotice(describeSupabaseError(error), 'danger');
+                return false;
+            }
+            const session = data?.session;
+            if (!session?.user) {
+                const redirect = encodeURIComponent(`${location.pathname}${location.search}`);
+                location.href = `/admin/login.html?redirect=${redirect}`;
+                return false;
+            }
+            try {
+                const profile = await resolveAdminProfile(session.user);
+                const role = String(profile?.role || '').toLowerCase();
+                const active = profile && profile.is_active !== false && String(profile.status || 'active').toLowerCase() !== 'inactive';
+                const allowed = ['admin', 'superadmin'];
+                if (!profile || !active || !allowed.includes(role)) {
+                    updateRoleUi(role || 'none');
+                    showAccessNotice('Access denied. Members Control Room requires an active admin or superadmin role in admin_profiles.', 'danger');
+                    return false;
+                }
+                canWriteMembers = ['admin', 'superadmin'].includes(role);
+                updateRoleUi(role);
+                showAccessNotice(`Members access verified as ${role}.`, 'info');
+                return true;
+            } catch (error) {
+                showAccessNotice(describeSupabaseError(error), 'danger');
+                return false;
+            }
+        }
+
+
+        function setTheme(mode) {
+            if (mode === 'carbon') {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('daynight-theme', 'carbon');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('daynight-theme', 'snow');
+            }
+        }
+
+        function showCopyToast(message = 'Copied to clipboard') {
+            const toast = document.getElementById('copyToast');
+            toast.innerHTML = `<i class="fas fa-check-circle text-secondary mr-2"></i>${message}`;
+            toast.classList.add('show');
+            clearTimeout(showCopyToast.timer);
+            showCopyToast.timer = setTimeout(() => toast.classList.remove('show'), 1800);
+        }
+
+        function toPublicUploadUrl(path) {
+            if (!path) return '';
+            if (/^https?:\/\//i.test(path)) return path;
+            const cleanPath = String(path).replace(/^uploads\//, '');
+            const { data } = supabaseClient.storage.from('uploads').getPublicUrl(cleanPath);
+            return data?.publicUrl || path;
+        }
+
+        async function getMembersExactCount() {
+            const { count, error } = await supabaseClient
+                .from('members')
+                .select('id', { count: 'exact', head: true });
+
+            if (error) throw error;
+            return Number(count || 0);
+        }
+
+        async function fetchAllMembers({ orderColumn = 'id', ascending = true, pageSize = 1000 } = {}) {
+            const totalCount = await getMembersExactCount();
+            const allRows = [];
+
+            const totalEl = document.getElementById('totalMembers');
+            if (totalEl) totalEl.textContent = totalCount.toLocaleString();
+            setText('summaryRecords', totalCount.toLocaleString());
+            setText('summaryFiltered', totalCount.toLocaleString());
+
+            if (!totalCount) return allRows;
+
+            for (let from = 0; from < totalCount; from += pageSize) {
+                const to = Math.min(from + pageSize - 1, totalCount - 1);
+                let query = supabaseClient
+                    .from('members')
+                    .select('*')
+                    .range(from, to);
+
+                if (orderColumn) query = query.order(orderColumn, { ascending });
+
+                const { data, error } = await query;
+                if (error) throw error;
+
+                const batch = Array.isArray(data) ? data : [];
+                allRows.push(...batch);
+            }
+
+            return allRows;
+        }
+
+        async function loadMembers() {
+            if (!(await requireMembersAdminAccess())) return;
+
+            try {
+                const members = await fetchAllMembers({ orderColumn: 'id', ascending: true });
+
+                allMembers = members || [];
+                document.getElementById('totalMembers').textContent = allMembers.length.toLocaleString();
+                updateSummary(allMembers);
+                populateStateFilter(allMembers);
+                initializeTable(allMembers);
+                showCopyToast(`Loaded ${allMembers.length.toLocaleString()} members from Supabase`);
+            } catch (error) {
+                console.error('Error loading members:', error);
+                alert('Unable to load members: ' + describeSupabaseError(error));
+            }
+        }
+
+        function updateSummary(members) {
+            const total = members.length;
+            const verified = members.filter(m => Boolean(m.verified)).length;
+            const pending = total - verified;
+            const uniqueStates = new Set(members.map(m => m.state?.trim()).filter(Boolean));
+            const today = new Date();
+            const todayKey = toLocalDateKey(today);
+            const todaysCount = members.filter(m => m.created_at && toLocalDateKey(new Date(m.created_at)) === todayKey).length;
+            const pvcUploads = members.filter(m => Boolean(m.pvc_upload_path)).length;
+            const apcUploads = members.filter(m => Boolean(m.apc_upload_path)).length;
+            const uploadSlots = total * 2;
+            const completedUploads = pvcUploads + apcUploads;
+            const uploadRate = uploadSlots ? Math.round((completedUploads / uploadSlots) * 100) : 0;
+            const accountReady = members.filter(m => Boolean(String(m.account_number || '').trim())).length;
+            const accountCoverage = total ? Math.round((accountReady / total) * 100) : 0;
+            const latest = members.find(m => m.created_at);
+
+            setText('summaryRecords', total.toLocaleString());
+            setText('summaryVerified', verified.toLocaleString());
+            setText('summaryAccounts', accountReady.toLocaleString());
+            setText('summaryPending', pending.toLocaleString());
+            setText('summaryUploads', uploadRate + '%');
+            setText('summaryStates', uniqueStates.size.toLocaleString());
+            setText('summaryToday', todaysCount.toLocaleString());
+            setText('summaryPvcUploads', total ? Math.round((pvcUploads / total) * 100) + '%' : '0%');
+            setText('summaryApcUploads', total ? Math.round((apcUploads / total) * 100) + '%' : '0%');
+            setText('summaryLatest', latest?.created_at ? formatDate(latest.created_at) : '—');
+            setText('summaryAccountCoverage', accountCoverage + '%');
+            updateFilteredCount();
+        }
+
+        function setText(id, value) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+        }
+
+        function toLocalDateKey(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function formatDate(value) {
+            if (!value) return '—';
+            return new Date(value).toLocaleDateString('en-NG', {
+                year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+        }
+
+        function populateStateFilter(members) {
+            const stateFilter = document.getElementById('stateFilter');
+            stateFilter.innerHTML = '<option value="">All States</option>';
+            states = new Set();
+            members.forEach(m => {
+                if (m.state) states.add(m.state.trim());
+            });
+            Array.from(states).sort().forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateFilter.appendChild(option);
+            });
+        }
+
+        function memberPassesAdvancedFilters(member) {
+            if (!member) return true;
+            if (advancedFilters.verification === 'verified' && !Boolean(member.verified)) return false;
+            if (advancedFilters.verification === 'pending' && Boolean(member.verified)) return false;
+
+            const docCount = (member.pvc_upload_path ? 1 : 0) + (member.apc_upload_path ? 1 : 0);
+            if (advancedFilters.documents === 'complete' && docCount !== 2) return false;
+            if (advancedFilters.documents === 'partial' && docCount !== 1) return false;
+            if (advancedFilters.documents === 'missing' && docCount === 2) return false;
+
+            const hasAccountNumber = Boolean(String(member.account_number || '').trim());
+            if (advancedFilters.account === 'with' && !hasAccountNumber) return false;
+            if (advancedFilters.account === 'missing' && hasAccountNumber) return false;
+
+            if (advancedFilters.date === 'today') {
+                if (!member.created_at) return false;
+                if (toLocalDateKey(new Date(member.created_at)) !== toLocalDateKey(new Date())) return false;
+            }
+            return true;
+        }
+
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            if (!table || settings.nTable.id !== 'membersTable') return true;
+            const member = table.row(dataIndex).data();
+            return memberPassesAdvancedFilters(member);
+        });
+
+        function updateFilteredCount() {
+            if (!table) {
+                setText('summaryFiltered', (allMembers || []).length.toLocaleString());
+                return;
+            }
+            const info = table.page.info();
+            setText('summaryFiltered', (info.recordsDisplay || 0).toLocaleString());
+        }
+
+        function applyAdvancedFilters() {
+            if (!table) return;
+            table.draw();
+            updateFilteredCount();
+            syncFilterChips();
+        }
+
+        function syncFilterChips() {
+            document.querySelectorAll('[data-chip]').forEach(chip => chip.classList.remove('active'));
+            if (!advancedFilters.verification && !advancedFilters.documents && !advancedFilters.account && !advancedFilters.date) {
+                document.querySelector('[data-chip="all"]')?.classList.add('active');
+                return;
+            }
+            if (advancedFilters.verification) document.querySelector(`[data-chip="${advancedFilters.verification}"]`)?.classList.add('active');
+            if (advancedFilters.documents === 'complete') document.querySelector('[data-chip="complete"]')?.classList.add('active');
+            if (advancedFilters.documents === 'missing') document.querySelector('[data-chip="missing"]')?.classList.add('active');
+            if (advancedFilters.account === 'with') document.querySelector('[data-chip="account"]')?.classList.add('active');
+            if (advancedFilters.date === 'today') document.querySelector('[data-chip="today"]')?.classList.add('active');
+        }
+
+        function initializeTable(members) {
+            if (table) {
+                table.clear().rows.add(members).draw();
+                updatePageSlider();
+                return;
+            }
+
+            table = $('#membersTable').DataTable({
+                data: members,
+                pageLength: 20,
+                lengthMenu: [[10, 20, 25, 50, 100, -1], [10, 20, 25, 50, 100, 'All']],
+                responsive: false,
+                fixedHeader: false,
+                autoWidth: false,
+                order: [[15, 'desc']],
+                dom: '<"mb-2"B>rt<"d-flex justify-content-between align-items-center"ip>',
+                buttons: [
+                    { extend: 'copy', text: '<i class="fas fa-copy"></i> Copy', className: 'action-btn' },
+                    { extend: 'csv', text: '<i class="fas fa-file-csv"></i> CSV', className: 'action-btn' },
+                    { text: '<i class="fas fa-building-columns"></i> member_account_details', className: 'action-btn account-report-btn', action: () => exportMemberAccountDetailsReport() },
+                    { extend: 'excel', text: '<i class="fas fa-file-excel"></i> Excel', className: 'action-btn' },
+                    { extend: 'pdf', text: '<i class="fas fa-file-pdf"></i> PDF', className: 'action-btn' },
+                    { extend: 'print', text: '<i class="fas fa-print"></i> Print', className: 'action-btn' },
+                    { extend: 'colvis', text: '<i class="fas fa-table-columns"></i> Columns', className: 'action-btn', collectionLayout: 'fixed' }
+                ],
+                columns: [
+                    {
+                        data: null,
+                        render: (data, type, row) => {
+                            const reg = row.reg_number || '—';
+                            return `<button type="button" class="reg-number quick-open-reg" data-member-ref="${safeMemberRefAttr(row)}" title="Open Quick View for ${escapeAttr(reg)}"><i class="fas fa-fingerprint mr-1"></i>${escapeHtml(reg)}<i class="fas fa-up-right-from-square quick-open-icon"></i></button>`;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: (data, type, row) => {
+                            const fullName = `${row.first_name || ''} ${row.last_name || ''}`.trim() || 'Unnamed Member';
+                            const initials = getMemberInitials(row);
+                            return `<div class="member-mini-profile"><span class="member-mini-avatar avatar-fallback" aria-hidden="true">${escapeHtml(initials)}</span><div><div class="font-black text-[#05351f] dark:text-white leading-tight">${escapeHtml(fullName)}</div><div class="text-[0.68rem] text-gray-500 dark:text-gray-400 font-bold">${escapeHtml(row.designation || 'Member')}</div></div></div>`;
+                        }
+                    },
+                    {
+                        data: 'account_number',
+                        render: d => d ? `<span class="account-number-pill"><i class="fas fa-building-columns"></i>${escapeHtml(d)}</span>` : '<span class="text-muted">—</span>'
+                    },
+                    {
+                        data: 'bank_name',
+                        render: d => d ? `<span class="font-black text-[#05351f] dark:text-white">${escapeHtml(d)}</span>` : '<span class="text-muted">—</span>'
+                    },
+                    { data: 'designation', defaultContent: '<span class="text-muted">—</span>' },
+                    { data: 'phone', defaultContent: '<span class="text-muted">—</span>' },
+                    {
+                        data: 'email',
+                        render: d => d ? d : '<span class="text-muted">—</span>'
+                    },
+                    { data: 'state', defaultContent: '<span class="text-muted">—</span>' },
+                    { data: 'lga', defaultContent: '<span class="text-muted">—</span>' },
+                    { data: 'ward', defaultContent: '<span class="text-muted">—</span>' },
+                    { data: 'pvc_number', defaultContent: '<span class="text-muted">—</span>' },
+                    { data: 'apc_card_number', defaultContent: '<span class="text-muted">—</span>' },
+                    { data: 'pvc_upload_path', render: renderUploadLink },
+                    { data: 'apc_upload_path', render: renderUploadLink },
+                    {
+                        data: null,
+                        render: (data, type, row) => {
+                            const isVerified = row.verified ?? false;
+                            return `<span class="verified-badge ${isVerified ? '' : 'pending'}"><i class="fas ${isVerified ? 'fa-circle-check' : 'fa-clock'}"></i>${isVerified ? 'Verified' : 'Pending'}</span>`;
+                        }
+                    },
+                    {
+                        data: 'created_at',
+                        render: d => d ? new Date(d).toLocaleDateString('en-NG', {
+                            year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                        }) : '—'
+                    },
+                    {
+                        data: null,
+                        orderable: false,
+                        render: (data, type, row) => `
+                            <div class="flex gap-1">
+                                <button class="action-btn bg-emerald-50 text-emerald-800 hover:bg-emerald-100 quick-view-btn" data-member-ref="${safeMemberRefAttr(row)}"><i class="fas fa-id-card"></i>Quick</button>
+                                <a href="${buildMemberDetailsHref(row)}" class="action-btn bg-green-50 text-green-800 hover:bg-green-100 no-underline" data-member-details-link="true" aria-label="View full member details"><i class="fas fa-eye"></i>View Details</a>
+                                <a href="${buildMemberEditHref(row)}" class="action-btn bg-yellow-50 text-yellow-800 hover:bg-yellow-100 no-underline"><i class="fas fa-pen"></i>Edit</a>
+                                <button class="action-btn bg-red-50 text-red-800 hover:bg-red-100 delete-btn" data-member-ref="${safeMemberRefAttr(row)}"><i class="fas fa-trash"></i>Delete</button>
+                            </div>
+                        `
+                    }
+                ],
+                initComplete: function () {
+                    this.api().columns().every(function () {
+                        const column = this;
+                        const title = column.footer().textContent;
+                        const input = document.createElement('input');
+                        input.placeholder = title;
+                        input.setAttribute('aria-label', 'Filter ' + title);
+                        column.footer().replaceChildren(input);
+                        input.addEventListener('keyup', () => {
+                            if (column.search() !== input.value) column.search(input.value).draw();
+                        });
+                    });
+                }
+            });
+
+            $('.dt-buttons').appendTo('.filter-container').addClass('flex flex-wrap gap-1');
+
+            table.button('.buttons-colvis').nodes().on('click', function () {
+                const btn = this;
+                setTimeout(function () {
+                    const collection = $('.dt-button-collection');
+                    collection.appendTo('body');
+                    const buttonPos = $(btn).offset();
+                    const collectionHeight = collection.outerHeight();
+                    const collectionWidth = collection.outerWidth();
+                    const buttonWidth = $(btn).outerWidth();
+                    const top = Math.max(10, buttonPos.top - collectionHeight - 12);
+                    collection.css({
+                        position: 'absolute',
+                        top: top + 'px',
+                        left: Math.max(10, buttonPos.left + (buttonWidth - collectionWidth) / 2) + 'px'
+                    });
+                }, 20);
+            });
+
+            updatePageSlider();
+            table.on('draw', () => {
+                updatePageSlider();
+                updateFilteredCount();
+                if (registryViewMode === 'cards') renderMemberCards(getDisplayedMembers());
+            });
+
+            document.getElementById('prevPage').addEventListener('click', () => {
+                if (table.page.info().page > 0) table.page('previous').draw('page');
+            });
+
+            document.getElementById('nextPage').addEventListener('click', () => {
+                if (table.page.info().page < table.page.info().pages - 1) table.page('next').draw('page');
+            });
+
+            $('#membersTable tbody').on('click', '.reg-number', function() {
+                const id = this.dataset.memberRef || this.dataset.id;
+                if (id) openMemberQuickView(id);
+            });
+
+            $('#membersTable tbody').on('click', '.delete-btn', async function() {
+                if (!canWriteMembers) { alert('Only admin/superadmin can delete member records.'); return; }
+                if (!confirm('Delete this member permanently?')) return;
+                const ref = this.dataset.memberRef || this.dataset.id;
+                const rowData = table.row($(this).parents('tr')).data() || findMemberByIdentifier(ref);
+                const column = getMemberPrimaryColumn(rowData);
+                const id = getMemberRouteIdentifier(rowData) || decodeIdentifier(ref);
+                const { error } = await supabaseClient.from('members').delete().eq(column, id);
+                if (!error) {
+                    table.row($(this).parents('tr')).remove().draw();
+                    allMembers = allMembers.filter(m => String(getMemberRouteIdentifier(m)) !== String(id));
+                    document.getElementById('totalMembers').textContent = allMembers.length.toLocaleString();
+                    updateSummary(allMembers);
+                    showCopyToast('Member deleted');
+                } else {
+                    alert('Delete failed: ' + describeSupabaseError(error));
+                }
+            });
+
+            document.getElementById('memberSearch').addEventListener('input', e => {
+                table.search(e.target.value).draw();
+                updateFilteredCount();
+            });
+
+            document.getElementById('stateFilter').addEventListener('change', e => {
+                table.column(7).search(e.target.value).draw();
+                updateFilteredCount();
+            });
+
+            document.getElementById('verificationFilter').addEventListener('change', e => {
+                advancedFilters.verification = e.target.value;
+                applyAdvancedFilters();
+            });
+
+            document.getElementById('documentFilter').addEventListener('change', e => {
+                advancedFilters.documents = e.target.value;
+                applyAdvancedFilters();
+            });
+
+            document.getElementById('accountFilter').addEventListener('change', e => {
+                advancedFilters.account = e.target.value;
+                applyAdvancedFilters();
+            });
+
+            document.querySelectorAll('[data-chip]').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    const type = chip.dataset.chip;
+                    if (type === 'all') {
+                        advancedFilters = { verification: '', documents: '', account: '', date: '' };
+                        document.getElementById('verificationFilter').value = '';
+                        document.getElementById('documentFilter').value = '';
+                        document.getElementById('accountFilter').value = '';
+                    }
+                    if (type === 'verified' || type === 'pending') {
+                        advancedFilters.verification = advancedFilters.verification === type ? '' : type;
+                        document.getElementById('verificationFilter').value = advancedFilters.verification;
+                    }
+                    if (type === 'complete') {
+                        advancedFilters.documents = advancedFilters.documents === 'complete' ? '' : 'complete';
+                        document.getElementById('documentFilter').value = advancedFilters.documents;
+                    }
+                    if (type === 'missing') {
+                        advancedFilters.documents = advancedFilters.documents === 'missing' ? '' : 'missing';
+                        document.getElementById('documentFilter').value = advancedFilters.documents;
+                    }
+                    if (type === 'account') {
+                        advancedFilters.account = advancedFilters.account === 'with' ? '' : 'with';
+                        document.getElementById('accountFilter').value = advancedFilters.account;
+                    }
+                    if (type === 'today') {
+                        advancedFilters.date = advancedFilters.date === 'today' ? '' : 'today';
+                    }
+                    applyAdvancedFilters();
+                });
+            });
+
+            document.getElementById('resetFiltersBtn').addEventListener('click', resetAllFilters);
+            document.getElementById('densityBtn').addEventListener('click', toggleDensity);
+            document.getElementById('refreshMembersBtn').addEventListener('click', refreshMembers);
+            document.getElementById('tableViewBtn')?.addEventListener('click', () => setRegistryView('table'));
+            document.getElementById('cardViewBtn')?.addEventListener('click', () => setRegistryView('cards'));
+            setRegistryView(registryViewMode);
+
+            $('#membersTable tbody').on('click', '.quick-view-btn', function() {
+                openMemberQuickView(this.dataset.memberRef || this.dataset.id);
+            });
+        }
+
+
+        function getDisplayedMembers() {
+            if (!table) return allMembers || [];
+            return table.rows({ search: 'applied' }).data().toArray();
+        }
+
+        function setRegistryView(mode) {
+            registryViewMode = mode === 'cards' ? 'cards' : 'table';
+            localStorage.setItem('apsg-members-view', registryViewMode);
+            const tableView = document.getElementById('tableRegistryView');
+            const cardsView = document.getElementById('memberCardsView');
+            const tableBtn = document.getElementById('tableViewBtn');
+            const cardBtn = document.getElementById('cardViewBtn');
+            if (tableView) tableView.hidden = registryViewMode !== 'table';
+            if (cardsView) cardsView.hidden = registryViewMode !== 'cards';
+            if (tableBtn) tableBtn.classList.toggle('active-view', registryViewMode === 'table');
+            if (cardBtn) cardBtn.classList.toggle('active-view', registryViewMode === 'cards');
+            if (registryViewMode === 'cards') renderMemberCards(getDisplayedMembers());
+        }
+
+        function renderMemberCards(rows) {
+            const wrap = document.getElementById('memberCardsView');
+            if (!wrap) return;
+            const members = rows || [];
+            if (!members.length) {
+                wrap.innerHTML = '<div class="member-card"><h3>No matching members</h3><p class="member-card-meta">Try clearing filters or searching another name, state, LGA, ward, registration number, phone or account field.</p></div>';
+                return;
+            }
+            wrap.innerHTML = members.slice(0, 300).map(member => {
+                const fullName = getMemberFullName(member) || 'Unnamed Member';
+                const reg = member.reg_number || '—';
+                const verified = Boolean(member.verified);
+                const docCount = (member.pvc_upload_path ? 1 : 0) + (member.apc_upload_path ? 1 : 0);
+                const readiness = calculateMemberReadiness(member);
+                return `
+                    <article class="member-card">
+                        <div class="member-card-head">
+                            ${renderMemberCardAvatar(member, fullName)}
+                            <div class="member-card-main">
+                                <button type="button" class="reg-number" data-member-ref="${safeMemberRefAttr(member)}" onclick="openMemberQuickView(this.dataset.memberRef)"><i class="fas fa-fingerprint"></i>${escapeHtml(reg)}</button>
+                                <h3>${escapeHtml(fullName)}</h3>
+                                <p class="member-card-meta">${escapeHtml(member.designation || 'Member')} • ${escapeHtml(member.state || 'No state')} • ${escapeHtml(member.lga || 'No LGA')}</p>
+                            </div>
+                        </div>
+                        <div class="member-card-grid">
+                            ${memberCardField('Phone', member.phone || '—')}
+                            ${memberCardField('Email', member.email || '—')}
+                            ${memberCardField('Account', member.account_number || '—')}
+                            ${memberCardField('Bank', member.bank_name || '—')}
+                            ${memberCardField('Ward', member.ward || '—')}
+                            ${memberCardField('Docs', `${docCount}/2 uploaded`)}
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="verified-badge ${verified ? '' : 'pending'}"><i class="fas ${verified ? 'fa-circle-check' : 'fa-clock'}"></i>${verified ? 'Verified' : 'Pending'}</span>
+                            <span class="status-pill" style="background:rgba(5,53,31,.06);color:#05351f;border-color:rgba(5,53,31,.10)"><i class="fas fa-gauge-high text-warning"></i>${readiness}% ready</span>
+                        </div>
+                        <div class="member-card-actions">
+                            <button class="action-btn bg-emerald-50 text-emerald-800" type="button" data-member-ref="${safeMemberRefAttr(member)}" onclick="openMemberQuickView(this.dataset.memberRef)"><i class="fas fa-id-card"></i>Quick View</button>
+                            <a class="action-btn bg-green-50 text-green-800" href="${buildMemberDetailsHref(member)}" data-member-details-link="true" aria-label="View full member details"><i class="fas fa-eye"></i>View Details</a>
+                            <a class="action-btn bg-yellow-50 text-yellow-800" href="${buildMemberEditHref(member)}"><i class="fas fa-pen"></i>Edit</a>
+                        </div>
+                    </article>`;
+            }).join('');
+        }
+
+        function memberCardField(label, value) {
+            return `<div class="member-card-field"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`;
+        }
+
+        function updatePageSlider() {
+            if (!table) return;
+            const info = table.page.info();
+            document.getElementById('pageInfo').textContent = `Page ${info.page + 1} of ${info.pages || 1}`;
+            document.getElementById('prevPage').disabled = info.page === 0;
+            document.getElementById('nextPage').disabled = info.page >= info.pages - 1;
+            updateFilteredCount();
+        }
+
+        function resetAllFilters() {
+            document.getElementById('memberSearch').value = '';
+            document.getElementById('stateFilter').value = '';
+            document.getElementById('verificationFilter').value = '';
+            document.getElementById('documentFilter').value = '';
+            document.getElementById('accountFilter').value = '';
+            advancedFilters = { verification: '', documents: '', account: '', date: '' };
+            if (table) {
+                table.search('');
+                table.columns().search('');
+                table.draw();
+            }
+            document.querySelectorAll('tfoot input').forEach(input => input.value = '');
+            syncFilterChips();
+            updateFilteredCount();
+            showCopyToast('Filters reset');
+        }
+
+        function toggleDensity() {
+            document.body.classList.toggle('density-compact');
+            const enabled = document.body.classList.contains('density-compact');
+            document.getElementById('densityBtn').innerHTML = enabled
+                ? '<i class="fas fa-expand"></i>Comfort Rows'
+                : '<i class="fas fa-compress"></i>Compact Rows';
+        }
+
+        async function refreshMembers() {
+            const btn = document.getElementById('refreshMembersBtn');
+            const old = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>Refreshing';
+            try {
+                const members = await fetchAllMembers({ orderColumn: 'id', ascending: true });
+                allMembers = members || [];
+                document.getElementById('totalMembers').textContent = allMembers.length.toLocaleString();
+                updateSummary(allMembers);
+                populateStateFilter(allMembers);
+                if (table) { table.clear().rows.add(allMembers).draw(); if (registryViewMode === 'cards') renderMemberCards(getDisplayedMembers()); }
+                showCopyToast(`Members refreshed: ${allMembers.length.toLocaleString()} loaded`);
+            } catch (error) {
+                console.error('Refresh failed:', error);
+                alert('Refresh failed: ' + describeSupabaseError(error));
+            } finally {
+                btn.innerHTML = old;
+            }
+        }
+
+        function openMemberQuickView(id) {
+            const member = findMemberByIdentifier(id);
+            if (!member) { showCopyToast('Member record could not be opened. Refresh the registry and try again.'); return; }
+            currentQuickMember = member;
+            const fullName = `${member.first_name || ''} ${member.last_name || ''}`.trim() || 'Unnamed Member';
+            const reg = member.reg_number || '—';
+            const verified = Boolean(member.verified);
+            const pvcUrl = toPublicUploadUrl(member.pvc_upload_path);
+            const apcUrl = toPublicUploadUrl(member.apc_upload_path);
+            const docCount = (member.pvc_upload_path ? 1 : 0) + (member.apc_upload_path ? 1 : 0);
+            const docStatus = `${member.pvc_upload_path ? 'PVC uploaded' : 'PVC missing'} • ${member.apc_upload_path ? 'APC uploaded' : 'APC missing'}`;
+            const readiness = calculateMemberReadiness(member);
+
+            document.getElementById('quickMemberName').textContent = `${fullName} • ${reg}`;
+            setLinkHrefOrDisabled('quickViewDetailsLink', buildMemberDetailsHref(member));
+            setLinkHrefOrDisabled('viewMemberDetailsLink', buildMemberDetailsHref(member));
+            setLinkHrefOrDisabled('quickEditMemberLink', buildMemberEditHref(member));
+            document.getElementById('quickMemberContent').innerHTML = `
+                <div class="member-modal-card p-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
+                        ${renderQuickAvatar(member, fullName)}
+                        <div class="min-w-0">
+                            <p class="text-[0.68rem] uppercase tracking-[0.22em] text-secondary font-black mb-2">Official Registry Number</p>
+                            <button class="reg-number mb-2" onclick="navigator.clipboard.writeText('${escapeAttr(reg)}').then(() => showCopyToast('Registration number copied'))"><i class="fas fa-fingerprint mr-1"></i>${escapeHtml(reg)}</button>
+                            <h3 class="text-2xl font-black text-[#05351f] dark:text-white mb-1 break-words">${escapeHtml(fullName)}</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-300 font-bold mb-0">${escapeHtml(member.designation || 'No designation supplied')}</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <div class="quick-stat-card"><p class="text-[0.62rem] uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400 font-black mb-1">Status</p><p class="font-black ${verified ? 'text-emerald-700' : 'text-amber-700'} mb-0">${verified ? 'Verified' : 'Pending'}</p></div>
+                        <div class="quick-stat-card"><p class="text-[0.62rem] uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400 font-black mb-1">Documents</p><p class="font-black text-[#05351f] dark:text-white mb-0">${docCount}/2</p></div>
+                        <div class="quick-stat-card"><p class="text-[0.62rem] uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400 font-black mb-1">Readiness</p><p class="font-black text-[#05351f] dark:text-white mb-0">${readiness}%</p></div>
+                        <div class="quick-stat-card"><p class="text-[0.62rem] uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400 font-black mb-1">Joined</p><p class="font-black text-[#05351f] dark:text-white mb-0">${escapeHtml(formatDate(member.created_at))}</p></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                        ${quickField('Phone', member.phone || '—')}
+                        ${quickField('Email', member.email || '—')}
+                        ${quickField('Account Number', member.account_number || '—')}
+                        ${quickField('Bank', member.bank_name || '—')}
+                        ${quickField('State', member.state || '—')}
+                        ${quickField('LGA/LCDA', member.lga || '—')}
+                        ${quickField('Ward', member.ward || '—')}
+                        ${quickField('Registration Date', formatDate(member.created_at))}
+                    </div>
+                </div>
+                <div class="member-modal-card p-4">
+                    <div class="flex flex-wrap justify-between gap-2 mb-3">
+                        <span class="verified-badge ${verified ? '' : 'pending'}"><i class="fas ${verified ? 'fa-circle-check' : 'fa-clock'}"></i>${verified ? 'Verified' : 'Pending Verification'}</span>
+                        <span class="text-xs font-black text-gray-500 dark:text-gray-400">${escapeHtml(docStatus)}</span>
+                    </div>
+                    <div class="mb-3">
+                        <div class="h-3 rounded-full bg-gray-100 dark:bg-white/10 overflow-hidden">
+                            <div class="h-full rounded-full bg-gradient-to-r from-[#0f8a4b] via-[#0f766e] to-[#d6a92b]" style="width:${readiness}%"></div>
+                        </div>
+                        <p class="mt-2 text-xs font-bold text-gray-500 dark:text-gray-400">Record readiness is calculated from identity, location, PVC/APC numbers and uploaded documents.</p>
+                    </div>
+                    <div class="grid sm:grid-cols-2 gap-3">
+                        <div class="rounded-2xl border border-green-100 dark:border-white/10 bg-white/70 dark:bg-white/5 p-3">
+                            <p class="text-[0.68rem] uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 font-black">PVC Number</p>
+                            <p class="font-black text-[#05351f] dark:text-white break-all">${escapeHtml(member.pvc_number || '—')}</p>
+                            ${member.pvc_upload_path ? `<button class="action-btn bg-green-50 text-green-800 mt-2" onclick="openPreview('${escapeAttr(pvcUrl)}', '${isPdfPath(member.pvc_upload_path) ? 'pdf' : 'image'}')"><i class="fas fa-file"></i>Preview PVC</button>` : '<p class="text-xs text-gray-500 mt-2">No PVC upload</p>'}
+                        </div>
+                        <div class="rounded-2xl border border-green-100 dark:border-white/10 bg-white/70 dark:bg-white/5 p-3">
+                            <p class="text-[0.68rem] uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 font-black">APC Card Number</p>
+                            <p class="font-black text-[#05351f] dark:text-white break-all">${escapeHtml(member.apc_card_number || '—')}</p>
+                            ${member.apc_upload_path ? `<button class="action-btn bg-green-50 text-green-800 mt-2" onclick="openPreview('${escapeAttr(apcUrl)}', '${isPdfPath(member.apc_upload_path) ? 'pdf' : 'image'}')"><i class="fas fa-file"></i>Preview APC</button>` : '<p class="text-xs text-gray-500 mt-2">No APC upload</p>'}
+                        </div>
+                    </div>
+                    <div class="mt-3 account-receipt-strip">
+                        <div>
+                            <p>Account Number</p>
+                            <strong>${escapeHtml(member.account_number || 'Not supplied')}</strong>
+                        </div>
+                        <div>
+                            <p>Bank</p>
+                            <strong>${escapeHtml(member.bank_name || 'Not supplied')}</strong>
+                        </div>
+                    </div>
+                    <div class="mt-3 rounded-2xl border border-secondary/20 bg-secondary/10 p-3 text-xs text-gray-700 dark:text-gray-200 font-bold">
+                        <i class="fas fa-shield-halved text-secondary mr-1"></i>
+                        Quick View opened from the registration number and pulled directly from Supabase members data.
+                    </div>
+                </div>
+            `;
+            new bootstrap.Modal(document.getElementById('memberQuickModal')).show();
+        }
+
+        function calculateMemberReadiness(member) {
+            const checks = [
+                member.first_name,
+                member.last_name,
+                member.phone,
+                member.state,
+                member.lga,
+                member.ward,
+                member.pvc_number,
+                member.apc_card_number,
+                member.profile_photo_path,
+                member.pvc_upload_path,
+                member.apc_upload_path,
+                member.account_number,
+                member.bank_name
+            ];
+            return Math.round((checks.filter(Boolean).length / checks.length) * 100);
+        }
+
+
+
+        function decodeIdentifier(value) {
+            const raw = String(value ?? '').trim();
+            if (!raw) return '';
+            try { return decodeURIComponent(raw); } catch (error) { return raw; }
+        }
+
+        function getMemberRouteIdentifier(member) {
+            if (!member) return '';
+            return String(
+                member.id ??
+                member.member_id ??
+                member.user_id ??
+                member.reg_number ??
+                member.registration_number ??
+                ''
+            ).trim();
+        }
+
+        function getMemberRouteKey(member) {
+            if (!member) return 'id';
+            if (member.id !== undefined && member.id !== null && String(member.id).trim()) return 'id';
+            if (member.member_id !== undefined && member.member_id !== null && String(member.member_id).trim()) return 'member_id';
+            if (member.user_id !== undefined && member.user_id !== null && String(member.user_id).trim()) return 'user_id';
+            return 'reg_number';
+        }
+
+        function getMemberPrimaryColumn(member) {
+            if (!member) return 'id';
+            if (member.id !== undefined && member.id !== null && String(member.id).trim()) return 'id';
+            if (member.member_id !== undefined && member.member_id !== null && String(member.member_id).trim()) return 'member_id';
+            if (member.user_id !== undefined && member.user_id !== null && String(member.user_id).trim()) return 'user_id';
+            return 'reg_number';
+        }
+
+        function buildMemberAdminHref(page, member) {
+            const identifier = getMemberRouteIdentifier(member);
+            if (!identifier) return '/admin/members.html';
+            const key = getMemberRouteKey(member);
+            return `/admin/${page}.html?${key}=${encodeURIComponent(identifier)}`;
+        }
+
+        function buildMemberDetailsHref(member) {
+            return buildMemberAdminHref('member-details', member);
+        }
+
+        function buildMemberEditHref(member) {
+            return buildMemberAdminHref('edit-member', member);
+        }
+
+        function findMemberByIdentifier(identifier) {
+            const raw = decodeIdentifier(identifier);
+            if (!raw) return null;
+            return (allMembers || []).find(member => {
+                const candidates = [
+                    member?.id,
+                    member?.member_id,
+                    member?.user_id,
+                    member?.reg_number,
+                    member?.registration_number,
+                    member?.phone,
+                    `${member?.first_name || ''} ${member?.last_name || ''}`.trim()
+                ].filter(value => value !== undefined && value !== null && String(value).trim());
+                return candidates.some(value => String(value) === raw || String(value) === identifier);
+            }) || null;
+        }
+
+        function safeMemberRefAttr(member) {
+            return escapeAttr(getMemberRouteIdentifier(member));
+        }
+
+        function setLinkHrefOrDisabled(elementId, href) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            if (href && href !== '/admin/members.html') {
+                element.href = href;
+                element.classList.remove('opacity-50', 'pointer-events-none');
+                element.removeAttribute('aria-disabled');
+                element.removeAttribute('tabindex');
+            } else {
+                element.href = '/admin/members.html';
+                element.classList.add('opacity-50');
+                element.setAttribute('aria-disabled', 'true');
+                element.setAttribute('tabindex', '-1');
+            }
+        }
+
+
+        function closeQuickMemberModalBeforeNavigation() {
+            try {
+                const modalElement = document.getElementById('memberQuickModal');
+                const modal = modalElement && window.bootstrap ? bootstrap.Modal.getInstance(modalElement) : null;
+                if (modal) modal.hide();
+            } catch (error) {
+                console.warn('Unable to close quick modal before navigation:', error);
+            }
+        }
+
+        function openCurrentQuickMemberDetails(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            const member = currentQuickMember;
+            const href = buildMemberDetailsHref(member);
+            if (!member || !href || href === '/admin/members.html' || href === '#') {
+                showCopyToast('Open Details needs a valid member record first.');
+                return false;
+            }
+            closeQuickMemberModalBeforeNavigation();
+            window.location.assign(href);
+            return false;
+        }
+
+        function openCurrentQuickMemberEdit(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            const member = currentQuickMember;
+            const href = buildMemberEditHref(member);
+            if (!member || !href || href === '/admin/members.html' || href === '#') {
+                showCopyToast('Edit needs a valid member record first.');
+                return false;
+            }
+            closeQuickMemberModalBeforeNavigation();
+            window.location.assign(href);
+            return false;
+        }
+
+        function openMemberDetailsFromLink(event, link) {
+            if (!link) return true;
+            const href = link.getAttribute('href');
+            if (!href || href === '#' || link.getAttribute('aria-disabled') === 'true') {
+                if (event) event.preventDefault();
+                showCopyToast('Open Details needs a valid member record first.');
+                return false;
+            }
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            window.location.assign(href);
+            return false;
+        }
+
+        document.addEventListener('click', function(event) {
+            const editLink = event.target.closest('[data-member-edit-link="true"]');
+            if (editLink) {
+                if (editLink.id === 'quickEditMemberLink') return;
+                return openMemberDetailsFromLink(event, editLink);
+            }
+            const detailsLink = event.target.closest('[data-member-details-link="true"]');
+            if (!detailsLink) return;
+            if (detailsLink.id === 'quickViewDetailsLink') return;
+            openMemberDetailsFromLink(event, detailsLink);
+        });
+
+        function getMemberInitials(member) {
+            const first = String(member?.first_name || '').trim();
+            const last = String(member?.last_name || '').trim();
+            const fallback = String(member?.reg_number || 'AP').replace(/[^a-z0-9]/gi, '').slice(0, 2).toUpperCase();
+            return ((first[0] || '') + (last[0] || '')).toUpperCase() || fallback || 'AP';
+        }
+
+        function renderMemberCardAvatar(member, fullName) {
+            const initials = getMemberInitials(member);
+            const fallback = `<span class="member-card-avatar avatar-fallback" aria-hidden="true">${escapeHtml(initials)}</span>`;
+            if (!member?.profile_photo_path) return fallback;
+            const profileUrl = toPublicUploadUrl(member.profile_photo_path);
+            if (!profileUrl) return fallback;
+            return `<img src="${escapeAttr(profileUrl)}" class="member-card-avatar member-photo" alt="${escapeAttr(fullName)}" data-initials="${escapeAttr(initials)}" loading="lazy" decoding="async" onerror="handleMemberCardAvatarError(this)">`;
+        }
+
+        function handleMemberCardAvatarError(img) {
+            const initials = escapeHtml(img?.dataset?.initials || 'AP');
+            img.outerHTML = `<span class="member-card-avatar avatar-fallback" aria-hidden="true">${initials}</span>`;
+        }
+
+        function renderQuickAvatar(member, fullName) {
+            const initials = getMemberInitials(member);
+            const fallback = `<span class="quick-avatar avatar-fallback" aria-hidden="true">${escapeHtml(initials)}</span>`;
+            if (!member?.profile_photo_path) return fallback;
+            const profileUrl = toPublicUploadUrl(member.profile_photo_path);
+            if (!profileUrl) return fallback;
+            return `<img src="${escapeAttr(profileUrl)}" class="quick-avatar" alt="${escapeAttr(fullName)}" data-initials="${escapeAttr(initials)}" loading="lazy" decoding="async" onerror="handleQuickAvatarError(this)">`;
+        }
+
+        function handleQuickAvatarError(img) {
+            const initials = escapeHtml(img?.dataset?.initials || 'AP');
+            img.outerHTML = `<span class="quick-avatar avatar-fallback" aria-hidden="true">${initials}</span>`;
+        }
+
+        function quickField(label, value) {
+            return `<div class="rounded-xl bg-white/70 dark:bg-white/5 border border-green-100 dark:border-white/10 p-2"><p class="text-[0.62rem] uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400 font-black mb-1">${escapeHtml(label)}</p><p class="font-extrabold text-[#05351f] dark:text-white break-all">${escapeHtml(value)}</p></div>`;
+        }
+
+        function isPdfPath(path) {
+            return String(path || '').split('?')[0].toLowerCase().endsWith('.pdf');
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+        }
+
+        function escapeAttr(value) {
+            return escapeHtml(value).replace(/'/g, '&#39;');
+        }
+
+        function escapeCsv(value) {
+            const text = value == null ? '' : String(value);
+            return `"${text.replace(/"/g, '""')}"`;
+        }
+
+        function getMemberFullName(member) {
+            return `${member?.first_name || ''} ${member?.last_name || ''}`.trim() || '—';
+        }
+
+        function getAccountReportSource() {
+            if (table) return table.rows({ search: 'applied' }).data().toArray();
+            return allMembers || [];
+        }
+
+        function exportMemberAccountDetailsReport() {
+            const rows = getAccountReportSource().filter(member => String(member.account_number || '').trim());
+            if (!rows.length) {
+                showCopyToast('No account-number records in the current view');
+                return;
+            }
+            const headers = ['Reg Number', 'Full Name', 'Account Number', 'Bank', 'Phone Number', 'State', 'LGA', 'Ward'];
+            const csvRows = [headers.map(escapeCsv).join(',')];
+            rows.forEach(member => {
+                csvRows.push([
+                    member.reg_number || '',
+                    getMemberFullName(member),
+                    member.account_number || '',
+                    member.bank_name || '',
+                    member.phone || '',
+                    member.state || '',
+                    member.lga || '',
+                    member.ward || ''
+                ].map(escapeCsv).join(','));
+            });
+            const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `member_account_details_${toLocalDateKey(new Date())}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showCopyToast('member_account_details report generated');
+        }
+
+        function renderUploadLink(path) {
+            if (!path) return '<span class="text-muted">—</span>';
+            const publicUrl = toPublicUploadUrl(path);
+            const clean = String(path).split('?')[0].toLowerCase();
+            const isPdf = clean.endsWith('.pdf');
+
+            if (isPdf) {
+                return `<a href="#" class="action-btn bg-green-50 text-green-800 hover:bg-green-100 no-underline" onclick="openPreview('${publicUrl}', 'pdf'); return false;"><i class="fas fa-file-pdf"></i>PDF</a>`;
+            }
+            return `<img src="${publicUrl}" class="upload-thumb" alt="Uploaded document" onclick="openPreview('${publicUrl}', 'image')" onerror="this.outerHTML='<span class=&quot;text-muted&quot;>File</span>'">`;
+        }
+
+        window.openPreview = function(url, type) {
+            const frame = document.getElementById('previewFrame');
+            const imgViewer = document.getElementById('imageViewer');
+            const img = document.getElementById('previewImage');
+            const zoomControls = document.querySelector('.zoom-controls');
+            const openOriginalLink = document.getElementById('openOriginalLink');
+
+            resetZoom();
+            openOriginalLink.href = url;
+
+            if (type === 'pdf') {
+                frame.src = url;
+                frame.classList.remove('d-none');
+                imgViewer.classList.add('d-none');
+                zoomControls.style.display = 'flex';
+                document.querySelectorAll('.zoom-btn:not(#openOriginalLink)').forEach(btn => btn.style.display = 'none');
+            } else {
+                img.src = url;
+                imgViewer.classList.remove('d-none');
+                frame.classList.add('d-none');
+                zoomControls.style.display = 'flex';
+                document.querySelectorAll('.zoom-btn').forEach(btn => btn.style.display = 'grid');
+            }
+            new bootstrap.Modal(document.getElementById('previewModal')).show();
+        };
+
+        window.zoomIn = function() {
+            zoomLevel = Math.min(zoomLevel + 0.12, 3);
+            document.getElementById('previewImage').style.transform = `scale(${zoomLevel})`;
+        };
+
+        window.zoomOut = function() {
+            zoomLevel = Math.max(zoomLevel - 0.12, 0.25);
+            document.getElementById('previewImage').style.transform = `scale(${zoomLevel})`;
+        };
+
+        window.resetZoom = function() {
+            zoomLevel = 1;
+            document.getElementById('previewImage').style.transform = 'scale(1)';
+        };
+
+        document.getElementById('copyMemberSummaryBtn')?.addEventListener('click', () => {
+            if (!currentQuickMember) return;
+            const m = currentQuickMember;
+            const summary = [
+                `Name: ${`${m.first_name || ''} ${m.last_name || ''}`.trim() || '—'}`,
+                `Reg Number: ${m.reg_number || '—'}`,
+                `Designation: ${m.designation || '—'}`,
+                `Phone: ${m.phone || '—'}`,
+                `Email: ${m.email || '—'}`,
+                `Account Number: ${m.account_number || '—'}`,
+                `Bank: ${m.bank_name || '—'}`,
+                `Location: ${m.state || '—'} / ${m.lga || '—'} / ${m.ward || '—'}`,
+                `PVC: ${m.pvc_number || '—'}`,
+                `APC Card: ${m.apc_card_number || '—'}`,
+                `Status: ${m.verified ? 'Verified' : 'Pending'}`
+            ].join('\n');
+            navigator.clipboard.writeText(summary).then(() => showCopyToast('Member summary copied'));
+        });
+
+        window.handleQuickAvatarError = handleQuickAvatarError;
+        window.handleMemberCardAvatarError = handleMemberCardAvatarError;
+        window.exportMemberAccountDetailsReport = exportMemberAccountDetailsReport;
+
+        document.addEventListener('DOMContentLoaded', loadMembers);
+    </script>
+  <script src="/assets/js/admin-unified.js" defer></script>
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

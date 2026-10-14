@@ -1,0 +1,2324 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#05351f" />
+    <title>Receipt Studio | APSG Admin</title>
+    <link rel="icon" href="/assets/images/logo/apsg.png" sizes="any" />
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+      :root {
+        --deep: #05351f;
+        --green: #0f7a3d;
+        --emerald: #0f766e;
+        --gold: #d8ad34;
+        --cream: #fffaf0;
+        --beige: #f7efe1;
+        --ink: #07140e;
+        --muted: #66736b;
+        --line: rgba(5, 53, 31, 0.12);
+        --shadow: 0 24px 80px rgba(5, 53, 31, 0.14);
+        --soft: 0 14px 42px rgba(5, 53, 31, 0.09);
+        --danger: #dc2626;
+        --amber: #b7791f;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(
+            circle at 8% 8%,
+            rgba(216, 173, 52, 0.18),
+            transparent 28rem
+          ),
+          radial-gradient(
+            circle at 94% 12%,
+            rgba(15, 122, 61, 0.14),
+            transparent 26rem
+          ),
+          linear-gradient(135deg, #fffdf8 0%, #f7fbf6 55%, #f4ecdc 100%);
+        color: var(--ink);
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        font-size: 14px;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+      .display-font {
+        font-family: "Playfair Display", Georgia, serif;
+      }
+      .admin-shell {
+        display: flex;
+        min-height: 100vh;
+      }
+      .mobile-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        display: none;
+        background: rgba(0, 0, 0, 0.42);
+        backdrop-filter: blur(6px);
+      }
+      .mobile-overlay.show {
+        display: block;
+      }
+      .admin-sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        z-index: 50;
+        width: 17rem;
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(
+          180deg,
+          #03190e 0%,
+          #052d19 58%,
+          #021108 100%
+        );
+        color: #fff;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 22px 0 70px rgba(5, 53, 31, 0.22);
+        transition: transform 0.28s ease;
+      }
+      .sidebar-brand {
+        position: relative;
+        padding: 0.9rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+      }
+      .sidebar-brand::after {
+        content: "";
+        position: absolute;
+        width: 7rem;
+        height: 7rem;
+        border-radius: 999px;
+        background: rgba(216, 173, 52, 0.19);
+        right: -3rem;
+        top: -3.5rem;
+        filter: blur(14px);
+      }
+      .brand-link {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.68rem;
+      }
+      .brand-logo {
+        width: 2.35rem;
+        height: 2.35rem;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(216, 173, 52, 0.32);
+        background: rgba(255, 255, 255, 0.09);
+        border-radius: 0.95rem;
+      }
+      .brand-logo img {
+        width: 1.72rem;
+        height: 1.72rem;
+        object-fit: contain;
+      }
+      .brand-link strong {
+        display: block;
+        font-size: 0.86rem;
+        font-weight: 950;
+        line-height: 1;
+      }
+      .brand-link small {
+        display: block;
+        margin-top: 0.2rem;
+        color: #f8dc7a;
+        font-size: 0.52rem;
+        font-weight: 950;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+      }
+      .sidebar-nav {
+        flex: 1;
+        overflow: auto;
+        padding: 0.65rem;
+      }
+      .side-title {
+        padding: 0.48rem 0.58rem 0.25rem;
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 0.54rem;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        font-weight: 950;
+      }
+      .side-title.gold {
+        color: rgba(216, 173, 52, 0.85);
+      }
+      .side-link {
+        appearance: none;
+        -webkit-appearance: none;
+        display: flex;
+        align-items: center;
+        gap: 0.58rem;
+        min-height: 2.32rem;
+        padding: 0.58rem 0.68rem;
+        border-radius: 0.95rem;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.72rem;
+        font-weight: 900;
+        transition: 0.18s ease;
+        border: 1px solid transparent;
+        background: transparent !important;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+      }
+      .side-link i {
+        width: 1rem;
+        text-align: center;
+        color: rgba(248, 220, 122, 0.84);
+      }
+      .side-link:hover,
+      .side-link.active {
+        background: rgba(216, 173, 52, 0.13) !important;
+        color: #fff4c7;
+        transform: translateX(2px);
+        border-color: rgba(216, 173, 52, 0.18);
+      }
+      .side-chip {
+        margin-left: auto;
+        padding: 0.12rem 0.36rem;
+        border: 1px solid rgba(216, 173, 52, 0.28);
+        border-radius: 999px;
+        background: rgba(216, 173, 52, 0.08);
+        color: #f8dc7a;
+        font-size: 0.48rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 950;
+      }
+      .role-card {
+        margin: 0.65rem;
+        padding: 0.78rem;
+        border: 1px solid rgba(216, 173, 52, 0.2);
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 1rem;
+      }
+      .role-top {
+        display: flex;
+        align-items: center;
+        gap: 0.58rem;
+      }
+      .role-icon {
+        width: 2rem;
+        height: 2rem;
+        display: grid;
+        place-items: center;
+        border-radius: 0.75rem;
+        background: var(--gold);
+        color: var(--deep);
+      }
+      .role-top strong {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 950;
+      }
+      .role-top small {
+        display: block;
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 0.62rem;
+        font-weight: 700;
+      }
+      .role-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.35rem;
+        margin-top: 0.65rem;
+      }
+      .role-level {
+        display: grid;
+        place-items: center;
+        min-height: 1.35rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.5rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 950;
+      }
+      .role-level.active {
+        border-color: rgba(216, 173, 52, 0.38);
+        color: #f8dc7a;
+        background: rgba(216, 173, 52, 0.16);
+      }
+      .logout-wrap {
+        padding: 0.65rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .danger-link {
+        background: rgba(220, 38, 38, 0.1) !important;
+        color: #fecaca;
+        justify-content: flex-start;
+      }
+      .admin-main {
+        min-width: 0;
+        flex: 1;
+        margin-left: 17rem;
+      }
+      .admin-topbar {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        min-height: 3.35rem;
+        padding: 0.55rem 1rem;
+        border-bottom: 1px solid rgba(5, 53, 31, 0.1);
+        background: rgba(255, 255, 255, 0.82);
+        backdrop-filter: blur(18px);
+      }
+      .top-left {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        min-width: 0;
+      }
+      .mobile-toggle {
+        display: none;
+        width: 2.28rem;
+        height: 2.28rem;
+        border-radius: 0.8rem;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--deep);
+        cursor: pointer;
+      }
+      .top-kicker {
+        margin: 0;
+        color: var(--amber);
+        font-size: 0.56rem;
+        font-weight: 950;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+      }
+      .top-title {
+        margin: 0.12rem 0 0;
+        color: var(--deep);
+        font-size: 1.05rem;
+        font-weight: 950;
+        line-height: 1;
+      }
+      .top-actions,
+      .action-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        border: 1px solid rgba(5, 53, 31, 0.12);
+        min-height: 2.16rem;
+        padding: 0.55rem 0.8rem;
+        border-radius: 999px;
+        background: #fff;
+        color: var(--deep);
+        font-size: 0.72rem;
+        font-weight: 950;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(5, 53, 31, 0.06);
+        transition: 0.18s ease;
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 12px 28px rgba(5, 53, 31, 0.1);
+      }
+      .btn.gold {
+        background: linear-gradient(135deg, #d8ad34, #f7db78);
+        border-color: rgba(216, 173, 52, 0.55);
+        color: var(--deep);
+      }
+      .btn.green {
+        background: linear-gradient(135deg, var(--green), var(--emerald));
+        border-color: rgba(15, 122, 61, 0.3);
+        color: #fff;
+      }
+      .btn.ghost {
+        background: rgba(255, 255, 255, 0.62);
+      }
+      .btn.red {
+        background: rgba(220, 38, 38, 0.08);
+        color: var(--danger);
+        border-color: rgba(220, 38, 38, 0.18);
+      }
+      .page-pad {
+        padding: 1rem;
+      }
+      .hero {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        border-radius: 1.35rem;
+        background:
+          radial-gradient(
+            circle at 82% 18%,
+            rgba(216, 173, 52, 0.24),
+            transparent 28rem
+          ),
+          linear-gradient(135deg, #05351f 0%, #0f7a3d 63%, #0f766e 100%);
+        color: #fff;
+        padding: 1.1rem;
+        box-shadow: var(--shadow);
+      }
+      .hero-inner {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 1rem;
+        align-items: center;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        border: 1px solid rgba(216, 173, 52, 0.28);
+        border-radius: 999px;
+        background: rgba(216, 173, 52, 0.13);
+        color: #fff3c7;
+        padding: 0.38rem 0.65rem;
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        font-weight: 950;
+      }
+      .hero h1 {
+        margin: 0.55rem 0 0;
+        font-size: clamp(1.8rem, 4.4vw, 4.1rem);
+        line-height: 0.96;
+        font-weight: 950;
+        letter-spacing: -0.04em;
+      }
+      .hero p {
+        margin: 0.65rem 0 0;
+        max-width: 54rem;
+        color: rgba(255, 255, 255, 0.78);
+        font-weight: 600;
+        line-height: 1.55;
+      }
+      .hero-metrics {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.55rem;
+      }
+      .mini-stat {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.09);
+        border-radius: 1rem;
+        padding: 0.75rem;
+      }
+      .mini-stat small {
+        display: block;
+        color: rgba(255, 255, 255, 0.58);
+        font-size: 0.58rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        font-weight: 950;
+      }
+      .mini-stat strong {
+        display: block;
+        margin-top: 0.25rem;
+        color: #fff;
+        font-size: 1.2rem;
+        font-weight: 950;
+      }
+      .grid-main {
+        display: grid;
+        grid-template-columns: minmax(21rem, 0.9fr) minmax(0, 1.1fr);
+        gap: 0.85rem;
+        margin-top: 0.85rem;
+        align-items: start;
+      }
+      .panel,
+      .receipt-frame {
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        border-radius: 1.25rem;
+        background: rgba(255, 255, 255, 0.86);
+        box-shadow: var(--soft);
+        backdrop-filter: blur(18px);
+      }
+      .panel {
+        padding: 0.95rem;
+      }
+      .panel-title {
+        margin: 0.25rem 0 0;
+        color: var(--deep);
+        font-size: 1.1rem;
+        font-weight: 950;
+      }
+      .panel-copy {
+        margin: 0.2rem 0 0.8rem;
+        color: var(--muted);
+        font-size: 0.75rem;
+        line-height: 1.42;
+        font-weight: 650;
+      }
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+      }
+      .tab-btn {
+        border: 1px solid rgba(5, 53, 31, 0.12);
+        border-radius: 999px;
+        background: #fff;
+        color: var(--deep);
+        padding: 0.48rem 0.68rem;
+        font-size: 0.68rem;
+        font-weight: 950;
+        cursor: pointer;
+      }
+      .tab-btn.active {
+        background: linear-gradient(135deg, var(--deep), var(--green));
+        color: #fff;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.65rem;
+      }
+      .field.full {
+        grid-column: 1/-1;
+      }
+      .field label {
+        display: block;
+        margin-bottom: 0.28rem;
+        color: #5d6a62;
+        font-size: 0.58rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+      .field input,
+      .field select,
+      .field textarea {
+        width: 100%;
+        min-height: 2.28rem;
+        border: 1px solid rgba(5, 53, 31, 0.13);
+        border-radius: 0.85rem;
+        background: rgba(255, 255, 255, 0.92);
+        color: var(--deep);
+        padding: 0.55rem 0.68rem;
+        outline: none;
+        font-size: 0.78rem;
+        font-weight: 800;
+        transition: 0.18s ease;
+      }
+      .field textarea {
+        min-height: 4.8rem;
+        resize: vertical;
+      }
+      .field input:focus,
+      .field select:focus,
+      .field textarea:focus {
+        border-color: rgba(216, 173, 52, 0.64);
+        box-shadow: 0 0 0 4px rgba(216, 173, 52, 0.14);
+      }
+      .action-row {
+        justify-content: flex-start;
+        margin-top: 0.75rem;
+      }
+      .receipt-frame {
+        position: sticky;
+        top: 4.2rem;
+        padding: 0.75rem;
+      }
+      .receipt-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 0.65rem;
+        flex-wrap: wrap;
+      }
+      .receipt-sheet {
+        position: relative;
+        overflow: hidden;
+        margin: 0 auto;
+        max-width: 58rem;
+        min-height: 48rem;
+        border: 1px solid rgba(5, 53, 31, 0.16);
+        border-radius: 1.1rem;
+        background: #fff;
+        box-shadow: 0 24px 70px rgba(5, 53, 31, 0.12);
+        color: var(--ink);
+      }
+      .receipt-watermark {
+        position: absolute;
+        inset: 44% auto auto 50%;
+        transform: translate(-50%, -50%) rotate(-22deg);
+        z-index: 0;
+        color: rgba(5, 53, 31, 0.045);
+        font-size: clamp(4rem, 12vw, 8rem);
+        line-height: 1;
+        font-weight: 950;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        pointer-events: none;
+      }
+      .receipt-top {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 1rem;
+        padding: 1rem 1.1rem 0.9rem;
+        background: linear-gradient(135deg, var(--deep), var(--green));
+        color: #fff;
+        box-shadow: inset 0 -3px 0 rgba(216, 173, 52, 0.75);
+      }
+      .receipt-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .receipt-logo {
+        width: 3.2rem;
+        height: 3.2rem;
+        display: grid;
+        place-items: center;
+        border-radius: 1.1rem;
+        background: #fff;
+        border: 2px solid rgba(216, 173, 52, 0.46);
+      }
+      .receipt-logo img {
+        width: 2.55rem;
+        height: 2.55rem;
+        object-fit: contain;
+      }
+      .receipt-brand h2 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 950;
+      }
+      .receipt-brand p {
+        margin: 0.18rem 0 0;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 0.62rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .receipt-status {
+        text-align: right;
+      }
+      .receipt-status strong {
+        display: block;
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .receipt-status span {
+        display: inline-flex;
+        margin-top: 0.35rem;
+        border-radius: 999px;
+        padding: 0.38rem 0.62rem;
+        background: #fff;
+        color: var(--deep);
+        font-size: 0.6rem;
+        font-weight: 950;
+        text-transform: uppercase;
+      }
+      .receipt-body {
+        position: relative;
+        z-index: 1;
+        padding: 1rem 1.1rem 1.1rem;
+      }
+      .receipt-alert {
+        border-radius: 0.95rem;
+        padding: 0.7rem 0.82rem;
+        margin-bottom: 0.85rem;
+        border: 1px solid rgba(216, 173, 52, 0.28);
+        background: rgba(255, 250, 240, 0.94);
+        color: #7a5616;
+        font-size: 0.72rem;
+        font-weight: 800;
+        line-height: 1.45;
+      }
+      .receipt-alert.final {
+        border-color: rgba(15, 122, 61, 0.22);
+        background: rgba(240, 253, 244, 0.94);
+        color: #075c36;
+      }
+      .receipt-alert.rejected {
+        border-color: rgba(220, 38, 38, 0.22);
+        background: rgba(254, 242, 242, 0.94);
+        color: #991b1b;
+      }
+      .receipt-title-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.85rem;
+        align-items: start;
+        border-bottom: 1px solid rgba(5, 53, 31, 0.1);
+        padding-bottom: 0.8rem;
+      }
+      .receipt-title-row h1 {
+        margin: 0;
+        color: var(--deep);
+        font-size: 2rem;
+        line-height: 0.98;
+        font-weight: 950;
+        letter-spacing: -0.03em;
+      }
+      .receipt-title-row p {
+        margin: 0.35rem 0 0;
+        color: var(--muted);
+        font-weight: 700;
+        font-size: 0.75rem;
+      }
+      .qr-box {
+        width: 5.75rem;
+        height: 5.75rem;
+        border: 1px solid rgba(5, 53, 31, 0.12);
+        border-radius: 0.8rem;
+        background: #fff;
+        padding: 0.32rem;
+        display: grid;
+        place-items: center;
+      }
+      .qr-box canvas {
+        width: 100%;
+        height: 100%;
+      }
+      .receipt-ref-line {
+        margin-top: 0.8rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+      }
+      .ref-pill {
+        display: inline-flex;
+        gap: 0.35rem;
+        align-items: center;
+        border: 1px solid rgba(5, 53, 31, 0.11);
+        background: #fffaf0;
+        color: var(--deep);
+        border-radius: 999px;
+        padding: 0.38rem 0.58rem;
+        font-size: 0.62rem;
+        font-weight: 950;
+      }
+      .receipt-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.55rem;
+        margin-top: 0.85rem;
+      }
+      .info-box {
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        background: rgba(255, 250, 240, 0.52);
+        border-radius: 0.9rem;
+        padding: 0.7rem;
+        min-height: 4.1rem;
+      }
+      .info-box.wide {
+        grid-column: span 2;
+      }
+      .info-box.full {
+        grid-column: 1/-1;
+      }
+      .info-box small {
+        display: block;
+        color: #708078;
+        font-size: 0.54rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-weight: 950;
+      }
+      .info-box strong {
+        display: block;
+        margin-top: 0.25rem;
+        color: var(--deep);
+        font-size: 0.86rem;
+        line-height: 1.25;
+        font-weight: 950;
+        overflow-wrap: anywhere;
+      }
+      .info-box p {
+        margin: 0.25rem 0 0;
+        color: var(--muted);
+        font-size: 0.7rem;
+        line-height: 1.36;
+        font-weight: 700;
+      }
+      .amount-box {
+        grid-column: 1/-1;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 1rem;
+        align-items: center;
+        border: 1px solid rgba(216, 173, 52, 0.32);
+        border-radius: 1rem;
+        background: linear-gradient(135deg, #fffaf0, #fff);
+        padding: 0.85rem;
+        margin-top: 0.75rem;
+      }
+      .amount-box small {
+        color: var(--amber);
+        font-size: 0.58rem;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-weight: 950;
+      }
+      .amount-box strong {
+        display: block;
+        color: var(--deep);
+        font-size: clamp(1.45rem, 3.2vw, 2.65rem);
+        line-height: 1;
+        font-weight: 950;
+      }
+      .amount-box span {
+        display: inline-flex;
+        border-radius: 999px;
+        background: var(--deep);
+        color: #fff;
+        padding: 0.48rem 0.7rem;
+        font-size: 0.62rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .receipt-footer {
+        margin-top: 0.9rem;
+        border-top: 1px solid rgba(5, 53, 31, 0.1);
+        padding-top: 0.75rem;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 1rem;
+        align-items: end;
+      }
+      .signature-line {
+        width: 12rem;
+        border-top: 1px solid rgba(5, 53, 31, 0.35);
+        padding-top: 0.38rem;
+        text-align: center;
+        color: var(--deep);
+        font-size: 0.64rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+      .receipt-note {
+        color: var(--muted);
+        font-size: 0.66rem;
+        line-height: 1.4;
+        font-weight: 700;
+      }
+      .toast {
+        position: fixed;
+        right: 1rem;
+        bottom: 1rem;
+        z-index: 100;
+        transform: translateY(1rem);
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.2s ease;
+        border: 1px solid rgba(216, 173, 52, 0.24);
+        border-radius: 1rem;
+        background: var(--deep);
+        color: #fff;
+        padding: 0.8rem 0.95rem;
+        box-shadow: 0 18px 50px rgba(5, 53, 31, 0.22);
+        font-weight: 850;
+        font-size: 0.78rem;
+      }
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .status-pending {
+        color: #92400e !important;
+        background: #fff7ed !important;
+      }
+      .status-final,
+      .status-confirmed {
+        color: #047857 !important;
+        background: #ecfdf5 !important;
+      }
+      .status-cancelled,
+      .status-rejected {
+        color: #b91c1c !important;
+        background: #fef2f2 !important;
+      }
+      .status-item {
+        color: #5b21b6 !important;
+        background: #f5f3ff !important;
+      }
+      .pdf-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 120;
+        display: none;
+        background: rgba(3, 23, 13, 0.76);
+        backdrop-filter: blur(10px);
+      }
+      .pdf-modal.show {
+        display: grid;
+        place-items: center;
+      }
+      .pdf-modal-card {
+        width: min(96vw, 1100px);
+        height: min(94vh, 920px);
+        border: 1px solid rgba(216, 173, 52, 0.28);
+        border-radius: 1.2rem;
+        background: #fff;
+        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .pdf-modal-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.72rem 0.9rem;
+        background: linear-gradient(135deg, #05351f, #0f7a3d);
+        color: white;
+      }
+      .pdf-modal-head h3 {
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 950;
+      }
+      .pdf-modal-head button {
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-radius: 999px;
+        padding: 0.45rem 0.7rem;
+        font-weight: 900;
+        cursor: pointer;
+      }
+      .pdf-modal iframe {
+        border: 0;
+        flex: 1;
+        width: 100%;
+        background: #f8fafc;
+      }
+      @media (max-width: 1120px) {
+        .hero-inner,
+        .grid-main {
+          grid-template-columns: 1fr;
+        }
+        .receipt-frame {
+          position: relative;
+          top: 0;
+        }
+      }
+      @media (max-width: 767px) {
+        .admin-sidebar {
+          transform: translateX(-100%);
+        }
+        .admin-sidebar.open {
+          transform: translateX(0);
+        }
+        .admin-main {
+          margin-left: 0;
+        }
+        .mobile-toggle {
+          display: inline-grid;
+          place-items: center;
+        }
+        .top-actions .hide-mobile {
+          display: none;
+        }
+        .page-pad {
+          padding: 0.7rem;
+        }
+        .hero,
+        .panel,
+        .receipt-frame {
+          border-radius: 1rem;
+        }
+        .hero-metrics,
+        .form-grid,
+        .receipt-grid {
+          grid-template-columns: 1fr;
+        }
+        .receipt-top,
+        .receipt-title-row,
+        .amount-box,
+        .receipt-footer {
+          grid-template-columns: 1fr;
+        }
+        .receipt-status {
+          text-align: left;
+        }
+        .info-box.wide {
+          grid-column: auto;
+        }
+        .receipt-sheet {
+          min-height: auto;
+        }
+        .pdf-modal-card {
+          width: 100vw;
+          height: 100vh;
+          border-radius: 0;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="/assets/css/admin-unified.css">
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+</head>
+  <body>
+    <div
+      id="mobileOverlay"
+      class="mobile-overlay"
+      onclick="toggleSidebar(false)"
+      aria-hidden="true"
+    ></div>
+    <div class="admin-shell">
+      <aside id="sidebar" class="admin-sidebar" aria-label="APSG admin sidebar">
+        <div class="sidebar-brand">
+          <a href="/admin/dashboard.html" class="brand-link"
+            ><span class="brand-logo"
+              ><img
+                src="/assets/images/logo/apsg.png"
+                alt="APSG"
+                onerror="this.src = '/assets/images/logo/apsg1.png'" width="96" height="96" decoding="async"></span
+            ><span
+              ><strong>APSG Admin</strong><small>Receipt Studio</small></span
+            ></a
+          >
+        </div>
+        <nav class="sidebar-nav">
+          <p class="side-title">Command Center</p>
+          <a class="side-link" href="/admin/dashboard.html"
+            ><i class="fas fa-chart-pie"></i><span>Dashboard</span
+            ><span class="side-chip">Admin</span></a
+          ><a class="side-link" href="/admin/members.html"
+            ><i class="fas fa-users"></i><span>Members</span
+            ><span class="side-chip">Admin</span></a
+          ><a class="side-link" href="/admin/account-details.html"
+            ><i class="fas fa-building-columns"></i><span>Account Details</span
+            ><span class="side-chip">Admin</span></a
+          ><a class="side-link" href="/admin/admin-leadership.html"
+            ><i class="fas fa-sitemap"></i><span>Leadership Desk</span
+            ><span class="side-chip">Admin</span></a
+          ><a class="side-link" href="/admin/admin-official-create.html"
+            ><i class="fas fa-user-pen"></i><span>Create / Update</span
+            ><span class="side-chip">Admin</span></a
+          ><a class="side-link" href="/admin/admin-officials-manager.html"
+            ><i class="fas fa-table-list"></i><span>Officials Manager</span
+            ><span class="side-chip">Admin</span></a
+          ><a class="side-link" href="/admin/member-details.html"
+            ><i class="fas fa-id-card-clip"></i><span>Member Dossier</span
+            ><span class="side-chip">Admin</span></a
+          ><a class="side-link" href="/admin/edit-member.html"
+            ><i class="fas fa-user-pen"></i><span>Edit Member</span
+            ><span class="side-chip">Admin</span></a
+          >
+          <p class="side-title gold">Get Involved Desk</p>
+          <a class="side-link" href="/admin/admin-get-involved.html"
+            ><i class="fas fa-handshake-angle"></i><span>Get Involved</span
+            ><span class="side-chip">Live</span></a
+          ><a class="side-link" href="/admin/admin-get-involved.html#donations"
+            ><i class="fas fa-heart"></i><span>Donations</span></a
+          ><a
+            class="side-link"
+            href="/admin/admin-get-involved.html#sponsorships"
+            ><i class="fas fa-award"></i><span>Sponsorships</span></a
+          ><a class="side-link" href="/admin/admin-get-involved.html#volunteers"
+            ><i class="fas fa-people-carry-box"></i><span>Volunteers</span></a
+          ><a class="side-link" href="/admin/admin-get-involved.html#rsvps"
+            ><i class="fas fa-ticket"></i><span>RSVPs</span></a
+          ><a
+            class="side-link active"
+            href="/admin/apsg-support-receipts.html"
+            aria-current="page"
+            ><i class="fas fa-receipt"></i><span>Receipt Studio</span
+            ><span class="side-chip">PDF</span></a
+          ><a class="side-link" href="/admin/viewpdf.html"
+            ><i class="fas fa-file-pdf"></i><span>View PDF</span></a
+          >
+          <p class="side-title gold">Publishing Desk</p>
+          <a class="side-link" href="/admin/admin-blog.html"
+            ><i class="fas fa-newspaper"></i><span>News & Updates</span
+            ><span class="side-chip">Editor</span></a
+          ><a class="side-link" href="/admin/admin-meeting.html"
+            ><i class="fas fa-users-line"></i><span>Meetings</span
+            ><span class="side-chip">Editor</span></a
+          ><a class="side-link" href="/admin/admin-event.html"
+            ><i class="fas fa-calendar-check"></i><span>Events</span
+            ><span class="side-chip">Editor</span></a
+          ><a class="side-link" href="/admin/admin-gallery.html"
+            ><i class="fas fa-images"></i><span>Gallery Albums</span
+            ><span class="side-chip">Editor</span></a
+          >
+          <p class="side-title">Public Review</p>
+          <a
+            class="side-link"
+            href="/pages/get-involved.html"
+            target="_blank"
+            rel="noopener"
+            ><i class="fas fa-arrow-up-right-from-square"></i
+            ><span>View Get Involved</span></a
+          ><a
+            class="side-link"
+            href="/pages/donation.html"
+            target="_blank"
+            rel="noopener"
+            ><i class="fas fa-arrow-up-right-from-square"></i
+            ><span>View Donations</span></a
+          ><a
+            class="side-link"
+            href="/pages/sponsor.html"
+            target="_blank"
+            rel="noopener"
+            ><i class="fas fa-arrow-up-right-from-square"></i
+            ><span>View Sponsor</span></a
+          ><a
+            class="side-link"
+            href="/pages/volunteer.html"
+            target="_blank"
+            rel="noopener"
+            ><i class="fas fa-arrow-up-right-from-square"></i
+            ><span>View Volunteer</span></a
+          ><a
+            class="side-link"
+            href="/pages/rsvp.html"
+            target="_blank"
+            rel="noopener"
+            ><i class="fas fa-arrow-up-right-from-square"></i
+            ><span>View RSVP</span></a
+          ><a
+            class="side-link"
+            href="/pages/blog.html"
+            target="_blank"
+            rel="noopener"
+            ><i class="fas fa-arrow-up-right-from-square"></i
+            ><span>View Blog</span></a
+          ><a
+            class="side-link"
+            href="/pages/events.html"
+            target="_blank"
+            rel="noopener"
+            ><i class="fas fa-arrow-up-right-from-square"></i
+            ><span>View Events</span></a
+          ><a
+            class="side-link"
+            href="/pages/leadership.html"
+            target="_blank"
+            rel="noopener"
+            ><i class="fas fa-arrow-up-right-from-square"></i
+            ><span>View Leadership</span></a
+          >
+          <p class="side-title">System</p>
+          <a class="side-link" href="/admin/settings.html"
+            ><i class="fas fa-gear"></i><span>Settings</span></a
+          ><a class="side-link" href="/admin/admin-users.html"
+            ><i class="fas fa-user-shield"></i><span>Admin Users</span></a
+          >
+        </nav>
+        <div class="role-card">
+          <div class="role-top">
+            <span class="role-icon"><i class="fas fa-user-shield"></i></span
+            ><span
+              ><strong>Role Access</strong
+              ><small id="adminRoleLabel">Resolving role</small></span
+            >
+          </div>
+          <div class="role-grid">
+            <span class="role-level" data-role-level="viewer">Viewer</span
+            ><span class="role-level" data-role-level="editor">Editor</span
+            ><span class="role-level active" data-role-level="admin">Admin</span
+            ><span class="role-level" data-role-level="superadmin"
+              >Superadmin</span
+            >
+          </div>
+        </div>
+        <div class="logout-wrap">
+          <button
+            class="side-link danger-link"
+            type="button"
+            onclick="logout()"
+          >
+            <i class="fas fa-right-from-bracket"></i><span>Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      <main class="admin-main">
+        <header class="admin-topbar">
+          <div class="top-left">
+            <button
+              class="mobile-toggle"
+              type="button"
+              onclick="toggleSidebar(true)"
+              aria-label="Open sidebar"
+            >
+              <i class="fas fa-bars"></i>
+            </button>
+            <div>
+              <p class="top-kicker">APSG Nigeria</p>
+              <h1 class="top-title">Support Receipt Studio</h1>
+            </div>
+          </div>
+          <div class="top-actions">
+            <button
+              class="btn ghost hide-mobile"
+              type="button"
+              onclick="fillSample('pending')"
+            >
+              <i class="fas fa-wand-magic-sparkles"></i>Sample</button
+            ><button class="btn" type="button" onclick="previewReceipt()">
+              <i class="fas fa-eye"></i>Preview</button
+            ><button class="btn gold" type="button" onclick="viewReceiptPdf()">
+              <i class="fas fa-file-pdf"></i>View Receipt PDF</button
+            ><button
+              class="btn green"
+              type="button"
+              onclick="downloadReceiptPdf()"
+            >
+              <i class="fas fa-download"></i>Download Receipt PDF
+            </button>
+          </div>
+        </header>
+        <div class="page-pad">
+          <section class="hero">
+            <div class="hero-inner">
+              <div>
+                <span class="chip"
+                  ><i class="fas fa-receipt"></i> Premium PDF Receipt
+                  Studio</span
+                >
+                <h1 class="display-font">APSG Receipt Verification Studio</h1>
+                <p>
+                  Create polished pending confirmations, final donation
+                  receipts, sponsorship receipts, and item pledge
+                  acknowledgements. Every generated file is PDF-only and carries
+                  the APSG logo.
+                </p>
+                <div class="action-row">
+                  <button
+                    class="btn gold"
+                    type="button"
+                    onclick="fillSample('pending')"
+                  >
+                    <i class="fas fa-clock"></i>Pending Donation</button
+                  ><button
+                    class="btn green"
+                    type="button"
+                    onclick="fillSample('final')"
+                  >
+                    <i class="fas fa-circle-check"></i>Final Receipt</button
+                  ><button
+                    class="btn ghost"
+                    type="button"
+                    onclick="fillSample('item')"
+                  >
+                    <i class="fas fa-box-open"></i>Item Pledge
+                  </button>
+                </div>
+              </div>
+              <div class="hero-metrics">
+                <div class="mini-stat">
+                  <small>Receipt Mode</small
+                  ><strong id="heroReceiptMode">Pending</strong>
+                </div>
+                <div class="mini-stat">
+                  <small>Source</small
+                  ><strong id="heroSourceType">Donation</strong>
+                </div>
+                <div class="mini-stat">
+                  <small>Amount / Value</small
+                  ><strong id="heroAmount">0</strong>
+                </div>
+                <div class="mini-stat">
+                  <small>Reference</small
+                  ><strong id="heroReceiptRef">APSG-RCP</strong>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="grid-main">
+            <form
+              id="receiptForm"
+              class="panel"
+              onsubmit="
+                event.preventDefault();
+                updateReceipt(true);
+              "
+            >
+              <div class="panel-head">
+                <div>
+                  <span class="chip"
+                    ><i class="fas fa-pen-to-square"></i> PDF Generator</span
+                  >
+                  <h2 class="panel-title">Receipt Details</h2>
+                  <p class="panel-copy">
+                    Fill the record below, preview it live, then view or
+                    download the official PDF version.
+                  </p>
+                </div>
+              </div>
+              <div class="tabs">
+                <button
+                  class="tab-btn active"
+                  type="button"
+                  data-preset="pending"
+                  onclick="fillSample('pending')"
+                >
+                  Pending Payment</button
+                ><button
+                  class="tab-btn"
+                  type="button"
+                  data-preset="final"
+                  onclick="fillSample('final')"
+                >
+                  Final Receipt</button
+                ><button
+                  class="tab-btn"
+                  type="button"
+                  data-preset="sponsor"
+                  onclick="fillSample('sponsor')"
+                >
+                  Sponsor</button
+                ><button
+                  class="tab-btn"
+                  type="button"
+                  data-preset="item"
+                  onclick="fillSample('item')"
+                >
+                  Item Pledge
+                </button>
+              </div>
+              <div class="form-grid" style="margin-top: 0.8rem">
+                <div class="field">
+                  <label for="receiptType">Receipt Type</label
+                  ><select id="receiptType">
+                    <option>Donation Receipt</option>
+                    <option>Sponsorship Receipt</option>
+                    <option>Pending Payment Confirmation</option>
+                    <option>Item Pledge Acknowledgement</option>
+                    <option>Event Sponsor Receipt</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="receiptStatus">Receipt Status</label
+                  ><select id="receiptStatus">
+                    <option value="pending">Pending</option>
+                    <option value="final">Final</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="cancelled">Cancelled</option>
+                    <option value="rejected">Rejected</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="sourceType">Source Type</label
+                  ><select id="sourceType">
+                    <option>Donation</option>
+                    <option>Sponsorship</option>
+                    <option>Item Pledge</option>
+                    <option>Volunteer Support</option>
+                    <option>Event Support</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="supportCategory">Support Category</label
+                  ><select id="supportCategory">
+                    <option>Cash Donation</option>
+                    <option>Campaign Item Donation</option>
+                    <option>Physical Item Pledge</option>
+                    <option>Event Sponsorship</option>
+                    <option>Media / ICT Support</option>
+                    <option>Women / CWDI Support</option>
+                    <option>Welfare Support</option>
+                    <option>Voter Education</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="partyName">Name / Organization</label
+                  ><input id="partyName" value="APSG Public Supporter" />
+                </div>
+                <div class="field">
+                  <label for="phone">Phone</label
+                  ><input id="phone" value="08000000000" />
+                </div>
+                <div class="field">
+                  <label for="email">Email</label
+                  ><input id="email" value="supporter@example.com" />
+                </div>
+                <div class="field">
+                  <label for="stateChapter">State / Chapter</label
+                  ><input id="stateChapter" value="Lagos State" />
+                </div>
+                <div class="field">
+                  <label for="impactArea">Impact Area</label
+                  ><select id="impactArea">
+                    <option>APSG General Support</option>
+                    <option>Campaign Support</option>
+                    <option>Grassroots Mobilisation</option>
+                    <option>Media and ICT Support</option>
+                    <option>Youth Empowerment</option>
+                    <option>Women / CWDI Support</option>
+                    <option>Welfare and Community Outreach</option>
+                    <option>Voter Education</option>
+                    <option>Event Support</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="eventTitle">Event / Project</label
+                  ><input
+                    id="eventTitle"
+                    value="APSG Media and ICT Support Drive"
+                  />
+                </div>
+                <div class="field">
+                  <label for="amountValue">Amount / Value</label
+                  ><input id="amountValue" value="500000" />
+                </div>
+                <div class="field">
+                  <label for="paymentStatus">Payment Status</label
+                  ><select id="paymentStatus">
+                    <option>pending_verification</option>
+                    <option>confirmed</option>
+                    <option>rejected</option>
+                    <option>unmatched</option>
+                    <option>item_received</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="donationRef">Donation / Sponsorship Ref</label
+                  ><input id="donationRef" value="APSG-DON-2607-000001" />
+                </div>
+                <div class="field">
+                  <label for="paymentRef">Payment Ref</label
+                  ><input id="paymentRef" value="APSG-PAY-2607-000001" />
+                </div>
+                <div class="field">
+                  <label for="receiptRef">Receipt Ref</label
+                  ><input id="receiptRef" value="APSG-RCP-2607-000001" />
+                </div>
+                <div class="field">
+                  <label for="donorRef">Donor / Sponsor Ref</label
+                  ><input id="donorRef" value="APSG-DNR-000001" />
+                </div>
+                <div class="field">
+                  <label for="transferSender">Transfer Sender Name</label
+                  ><input id="transferSender" value="APSG Public Supporter" />
+                </div>
+                <div class="field">
+                  <label for="bankTxnRef">Bank Transaction Ref</label
+                  ><input id="bankTxnRef" value="BANK-TXN-000001" />
+                </div>
+                <div class="field">
+                  <label for="bankName">Receiving Bank</label
+                  ><input id="bankName" value="Eco Bank" />
+                </div>
+                <div class="field">
+                  <label for="accountNumber">APSG Account Number</label
+                  ><input id="accountNumber" value="2930053955" />
+                </div>
+                <div class="field full">
+                  <label for="receiptNote">Receipt Note</label
+                  ><textarea id="receiptNote">
+This is a pending payment confirmation receipt. Final receipt will be issued after APSG confirms the bank transfer.</textarea
+                  >
+                </div>
+                <div class="field">
+                  <label for="issuedBy">Issued By</label
+                  ><input id="issuedBy" value="APSG Finance Desk" />
+                </div>
+                <div class="field">
+                  <label for="issuedAt">Issued At</label
+                  ><input id="issuedAt" type="datetime-local" />
+                </div>
+              </div>
+              <div class="action-row">
+                <button class="btn green" type="submit">
+                  <i class="fas fa-rotate"></i>Preview</button
+                ><button
+                  class="btn gold"
+                  type="button"
+                  onclick="viewReceiptPdf()"
+                >
+                  <i class="fas fa-file-pdf"></i>View Receipt PDF</button
+                ><button
+                  class="btn green"
+                  type="button"
+                  onclick="downloadReceiptPdf()"
+                >
+                  <i class="fas fa-download"></i>Download Receipt PDF</button
+                ><button
+                  class="btn"
+                  type="button"
+                  onclick="sendReceiptWhatsapp()"
+                >
+                  <i class="fab fa-whatsapp"></i>WhatsApp Text</button
+                ><button
+                  class="btn red"
+                  type="button"
+                  onclick="clearReceiptForm()"
+                >
+                  <i class="fas fa-broom"></i>Clear
+                </button>
+              </div>
+            </form>
+            <section class="receipt-frame">
+              <div class="receipt-toolbar">
+                <span class="chip"
+                  ><i class="fas fa-eye"></i> Quick Receipt Preview</span
+                >
+                <div class="top-actions">
+                  <button
+                    class="btn"
+                    type="button"
+                    onclick="copyReceiptSummary()"
+                  >
+                    <i class="fas fa-copy"></i>Copy</button
+                  ><button
+                    class="btn gold"
+                    type="button"
+                    onclick="viewReceiptPdf()"
+                  >
+                    <i class="fas fa-file-pdf"></i>View PDF
+                  </button>
+                </div>
+              </div>
+              <article id="receiptSheet" class="receipt-sheet">
+                <div id="receiptWatermark" class="receipt-watermark">
+                  PENDING
+                </div>
+                <header class="receipt-top">
+                  <div class="receipt-brand">
+                    <span class="receipt-logo"
+                      ><img
+                        src="/assets/images/logo/apsg.png"
+                        alt="APSG"
+                        onerror="this.src = '/assets/images/logo/apsg1.png'"
+                    width="96" height="96" decoding="async"></span>
+                    <div>
+                      <h2>APC Progressive Support Group</h2>
+                      <p>Official APSG Support Receipt</p>
+                    </div>
+                  </div>
+                  <div class="receipt-status">
+                    <strong id="rStatusLabel">Pending Receipt</strong
+                    ><span id="rStatusPill" class="status-pending"
+                      >Pending Verification</span
+                    >
+                  </div>
+                </header>
+                <div class="receipt-body">
+                  <div id="rAlert" class="receipt-alert">
+                    This is a pending payment confirmation receipt. Final
+                    receipt will be issued after APSG confirms the bank
+                    transfer.
+                  </div>
+                  <div class="receipt-title-row">
+                    <div>
+                      <h1 id="rReceiptType" class="display-font">
+                        Pending Payment Confirmation
+                      </h1>
+                      <p id="rSubtitle">
+                        Generated for APSG support tracking and finance
+                        verification.
+                      </p>
+                    </div>
+                    <div class="qr-box">
+                      <canvas id="receiptQr" width="180" height="180"></canvas>
+                    </div>
+                  </div>
+                  <div class="receipt-ref-line">
+                    <span class="ref-pill"
+                      ><i class="fas fa-receipt"></i
+                      ><span id="rReceiptRef">APSG-RCP-2607-000001</span></span
+                    ><span class="ref-pill"
+                      ><i class="fas fa-money-check"></i
+                      ><span id="rPaymentRef">APSG-PAY-2607-000001</span></span
+                    ><span class="ref-pill"
+                      ><i class="fas fa-fingerprint"></i
+                      ><span id="rMainRef">APSG-DON-2607-000001</span></span
+                    >
+                  </div>
+                  <div class="amount-box">
+                    <div>
+                      <small>Amount / Declared Support Value</small
+                      ><strong id="rAmount">500,000</strong>
+                    </div>
+                    <span id="rSourceType">Donation</span>
+                  </div>
+                  <div class="receipt-grid">
+                    <div class="info-box wide">
+                      <small>Received From</small
+                      ><strong id="rPartyName">APSG Public Supporter</strong>
+                      <p id="rContact">08000000000 • supporter@example.com</p>
+                    </div>
+                    <div class="info-box">
+                      <small>Chapter</small
+                      ><strong id="rState">Lagos State</strong>
+                      <p>Supporter location</p>
+                    </div>
+                    <div class="info-box">
+                      <small>Support Category</small
+                      ><strong id="rCategory">Cash Donation</strong>
+                      <p id="rImpact">Media and ICT Support</p>
+                    </div>
+                    <div class="info-box wide">
+                      <small>Project / Event</small
+                      ><strong id="rEventTitle"
+                        >APSG Media and ICT Support Drive</strong
+                      >
+                      <p id="rBankLine">Eco Bank • 2930053955</p>
+                    </div>
+                    <div class="info-box">
+                      <small>Payment / Item Status</small
+                      ><strong id="rPaymentStatus">pending_verification</strong>
+                      <p>Manual admin verification required</p>
+                    </div>
+                    <div class="info-box">
+                      <small>Transfer Sender</small
+                      ><strong id="rTransferSender"
+                        >APSG Public Supporter</strong
+                      >
+                      <p id="rBankTxn">BANK-TXN-000001</p>
+                    </div>
+                    <div class="info-box">
+                      <small>Donor / Sponsor Ref</small
+                      ><strong id="rDonorRef">APSG-DNR-000001</strong>
+                      <p>Supporter reference</p>
+                    </div>
+                    <div class="info-box full">
+                      <small>Official Note</small
+                      ><strong id="rNote"
+                        >This is a pending payment confirmation receipt. Final
+                        receipt will be issued after APSG confirms the bank
+                        transfer.</strong
+                      >
+                      <p>
+                        This receipt is generated by APSG receipt studio for
+                        record tracking and should be matched with APSG
+                        finance/admin records.
+                      </p>
+                    </div>
+                  </div>
+                  <footer class="receipt-footer">
+                    <p class="receipt-note">
+                      Issued on <strong id="rIssuedAt">—</strong> by
+                      <strong id="rIssuedBy">APSG Finance Desk</strong>. This
+                      document is valid only when its reference exists in APSG
+                      administrative records.
+                    </p>
+                    <div class="signature-line">APSG Authorized Desk</div>
+                  </footer>
+                </div>
+              </article>
+            </section>
+          </section>
+        </div>
+      </main>
+    </div>
+    <div id="toast" class="toast"></div>
+    <script src="/assets/js/supabase-clients.js"></script>
+  <script src="/assets/js/apsg-settings.js"></script>
+    <script src="/assets/js/admin-auth.js"></script>
+    <script>
+      const fieldIds = [
+        "receiptType",
+        "receiptStatus",
+        "sourceType",
+        "supportCategory",
+        "partyName",
+        "phone",
+        "email",
+        "stateChapter",
+        "impactArea",
+        "eventTitle",
+        "amountValue",
+        "paymentStatus",
+        "donationRef",
+        "paymentRef",
+        "receiptRef",
+        "donorRef",
+        "transferSender",
+        "bankTxnRef",
+        "bankName",
+        "accountNumber",
+        "receiptNote",
+        "issuedBy",
+        "issuedAt",
+      ];
+      const $ = (id) => document.getElementById(id);
+      const APSG_LOGO_URLS = [
+        "/assets/images/logo/apsg.png",
+        "/assets/images/logo/apsg1.png",
+        "/assets/images/apsg.png",
+      ];
+      let logoPromise = null;
+      function pad(n) {
+        return String(n).padStart(2, "0");
+      }
+      function compactMonth() {
+        const d = new Date();
+        return String(d.getFullYear()).slice(2) + pad(d.getMonth() + 1);
+      }
+      function makeRef(prefix, serial = 1) {
+        return `APSG-${prefix}-${compactMonth()}-${String(serial).padStart(6, "0")}`;
+      }
+      function makeShortRef(prefix, serial = 1) {
+        return `APSG-${prefix}-${String(serial).padStart(6, "0")}`;
+      }
+      function clean(v) {
+        return String(v == null ? "" : v).trim();
+      }
+      function money(v) {
+        const raw = clean(v).replace(/[₦,\s]/g, "");
+        const n = Number(raw);
+        return Number.isFinite(n) && n > 0
+          ? "₦" + n.toLocaleString("en-NG")
+          : clean(v) || "Not stated";
+      }
+      function niceDateTime(v) {
+        const d = v ? new Date(v) : new Date();
+        return Number.isNaN(d.getTime())
+          ? new Date().toLocaleString("en-NG", {
+              dateStyle: "medium",
+              timeStyle: "short",
+            })
+          : d.toLocaleString("en-NG", {
+              dateStyle: "medium",
+              timeStyle: "short",
+            });
+      }
+      function statusClass(s) {
+        s = clean(s).toLowerCase();
+        if (["final", "confirmed"].includes(s)) return "status-final";
+        if (["cancelled", "rejected"].includes(s)) return "status-rejected";
+        if (s.includes("item")) return "status-item";
+        return "status-pending";
+      }
+      function titleStatus(s) {
+        s = clean(s).toLowerCase();
+        if (s === "final") return "Final Receipt";
+        if (s === "confirmed") return "Confirmed Receipt";
+        if (s === "cancelled") return "Cancelled Receipt";
+        if (s === "rejected") return "Rejected Receipt";
+        return "Pending Receipt";
+      }
+      function statusPill(s) {
+        s = clean(s).toLowerCase();
+        if (s === "final") return "Final Issued";
+        if (s === "confirmed") return "Confirmed";
+        if (s === "cancelled") return "Cancelled";
+        if (s === "rejected") return "Rejected";
+        return "Pending Verification";
+      }
+      function toast(m) {
+        const b = $("toast");
+        b.textContent = m;
+        b.classList.add("show");
+        clearTimeout(toast.timer);
+        toast.timer = setTimeout(() => b.classList.remove("show"), 1800);
+      }
+      function setValue(id, v) {
+        const el = $(id);
+        if (el) el.value = v;
+      }
+      function setText(id, v) {
+        const el = $(id);
+        if (el) el.textContent = v;
+      }
+      function getData() {
+        return Object.fromEntries(
+          fieldIds.map((id) => [id, clean($(id)?.value)]),
+        );
+      }
+      function setIssuedNow() {
+        const el = $("issuedAt");
+        if (!el.value) {
+          const d = new Date();
+          d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+          el.value = d.toISOString().slice(0, 16);
+        }
+      }
+      function blobToDataUrl(blob) {
+        return new Promise((res, rej) => {
+          const r = new FileReader();
+          r.onload = () => res(r.result);
+          r.onerror = rej;
+          r.readAsDataURL(blob);
+        });
+      }
+      async function loadLogo() {
+        if (logoPromise) return logoPromise;
+        logoPromise = (async () => {
+          for (const url of APSG_LOGO_URLS) {
+            try {
+              const r = await fetch(url, { cache: "force-cache" });
+              if (!r.ok) continue;
+              const b = await r.blob();
+              if (!String(b.type || "").startsWith("image/")) continue;
+              return await blobToDataUrl(b);
+            } catch (e) {}
+          }
+          return "";
+        })();
+        return logoPromise;
+      }
+      function imgFormat(data) {
+        return /^data:image\/jpe?g/i.test(String(data || "")) ? "JPEG" : "PNG";
+      }
+      function drawLogo(doc, data, x, y, size) {
+        try {
+          if (data) {
+            doc.addImage(data, imgFormat(data), x, y, size, size);
+            return;
+          }
+        } catch (e) {}
+        doc.setFillColor(255, 255, 255);
+        doc.roundedRect(x, y, size, size, 12, 12, "F");
+        doc.setTextColor(5, 53, 31);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text("APSG", x + 8, y + size / 2 + 5);
+      }
+      function updateQr(text) {
+        const c = $("receiptQr");
+        if (!c) return;
+        const ctx = c.getContext("2d"),
+          size = c.width;
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(0, 0, size, size);
+        const cells = 21,
+          cell = Math.floor(size / cells);
+        let hash = 2166136261;
+        for (let i = 0; i < text.length; i++) {
+          hash ^= text.charCodeAt(i);
+          hash = Math.imul(hash, 16777619);
+        }
+        function finder(x, y) {
+          ctx.fillStyle = "#05351f";
+          ctx.fillRect(x * cell, y * cell, 7 * cell, 7 * cell);
+          ctx.fillStyle = "#fff";
+          ctx.fillRect((x + 1) * cell, (y + 1) * cell, 5 * cell, 5 * cell);
+          ctx.fillStyle = "#05351f";
+          ctx.fillRect((x + 2) * cell, (y + 2) * cell, 3 * cell, 3 * cell);
+        }
+        finder(1, 1);
+        finder(13, 1);
+        finder(1, 13);
+        for (let y = 0; y < cells; y++)
+          for (let x = 0; x < cells; x++) {
+            const f =
+              (x >= 1 && x <= 7 && y >= 1 && y <= 7) ||
+              (x >= 13 && x <= 19 && y >= 1 && y <= 7) ||
+              (x >= 1 && x <= 7 && y >= 13 && y <= 19);
+            if (f) continue;
+            const bit =
+              ((hash >>> ((x + y * 7) % 24)) ^ (x * 31 + y * 17 + hash)) & 1;
+            if (bit) {
+              ctx.fillStyle = (x + y) % 5 === 0 ? "#d8ad34" : "#05351f";
+              ctx.fillRect(x * cell, y * cell, cell, cell);
+            }
+          }
+      }
+      function updateReceipt(showNotice = false) {
+        setIssuedNow();
+        const d = getData(),
+          status = d.receiptStatus || "pending",
+          contact =
+            [d.phone, d.email].filter(Boolean).join(" • ") ||
+            "No contact supplied",
+          alert = $("rAlert"),
+          pill = $("rStatusPill"),
+          watermark = $("receiptWatermark");
+        setText("heroReceiptMode", titleStatus(status).replace(" Receipt", ""));
+        setText("heroSourceType", d.sourceType || "Support");
+        setText("heroAmount", money(d.amountValue));
+        setText("heroReceiptRef", d.receiptRef || makeRef("RCP"));
+        setText("rStatusLabel", titleStatus(status));
+        setText("rStatusPill", statusPill(status));
+        pill.className = statusClass(status);
+        watermark.textContent =
+          status === "final" || status === "confirmed"
+            ? "FINAL"
+            : status === "cancelled" || status === "rejected"
+              ? "VOID"
+              : "PENDING";
+        setText("rReceiptType", d.receiptType || "Support Receipt");
+        setText(
+          "rSubtitle",
+          `${d.sourceType || "Support"} • ${d.supportCategory || "APSG Support"} • ${d.impactArea || "General Support"}`,
+        );
+        setText("rReceiptRef", d.receiptRef || makeRef("RCP"));
+        setText("rPaymentRef", d.paymentRef || makeRef("PAY"));
+        setText(
+          "rMainRef",
+          d.donationRef ||
+            makeRef(d.sourceType === "Sponsorship" ? "SPN" : "DON"),
+        );
+        setText("rAmount", money(d.amountValue));
+        setText("rSourceType", d.sourceType || "Support");
+        setText("rPartyName", d.partyName || "Supporter Name");
+        setText("rContact", contact);
+        setText("rState", d.stateChapter || "Not stated");
+        setText("rCategory", d.supportCategory || "Support Category");
+        setText("rImpact", d.impactArea || "APSG General Support");
+        setText("rEventTitle", d.eventTitle || "APSG Support Project");
+        setText(
+          "rBankLine",
+          `${d.bankName || "Eco Bank"} • ${d.accountNumber || "2930053955"}`,
+        );
+        setText("rPaymentStatus", d.paymentStatus || "pending_verification");
+        setText(
+          "rTransferSender",
+          d.transferSender || d.partyName || "Not supplied",
+        );
+        setText(
+          "rBankTxn",
+          d.bankTxnRef || "No bank transaction reference supplied",
+        );
+        setText("rDonorRef", d.donorRef || makeShortRef("DNR"));
+        setText(
+          "rNote",
+          d.receiptNote || "Support recorded by APSG receipt studio.",
+        );
+        setText("rIssuedAt", niceDateTime(d.issuedAt));
+        setText("rIssuedBy", d.issuedBy || "APSG Finance Desk");
+        alert.className = "receipt-alert";
+        if (status === "final" || status === "confirmed") {
+          alert.classList.add("final");
+          alert.textContent =
+            "This is a final APSG receipt generated after administrative verification of the support record.";
+        } else if (status === "cancelled" || status === "rejected") {
+          alert.classList.add("rejected");
+          alert.textContent =
+            "This receipt record is not valid as a confirmed support receipt. It is marked cancelled or rejected.";
+        } else {
+          alert.textContent =
+            d.receiptNote ||
+            "This is a pending payment confirmation receipt. Final receipt will be issued after APSG confirms the bank transfer.";
+        }
+        updateQr(
+          [
+            d.receiptRef,
+            d.paymentRef,
+            d.donationRef,
+            d.partyName,
+            d.amountValue,
+            status,
+          ].join("|"),
+        );
+        if (showNotice) toast("Receipt preview updated");
+        return d;
+      }
+      function fillSample(type) {
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((b) =>
+            b.classList.toggle("active", b.dataset.preset === type),
+          );
+        const serial =
+          type === "final"
+            ? 2
+            : type === "sponsor"
+              ? 3
+              : type === "item"
+                ? 4
+                : 1;
+        setValue("issuedAt", "");
+        if (type === "final") {
+          setValue("receiptType", "Donation Receipt");
+          setValue("receiptStatus", "final");
+          setValue("sourceType", "Donation");
+          setValue("supportCategory", "Cash Donation");
+          setValue("partyName", "APSG Public Supporter");
+          setValue("amountValue", "1000000");
+          setValue("paymentStatus", "confirmed");
+          setValue("impactArea", "Grassroots Mobilisation");
+          setValue("eventTitle", "APSG Grassroots Mobilisation Support");
+          setValue(
+            "receiptNote",
+            "This is a final APSG donation receipt issued after bank transfer verification.",
+          );
+          setValue("donationRef", makeRef("DON", serial));
+          setValue("paymentRef", makeRef("PAY", serial));
+          setValue("receiptRef", makeRef("RCP", serial));
+          setValue("donorRef", makeShortRef("DNR", serial));
+        } else if (type === "sponsor") {
+          setValue("receiptType", "Sponsorship Receipt");
+          setValue("receiptStatus", "pending");
+          setValue("sourceType", "Sponsorship");
+          setValue("supportCategory", "Event Sponsorship");
+          setValue("partyName", "Strategic Partner Organization");
+          setValue("amountValue", "5000000");
+          setValue("paymentStatus", "pending_verification");
+          setValue("impactArea", "Event Support");
+          setValue("eventTitle", "APSG Youth Political Bootcamp");
+          setValue(
+            "receiptNote",
+            "This is a pending sponsorship confirmation receipt. Final sponsor receipt will be issued after APSG confirms the bank transfer.",
+          );
+          setValue("donationRef", makeRef("SPN", serial));
+          setValue("paymentRef", makeRef("PAY", serial));
+          setValue("receiptRef", makeRef("RCP", serial));
+          setValue("donorRef", makeShortRef("SPN", serial));
+        } else if (type === "item") {
+          setValue("receiptType", "Item Pledge Acknowledgement");
+          setValue("receiptStatus", "confirmed");
+          setValue("sourceType", "Item Pledge");
+          setValue("supportCategory", "Campaign Item Donation");
+          setValue("partyName", "Campaign Materials Donor");
+          setValue(
+            "amountValue",
+            "Premium campaign T-shirts, caps and banners",
+          );
+          setValue("paymentStatus", "item_received");
+          setValue("impactArea", "Campaign Support");
+          setValue("eventTitle", "APSG Campaign Materials Support");
+          setValue(
+            "receiptNote",
+            "This acknowledgement confirms receipt or administrative recording of the stated item support.",
+          );
+          setValue("donationRef", makeRef("ITM", serial));
+          setValue("paymentRef", makeRef("PAY", serial));
+          setValue("receiptRef", makeRef("RCP", serial));
+          setValue("donorRef", makeShortRef("DNR", serial));
+        } else {
+          setValue("receiptType", "Pending Payment Confirmation");
+          setValue("receiptStatus", "pending");
+          setValue("sourceType", "Donation");
+          setValue("supportCategory", "Media / ICT Support");
+          setValue("partyName", "APSG Public Supporter");
+          setValue("amountValue", "500000");
+          setValue("paymentStatus", "pending_verification");
+          setValue("impactArea", "Media and ICT Support");
+          setValue("eventTitle", "APSG Media and ICT Support Drive");
+          setValue(
+            "receiptNote",
+            "This is a pending payment confirmation receipt. Final receipt will be issued after APSG confirms the bank transfer.",
+          );
+          setValue("donationRef", makeRef("DON", serial));
+          setValue("paymentRef", makeRef("PAY", serial));
+          setValue("receiptRef", makeRef("RCP", serial));
+          setValue("donorRef", makeShortRef("DNR", serial));
+        }
+        setValue("transferSender", $("partyName").value);
+        setValue("bankTxnRef", `BANK-TXN-${String(serial).padStart(6, "0")}`);
+        updateReceipt(true);
+      }
+      function copyReceiptSummary() {
+        const d = getData();
+        const text = `APSG SUPPORT RECEIPT\nReceipt Ref: ${d.receiptRef}\nPayment Ref: ${d.paymentRef}\nRecord Ref: ${d.donationRef}\nName: ${d.partyName}\nSupport: ${d.sourceType} - ${d.supportCategory}\nImpact Area: ${d.impactArea}\nAmount/Value: ${money(d.amountValue)}\nStatus: ${d.receiptStatus}\nNote: ${d.receiptNote}`;
+        navigator.clipboard
+          ?.writeText(text)
+          .then(() => toast("Receipt summary copied"))
+          .catch(() => toast("Copy not available"));
+      }
+      function sendReceiptWhatsapp() {
+        const d = getData();
+        const msg = `APSG Receipt Confirmation%0AReceipt Ref: ${encodeURIComponent(d.receiptRef)}%0APayment Ref: ${encodeURIComponent(d.paymentRef)}%0AName: ${encodeURIComponent(d.partyName)}%0AAmount/Value: ${encodeURIComponent(money(d.amountValue))}%0AStatus: ${encodeURIComponent(d.receiptStatus)}%0ANote: ${encodeURIComponent(d.receiptNote)}`;
+        window.open(`https://wa.me/?text=${msg}`, "_blank", "noopener");
+      }
+      async function buildReceiptPdf() {
+        updateReceipt(false);
+        const PDF = window.jspdf?.jsPDF || window.jsPDF;
+        if (!PDF) {
+          toast("PDF engine is still loading");
+          return null;
+        }
+        const logo = await loadLogo();
+        const d = getData();
+        const doc = new PDF({
+            orientation: "portrait",
+            unit: "pt",
+            format: "a4",
+          }),
+          w = doc.internal.pageSize.getWidth(),
+          h = doc.internal.pageSize.getHeight(),
+          deep = [5, 53, 31],
+          green = [15, 122, 61],
+          gold = [216, 173, 52],
+          muted = [100, 116, 105],
+          cream = [255, 250, 240];
+        const status = titleStatus(d.receiptStatus);
+        doc.setFillColor(...deep);
+        doc.rect(0, 0, w, 126, "F");
+        doc.setFillColor(...green);
+        doc.triangle(w, 0, w, 126, w - 215, 0, "F");
+        doc.setFillColor(...gold);
+        doc.rect(0, 122, w, 4, "F");
+        drawLogo(doc, logo, 42, 29, 58);
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(18);
+        doc.text("APC Progressive Support Group", 116, 48);
+        doc.setFontSize(8);
+        doc.setTextColor(236, 244, 238);
+        doc.text("OFFICIAL APSG SUPPORT RECEIPT", 116, 66);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.text(`Issued: ${niceDateTime(d.issuedAt)}`, 116, 82);
+        doc.setFillColor(255, 255, 255);
+        doc.roundedRect(w - 178, 36, 136, 32, 16, 16, "F");
+        doc.setTextColor(...deep);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(9);
+        doc.text(status.toUpperCase(), w - 160, 56);
+        doc.setTextColor(236, 240, 236);
+        doc.setFontSize(64);
+        doc.text(
+          d.receiptStatus === "final" || d.receiptStatus === "confirmed"
+            ? "FINAL"
+            : d.receiptStatus === "cancelled" || d.receiptStatus === "rejected"
+              ? "VOID"
+              : "PENDING",
+          w / 2,
+          287,
+          { align: "center", angle: -22 },
+        );
+        if (logo) {
+          try {
+            doc.addImage(logo, imgFormat(logo), w / 2 - 45, 220, 90, 90);
+          } catch (e) {}
+        }
+        doc.setTextColor(...deep);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(30);
+        doc.text(d.receiptType || "Support Receipt", 42, 166, {
+          maxWidth: w - 84,
+        });
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(...muted);
+        doc.text(
+          "Generated by APSG Receipt Studio for finance/admin verification and official record keeping.",
+          42,
+          184,
+          { maxWidth: w - 84 },
+        );
+        doc.setDrawColor(230, 235, 230);
+        doc.line(42, 202, w - 42, 202);
+        function box(x, y, bw, bh, label, value) {
+          doc.setDrawColor(218, 224, 218);
+          doc.setFillColor(...cream);
+          doc.roundedRect(x, y, bw, bh, 10, 10, "FD");
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(7);
+          doc.setTextColor(112, 128, 120);
+          doc.text(String(label).toUpperCase(), x + 12, y + 18);
+          doc.setFontSize(10);
+          doc.setTextColor(...deep);
+          doc.text(clean(value) || "—", x + 12, y + 39, { maxWidth: bw - 24 });
+        }
+        box(42, 222, 246, 62, "Receipt Reference", d.receiptRef);
+        box(306, 222, 246, 62, "Payment Reference", d.paymentRef);
+        box(42, 296, 246, 62, "Source Reference", d.donationRef);
+        box(306, 296, 246, 62, "Donor / Sponsor Reference", d.donorRef);
+        box(42, 370, 246, 62, "Received From", d.partyName);
+        box(
+          306,
+          370,
+          246,
+          62,
+          "Phone / Email",
+          [d.phone, d.email].filter(Boolean).join(" • "),
+        );
+        box(42, 444, 246, 62, "Support Type", d.sourceType);
+        box(306, 444, 246, 62, "Support Category", d.supportCategory);
+        doc.setFillColor(255, 250, 240);
+        doc.setDrawColor(...gold);
+        doc.roundedRect(42, 526, w - 84, 78, 14, 14, "FD");
+        doc.setTextColor(126, 86, 16);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(8);
+        doc.text("AMOUNT / DECLARED SUPPORT VALUE", 58, 552);
+        doc.setTextColor(...deep);
+        doc.setFontSize(27);
+        doc.text(money(d.amountValue), 58, 580, { maxWidth: w - 245 });
+        doc.setFillColor(...deep);
+        doc.roundedRect(w - 190, 552, 132, 27, 13, 13, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(8);
+        doc.text((d.sourceType || "support").toUpperCase(), w - 174, 569);
+        box(42, 626, 246, 62, "State / Chapter", d.stateChapter);
+        box(306, 626, 246, 62, "Transfer Sender", d.transferSender);
+        doc.setFillColor(255, 255, 255);
+        doc.setDrawColor(218, 224, 218);
+        doc.roundedRect(42, 704, w - 84, 70, 10, 10, "FD");
+        doc.setTextColor(112, 128, 120);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(7);
+        doc.text("OFFICIAL RECEIPT NOTE", 58, 724);
+        doc.setTextColor(...deep);
+        doc.setFontSize(10);
+        doc.text(clean(d.receiptNote), 58, 746, { maxWidth: w - 116 });
+        doc.setDrawColor(210, 218, 210);
+        doc.line(42, h - 82, w - 42, h - 82);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(...muted);
+        doc.text(
+          "This receipt is valid only when the reference exists in APSG administrative records. Manual bank transfer verification remains required unless a payment gateway is later integrated.",
+          42,
+          h - 61,
+          { maxWidth: w - 180 },
+        );
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(...deep);
+        doc.text("APSG Authorized Finance Desk", w - 196, h - 45);
+        doc.setDrawColor(...deep);
+        doc.line(w - 222, h - 60, w - 42, h - 60);
+        return doc;
+      }
+      async function viewReceiptPdf() {
+        const d = updateReceipt(false);
+        try {
+          sessionStorage.setItem(
+            "apsg_receipt_view_payload",
+            JSON.stringify(d),
+          );
+          if (d.receiptRef)
+            sessionStorage.setItem(
+              "apsg_receipt_payload_" + d.receiptRef,
+              JSON.stringify(d),
+            );
+        } catch (e) {}
+        const params = new URLSearchParams();
+        params.set("ref", d.receiptRef || "APSG-RCP");
+        params.set("from", "receipt-studio");
+        window.open(
+          "/admin/viewpdf.html?" + params.toString(),
+          "_blank",
+          "noopener",
+        );
+        toast("Opening full PDF viewer");
+      }
+      function closeReceiptPdfViewer() {
+        const modal = $("receiptPdfModal"),
+          frame = $("receiptPdfFrame"),
+          old = modal?.dataset?.pdfUrl;
+        if (old) URL.revokeObjectURL(old);
+        if (frame) frame.removeAttribute("src");
+        modal?.classList.remove("show");
+      }
+      async function downloadReceiptPdf() {
+        const doc = await buildReceiptPdf();
+        if (!doc) return;
+        const ref = ($("receiptRef").value || "apsg-receipt").replace(
+          /[^a-z0-9-]+/gi,
+          "-",
+        );
+        doc.save(`${ref}.pdf`);
+        toast("Receipt PDF downloaded");
+      }
+      function clearReceiptForm() {
+        fieldIds.forEach((id) => setValue(id, ""));
+        setValue("bankName", "Eco Bank");
+        setValue("accountNumber", "2930053955");
+        setValue("issuedBy", "APSG Finance Desk");
+        updateReceipt(true);
+      }
+      function toggleSidebar(show) {
+        $("sidebar")?.classList.toggle("open", Boolean(show));
+        $("mobileOverlay")?.classList.toggle("show", Boolean(show));
+      }
+      async function logout() {
+        const c =
+          window.supabaseClient || window.apsgSupabaseClient || window.supabase;
+        if (c?.auth?.signOut) await c.auth.signOut();
+        location.href = "/admin/login.html";
+      }
+      async function resolveRole() {
+        let role =
+          localStorage.getItem("apsg_admin_role") ||
+          sessionStorage.getItem("apsg_admin_role") ||
+          "admin";
+        try {
+          const c =
+            window.supabaseClient ||
+            window.apsgSupabaseClient ||
+            window.supabase;
+          if (c?.auth?.getUser) {
+            const { data } = await c.auth.getUser();
+            const u = data?.user;
+            if (u) {
+              const { data: p } = await c
+                .from("admin_profiles")
+                .select("role,is_active,status")
+                .or(
+                  `id.eq.${u.id},user_id.eq.${u.id},email.eq.${u.email || ""}`,
+                )
+                .limit(1)
+                .maybeSingle();
+              if (p?.role) role = String(p.role).toLowerCase();
+            }
+          }
+        } catch (e) {}
+        if (!["viewer", "editor", "admin", "superadmin"].includes(role))
+          role = "admin";
+        $("adminRoleLabel").textContent =
+          role.charAt(0).toUpperCase() + role.slice(1);
+        document
+          .querySelectorAll("[data-role-level]")
+          .forEach((el) =>
+            el.classList.toggle("active", el.dataset.roleLevel === role),
+          );
+      }
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          toggleSidebar(false);
+          closeReceiptPdfViewer();
+        }
+      });
+      document.addEventListener("DOMContentLoaded", () => {
+        setIssuedNow();
+        fieldIds.forEach((id) =>
+          $(id)?.addEventListener("input", () => updateReceipt(false)),
+        );
+        fillSample("pending");
+        resolveRole();
+      });
+    </script>
+    <script src="/assets/js/admin-unified.js" defer></script>
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

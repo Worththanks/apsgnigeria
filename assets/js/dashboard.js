@@ -1,151 +1,980 @@
-// dashboard.js — CLEAN & SAFE (2026)
+let cachedMembers = [];
 
-document.addEventListener('DOMContentLoaded', async () => {
-  if (!window.supabaseClient) {
-    console.error('Supabase client not loaded');
-    window.location.href = 'login.html';
-    return;
-  }
+        const els = {
+            sidebar: document.getElementById('sidebar'),
+            overlay: document.getElementById('mobile-overlay'),
+            totalMembers: document.getElementById('totalMembers'),
+            todaysRegistrations: document.getElementById('todaysRegistrations'),
+            activeStates: document.getElementById('activeStates'),
+            accountMembers: document.getElementById('accountMembers'),
+            topStatesValue: document.getElementById('topStatesValue'),
+            topLgasValue: document.getElementById('topLgasValue'),
+            donutValue: document.getElementById('donut-value'),
+            donutSegments: document.querySelectorAll('.donut-segment'),
+            donutLegend: document.getElementById('donut-legend'),
+            bars: document.querySelectorAll('.bar'),
+            noDataMessage: document.getElementById('noDataMessage'),
+            documentCoverage: document.getElementById('documentCoverage'),
+            accountCoverage: document.getElementById('accountCoverage'),
+            lastRegistered: document.getElementById('lastRegistered'),
+            lastUpdatedLabel: document.getElementById('lastUpdatedLabel'),
+            weekMiniLabel: document.getElementById('weekMiniLabel'),
+            pendingMiniLabel: document.getElementById('pendingMiniLabel'),
+            weekRegistrations: document.getElementById('weekRegistrations'),
+            monthRegistrations: document.getElementById('monthRegistrations'),
+            growthRate: document.getElementById('growthRate'),
+            dataQualityRate: document.getElementById('dataQualityRate'),
+            topStateCard: document.getElementById('topStateCard'),
+            topStateMeta: document.getElementById('topStateMeta'),
+            pvcCoverageCard: document.getElementById('pvcCoverageCard'),
+            apcCoverageCard: document.getElementById('apcCoverageCard'),
+            phoneCoverageCard: document.getElementById('phoneCoverageCard'),
+            emailCoverageCard: document.getElementById('emailCoverageCard'),
+            pvcCoverageBar: document.getElementById('pvcCoverageBar'),
+            apcCoverageBar: document.getElementById('apcCoverageBar'),
+            phoneCoverageBar: document.getElementById('phoneCoverageBar'),
+            emailCoverageBar: document.getElementById('emailCoverageBar'),
+            pendingActionsCount: document.getElementById('pendingActionsCount'),
+            dataHealthList: document.getElementById('dataHealthList'),
+            pendingActionsList: document.getElementById('pendingActionsList'),
+            recentActivityList: document.getElementById('recentActivityList'),
+            latestMembersTable: document.getElementById('latestMembersTable'),
+            incompleteRecordsTable: document.getElementById('incompleteRecordsTable'),
+            topStatesTable: document.getElementById('topStatesTable'),
+            newsPublishedCount: document.getElementById('newsPublishedCount'),
+            newsDraftCount: document.getElementById('newsDraftCount'),
+            meetingsPublishedCount: document.getElementById('meetingsPublishedCount'),
+            meetingsUpcomingCount: document.getElementById('meetingsUpcomingCount'),
+            eventsPublishedCount: document.getElementById('eventsPublishedCount'),
+            eventsUpcomingCount: document.getElementById('eventsUpcomingCount'),
+            galleryAlbumCount: document.getElementById('galleryAlbumCount'),
+            visitorsTodayCount: document.getElementById('visitorsTodayCount'),
+            pageViewsTodayCount: document.getElementById('pageViewsTodayCount'),
+            pageViewsWeekCount: document.getElementById('pageViewsWeekCount'),
+            ctaClicksWeekCount: document.getElementById('ctaClicksWeekCount'),
+            topPublicPageLabel: document.getElementById('topPublicPageLabel'),
+            topPublicPageMeta: document.getElementById('topPublicPageMeta'),
+            topPublicPagesTable: document.getElementById('topPublicPagesTable')
+        };
 
-  await checkAuth();
-  attachLogoutHandlers();
-  loadDashboard();
-});
 
-/* =========================
-   AUTH CHECK
-========================= */
-async function checkAuth() {
-  const { data, error } = await supabaseClient.auth.getSession();
 
-  if (error || !data.session) {
-    window.location.href = 'login.html';
-  }
+        function getClient() {
+            return window.supabaseClient || window.apsgSupabase || window.APSG_SUPABASE || (window.APSG && window.APSG.supabase) || window.supabase || null;
+        }
+
+        async function waitForSupabaseClient() {
+            for (let i = 0; i < 40; i += 1) {
+                const client = getClient();
+                if (client && typeof client.from === 'function' && client.auth) {
+                    window.supabaseClient = client;
+                    return client;
+                }
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            return null;
+        }
+
+        function redirectToLogin() {
+            const next = encodeURIComponent(location.pathname + location.search);
+            window.location.href = `/admin/login.html?next=${next}`;
+        }
+
+        async function ensureDashboardSession() {
+            const client = await waitForSupabaseClient();
+            if (!client || !client.auth) {
+                redirectToLogin();
+                return false;
+            }
+            try {
+                const { data, error } = await client.auth.getSession();
+                if (error) throw error;
+                if (!data?.session) {
+                    redirectToLogin();
+                    return false;
+                }
+                return true;
+            } catch (error) {
+                console.warn('Dashboard session check failed:', error?.message || error);
+                redirectToLogin();
+                return false;
+            }
+        }
+
+        function applyRoleToSidebar(role) {
+            const normalized = String(role || 'viewer').toLowerCase();
+            const label = document.getElementById('adminRoleLabel');
+            if (label) label.textContent = normalized.charAt(0).toUpperCase() + normalized.slice(1);
+            const topBadge = document.getElementById('topRoleBadge');
+            if (topBadge) topBadge.innerHTML = `<i class="fas fa-user-shield"></i>${normalized}`;
+            document.querySelectorAll('[data-role-level]').forEach(el => el.classList.toggle('active', el.dataset.roleLevel === normalized));
+            document.querySelectorAll('[data-access]').forEach(el => {
+                const allowed = String(el.dataset.access || '').split(',').map(item => item.trim().toLowerCase()).filter(Boolean);
+                const locked = allowed.length && !allowed.includes(normalized);
+                el.classList.toggle('locked-by-role', locked);
+                el.hidden = locked;
+                if (locked) el.setAttribute('aria-disabled', 'true'); else el.removeAttribute('aria-disabled');
+            });
+        }
+
+        const ui = {
+            toggleSidebar() {
+                els.sidebar.classList.toggle('-translate-x-full');
+                els.overlay.classList.toggle('hidden');
+            },
+            closeSidebar() {
+                els.sidebar.classList.add('-translate-x-full');
+                els.overlay.classList.add('hidden');
+            },
+            setTheme(mode) {
+                if (mode === 'carbon') {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('daynight-theme', 'carbon');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('daynight-theme', 'snow');
+                }
+                document.querySelectorAll('.theme-btn-snow, .theme-btn-carbon').forEach(btn => {
+                    const active = btn.classList.contains(`theme-btn-${mode}`);
+                    btn.classList.toggle('bg-warning', active);
+                    btn.classList.toggle('text-primary-dark', active);
+                    btn.classList.toggle('shadow-sm', active);
+                });
+            }
+        };
+
+        const auth = {
+            async logout() {
+                if (typeof supabaseClient !== 'undefined') {
+                    await supabaseClient.auth.signOut();
+                }
+                window.location.href = '/admin/login.html';
+            }
+        };
+
+        function toLocalDateString(dateInput) {
+            const d = new Date(dateInput);
+            if (Number.isNaN(d.getTime())) return '';
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function niceDateTime(dateInput) {
+            if (!dateInput) return 'No data';
+            const d = new Date(dateInput);
+            if (Number.isNaN(d.getTime())) return 'No data';
+            return d.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+
+        function escapeCsv(value) {
+            const text = value == null ? '' : String(value);
+            return `"${text.replace(/"/g, '""')}"`;
+        }
+
+        function hasValue(value) {
+            return String(value ?? '').trim().length > 0;
+        }
+
+        function fullName(member) {
+            return `${member.first_name || ''} ${member.last_name || ''}`.trim() || member.name || 'Unnamed member';
+        }
+
+        function hasPVC(member) {
+            return hasValue(member.pvc_number) || hasValue(member.pvc_upload_path);
+        }
+
+        function hasAPCCard(member) {
+            return hasValue(member.apc_card_number) || hasValue(member.apc_upload_path);
+        }
+
+        function hasDocuments(member) {
+            return hasPVC(member) || hasAPCCard(member);
+        }
+
+        function percent(part, total) {
+            if (!total) return 0;
+            return Math.round((part / total) * 100);
+        }
+
+        function setText(el, value) {
+            if (el) el.textContent = value;
+        }
+
+        function setProgress(bar, value) {
+            if (bar) bar.style.width = `${Math.max(0, Math.min(100, value))}%`;
+        }
+
+        function startOfToday() {
+            const d = new Date();
+            d.setHours(0, 0, 0, 0);
+            return d;
+        }
+
+        function daysAgoStart(days) {
+            const d = startOfToday();
+            d.setDate(d.getDate() - days);
+            return d;
+        }
+
+        function startOfMonth() {
+            const d = new Date();
+            return new Date(d.getFullYear(), d.getMonth(), 1);
+        }
+
+        function isOnOrAfter(dateInput, threshold) {
+            const d = new Date(dateInput || 0);
+            return !Number.isNaN(d.getTime()) && d >= threshold;
+        }
+
+        function getMissingFields(member) {
+            const missing = [];
+            if (!hasValue(member.first_name) && !hasValue(member.last_name) && !hasValue(member.name)) missing.push('Name');
+            if (!hasValue(member.phone)) missing.push('Phone');
+            if (!hasValue(member.state)) missing.push('State');
+            if (!hasValue(member.lga)) missing.push('LGA');
+            if (!hasValue(member.ward)) missing.push('Ward');
+            if (!hasPVC(member)) missing.push('PVC');
+            if (!hasAPCCard(member)) missing.push('APC Card');
+            if (!hasValue(member.account_number)) missing.push('Account');
+            return missing;
+        }
+
+        function buildCsv(rows, columns, filename) {
+            if (!rows.length) {
+                alert('No matching records available for this export.');
+                return;
+            }
+            const csvRows = [columns.map(escapeCsv).join(',')];
+            rows.forEach(member => {
+                csvRows.push(columns.map(col => {
+                    if (col === 'full_name') return escapeCsv(fullName(member));
+                    if (col === 'missing_fields') return escapeCsv(getMissingFields(member).join(', '));
+                    return escapeCsv(member[col]);
+                }).join(','));
+            });
+            const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function exportFilteredCsvFile(type = 'all') {
+            logDashboardActivity('export_filtered_csv', 'members', `Exported ${type} member report.`, { report_type: type });
+            const baseColumns = ['reg_number', 'full_name', 'phone', 'email', 'state', 'lga', 'ward', 'pvc_number', 'apc_card_number', 'account_number', 'bank_name', 'missing_fields', 'created_at'];
+            let rows = cachedMembers;
+            let filename = `apsg-members-${type}-${toLocalDateString(new Date())}.csv`;
+
+            if (type === 'missing-docs') rows = cachedMembers.filter(member => !hasDocuments(member));
+            if (type === 'missing-accounts') rows = cachedMembers.filter(member => !hasValue(member.account_number));
+            if (type === 'incomplete') rows = cachedMembers.filter(member => getMissingFields(member).length > 0);
+
+            buildCsv(rows, baseColumns, filename);
+        }
+
+        function exportCsvFile() {
+            logDashboardActivity('export_members_csv', 'members', 'Exported all member records from dashboard.', {});
+            if (!cachedMembers.length) {
+                alert('No dashboard data available to export yet.');
+                return;
+            }
+            const columns = ['reg_number', 'first_name', 'last_name', 'account_number', 'bank_name', 'designation', 'phone', 'email', 'state', 'lga', 'ward', 'pvc_number', 'apc_card_number', 'created_at'];
+            const rows = [columns.join(',')];
+            cachedMembers.forEach(member => {
+                rows.push(columns.map(col => escapeCsv(member[col])).join(','));
+            });
+            const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `apsg-members-${toLocalDateString(new Date())}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function exportAccountCsvFile() {
+            logDashboardActivity('export_account_csv', 'members', 'Exported member account details report.', {});
+            const accountMembers = cachedMembers.filter(member => String(member.account_number || '').trim());
+            if (!accountMembers.length) {
+                alert('No member account details are available yet.');
+                return;
+            }
+            const headers = ['Reg Number', 'Full Name', 'Account Number', 'Bank', 'Phone Number', 'State', 'LGA', 'Ward'];
+            const rows = [headers.map(escapeCsv).join(',')];
+            accountMembers.forEach(member => {
+                const fullName = `${member.first_name || ''} ${member.last_name || ''}`.trim();
+                rows.push([
+                    member.reg_number || '',
+                    fullName,
+                    member.account_number || '',
+                    member.bank_name || '',
+                    member.phone || '',
+                    member.state || '',
+                    member.lga || '',
+                    member.ward || ''
+                ].map(escapeCsv).join(','));
+            });
+            const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `member_account_details_${toLocalDateString(new Date())}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+
+        async function getMembersExactCount() {
+            const { count, error } = await supabaseClient
+                .from('members')
+                .select('id', { count: 'exact', head: true });
+
+            if (error) throw error;
+            return Number(count || 0);
+        }
+
+        async function fetchAllMembers({ orderColumn = 'id', ascending = true, pageSize = 1000 } = {}) {
+            const totalCount = await getMembersExactCount();
+            const allRows = [];
+
+            if (els.totalMembers) {
+                els.totalMembers.textContent = totalCount.toLocaleString();
+            }
+
+            if (!totalCount) return allRows;
+
+            for (let from = 0; from < totalCount; from += pageSize) {
+                const to = Math.min(from + pageSize - 1, totalCount - 1);
+                let query = supabaseClient
+                    .from('members')
+                    .select('*')
+                    .range(from, to);
+
+                if (orderColumn) query = query.order(orderColumn, { ascending });
+
+                const { data, error } = await query;
+                if (error) throw error;
+
+                const batch = Array.isArray(data) ? data : [];
+                allRows.push(...batch);
+            }
+
+            return allRows;
+        }
+
+
+        function renderEmptyOverview() {
+            const zeroEls = [
+                els.weekMiniLabel, els.pendingMiniLabel, els.weekRegistrations, els.monthRegistrations,
+                els.pendingActionsCount, els.accountMembers
+            ];
+            zeroEls.forEach(el => setText(el, '0'));
+            [els.growthRate, els.dataQualityRate, els.pvcCoverageCard, els.apcCoverageCard, els.phoneCoverageCard, els.emailCoverageCard, els.documentCoverage, els.accountCoverage]
+                .forEach(el => setText(el, '0%'));
+            [els.pvcCoverageBar, els.apcCoverageBar, els.phoneCoverageBar, els.emailCoverageBar].forEach(bar => setProgress(bar, 0));
+            setText(els.topStateCard, 'No data');
+            setText(els.topStateMeta, 'Highest coverage');
+            if (els.dataHealthList) els.dataHealthList.innerHTML = '';
+            if (els.pendingActionsList) els.pendingActionsList.innerHTML = '<div class="action-row"><span class="status-pill">Clean</span><span class="font-bold text-gray-600 dark:text-gray-300">No data yet.</span></div>';
+            if (els.recentActivityList) els.recentActivityList.innerHTML = '<div class="activity-row"><i class="fas fa-inbox text-warning"></i><span class="font-bold text-gray-600 dark:text-gray-300">No recent activity.</span></div>';
+            [els.latestMembersTable, els.incompleteRecordsTable, els.topStatesTable].forEach(tbody => { if (tbody) tbody.innerHTML = '<tr><td colspan="7">No data available</td></tr>'; });
+        }
+
+        function countByField(rows, field) {
+            const counts = {};
+            rows.forEach(row => {
+                const value = String(row[field] || '').trim();
+                if (value) counts[value] = (counts[value] || 0) + 1;
+            });
+            return counts;
+        }
+
+        function renderDataHealth(metrics) {
+            if (!els.dataHealthList) return;
+            const items = [
+                ['PVC Records', metrics.withPVC, metrics.pvcRate, 'fa-id-card'],
+                ['APC Card Records', metrics.withAPC, metrics.apcRate, 'fa-address-card'],
+                ['Bank Account Records', metrics.withAccounts, metrics.accountRate, 'fa-building-columns'],
+                ['Phone Numbers', metrics.withPhone, metrics.phoneRate, 'fa-phone'],
+                ['Email Addresses', metrics.withEmail, metrics.emailRate, 'fa-envelope'],
+                ['State / LGA / Ward', metrics.withLocation, metrics.locationRate, 'fa-map-location-dot']
+            ];
+            els.dataHealthList.innerHTML = items.map(([label, count, rate, icon]) => `
+                <div class="quality-row">
+                    <span class="overview-icon shrink-0"><i class="fas ${icon}"></i></span>
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center justify-between gap-2">
+                            <p class="truncate text-[11px] font-black text-primary-dark dark:text-white">${label}</p>
+                            <p class="text-[11px] font-black text-bronze dark:text-warning">${rate}%</p>
+                        </div>
+                        <div class="progress-track mt-1.5"><div class="progress-fill" style="width:${rate}%"></div></div>
+                        <p class="mt-1 text-[10px] text-gray-500 dark:text-gray-400">${count.toLocaleString()} of ${metrics.total.toLocaleString()} records</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPendingActions(metrics) {
+            if (!els.pendingActionsList) return;
+            const actions = [
+                ['Missing PVC details', metrics.missingPVC, 'members.html', 'fa-id-card'],
+                ['Missing APC card details', metrics.missingAPC, 'members.html', 'fa-address-card'],
+                ['Missing bank account details', metrics.missingAccounts, 'account-details.html', 'fa-building-columns'],
+                ['Missing phone number', metrics.missingPhone, 'members.html', 'fa-phone'],
+                ['Missing state / LGA / ward', metrics.missingLocation, 'members.html', 'fa-map'],
+                ['Possible duplicate phone numbers', metrics.duplicatePhones, 'members.html', 'fa-copy']
+            ].filter(item => item[1] > 0);
+
+            if (!actions.length) {
+                els.pendingActionsList.innerHTML = '<div class="action-row"><span class="status-pill"><i class="fas fa-circle-check"></i> Clean</span><span class="font-bold text-gray-600 dark:text-gray-300">No critical pending action detected.</span></div>';
+                return;
+            }
+
+            els.pendingActionsList.innerHTML = actions.map(([label, count, href, icon]) => `
+                <a href="${href}" class="action-row hover:bg-warning/10 transition">
+                    <span class="overview-icon shrink-0"><i class="fas ${icon}"></i></span>
+                    <span class="min-w-0 flex-1">
+                        <span class="block text-[11px] font-black text-primary-dark dark:text-white">${label}</span>
+                        <span class="block text-[10px] text-gray-500 dark:text-gray-400">Requires verification or update</span>
+                    </span>
+                    <span class="status-pill ${count > 20 ? 'danger' : 'warn'}">${count.toLocaleString()}</span>
+                </a>
+            `).join('');
+        }
+
+        // @spec DASH-UI-016
+        function renderRecentActivity(sortedByDate) {
+            if (!els.recentActivityList) return;
+            const items = sortedByDate.slice(0, 5).map(member => ({
+                icon: 'fa-user-plus',
+                title: `New member: ${fullName(member)}`,
+                meta: `${member.state || 'No state'} • ${niceDateTime(member.created_at)}`
+            }));
+            if (!items.length) {
+                els.recentActivityList.innerHTML = '<div class="activity-row"><i class="fas fa-inbox text-warning"></i><span class="font-bold text-gray-600 dark:text-gray-300">No recent activity.</span></div>';
+                return;
+            }
+            els.recentActivityList.innerHTML = items.map(item => `
+                <div class="activity-row">
+                    <span class="overview-icon shrink-0"><i class="fas ${item.icon}"></i></span>
+                    <span class="min-w-0">
+                        <span class="block truncate text-[11px] font-black text-primary-dark dark:text-white">${item.title}</span>
+                        <span class="block truncate text-[10px] text-gray-500 dark:text-gray-400">${item.meta}</span>
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        function renderLatestMembers(sortedByDate) {
+            if (!els.latestMembersTable) return;
+            const rows = sortedByDate.slice(0, 8);
+            if (!rows.length) {
+                els.latestMembersTable.innerHTML = '<tr><td colspan="7">No members yet</td></tr>';
+                return;
+            }
+            els.latestMembersTable.innerHTML = rows.map(member => `
+                <tr>
+                    <td>${member.reg_number || '-'}</td>
+                    <td>${fullName(member)}</td>
+                    <td>${member.state || '-'}</td>
+                    <td>${member.lga || '-'}</td>
+                    <td><span class="status-pill ${hasDocuments(member) ? '' : 'warn'}">${hasDocuments(member) ? 'Ready' : 'Missing'}</span></td>
+                    <td><span class="status-pill ${hasValue(member.account_number) ? '' : 'warn'}">${hasValue(member.account_number) ? 'Ready' : 'Missing'}</span></td>
+                    <td>${niceDateTime(member.created_at)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderIncompleteRecords(members) {
+            if (!els.incompleteRecordsTable) return;
+            const rows = members
+                .map(member => ({ member, missing: getMissingFields(member) }))
+                .filter(item => item.missing.length > 0)
+                .sort((a, b) => b.missing.length - a.missing.length)
+                .slice(0, 10);
+            if (!rows.length) {
+                els.incompleteRecordsTable.innerHTML = '<tr><td colspan="5">No incomplete critical records found</td></tr>';
+                return;
+            }
+            els.incompleteRecordsTable.innerHTML = rows.map(({ member, missing }) => `
+                <tr>
+                    <td>${fullName(member)}</td>
+                    <td>${missing.slice(0, 4).join(', ')}${missing.length > 4 ? ' +' + (missing.length - 4) : ''}</td>
+                    <td>${member.state || '-'}</td>
+                    <td>${member.phone || '-'}</td>
+                    <td>${niceDateTime(member.created_at)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderTopStates(sortedStates, members, total) {
+            if (!els.topStatesTable) return;
+            const rows = sortedStates.slice(0, 8);
+            if (!rows.length) {
+                els.topStatesTable.innerHTML = '<tr><td colspan="5">No state data available</td></tr>';
+                return;
+            }
+            els.topStatesTable.innerHTML = rows.map(([state, count], index) => {
+                const stateMembers = members.filter(member => String(member.state || '').trim() === state);
+                const lgaCounts = countByField(stateMembers, 'lga');
+                const topLga = Object.entries(lgaCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || '-';
+                return `
+                    <tr>
+                        <td>#${index + 1}</td>
+                        <td>${state}</td>
+                        <td>${count.toLocaleString()}</td>
+                        <td>${percent(count, total)}%</td>
+                        <td>${topLga}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function getContentCount(tableName, filters = []) {
+            try {
+                let query = supabaseClient.from(tableName).select('id', { count: 'exact', head: true });
+                filters.forEach(([column, value]) => {
+                    query = query.eq(column, value);
+                });
+                const { count, error } = await query;
+                if (error) throw error;
+                return Number(count || 0);
+            } catch (error) {
+                return 0;
+            }
+        }
+
+        async function loadPublishingOverview() {
+            const contentTables = ['site_content', 'content_items'];
+            let loaded = false;
+            for (const table of contentTables) {
+                try {
+                    const { data, error } = await supabaseClient.from(table).select('*').limit(500);
+                    if (error || !Array.isArray(data)) continue;
+                    loaded = true;
+                    const isPublished = item => ['published', 'publish', 'live', true].includes(item.status) || item.is_published === true || item.published === true;
+                    const isDraft = item => String(item.status || '').toLowerCase() === 'draft' || item.is_published === false;
+                    const typeOf = item => String(item.type || item.content_type || item.category || item.kind || '').toLowerCase();
+                    const dateValue = item => item.event_date || item.meeting_date || item.date || item.start_date || item.created_at;
+                    const upcoming = item => {
+                        const d = new Date(dateValue(item) || 0);
+                        return !Number.isNaN(d.getTime()) && d >= startOfToday();
+                    };
+                    const news = data.filter(item => ['blog', 'news', 'update', 'updates'].some(t => typeOf(item).includes(t)));
+                    const meetings = data.filter(item => typeOf(item).includes('meeting'));
+                    const events = data.filter(item => typeOf(item).includes('event'));
+                    setText(els.newsPublishedCount, news.filter(isPublished).length.toLocaleString());
+                    setText(els.newsDraftCount, news.filter(isDraft).length.toLocaleString());
+                    setText(els.meetingsPublishedCount, meetings.filter(isPublished).length.toLocaleString());
+                    setText(els.meetingsUpcomingCount, meetings.filter(upcoming).length.toLocaleString());
+                    setText(els.eventsPublishedCount, events.filter(isPublished).length.toLocaleString());
+                    setText(els.eventsUpcomingCount, events.filter(upcoming).length.toLocaleString());
+                    break;
+                } catch (error) {
+                    loaded = false;
+                }
+            }
+            if (!loaded) {
+                setText(els.newsPublishedCount, '0');
+                setText(els.newsDraftCount, '0');
+                setText(els.meetingsPublishedCount, '0');
+                setText(els.meetingsUpcomingCount, '0');
+                setText(els.eventsPublishedCount, '0');
+                setText(els.eventsUpcomingCount, '0');
+            }
+            const galleryCount = await getContentCount('gallery_albums').catch(() => 0);
+            setText(els.galleryAlbumCount, galleryCount.toLocaleString());
+        }
+
+
+function safeNumber(value) {
+    const number = Number(value || 0);
+    return Number.isFinite(number) ? number : 0;
 }
 
-/* =========================
-   LOGOUT
-========================= */
-async function logout() {
-  await supabaseClient.auth.signOut();
-  window.location.href = 'login.html';
+function shortPageLabel(path) {
+    const raw = String(path || '').trim() || '/';
+    if (raw === '/') return 'Home';
+    return raw
+        .replace(/^\/pages\//, '')
+        .replace(/^\/admin\//, '')
+        .replace(/^\//, '')
+        .replace(/\.html$/i, '')
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, letter => letter.toUpperCase()) || raw;
 }
 
-function attachLogoutHandlers() {
-  document
-    .querySelectorAll('.mobile-logout-btn, .btn-logout')
-    .forEach(btn => btn.addEventListener('click', logout));
+async function logDashboardActivity(action, entityType = 'dashboard', description = '', metadata = {}) {
+    try {
+        if (typeof supabaseClient === 'undefined') return;
+        await supabaseClient.rpc('dashboard_log_activity', {
+            p_action: action,
+            p_entity_type: entityType,
+            p_entity_id: null,
+            p_description: description,
+            p_metadata: metadata || {}
+        });
+    } catch (error) {
+        console.info('Dashboard activity log skipped:', error?.message || error);
+    }
 }
 
-/* =========================
-   DASHBOARD DATA
-========================= */
-async function loadDashboard() {
-  const { data: members, error } = await supabaseClient
-    .from('members')
-    .select('*');
+async function loadWebsiteAnalyticsOverview() {
+    try {
+        if (typeof supabaseClient === 'undefined') throw new Error('Supabase client unavailable');
 
-  if (error) {
-    console.error('Error loading data:', error);
-    showNoData('Error loading data. Check console.');
-    return;
-  }
+        const today = toLocalDateString(new Date());
+        const weekStart = toLocalDateString(daysAgoStart(6));
 
-  if (!members || members.length === 0) {
-    showNoData('No data available.');
-    return;
-  }
+        let { data: dailyRows, error: dailyError } = await supabaseClient
+            .from('dashboard_analytics_daily')
+            .select('*')
+            .gte('event_day', weekStart)
+            .order('event_day', { ascending: false });
 
-  updateStats(members);
-  renderStateDonut(members);
-  renderLast7Days(members);
+        if (dailyError) {
+            const raw = await supabaseClient.from('site_analytics_events').select('event_name,page_path,visitor_id,created_at').gte('created_at', weekStart);
+            if (raw.error) throw dailyError;
+            const grouped = {};
+            (raw.data || []).forEach(event => {
+                const day = toLocalDateString(event.created_at);
+                const key = day + '|' + (event.page_path || '/');
+                grouped[key] = grouped[key] || { event_day: day, page_path: event.page_path || '/', page_views: 0, cta_clicks: 0, visitors: new Set() };
+                if (event.event_name === 'page_view') grouped[key].page_views += 1;
+                if (/click|cta/i.test(event.event_name || '')) grouped[key].cta_clicks += 1;
+                if (event.visitor_id) grouped[key].visitors.add(event.visitor_id);
+            });
+            dailyRows = Object.values(grouped).map(row => ({...row, unique_visitors: row.visitors.size}));
+        }
+
+        const rows = Array.isArray(dailyRows) ? dailyRows : [];
+        const todayRows = rows.filter(row => String(row.event_day) === today);
+        const todayPageViews = todayRows.reduce((sum, row) => sum + safeNumber(row.page_views), 0);
+        const todayVisitors = todayRows.reduce((sum, row) => sum + safeNumber(row.unique_visitors), 0);
+        const weekPageViews = rows.reduce((sum, row) => sum + safeNumber(row.page_views), 0);
+        const weekCtaClicks = rows.reduce((sum, row) => sum + safeNumber(row.cta_clicks), 0);
+
+        setText(els.visitorsTodayCount, todayVisitors.toLocaleString());
+        setText(els.pageViewsTodayCount, todayPageViews.toLocaleString());
+        setText(els.pageViewsWeekCount, weekPageViews.toLocaleString());
+        setText(els.ctaClicksWeekCount, weekCtaClicks.toLocaleString());
+
+        let { data: topPages, error: topPagesError } = await supabaseClient
+            .from('dashboard_analytics_top_pages')
+            .select('*')
+            .gte('period_start', weekStart)
+            .limit(8);
+
+        if (topPagesError) {
+            const pageMap = {};
+            rows.forEach(row => {
+                const path = row.page_path || '/';
+                pageMap[path] = pageMap[path] || { page_path: path, page_views: 0, unique_visitors: 0 };
+                pageMap[path].page_views += safeNumber(row.page_views);
+                pageMap[path].unique_visitors += safeNumber(row.unique_visitors);
+            });
+            topPages = Object.values(pageMap).sort((a,b)=>b.page_views-a.page_views).slice(0,8);
+        }
+
+        const pages = Array.isArray(topPages) ? topPages : [];
+        if (pages.length) {
+            const topPage = pages[0];
+            setText(els.topPublicPageLabel, shortPageLabel(topPage.page_path));
+            setText(els.topPublicPageMeta, `${safeNumber(topPage.page_views).toLocaleString()} views • ${safeNumber(topPage.unique_visitors).toLocaleString()} visitors`);
+            if (els.topPublicPagesTable) {
+                els.topPublicPagesTable.innerHTML = pages.map(page => `
+                    <tr>
+                        <td>${shortPageLabel(page.page_path)}</td>
+                        <td>${safeNumber(page.page_views).toLocaleString()}</td>
+                        <td>${safeNumber(page.unique_visitors).toLocaleString()}</td>
+                    </tr>
+                `).join('');
+            }
+        } else {
+            setText(els.topPublicPageLabel, 'No data');
+            setText(els.topPublicPageMeta, 'Waiting for visits');
+            if (els.topPublicPagesTable) els.topPublicPagesTable.innerHTML = '<tr><td colspan="3">No analytics yet</td></tr>';
+        }
+    } catch (error) {
+        console.info('Website analytics overview skipped:', error?.message || error);
+        setText(els.visitorsTodayCount, '0');
+        setText(els.pageViewsTodayCount, '0');
+        setText(els.pageViewsWeekCount, '0');
+        setText(els.ctaClicksWeekCount, '0');
+        setText(els.topPublicPageLabel, 'Not connected');
+        setText(els.topPublicPageMeta, 'Run analytics SQL upgrade first');
+        if (els.topPublicPagesTable) els.topPublicPagesTable.innerHTML = '<tr><td colspan="3">Analytics tables not connected yet</td></tr>';
+    }
 }
 
-/* =========================
-   HELPERS
-========================= */
-function showNoData(message) {
-  const el = document.getElementById('noDataMessage');
-  if (!el) return;
-  el.textContent = message;
-  el.style.display = 'block';
-}
+        const data = {
+            async loadDashboard() {
+                const moduleResults = await Promise.allSettled([loadPublishingOverview(), loadWebsiteAnalyticsOverview()]);
+                moduleResults.forEach((result, index) => {
+                    if (result.status === 'rejected') console.info(['Publishing','Analytics'][index] + ' module failed independently:', result.reason?.message || result.reason);
+                });
+                try {
+                    const members = await fetchAllMembers({ orderColumn: 'id', ascending: true });
 
-function updateStats(members) {
-  const total = members.length;
-  const today = new Date().toISOString().slice(0, 10);
-  const todaysCount = members.filter(
-    m => m.created_at?.slice(0, 10) === today
-  ).length;
+                    cachedMembers = members || [];
+                    setText(els.lastUpdatedLabel, new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }));
 
-  const stats = document.querySelectorAll('.stat-value');
-  if (stats[0]) stats[0].textContent = total.toLocaleString();
-  if (stats[1]) stats[1].textContent = todaysCount;
-}
+                    if (!members || members.length === 0) {
+                        els.noDataMessage.classList.remove('hidden');
+                        setText(els.topStatesValue, 'No data');
+                        setText(els.topLgasValue, 'No data');
+                        setText(els.lastRegistered, 'No data');
+                        renderEmptyOverview();
+                        return;
+                    }
 
-function renderStateDonut(members) {
-  const total = members.length;
-  const stateCounts = {};
+                    els.noDataMessage.classList.add('hidden');
+                    els.donutLegend.innerHTML = '';
 
-  members.forEach(m => {
-    if (!m.state) return;
-    stateCounts[m.state] = (stateCounts[m.state] || 0) + 1;
-  });
+                    const total = members.length;
+                    const today = toLocalDateString(new Date());
+                    const weekStart = daysAgoStart(6);
+                    const previousWeekStart = daysAgoStart(13);
+                    const monthStart = startOfMonth();
 
-  const topStates = Object.entries(stateCounts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5);
+                    const todaysCount = members.filter(m => toLocalDateString(m.created_at) === today).length;
+                    const weekCount = members.filter(m => isOnOrAfter(m.created_at, weekStart)).length;
+                    const previousWeekCount = members.filter(m => {
+                        const d = new Date(m.created_at || 0);
+                        return !Number.isNaN(d.getTime()) && d >= previousWeekStart && d < weekStart;
+                    }).length;
+                    const monthCount = members.filter(m => isOnOrAfter(m.created_at, monthStart)).length;
+                    const growth = previousWeekCount === 0 ? (weekCount > 0 ? 100 : 0) : Math.round(((weekCount - previousWeekCount) / previousWeekCount) * 100);
 
-  const others =
-    total - topStates.reduce((sum, [, count]) => sum + count, 0);
+                    setText(els.totalMembers, total.toLocaleString());
+                    setText(els.todaysRegistrations, todaysCount.toLocaleString());
+                    setText(els.weekRegistrations, weekCount.toLocaleString());
+                    setText(els.weekMiniLabel, weekCount.toLocaleString());
+                    setText(els.monthRegistrations, monthCount.toLocaleString());
+                    setText(els.growthRate, `${growth > 0 ? '+' : ''}${growth}%`);
 
-  if (others > 0) topStates.push(['Others', others]);
+                    const uniqueStates = new Set(members.map(m => m.state?.trim()).filter(Boolean));
+                    setText(els.activeStates, uniqueStates.size.toLocaleString());
 
-  const segments = document.querySelectorAll('.donut-segment');
-  const colors = [
-    'var(--accent)',
-    'var(--success)',
-    'var(--warning)',
-    '#A855F7',
-    '#EC4899',
-    '#94A3B8'
-  ];
+                    const withPVC = members.filter(hasPVC).length;
+                    const withAPC = members.filter(hasAPCCard).length;
+                    const withDocs = members.filter(hasDocuments).length;
+                    const withAccounts = members.filter(m => hasValue(m.account_number)).length;
+                    const withPhone = members.filter(m => hasValue(m.phone)).length;
+                    const withEmail = members.filter(m => hasValue(m.email)).length;
+                    const withLocation = members.filter(m => hasValue(m.state) && hasValue(m.lga) && hasValue(m.ward)).length;
+                    const missingPVC = total - withPVC;
+                    const missingAPC = total - withAPC;
+                    const missingAccounts = total - withAccounts;
+                    const missingPhone = total - withPhone;
+                    const missingLocation = total - withLocation;
+                    const phoneCounts = countByField(members, 'phone');
+                    const duplicatePhones = Object.values(phoneCounts).filter(count => count > 1).reduce((sum, count) => sum + count, 0);
 
-  let offset = 0;
-  segments.forEach(seg => {
-    seg.style.strokeDasharray = '0 100';
-    seg.style.strokeDashoffset = '0';
-  });
+                    const pvcRate = percent(withPVC, total);
+                    const apcRate = percent(withAPC, total);
+                    const docsRate = percent(withDocs, total);
+                    const accountRate = percent(withAccounts, total);
+                    const phoneRate = percent(withPhone, total);
+                    const emailRate = percent(withEmail, total);
+                    const locationRate = percent(withLocation, total);
+                    const dataQuality = Math.round((pvcRate + apcRate + accountRate + phoneRate + emailRate + locationRate) / 6);
+                    const pendingTotal = missingPVC + missingAPC + missingAccounts + missingPhone + missingLocation + duplicatePhones;
 
-  topStates.forEach(([_, count], i) => {
-    if (!segments[i]) return;
-    const percent = (count / total) * 100;
-    segments[i].style.strokeDasharray = `${percent} 100`;
-    segments[i].style.strokeDashoffset = -offset;
-    segments[i].style.stroke = colors[i % colors.length];
-    offset += percent;
-  });
+                    setText(els.documentCoverage, `${docsRate}%`);
+                    setText(els.accountMembers, withAccounts.toLocaleString());
+                    setText(els.accountCoverage, `${accountRate}%`);
+                    setText(els.pvcCoverageCard, `${pvcRate}%`);
+                    setText(els.apcCoverageCard, `${apcRate}%`);
+                    setText(els.phoneCoverageCard, `${phoneRate}%`);
+                    setText(els.emailCoverageCard, `${emailRate}%`);
+                    setText(els.dataQualityRate, `${dataQuality}%`);
+                    setText(els.pendingActionsCount, pendingTotal.toLocaleString());
+                    setText(els.pendingMiniLabel, pendingTotal.toLocaleString());
+                    setProgress(els.pvcCoverageBar, pvcRate);
+                    setProgress(els.apcCoverageBar, apcRate);
+                    setProgress(els.phoneCoverageBar, phoneRate);
+                    setProgress(els.emailCoverageBar, emailRate);
 
-  const value = document.querySelector('.donut-value');
-  if (value) value.textContent = total;
-}
+                    const sortedByDate = [...members].sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+                    setText(els.lastRegistered, niceDateTime(sortedByDate[0]?.created_at));
 
-function renderLast7Days(members) {
-  const days = [];
+                    const stateCounts = countByField(members, 'state');
+                    const sortedStates = Object.entries(stateCounts).sort((a, b) => b[1] - a[1]);
+                    const topThree = sortedStates.slice(0, 3);
+                    setText(els.topStatesValue, topThree.map(([state, count], idx) => `${idx + 1}. ${state} (${count})`).join(' | ') || 'No data');
+                    if (sortedStates[0]) {
+                        setText(els.topStateCard, sortedStates[0][0]);
+                        setText(els.topStateMeta, `${sortedStates[0][1].toLocaleString()} members • ${percent(sortedStates[0][1], total)}%`);
+                    }
 
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    days.push(d.toISOString().slice(0, 10));
-  }
+                    const lgaCounts = countByField(members, 'lga');
+                    const sortedLGAs = Object.entries(lgaCounts).sort((a, b) => b[1] - a[1]);
+                    const topThreeLGAs = sortedLGAs.slice(0, 3);
+                    setText(els.topLgasValue, topThreeLGAs.map(([l, c], i) => `${i + 1}. ${l} (${c})`).join(' | ') || 'No data');
 
-  const counts = days.map(date =>
-    members.filter(m => m.created_at?.slice(0, 10) === date).length
-  );
+                    const metrics = {
+                        total, withPVC, withAPC, withAccounts, withPhone, withEmail, withLocation,
+                        pvcRate, apcRate, accountRate, phoneRate, emailRate, locationRate,
+                        missingPVC, missingAPC, missingAccounts, missingPhone, missingLocation, duplicatePhones,
+                        dataQuality, pendingTotal
+                    };
+                    renderDataHealth(metrics);
+                    renderPendingActions(metrics);
+                    renderRecentActivity(sortedByDate);
+                    renderLatestMembers(sortedByDate);
+                    renderIncompleteRecords(members);
+                    renderTopStates(sortedStates, members, total);
 
-  const bars = document.querySelectorAll('.bar');
-  bars.forEach((bar, i) => {
-    const count = counts[i] || 0;
-    bar.style.height = Math.max(20, count * 15) + 'px';
-  });
-}
+                    const topFour = sortedStates.slice(0, 4);
+                    const othersCount = total - topFour.reduce((sum, entry) => sum + entry[1], 0);
+                    const donutData = [...topFour];
+                    if (othersCount > 0) donutData.push(['Others', othersCount]);
+
+                    const colors = ['#d6a92b', '#0f8a4b', '#10b981', '#f59e0b', '#94a3b8'];
+                    let offset = 0;
+                    els.donutSegments.forEach((seg, i) => {
+                        if (i < donutData.length) {
+                            const [name, count] = donutData[i];
+                            const segmentPercent = (count / total * 100) || 0;
+                            seg.style.strokeDasharray = `${segmentPercent} 100`;
+                            seg.style.strokeDashoffset = -offset;
+                            seg.style.stroke = colors[i % colors.length];
+                            offset += segmentPercent;
+
+                            const legendItem = document.createElement('div');
+                            legendItem.className = 'flex items-center gap-2 rounded-xl bg-white/60 dark:bg-white/5 border border-green-900/10 dark:border-white/10 px-2.5 py-1.5 min-w-0';
+                            legendItem.innerHTML = `
+                                <div class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${colors[i % colors.length]}"></div>
+                                <span class="truncate font-bold text-gray-700 dark:text-gray-200">${name}</span>
+                                <span class="ml-auto font-black text-primary-dark dark:text-warning">${count}</span>
+                            `;
+                            els.donutLegend.appendChild(legendItem);
+                        } else {
+                            seg.style.strokeDasharray = '0 100';
+                        }
+                    });
+                    setText(els.donutValue, total.toLocaleString());
+
+                    const last7Days = [];
+                    const dayNames = [];
+
+                    for (let i = 6; i >= 0; i--) {
+                        const date = new Date();
+                        date.setDate(date.getDate() - i);
+                        const dateStr = toLocalDateString(date);
+                        last7Days.push(dateStr);
+                        dayNames.push(i === 0 ? 'Today' : date.toLocaleDateString(undefined, { weekday: 'short' }));
+                    }
+
+                    const counts = last7Days.map(dateStr =>
+                        members.filter(m => toLocalDateString(m.created_at) === dateStr).length
+                    );
+
+                    const maxCount = Math.max(...counts, 1);
+                    const maxBarHeight = 104;
+                    const bars = document.querySelectorAll('.bar');
+
+                    bars.forEach((bar, i) => {
+                        const count = counts[i] || 0;
+                        const height = count === 0 ? 4 : (count / maxCount) * maxBarHeight;
+                        bar.style.height = height + 'px';
+                        bar.title = `${dayNames[i]}: ${count} registration${count === 1 ? '' : 's'}`;
+                    });
+
+                    const dayLabels = document.querySelectorAll('.day-label');
+                    dayLabels.forEach((label, i) => {
+                        label.textContent = dayNames[i];
+                    });
+
+                    const countLabels = document.querySelectorAll('.count-label');
+                    countLabels.forEach((label, i) => {
+                        label.textContent = counts[i] || 0;
+                    });
+
+                } catch (error) {
+                    console.error('Error loading dashboard member data:', error);
+                    els.noDataMessage?.classList.remove('hidden');
+                    if (els.noDataMessage) {
+                        els.noDataMessage.querySelector('p') && (els.noDataMessage.querySelector('p').textContent = 'Member data could not be loaded.');
+                        const note = els.noDataMessage.querySelector('p.text-xs');
+                        if (note) note.textContent = /row-level security|permission|42501/i.test(String(error?.message || error)) ? 'Supabase RLS blocked the members query. Confirm admin profile policies.' : 'The dashboard remains available while this module is repaired.';
+                    }
+                    renderEmptyOverview();
+                    setText(els.lastUpdatedLabel, 'Partial data');
+                }
+            }
+
+        };
+
+
+        async function resolveAdminRole() {
+            let role = 'viewer';
+            try {
+                const client = await waitForSupabaseClient();
+                const { data: sessionData, error: sessionError } = await client.auth.getSession();
+                if (sessionError) throw sessionError;
+                const user = sessionData?.session?.user;
+                if (!user) {
+                    redirectToLogin();
+                    return 'viewer';
+                }
+
+                const email = String(user.email || '').toLowerCase();
+                const fields = 'id,user_id,email,role,is_active,status';
+                let result = await client.from('admin_profiles').select(fields).eq('id', user.id).limit(1).maybeSingle();
+                if (!result?.data) result = await client.from('admin_profiles').select(fields).eq('user_id', user.id).limit(1).maybeSingle();
+                if (!result?.data && email) result = await client.from('admin_profiles').select(fields).ilike('email', email).limit(1).maybeSingle();
+                if (result?.error) throw result.error;
+
+                const profile = result?.data;
+                role = String(profile?.role || user?.app_metadata?.role || user?.user_metadata?.role || 'viewer').toLowerCase();
+                const active = profile ? profile.is_active !== false && String(profile.status || 'active').toLowerCase() !== 'inactive' : true;
+                if (!active) {
+                    applyRoleToSidebar('viewer');
+                    document.body.dataset.adminAccess = 'inactive';
+                    return 'viewer';
+                }
+            } catch (error) {
+                console.info('Admin role profile lookup skipped:', error?.message || error);
+                role = localStorage.getItem('apsg_admin_role') || sessionStorage.getItem('apsg_admin_role') || 'viewer';
+            }
+            const allowedRoles = ['viewer', 'editor', 'admin', 'superadmin'];
+            if (!allowedRoles.includes(role)) role = 'viewer';
+            window.APSG_ADMIN_ROLE = role;
+            document.body.dataset.adminRole = role;
+            applyRoleToSidebar(role);
+            return role;
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const hasSession = await ensureDashboardSession();
+            if (!hasSession) return;
+            if (typeof checkAuth === 'function') { try { await checkAuth(); } catch (error) { console.warn('checkAuth skipped:', error?.message || error); } }
+            await resolveAdminRole();
+            await data.loadDashboard();
+            logDashboardActivity('view_dashboard', 'dashboard', 'Admin opened the APSG command center.', { page: 'dashboard.html' });
+            document.querySelectorAll('#sidebar a').forEach(link => link.addEventListener('click', () => { if (window.innerWidth < 768) ui.closeSidebar(); }));
+            document.addEventListener('keydown', event => { if (event.key === 'Escape') ui.closeSidebar(); });
+            const isDark = document.documentElement.classList.contains('dark');
+            ui.setTheme(isDark ? 'carbon' : 'snow');
+        });
+
+        window.toggleSidebar = ui.toggleSidebar;
+        window.closeSidebar = ui.closeSidebar;
+        window.setTheme = ui.setTheme;
+        window.logout = auth.logout;
+        window.exportCsv = exportCsvFile;
+        window.exportAccountCsv = exportAccountCsvFile;
+        window.exportFilteredCsv = exportFilteredCsvFile;
+        window.APSGDashboard = { reload: () => data.loadDashboard(), exportCsv: exportCsvFile, exportAccounts: exportAccountCsvFile };

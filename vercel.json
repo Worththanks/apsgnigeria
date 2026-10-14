@@ -1,0 +1,138 @@
+{
+  "cleanUrls": false,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/admin/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(self), microphone=(), geolocation=(), payment=()"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains; preload"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co; frame-src 'self' blob: data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/leadership.html",
+      "destination": "/pages/leadership.html",
+      "permanent": true
+    },
+    {
+      "source": "/mp.html",
+      "destination": "/pages/mp.html",
+      "permanent": true
+    },
+    {
+      "source": "/state.html",
+      "destination": "/pages/state.html",
+      "permanent": true
+    },
+    {
+      "source": "/state-details.html",
+      "destination": "/pages/state-details.html",
+      "permanent": true
+    },
+    {
+      "source": "/pages/nat-exe.html",
+      "destination": "/pages/nat-exec.html",
+      "permanent": true
+    },
+    {
+      "source": "/blog.html",
+      "destination": "/pages/blog.html",
+      "permanent": true
+    },
+    {
+      "source": "/event.html",
+      "destination": "/pages/events.html",
+      "permanent": true
+    },
+    {
+      "source": "/meeting.html",
+      "destination": "/pages/meetings.html",
+      "permanent": true
+    },
+    {
+      "source": "/donation.html",
+      "destination": "/pages/donation.html",
+      "permanent": true
+    },
+    {
+      "source": "/sponsor.html",
+      "destination": "/pages/sponsor.html",
+      "permanent": true
+    },
+    {
+      "source": "/volunteer.html",
+      "destination": "/pages/volunteer.html",
+      "permanent": true
+    },
+    {
+      "source": "/rsvp.html",
+      "destination": "/pages/rsvp.html",
+      "permanent": true
+    },
+    {
+      "source": "/contact.html",
+      "destination": "/pages/contact.html",
+      "permanent": true
+    },
+    {
+      "source": "/membership.html",
+      "destination": "/pages/register.html",
+      "permanent": true
+    },
+    {
+      "source": "/admin/content-manager.html",
+      "destination": "/admin/admin-event.html",
+      "permanent": true
+    }
+  ]
+}

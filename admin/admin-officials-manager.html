@@ -1,0 +1,2396 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#05351f">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <base href="/">
+  <title>Officials Manager | APSG Admin</title>
+  <link rel="icon" href="/assets/images/logo/apsg.png" sizes="any">
+  <link rel="apple-touch-icon" href="/assets/images/logo/apsg.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="/assets/js/supabase-clients.js" defer></script>
+  <script src="/assets/js/apsg-settings.js" defer></script>
+  <script src="/assets/js/admin-auth.js" defer></script>
+  <style>
+    :root {
+      --deep: #05351f;
+      --deep-2: #031b0f;
+      --green: #0f8a4b;
+      --emerald: #14a861;
+      --gold: #d6a92b;
+      --gold-soft: #ffe6a3;
+      --cream: #fffaf0;
+      --paper: #ffffff;
+      --soft: #f6fbf7;
+      --ink: #07140e;
+      --muted: #64746a;
+      --danger: #991b1b;
+      --danger-bg: #fee2e2;
+      --border: rgba(5, 53, 31, .10);
+      --gold-border: rgba(214, 169, 43, .25);
+      --shadow-card: 0 18px 52px rgba(5, 53, 31, .10);
+      --shadow-premium: 0 34px 110px rgba(5, 53, 31, .20);
+      --radius-xl: 1.35rem;
+      --radius-2xl: 1.75rem;
+    }
+
+    * { box-sizing: border-box; }
+    html { min-height: 100%; scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 14px;
+      background:
+        radial-gradient(circle at 96% 0, rgba(214, 169, 43, .14), transparent 28rem),
+        radial-gradient(circle at 0 8%, rgba(15, 138, 75, .11), transparent 31rem),
+        linear-gradient(180deg, #f8fbf7 0%, #eef6ef 100%);
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    img { display: block; max-width: 100%; }
+
+    .display-font { font-family: "Playfair Display", Georgia, serif; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: fixed;
+      left: 1rem;
+      top: .75rem;
+      z-index: 500;
+      transform: translateY(-140%);
+      border-radius: 999px;
+      background: var(--gold);
+      color: var(--deep);
+      padding: .65rem .95rem;
+      font-weight: 950;
+      box-shadow: var(--shadow-card);
+      transition: transform .18s ease;
+    }
+    .skip-link:focus { transform: translateY(0); }
+
+    .mobile-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: none;
+      background: rgba(0, 0, 0, .42);
+      border: 0;
+    }
+    .mobile-overlay.is-open { display: block; }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 50;
+      width: 16rem;
+      overflow-y: auto;
+      color: #fff;
+      background: linear-gradient(180deg, #031b0f, #052414 60%, #03140b);
+      border-right: 1px solid rgba(255,255,255,.10);
+      transform: translateX(-100%);
+      transition: transform .28s ease;
+    }
+    .sidebar.is-open { transform: translateX(0); }
+    .sidebar-brand {
+      position: relative;
+      overflow: hidden;
+      padding: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .sidebar-brand::after {
+      content: "";
+      position: absolute;
+      right: -3rem;
+      top: -3rem;
+      width: 8rem;
+      height: 8rem;
+      border-radius: 999px;
+      background: rgba(214,169,43,.22);
+      filter: blur(28px);
+    }
+    .brand-link {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 2.85rem;
+      height: 2.85rem;
+      border: 1px solid rgba(214,169,43,.32);
+      border-radius: 1rem;
+      background: rgba(255,255,255,.10);
+      box-shadow: 0 14px 34px rgba(0,0,0,.18);
+    }
+    .brand-mark img { width: 2rem; height: 2rem; object-fit: contain; }
+    .brand-title {
+      display: block;
+      font-size: 1rem;
+      font-weight: 950;
+      line-height: 1;
+    }
+    .brand-kicker {
+      display: block;
+      margin-top: .28rem;
+      color: var(--gold-soft);
+      font-size: .58rem;
+      font-weight: 950;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+    .sidebar-nav { padding: .72rem; }
+    .sidebar-heading {
+      margin: .85rem .4rem .35rem;
+      color: rgba(255,255,255,.42);
+      font-size: .56rem;
+      font-weight: 950;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+    }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: .58rem;
+      min-height: 2.42rem;
+      margin-bottom: .25rem;
+      padding: .58rem .72rem;
+      border-radius: 1rem;
+      color: rgba(255,255,255,.82);
+      font-size: .76rem;
+      font-weight: 850;
+      transition: background .18s ease, color .18s ease, transform .18s ease;
+    }
+    .sidebar-link:hover,
+    .sidebar-link.active,
+    .sidebar-link:focus-visible {
+      background: rgba(214,169,43,.14);
+      color: #f8dc7a;
+      transform: translateX(2px);
+      outline: 0;
+    }
+    .sidebar-link i {
+      width: 1rem;
+      text-align: center;
+      color: inherit;
+    }
+    .role-chip {
+      margin-left: auto;
+      padding: .16rem .38rem;
+      border-radius: 999px;
+      background: rgba(214,169,43,.14);
+      color: #f8dc7a;
+      font-size: .5rem;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .main-wrap {
+      min-height: 100vh;
+      transition: margin-left .28s ease;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      min-height: 3.8rem;
+      padding: .62rem .8rem;
+      border-bottom: 1px solid rgba(5,53,31,.08);
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(18px);
+    }
+    .topbar-inner,
+    .hero-inner,
+    .modal-title-row,
+    .flex-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .8rem;
+    }
+    .topbar-title { min-width: 0; }
+    .topbar-title p,
+    .eyebrow {
+      margin: 0;
+      color: #8a6616;
+      font-size: .62rem;
+      font-weight: 950;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+    }
+    .topbar-title h1 {
+      margin: .14rem 0 0;
+      color: var(--deep);
+      font-size: 1.04rem;
+      font-weight: 950;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mobile-menu-btn {
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      width: 2.4rem;
+      height: 2.4rem;
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      background: #fff;
+      color: var(--deep);
+    }
+    .top-actions { display: none; align-items: center; gap: .5rem; }
+
+    main { padding: .75rem; }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      margin-bottom: .85rem;
+      padding: 1rem;
+      border: 1px solid rgba(214,169,43,.20);
+      border-radius: var(--radius-2xl);
+      background: linear-gradient(135deg, rgba(255,255,255,.98), rgba(255,250,240,.84));
+      box-shadow: var(--shadow-card);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -4rem;
+      top: -5rem;
+      width: 14rem;
+      height: 14rem;
+      border-radius: 999px;
+      background: rgba(214,169,43,.20);
+      filter: blur(30px);
+    }
+    .hero-inner { position: relative; z-index: 1; align-items: flex-end; flex-wrap: wrap; }
+    .hero-copy { max-width: 58rem; }
+    .hero h2 {
+      margin: .6rem 0 0;
+      color: var(--deep);
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 950;
+      line-height: .92;
+      letter-spacing: -.035em;
+    }
+    .hero p {
+      max-width: 54rem;
+      margin: .78rem 0 0;
+      color: #58675e;
+      font-weight: 650;
+      line-height: 1.65;
+    }
+    .hero-actions,
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+
+    .chip,
+    .pill,
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: .36rem;
+      border-radius: 999px;
+      font-weight: 950;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .chip {
+      min-height: 1.62rem;
+      padding: .34rem .66rem;
+      border: 1px solid rgba(214,169,43,.26);
+      background: rgba(214,169,43,.12);
+      color: #73540c;
+      font-size: .58rem;
+      letter-spacing: .14em;
+    }
+    .chip.success {
+      border-color: rgba(15,138,75,.20);
+      background: rgba(15,138,75,.10);
+      color: var(--deep);
+    }
+    .chip.danger {
+      border-color: #fecaca;
+      background: #fee2e2;
+      color: var(--danger);
+    }
+    .pill {
+      padding: .35rem .58rem;
+      border: 1px solid rgba(5,53,31,.10);
+      background: #fff;
+      color: var(--deep);
+      font-size: .62rem;
+      letter-spacing: .04em;
+    }
+    .pill.gold {
+      border-color: rgba(214,169,43,.28);
+      background: rgba(214,169,43,.13);
+      color: #73540c;
+    }
+    .pill.green {
+      border-color: rgba(15,138,75,.18);
+      background: rgba(15,138,75,.11);
+      color: var(--deep);
+    }
+    .pill.red {
+      border-color: #fecaca;
+      background: #fee2e2;
+      color: var(--danger);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .45rem;
+      min-height: 2.35rem;
+      padding: .58rem .9rem;
+      border: 0;
+      border-radius: 999px;
+      font-size: .75rem;
+      font-weight: 950;
+      line-height: 1;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, opacity .18s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:focus-visible,
+    .input:focus,
+    .select:focus {
+      outline: 3px solid rgba(214,169,43,.28);
+      outline-offset: 2px;
+    }
+    .btn.green {
+      background: linear-gradient(135deg, var(--deep), var(--green));
+      color: #fff;
+      box-shadow: 0 14px 34px rgba(5,53,31,.18);
+    }
+    .btn.gold {
+      background: linear-gradient(135deg, var(--gold), #ffe08a);
+      color: var(--deep);
+      box-shadow: 0 12px 28px rgba(214,169,43,.20);
+    }
+    .btn.white {
+      border: 1px solid rgba(5,53,31,.10);
+      background: #fff;
+      color: var(--deep);
+    }
+    .btn.red {
+      border: 1px solid #fecaca;
+      background: #fee2e2;
+      color: var(--danger);
+    }
+    .btn[disabled],
+    .btn.is-disabled {
+      cursor: not-allowed;
+      opacity: .55;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .55rem;
+      margin-bottom: .85rem;
+    }
+    .stat-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 5.4rem;
+      padding: .84rem;
+      border: 1px solid rgba(5,53,31,.08);
+      border-radius: 1.15rem;
+      background: rgba(255,255,255,.94);
+      box-shadow: 0 14px 34px rgba(5,53,31,.06);
+    }
+    .stat-card::after {
+      content: "";
+      position: absolute;
+      right: -.9rem;
+      bottom: -.9rem;
+      width: 3.6rem;
+      height: 3.6rem;
+      border-radius: 999px;
+      background: rgba(214,169,43,.12);
+    }
+    .stat-card p {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      color: var(--muted);
+      font-size: .58rem;
+      font-weight: 950;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .stat-card strong {
+      position: relative;
+      z-index: 1;
+      display: block;
+      margin-top: .22rem;
+      color: var(--deep);
+      font-size: 1.45rem;
+      font-weight: 950;
+      letter-spacing: -.035em;
+    }
+
+    .card {
+      border: 1px solid rgba(214,169,43,.18);
+      border-radius: var(--radius-xl);
+      background: rgba(255,255,255,.92);
+      box-shadow: 0 18px 48px rgba(5,53,31,.075);
+    }
+    .filters-card {
+      margin-bottom: .85rem;
+      padding: .85rem;
+    }
+    .filters {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: .6rem;
+    }
+    .input,
+    .select {
+      width: 100%;
+      min-height: 2.75rem;
+      border: 1px solid rgba(5,53,31,.12);
+      border-radius: .95rem;
+      background: #fff;
+      color: #102017;
+      padding: .68rem .78rem;
+      font-size: .82rem;
+      font-weight: 750;
+    }
+    .filter-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .5rem;
+      margin-top: .75rem;
+    }
+
+    .notice {
+      display: grid;
+      gap: .55rem;
+      margin-bottom: .85rem;
+      padding: .85rem;
+      border: 1px solid rgba(214,169,43,.22);
+      border-radius: 1rem;
+      background: linear-gradient(135deg, rgba(255,250,240,.96), rgba(255,255,255,.96));
+      color: #4c3b13;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+    .notice strong { color: var(--deep); }
+
+    .people-grid {
+      display: grid;
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      gap: .9rem;
+    }
+    .person-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(214,169,43,.22);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(145deg, #fff, var(--cream));
+      box-shadow: 0 18px 42px rgba(5,53,31,.10);
+      transition: transform .22s ease, box-shadow .22s ease;
+    }
+    .person-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 26px 70px rgba(5,53,31,.16);
+    }
+    .person-photo {
+      position: relative;
+      height: 22rem;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 50% 8%, rgba(214,169,43,.18), transparent 12rem),
+        linear-gradient(135deg, #f8fbf7, #fffaf0 45%, #eef6ef);
+    }
+    .person-photo::before,
+    .list-photo::before,
+    .preview-photo::before {
+      content: "";
+      position: absolute;
+      inset: .65rem;
+      pointer-events: none;
+      border: 1px solid rgba(214,169,43,.18);
+      border-radius: 1rem;
+    }
+    .person-photo img,
+    .list-photo img,
+    .preview-photo img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: top center;
+      padding: .45rem;
+      transition: transform .55s ease;
+    }
+    .person-card:hover .person-photo img,
+    .list-card:hover .list-photo img { transform: scale(1.025); }
+    body[data-image-mode="cover"] .person-photo img,
+    body[data-image-mode="cover"] .list-photo img,
+    body[data-image-mode="cover"] .preview-photo img,
+    body[data-image-mode="cover"] .avatar {
+      object-fit: cover;
+      padding: 0;
+    }
+    body[data-image-mode="cover"] .person-photo::before,
+    body[data-image-mode="cover"] .list-photo::before,
+    body[data-image-mode="cover"] .preview-photo::before { display: none; }
+    body[data-image-mode="compact"] .person-photo { height: 15rem; }
+    body[data-image-mode="compact"] .person-photo img,
+    body[data-image-mode="compact"] .list-photo img,
+    body[data-image-mode="compact"] .preview-photo img {
+      object-fit: contain;
+      padding: .25rem;
+    }
+    .person-body { padding: 1rem; }
+    .person-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem;
+      margin-bottom: .7rem;
+    }
+    .person-title {
+      margin: 0;
+      color: var(--deep);
+      font-size: clamp(1.55rem, 4vw, 2.25rem);
+      font-weight: 950;
+      line-height: .98;
+      letter-spacing: -.025em;
+    }
+    .person-summary {
+      margin: .65rem 0 0;
+      color: #5c6961;
+      font-size: .9rem;
+      font-weight: 650;
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      overflow: hidden;
+    }
+    .role-list {
+      display: grid;
+      gap: .48rem;
+      margin-top: .85rem;
+    }
+    .role-item {
+      padding: .62rem;
+      border: 1px solid rgba(5,53,31,.08);
+      border-radius: .95rem;
+      background: rgba(255,255,255,.84);
+    }
+    .role-item strong {
+      display: block;
+      color: var(--deep);
+      font-size: .82rem;
+      font-weight: 950;
+      line-height: 1.25;
+    }
+    .role-item small {
+      display: block;
+      margin-top: .18rem;
+      color: var(--muted);
+      font-size: .7rem;
+      font-weight: 750;
+      line-height: 1.4;
+    }
+    .person-actions { margin-top: .9rem; }
+
+    .list-view {
+      display: grid;
+      gap: .85rem;
+    }
+    .list-card {
+      display: grid;
+      grid-template-columns: 1fr;
+      overflow: hidden;
+      border: 1px solid rgba(214,169,43,.22);
+      border-radius: var(--radius-xl);
+      background: rgba(255,255,255,.94);
+      box-shadow: 0 18px 42px rgba(5,53,31,.09);
+      transition: transform .22s ease, box-shadow .22s ease;
+    }
+    .list-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 26px 70px rgba(5,53,31,.14);
+    }
+    .list-photo {
+      position: relative;
+      min-height: 20rem;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 50% 8%, rgba(214,169,43,.18), transparent 12rem),
+        linear-gradient(135deg, #f8fbf7, #fffaf0 45%, #eef6ef);
+    }
+    .list-body {
+      display: grid;
+      align-content: center;
+      gap: .75rem;
+      padding: 1rem;
+    }
+    .list-title {
+      margin: 0;
+      color: var(--deep);
+      font-size: clamp(1.65rem, 4vw, 2.45rem);
+      font-weight: 950;
+      line-height: .98;
+      letter-spacing: -.025em;
+    }
+    .list-summary {
+      margin: 0;
+      color: #4f6157;
+      font-size: .94rem;
+      font-weight: 680;
+      line-height: 1.6;
+    }
+    .list-meta {
+      display: grid;
+      gap: .48rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      padding: .85rem;
+    }
+    .records-table {
+      width: 100%;
+      min-width: 880px;
+      border-collapse: separate;
+      border-spacing: 0 .5rem;
+    }
+    .records-table caption {
+      color: var(--muted);
+      text-align: left;
+      font-weight: 800;
+      padding: .25rem .4rem .5rem;
+    }
+    .records-table th {
+      padding: .35rem .7rem;
+      color: var(--muted);
+      text-align: left;
+      font-size: .62rem;
+      font-weight: 950;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .records-table td {
+      padding: .74rem;
+      border-top: 1px solid rgba(5,53,31,.08);
+      border-bottom: 1px solid rgba(5,53,31,.08);
+      background: #fff;
+      vertical-align: middle;
+    }
+    .records-table td:first-child {
+      border-left: 1px solid rgba(5,53,31,.08);
+      border-radius: 1rem 0 0 1rem;
+    }
+    .records-table td:last-child {
+      border-right: 1px solid rgba(5,53,31,.08);
+      border-radius: 0 1rem 1rem 0;
+    }
+    .table-official {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      min-width: 16rem;
+    }
+    .avatar {
+      width: 3.8rem;
+      height: 3.8rem;
+      border-radius: 1rem;
+      object-fit: contain;
+      object-position: top center;
+      padding: .12rem;
+      background: #f6fbf7;
+      border: 1px solid rgba(5,53,31,.08);
+    }
+    .table-name {
+      display: block;
+      color: var(--deep);
+      font-size: .88rem;
+      font-weight: 950;
+    }
+    .table-meta {
+      display: block;
+      margin-top: .15rem;
+      color: var(--muted);
+      font-size: .72rem;
+      font-weight: 750;
+    }
+
+    .empty-state,
+    .access-state,
+    .loading-state {
+      grid-column: 1 / -1;
+      padding: 2rem 1rem;
+      border: 1px solid rgba(214,169,43,.20);
+      border-radius: var(--radius-xl);
+      background: rgba(255,255,255,.94);
+      box-shadow: var(--shadow-card);
+      text-align: center;
+    }
+    .empty-state i,
+    .access-state i {
+      display: grid;
+      place-items: center;
+      width: 3.4rem;
+      height: 3.4rem;
+      margin: 0 auto .8rem;
+      border-radius: 1.1rem;
+      background: rgba(214,169,43,.14);
+      color: #8a6616;
+      font-size: 1.35rem;
+    }
+    .empty-state h3,
+    .access-state h3 {
+      margin: 0;
+      color: var(--deep);
+      font-size: 1.45rem;
+      font-weight: 950;
+      letter-spacing: -.02em;
+    }
+    .empty-state p,
+    .access-state p {
+      max-width: 44rem;
+      margin: .5rem auto 0;
+      color: var(--muted);
+      font-weight: 700;
+      line-height: 1.55;
+    }
+
+    .skeleton-grid {
+      display: grid;
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      gap: .9rem;
+    }
+    .skeleton-card {
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(5,53,31,.08);
+      background: #fff;
+      box-shadow: 0 16px 38px rgba(5,53,31,.07);
+    }
+    .skeleton-media {
+      height: 16rem;
+      background: linear-gradient(100deg, #e8f2ec 0%, #f7fbf8 45%, #e8f2ec 80%);
+      background-size: 220% 100%;
+      animation: shimmer 1.3s infinite;
+    }
+    .skeleton-lines { padding: 1rem; }
+    .skeleton-line {
+      height: .85rem;
+      margin-bottom: .65rem;
+      border-radius: 999px;
+      background: linear-gradient(100deg, #e8f2ec 0%, #f7fbf8 45%, #e8f2ec 80%);
+      background-size: 220% 100%;
+      animation: shimmer 1.3s infinite;
+    }
+    .skeleton-line:nth-child(1) { width: 42%; }
+    .skeleton-line:nth-child(2) { width: 78%; height: 1.3rem; }
+    .skeleton-line:nth-child(3) { width: 95%; }
+    .skeleton-line:nth-child(4) { width: 66%; }
+
+    @keyframes shimmer {
+      0% { background-position: 140% 0; }
+      100% { background-position: -80% 0; }
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal.is-open { display: flex; }
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      border: 0;
+      background: rgba(2,20,11,.72);
+      backdrop-filter: blur(10px);
+    }
+    .modal-card {
+      position: relative;
+      z-index: 2;
+      width: min(1080px, 100%);
+      max-height: 92vh;
+      overflow: auto;
+      border: 1px solid rgba(214,169,43,.26);
+      border-radius: 1.65rem;
+      background: #fff;
+      box-shadow: 0 34px 110px rgba(5,53,31,.35);
+    }
+    .preview-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    .preview-photo {
+      position: relative;
+      min-height: 28rem;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 8%, rgba(214,169,43,.18), transparent 12rem),
+        linear-gradient(135deg, #f8fbf7, #fffaf0 45%, #eef6ef);
+    }
+    .preview-photo img {
+      min-height: 28rem;
+    }
+    .preview-body { padding: 1.2rem; }
+    .preview-title {
+      margin: .65rem 0 0;
+      color: var(--deep);
+      font-size: clamp(2rem, 6vw, 3.7rem);
+      font-weight: 950;
+      line-height: .94;
+      letter-spacing: -.035em;
+    }
+    .preview-summary {
+      margin: .9rem 0 0;
+      color: #4d5e54;
+      font-weight: 680;
+      line-height: 1.65;
+    }
+    .modal-role-list {
+      display: grid;
+      gap: .65rem;
+      margin-top: 1rem;
+    }
+    .modal-role-item {
+      padding: .75rem;
+      border: 1px solid rgba(5,53,31,.08);
+      border-radius: 1rem;
+      background: linear-gradient(135deg, rgba(255,255,255,.98), rgba(255,250,240,.65));
+    }
+    .modal-role-row {
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 1.2rem;
+      z-index: 200;
+      display: none;
+      width: min(92vw, 36rem);
+      transform: translateX(-50%);
+      border: 1px solid rgba(214,169,43,.30);
+      border-radius: 1rem;
+      background: var(--deep);
+      color: #fff;
+      padding: .78rem 1rem;
+      font-size: .84rem;
+      font-weight: 850;
+      line-height: 1.45;
+      box-shadow: 0 18px 52px rgba(5,53,31,.22);
+    }
+    .toast.show { display: block; }
+
+    .hidden-view { display: none !important; }
+    .body-lock { overflow: hidden; }
+
+    @media (min-width: 640px) {
+      .top-actions { display: flex; }
+      .stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (min-width: 768px) {
+      .sidebar { transform: translateX(0); }
+      .mobile-overlay { display: none !important; }
+      .main-wrap { margin-left: 16rem; }
+      .mobile-menu-btn { display: none; }
+      main { padding: 1rem; }
+      .hero { padding: 1.25rem; }
+      .filters { grid-template-columns: 1.4fr repeat(2, minmax(10rem, 1fr)); }
+      .person-photo { height: 20rem; }
+    }
+    @media (min-width: 900px) {
+      .people-grid,
+      .skeleton-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .preview-grid { grid-template-columns: .38fr .62fr; }
+      .list-card { grid-template-columns: minmax(17rem, .34fr) minmax(0, 1fr); }
+      .list-photo { min-height: 18rem; }
+      .preview-body { padding: 1.55rem; }
+      .modal-role-row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+    @media (min-width: 1180px) {
+      .stats-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+      .filters { grid-template-columns: 1.35fr repeat(6, minmax(8.3rem, 1fr)); }
+    }
+    @media (min-width: 1280px) {
+      .people-grid,
+      .skeleton-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 720px) {
+      .hero-actions .btn,
+      .filter-actions .btn,
+      .top-actions .btn { width: 100%; }
+      .hero-inner,
+      .topbar-inner,
+      .flex-row { align-items: stretch; }
+      .hero-actions,
+      .filter-actions { width: 100%; }
+      .person-photo { height: 24rem; }
+      .list-photo { min-height: 24rem; }
+      .hide-sm { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="/assets/css/admin-unified.css">
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+</head>
+
+<body data-image-mode="full">
+  <a class="skip-link" href="#mainContent">Skip to officials manager</a>
+
+  <button id="mobileOverlay" class="mobile-overlay" type="button" aria-label="Close admin navigation"></button>
+
+  <aside id="sidebar" class="sidebar" aria-label="APSG admin navigation">
+    <div class="sidebar-brand">
+      <a href="/admin/dashboard.html" class="brand-link" aria-label="Open APSG admin dashboard">
+        <span class="brand-mark">
+          <img src="/assets/images/logo/apsg.png" alt="APSG logo" onerror="this.style.display='none'" width="96" height="96" decoding="async">
+        </span>
+        <span>
+          <strong class="brand-title">APSG Admin</strong>
+          <small class="brand-kicker">Officials Control</small>
+        </span>
+      </a>
+    </div>
+
+    <nav class="sidebar-nav">
+      <p class="sidebar-heading">Command Center</p>
+      <a href="/admin/dashboard.html" class="sidebar-link">
+        <i class="fa-solid fa-gauge-high" aria-hidden="true"></i>
+        Dashboard
+      </a>
+      <a href="/admin/admin-leadership.html" class="sidebar-link">
+        <i class="fa-solid fa-users-viewfinder" aria-hidden="true"></i>
+        Leadership Desk
+        <span class="role-chip">Admin</span>
+      </a>
+      <a href="/admin/admin-official-create.html" class="sidebar-link">
+        <i class="fa-solid fa-user-pen" aria-hidden="true"></i>
+        Create / Update
+        <span class="role-chip">New</span>
+      </a>
+      <a href="/admin/admin-officials-manager.html" class="sidebar-link active" aria-current="page">
+        <i class="fa-solid fa-table-list" aria-hidden="true"></i>
+        Officials Manager
+        <span class="role-chip">Admin</span>
+      </a>
+
+      <p class="sidebar-heading">Public Review</p>
+      <a href="/pages/leadership.html" class="sidebar-link" target="_blank" rel="noopener">
+        <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
+        Leadership
+      </a>
+      <a href="/pages/bot.html" class="sidebar-link" target="_blank" rel="noopener">
+        <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
+        BOT
+      </a>
+      <a href="/pages/cwdi.html" class="sidebar-link" target="_blank" rel="noopener">
+        <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
+        CWDI
+      </a>
+      <a href="/pages/mp.html" class="sidebar-link" target="_blank" rel="noopener">
+        <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
+        Matrons & Patrons
+      </a>
+      <a href="/pages/nat-exec.html" class="sidebar-link" target="_blank" rel="noopener">
+        <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
+        NATEXCO
+      </a>
+    </nav>
+  </aside>
+
+  <div class="main-wrap">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="flex-row" style="justify-content:flex-start; min-width:0;">
+          <button id="mobileMenuBtn" class="mobile-menu-btn" type="button" aria-label="Open admin navigation" aria-controls="sidebar" aria-expanded="false">
+            <i class="fa-solid fa-bars" aria-hidden="true"></i>
+          </button>
+          <div class="topbar-title">
+            <p>APSG / CWDI Leadership Records</p>
+            <h1>Profile-Based Officials Manager</h1>
+          </div>
+        </div>
+
+        <div class="top-actions" aria-label="Quick actions">
+          <span id="adminRoleChip" class="chip success" title="Verified admin role">
+            <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+            Checking access
+          </span>
+          <a href="/admin/admin-official-create.html" class="btn green">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            Create / Update
+          </a>
+          <button id="refreshBtn" class="btn gold" type="button">
+            <i class="fa-solid fa-rotate" aria-hidden="true"></i>
+            Refresh
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="mainContent" tabindex="-1">
+      <section id="accessNotice" class="notice hidden-view" aria-live="polite"></section>
+
+      <section class="hero" aria-labelledby="pageTitle">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <span class="chip">
+              <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+              APSG / CWDI Officials Control
+            </span>
+                  </div>
+
+          <div class="hero-actions" aria-label="Officials manager actions">
+            <button id="exportJsonBtn" class="btn white" type="button">
+              <i class="fa-solid fa-file-code" aria-hidden="true"></i>
+              Export JSON
+            </button>
+            <button id="exportCsvBtn" class="btn white" type="button">
+              <i class="fa-solid fa-file-csv" aria-hidden="true"></i>
+              Export CSV
+            </button>
+            <button id="copyVisibleBtn" class="btn white" type="button">
+              <i class="fa-solid fa-copy" aria-hidden="true"></i>
+              Copy Visible
+            </button>
+            <button id="dedupeExactBtn" class="btn red" type="button" data-requires-write>
+              <i class="fa-solid fa-broom" aria-hidden="true"></i>
+              Remove Exact Duplicates
+            </button>
+            <a href="/admin/admin-official-create.html" class="btn green" data-requires-write>
+              <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              New Official / Position
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats-grid" aria-label="Officials summary">
+        <div class="stat-card"><p>Person Groups</p><strong id="statPeople">0</strong></div>
+        <div class="stat-card"><p>Raw Records</p><strong id="statRecords">0</strong></div>
+        <div class="stat-card"><p>Hidden Duplicates</p><strong id="statHidden">0</strong></div>
+        <div class="stat-card"><p>Published</p><strong id="statPublished">0</strong></div>
+        <div class="stat-card"><p>APSG</p><strong id="statAPSG">0</strong></div>
+        <div class="stat-card"><p>CWDI</p><strong id="statCWDI">0</strong></div>
+      </section>
+
+      <section class="card filters-card" aria-label="Filter officials records">
+        <div class="filters">
+          <label class="sr-only" for="searchInput">Search officials</label>
+          <input id="searchInput" class="input" type="search" placeholder="Search name, slug, role, organization, target..." autocomplete="off">
+
+          <label class="sr-only" for="orgFilter">Organization group</label>
+          <select id="orgFilter" class="select">
+            <option value="all">All Groups</option>
+            <option value="apsg">APSG</option>
+            <option value="cwdi">CWDI</option>
+          </select>
+
+          <label class="sr-only" for="groupFilter">Leadership section</label>
+          <select id="groupFilter" class="select">
+            <option value="all">All Sections</option>
+            <option value="board_bot">Board / BOT</option>
+            <option value="patrons">Patrons</option>
+            <option value="matrons">Matrons</option>
+            <option value="executive_directors">Executive Directors</option>
+            <option value="executive_leadership">Executive Leadership</option>
+          </select>
+
+          <label class="sr-only" for="statusFilter">Publication status</label>
+          <select id="statusFilter" class="select">
+            <option value="all">All Status</option>
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+          </select>
+
+          <label class="sr-only" for="targetFilter">Publish target</label>
+          <select id="targetFilter" class="select">
+            <option value="all">All Targets</option>
+            <option value="leadership">Leadership</option>
+            <option value="bot">BOT</option>
+            <option value="cwdi">CWDI</option>
+            <option value="mp">Matrons/Patrons</option>
+            <option value="national_executive">NATEXCO</option>
+            <option value="state_executive">State Exec</option>
+          </select>
+
+          <label class="sr-only" for="viewMode">View mode</label>
+          <select id="viewMode" class="select">
+            <option value="grid">Grid View</option>
+            <option value="list">List View</option>
+            <option value="table">Compact Table</option>
+          </select>
+
+          <label class="sr-only" for="imageMode">Image display mode</label>
+          <select id="imageMode" class="select">
+            <option value="full">Full Image</option>
+            <option value="cover">Fill Card / Crop</option>
+            <option value="compact">Compact Full Image</option>
+          </select>
+        </div>
+
+        <div class="filter-actions">
+          <button id="resetFiltersBtn" class="btn white" type="button">
+            <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+            Reset Filters
+          </button>
+          <button id="bulkPublishBtn" class="btn green" type="button" data-requires-write>
+            <i class="fa-solid fa-bullhorn" aria-hidden="true"></i>
+            Publish Visible Records
+          </button>
+          <button id="bulkDraftBtn" class="btn white" type="button" data-requires-write>
+            <i class="fa-solid fa-eye-slash" aria-hidden="true"></i>
+            Draft Visible Records
+          </button>
+          <span id="loadStatus" class="chip" aria-live="polite">
+            <i class="fa-solid fa-database" aria-hidden="true"></i>
+            Connecting
+          </span>
+        </div>
+      </section>
+
+      <section id="gridView" class="people-grid" aria-live="polite"></section>
+
+      <section id="listView" class="list-view hidden-view" aria-live="polite"></section>
+
+      <section id="tableView" class="card table-wrap hidden-view" aria-live="polite">
+        <table class="records-table">
+          <caption>Officials grouped by person identity</caption>
+          <thead>
+            <tr>
+              <th scope="col">Official</th>
+              <th scope="col">Linked Roles</th>
+              <th scope="col">Organizations</th>
+              <th scope="col">Status</th>
+              <th scope="col" class="hide-sm">Targets</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="recordsBody"></tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <div id="previewModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="previewTitle">
+    <button class="modal-backdrop" type="button" data-action="close-modal" aria-label="Close preview"></button>
+    <div class="modal-card" role="document">
+      <div id="previewContent"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    window.APSG_OFFICIALS_TABLES = window.APSG_OFFICIALS_TABLES || ["apsg_officials", "officials", "leadership_officials"];
+  </script>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const FALLBACK_IMAGE = "/assets/images/logo/apsg.png";
+      const ALLOWED_ROLES = new Set(["superadmin", "admin"]);
+      const SECTION_LABELS = {
+        board_bot: "Board / BOT",
+        patrons: "Patrons",
+        matrons: "Matrons",
+        executive_directors: "Executive Directors",
+        executive_leadership: "Executive Leadership"
+      };
+
+      const state = {
+        client: null,
+        activeTable: "",
+        records: [],
+        groups: [],
+        filtered: [],
+        adminRole: "",
+        canWrite: false,
+        loading: true,
+        lastFocus: null,
+        bound: false
+      };
+
+      const $ = (id) => document.getElementById(id);
+
+      function esc(value) {
+        return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          "\"": "&quot;",
+          "'": "&#039;"
+        })[char]);
+      }
+
+      function slugify(value) {
+        return String(value || "")
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "") || "official";
+      }
+
+      function canonicalSlug(value) {
+        return slugify(
+          String(value || "")
+            .replace(/^(apsg|cwdi)[-_](board[-_]bot|patrons|matrons|executive[-_]directors|executive[-_]leadership)[-_]/i, "")
+        );
+      }
+
+      function cleanImage(value) {
+        const url = String(value || "").trim();
+        if (!url) return "";
+        if (/^(null|undefined|n\/a)$/i.test(url)) return "";
+        if (/logo\/apsg|assets\/images\/logo/i.test(url)) return "";
+        return url;
+      }
+
+      function isRealName(record) {
+        const name = String(record.full_name || record.name || "").trim();
+        if (name.length < 3) return false;
+        return !/^(official|unnamed official|unnamed|name|full name|tbd|test|placeholder|null|n\/a)$/i.test(name);
+      }
+
+      function identityKey(record) {
+        return String(record.profile_slug || record.profile_key || "").trim()
+          || canonicalSlug(record.slug)
+          || cleanImage(record.image_url).toLowerCase()
+          || slugify(record.full_name || record.name || "");
+      }
+
+      function targets(record) {
+        const raw = record.publish_targets || [];
+        if (Array.isArray(raw)) return raw.filter(Boolean);
+        if (typeof raw === "string") {
+          try {
+            const parsed = JSON.parse(raw);
+            return Array.isArray(parsed) ? parsed.filter(Boolean) : raw.split(",").map((item) => item.trim()).filter(Boolean);
+          } catch {
+            return raw.split(",").map((item) => item.trim()).filter(Boolean);
+          }
+        }
+        return [];
+      }
+
+      function orgOf(record) {
+        return String(record.organization_key || record.organization || "apsg").toLowerCase();
+      }
+
+      function groupOf(record) {
+        return record.leadership_group || record.section_key || "";
+      }
+
+      function normalizeStatus(record) {
+        return String(record.status || "published").toLowerCase();
+      }
+
+      function isCanonical(record) {
+        return record.canonical_profile === true || String(record.canonical_profile).toLowerCase() === "true";
+      }
+
+      function newest(a, b) {
+        const canonicalDiff = Number(isCanonical(b)) - Number(isCanonical(a));
+        if (canonicalDiff !== 0) return canonicalDiff;
+        return new Date(b.updated_at || b.created_at || 0) - new Date(a.updated_at || a.created_at || 0);
+      }
+
+      function primaryRecord(group) {
+        return group.records.find(isCanonical) || group.records[0] || {};
+      }
+
+      function displayName(group) {
+        const record = primaryRecord(group);
+        return record.full_name || record.name || "Unnamed Official";
+      }
+
+      function displayImage(group) {
+        const primary = primaryRecord(group);
+        return cleanImage(primary.image_url)
+          || cleanImage(group.records.find((record) => cleanImage(record.image_url))?.image_url)
+          || FALLBACK_IMAGE;
+      }
+
+      function setText(id, value) {
+        const node = $(id);
+        if (node) node.textContent = value;
+      }
+
+      function toast(message, type = "info") {
+        const node = $("toast");
+        if (!node) return;
+        node.textContent = message;
+        node.dataset.type = type;
+        node.classList.add("show");
+        window.clearTimeout(toast._timer);
+        toast._timer = window.setTimeout(() => node.classList.remove("show"), 4200);
+      }
+
+      function setLoadStatus(message, type = "info", icon = "fa-database") {
+        const node = $("loadStatus");
+        if (!node) return;
+        node.className = `chip ${type === "error" ? "danger" : type === "success" ? "success" : ""}`.trim();
+        node.innerHTML = `<i class="fa-solid ${icon}" aria-hidden="true"></i> ${esc(message)}`;
+      }
+
+      function showNotice(message, type = "info") {
+        const notice = $("accessNotice");
+        if (!notice) return;
+        notice.className = "notice";
+        notice.innerHTML = `<strong>${type === "error" ? "Attention:" : "Note:"}</strong> ${esc(message)}`;
+      }
+
+      function hideNotice() {
+        const notice = $("accessNotice");
+        if (notice) notice.classList.add("hidden-view");
+      }
+
+      function showAccessDenied(title, message) {
+        state.loading = false;
+        const content = `
+          <div class="access-state">
+            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+            <h3>${esc(title)}</h3>
+            <p>${esc(message)}</p>
+            <div class="actions" style="justify-content:center; margin-top:1rem;">
+              <a class="btn green" href="/admin/login.html">Go to Login</a>
+              <a class="btn white" href="/admin/dashboard.html">Return to Dashboard</a>
+            </div>
+          </div>
+        `;
+        $("gridView").innerHTML = content;
+        $("listView").innerHTML = content;
+        $("tableView").classList.add("hidden-view");
+        setLoadStatus("Access denied", "error", "fa-lock");
+      }
+
+      function describeSupabaseError(error) {
+        const message = String(error?.message || error || "Unknown Supabase error.");
+        const code = String(error?.code || "");
+
+        if (!navigator.onLine) return "Network appears offline. Check your internet connection and refresh.";
+        if (code === "42P01" || /relation .* does not exist/i.test(message)) {
+          return "The officials table was not found. Confirm the table name in window.APSG_OFFICIALS_TABLES or create apsg_officials.";
+        }
+        if (code === "42501" || /permission denied|row-level security|rls/i.test(message)) {
+          return "Supabase RLS denied this request. Confirm the signed-in admin has a valid admin_profiles row and matching RLS policy.";
+        }
+        if (/bucket|storage/i.test(message)) {
+          return "A Supabase Storage bucket or image path could not be resolved. Confirm the storage bucket and public image URLs.";
+        }
+        if (/failed to fetch|network|timeout/i.test(message)) {
+          return "Network or Supabase connection issue. Check your internet connection and Supabase project status.";
+        }
+
+        return message;
+      }
+
+      function getClient() {
+        state.client = window.supabaseClient
+          || window.apsgSupabase
+          || window.APSG_SUPABASE
+          || (window.APSG && window.APSG.supabase)
+          || null;
+
+        if (state.client && typeof state.client.from === "function") return state.client;
+        return null;
+      }
+
+      async function waitForClient() {
+        for (let i = 0; i < 30; i += 1) {
+          const client = getClient();
+          if (client) return client;
+          await new Promise((resolve) => window.setTimeout(resolve, 100));
+        }
+        return null;
+      }
+
+      async function resolveAdminRole(user) {
+        const client = state.client;
+        if (!client || !user) return null;
+
+        const email = String(user.email || "").toLowerCase();
+
+        let result = await client
+          .from("admin_profiles")
+          .select("id,user_id,email,role,is_active,status")
+          .eq("id", user.id)
+          .limit(1)
+          .maybeSingle();
+
+        if (!result.error && result.data) return result.data;
+
+        result = await client
+          .from("admin_profiles")
+          .select("id,user_id,email,role,is_active,status")
+          .eq("user_id", user.id)
+          .limit(1)
+          .maybeSingle();
+
+        if (!result.error && result.data) return result.data;
+
+        result = await client
+          .from("admin_profiles")
+          .select("id,user_id,email,role,is_active,status")
+          .ilike("email", email)
+          .limit(1)
+          .maybeSingle();
+
+        if (result.error) throw result.error;
+        return result.data || null;
+      }
+
+      async function requireAdminAccess() {
+        const client = state.client;
+        if (!client?.auth?.getSession) {
+          showAccessDenied("Supabase Auth is unavailable", "The admin page could not find a valid Supabase browser client. Confirm assets/js/supabase-clients.js loads before this page script.");
+          return false;
+        }
+
+        const { data, error } = await client.auth.getSession();
+        if (error) {
+          showAccessDenied("Session check failed", describeSupabaseError(error));
+          return false;
+        }
+
+        const session = data?.session;
+        if (!session?.user) {
+          const redirect = encodeURIComponent(`${location.pathname}${location.search}`);
+          location.href = `/admin/login.html?redirect=${redirect}`;
+          return false;
+        }
+
+        try {
+          const profile = await resolveAdminRole(session.user);
+          const role = String(profile?.role || "").toLowerCase();
+          const active = profile && profile.is_active !== false && String(profile.status || "active").toLowerCase() !== "inactive";
+
+          if (!profile || !active || !ALLOWED_ROLES.has(role)) {
+            showAccessDenied(
+              "Insufficient admin permission",
+              "This manager requires an active superadmin or admin role in public.admin_profiles."
+            );
+            return false;
+          }
+
+          state.adminRole = role;
+          state.canWrite = ALLOWED_ROLES.has(role);
+          const chip = $("adminRoleChip");
+          if (chip) {
+            chip.className = "chip success";
+            chip.innerHTML = `<i class="fa-solid fa-shield-halved" aria-hidden="true"></i> ${esc(role)}`;
+          }
+          applyRoleControls();
+          hideNotice();
+          return true;
+        } catch (error) {
+          showAccessDenied("Role verification failed", describeSupabaseError(error));
+          return false;
+        }
+      }
+
+      function applyRoleControls() {
+        document.querySelectorAll("[data-requires-write]").forEach((node) => {
+          if (state.canWrite) {
+            node.removeAttribute("aria-disabled");
+            node.classList.remove("is-disabled");
+            if (node.tagName === "BUTTON") node.disabled = false;
+          } else {
+            node.setAttribute("aria-disabled", "true");
+            node.classList.add("is-disabled");
+            if (node.tagName === "BUTTON") node.disabled = true;
+          }
+        });
+      }
+
+      async function chooseTable() {
+        if (!state.client) await waitForClient();
+
+        if (!state.client) {
+          setLoadStatus("Supabase client missing", "error", "fa-triangle-exclamation");
+          throw new Error("Supabase client not found.");
+        }
+
+        const tables = window.APSG_OFFICIALS_TABLES || ["apsg_officials"];
+        const errors = [];
+
+        for (const table of tables) {
+          const result = await state.client.from(table).select("id").limit(1);
+          if (!result.error) {
+            state.activeTable = table;
+            setLoadStatus(table, "success", "fa-database");
+            return table;
+          }
+          errors.push(`${table}: ${describeSupabaseError(result.error)}`);
+        }
+
+        state.activeTable = tables[0];
+        setLoadStatus("Table check failed", "error", "fa-triangle-exclamation");
+        throw new Error(errors.join(" | "));
+      }
+
+      function buildGroups() {
+        const map = new Map();
+        const usable = state.records.filter(isRealName);
+
+        usable.forEach((record) => {
+          const key = identityKey(record);
+          if (!map.has(key)) map.set(key, { key, records: [] });
+          map.get(key).records.push(record);
+        });
+
+        state.groups = Array.from(map.values())
+          .map((group) => {
+            group.records.sort(newest);
+            group.hidden = Math.max(0, group.records.length - 1);
+            group.search = group.records.map((record) => [
+              record.full_name,
+              record.name,
+              record.slug,
+              record.profile_slug,
+              record.profile_key,
+              record.position,
+              record.seat,
+              record.category,
+              normalizeStatus(record),
+              orgOf(record),
+              groupOf(record),
+              targets(record).join(" ")
+            ].join(" ")).join(" ").toLowerCase();
+            return group;
+          })
+          .sort((a, b) => displayName(a).localeCompare(displayName(b)));
+      }
+
+      function setStats() {
+        const usableRecords = state.records.filter(isRealName);
+        const published = usableRecords.filter((record) => normalizeStatus(record) === "published").length;
+        setText("statPeople", state.groups.length);
+        setText("statRecords", usableRecords.length);
+        setText("statHidden", Math.max(0, usableRecords.length - state.groups.length));
+        setText("statPublished", published);
+        setText("statAPSG", usableRecords.filter((record) => orgOf(record) === "apsg").length);
+        setText("statCWDI", usableRecords.filter((record) => orgOf(record) === "cwdi").length);
+      }
+
+      function applyFilters() {
+        const query = $("searchInput").value.trim().toLowerCase();
+        const org = $("orgFilter").value;
+        const group = $("groupFilter").value;
+        const status = $("statusFilter").value;
+        const target = $("targetFilter").value;
+
+        state.filtered = state.groups.filter((item) => {
+          const records = item.records;
+          return (!query || item.search.includes(query))
+            && (org === "all" || records.some((record) => orgOf(record) === org))
+            && (group === "all" || records.some((record) => groupOf(record) === group))
+            && (status === "all" || records.some((record) => normalizeStatus(record) === status))
+            && (target === "all" || records.some((record) => targets(record).includes(target)));
+        });
+
+        render();
+      }
+
+      function pills(values, className = "") {
+        return Array.from(new Set(values.filter(Boolean))).map((value) => (
+          `<span class="pill ${esc(className)}">${esc(value)}</span>`
+        )).join("");
+      }
+
+      function emptyState(title, message, icon = "fa-circle-info") {
+        return `
+          <div class="empty-state">
+            <i class="fa-solid ${esc(icon)}" aria-hidden="true"></i>
+            <h3>${esc(title)}</h3>
+            <p>${esc(message)}</p>
+          </div>
+        `;
+      }
+
+      function renderLoading() {
+        const skeleton = `
+          <div class="skeleton-grid" aria-label="Loading official records">
+            ${Array.from({ length: 6 }).map(() => `
+              <article class="skeleton-card">
+                <div class="skeleton-media"></div>
+                <div class="skeleton-lines">
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                </div>
+              </article>
+            `).join("")}
+          </div>
+        `;
+        $("gridView").innerHTML = skeleton;
+        $("listView").innerHTML = skeleton;
+        $("recordsBody").innerHTML = "";
+      }
+
+      function renderGrid() {
+        const wrap = $("gridView");
+
+        if (!state.filtered.length) {
+          wrap.innerHTML = emptyState(
+            state.records.length ? "No matching official found" : "No officials loaded",
+            state.records.length
+              ? "Try clearing filters or searching another name, section, organization, or publish target."
+              : "No published or draft official records were returned from Supabase.",
+            "fa-magnifying-glass"
+          );
+          return;
+        }
+
+        wrap.innerHTML = state.filtered.map((group) => {
+          const records = group.records;
+          const lead = primaryRecord(group);
+          const name = displayName(group);
+          const image = displayImage(group);
+          const profileParam = encodeURIComponent(group.key);
+          const statusClass = records.some((record) => normalizeStatus(record) === "draft") ? "red" : "green";
+
+          return `
+            <article class="person-card">
+              <div class="person-photo">
+                <img src="${esc(image)}" alt="${esc(name)} official portrait" loading="lazy" decoding="async" onerror="this.src='${FALLBACK_IMAGE}'">
+              </div>
+              <div class="person-body">
+                <div class="person-badges">
+                  ${pills(records.map((record) => orgOf(record).toUpperCase()), "green")}
+                  ${pills(Array.from(new Set(records.map(normalizeStatus))), statusClass)}
+                  ${group.hidden ? `<span class="pill gold">${records.length} linked roles</span>` : ""}
+                </div>
+                <h3 class="person-title display-font">${esc(name)}</h3>
+                <p class="person-summary">${esc(lead.short_info || lead.position || "Official record")}</p>
+                <div class="role-list">
+                  ${records.slice(0, 4).map((record) => `
+                    <div class="role-item">
+                      <strong>${esc(record.position || "Official")}</strong>
+                      <small>${esc(orgOf(record).toUpperCase())} - ${esc(SECTION_LABELS[groupOf(record)] || groupOf(record) || "Section")} - ${esc(normalizeStatus(record))}</small>
+                    </div>
+                  `).join("")}
+                  ${records.length > 4 ? `
+                    <div class="role-item">
+                      <strong>+${records.length - 4} more role(s)</strong>
+                      <small>Open preview to manage all mapped records.</small>
+                    </div>
+                  ` : ""}
+                </div>
+                <div class="actions person-actions">
+                  <button class="btn white" type="button" data-action="preview" data-key="${esc(group.key)}">
+                    <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                    Preview
+                  </button>
+                  <a class="btn green" href="/admin/admin-official-create.html?id=${encodeURIComponent(lead.id || "")}" data-requires-write>
+                    <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                    Edit
+                  </a>
+                  <a class="btn gold" href="/admin/admin-official-create.html?profile=${profileParam}&new_position=1" data-requires-write>
+                    <i class="fa-solid fa-clone" aria-hidden="true"></i>
+                    New Position
+                  </a>
+                  <a class="btn white" target="_blank" rel="noopener" href="/pages/official-details.html?profile=${profileParam}&id=${encodeURIComponent(lead.id || "")}&slug=${encodeURIComponent(lead.slug || "")}">
+                    <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+                    Dossier
+                  </a>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join("");
+
+        applyRoleControls();
+      }
+
+      function renderList() {
+        const wrap = $("listView");
+
+        if (!state.filtered.length) {
+          wrap.innerHTML = emptyState(
+            state.records.length ? "No matching official found" : "No officials loaded",
+            state.records.length
+              ? "Try clearing filters or searching another name, section, organization, or publish target."
+              : "No published or draft official records were returned from Supabase.",
+            "fa-magnifying-glass"
+          );
+          return;
+        }
+
+        wrap.innerHTML = state.filtered.map((group) => {
+          const records = group.records;
+          const lead = primaryRecord(group);
+          const name = displayName(group);
+          const image = displayImage(group);
+          const profileParam = encodeURIComponent(group.key);
+          const statusClass = records.some((record) => normalizeStatus(record) === "draft") ? "red" : "green";
+
+          return `
+            <article class="list-card">
+              <div class="list-photo">
+                <img src="${esc(image)}" alt="${esc(name)} official portrait" loading="lazy" decoding="async" onerror="this.src='${FALLBACK_IMAGE}'">
+              </div>
+              <div class="list-body">
+                <div class="person-badges">
+                  ${pills(records.map((record) => orgOf(record).toUpperCase()), "green")}
+                  ${pills(Array.from(new Set(records.map(normalizeStatus))), statusClass)}
+                  ${group.hidden ? `<span class="pill gold">${records.length} linked roles</span>` : ""}
+                </div>
+                <h3 class="list-title display-font">${esc(name)}</h3>
+                <p class="list-summary">${esc(lead.short_info || lead.position || "Official record")}</p>
+                <div class="list-meta">
+                  ${records.slice(0, 3).map((record) => `
+                    <div class="role-item">
+                      <strong>${esc(record.position || "Official")}</strong>
+                      <small>${esc(orgOf(record).toUpperCase())} - ${esc(SECTION_LABELS[groupOf(record)] || groupOf(record) || "Section")} - ${esc(normalizeStatus(record))}</small>
+                    </div>
+                  `).join("")}
+                  ${records.length > 3 ? `
+                    <div class="role-item">
+                      <strong>+${records.length - 3} more role(s)</strong>
+                      <small>Open preview to manage all mapped records.</small>
+                    </div>
+                  ` : ""}
+                </div>
+                <div class="actions person-actions">
+                  <button class="btn white" type="button" data-action="preview" data-key="${esc(group.key)}">
+                    <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                    Preview
+                  </button>
+                  <a class="btn green" href="/admin/admin-official-create.html?id=${encodeURIComponent(lead.id || "")}" data-requires-write>
+                    <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                    Edit
+                  </a>
+                  <a class="btn gold" href="/admin/admin-official-create.html?profile=${profileParam}&new_position=1" data-requires-write>
+                    <i class="fa-solid fa-clone" aria-hidden="true"></i>
+                    New Position
+                  </a>
+                  <a class="btn white" target="_blank" rel="noopener" href="/pages/official-details.html?profile=${profileParam}&id=${encodeURIComponent(lead.id || "")}&slug=${encodeURIComponent(lead.slug || "")}">
+                    <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+                    Dossier
+                  </a>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join("");
+
+        applyRoleControls();
+      }
+
+      function renderTable() {
+        const body = $("recordsBody");
+
+        if (!state.filtered.length) {
+          body.innerHTML = `
+            <tr>
+              <td colspan="6">
+                ${emptyState("No matching official found", "Try clearing filters or searching another field.", "fa-magnifying-glass")}
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        body.innerHTML = state.filtered.map((group) => {
+          const records = group.records;
+          const lead = primaryRecord(group);
+          const name = displayName(group);
+          const profileParam = encodeURIComponent(group.key);
+          const statusClass = records.some((record) => normalizeStatus(record) === "draft") ? "red" : "green";
+
+          return `
+            <tr>
+              <td>
+                <div class="table-official">
+                  <img class="avatar" src="${esc(displayImage(group))}" alt="${esc(name)} portrait" loading="lazy" decoding="async" onerror="this.src='${FALLBACK_IMAGE}'">
+                  <div>
+                    <strong class="table-name">${esc(name)}</strong>
+                    <small class="table-meta">${esc(lead.slug || lead.profile_slug || group.key)}</small>
+                  </div>
+                </div>
+              </td>
+              <td><strong>${records.length}</strong> role(s)</td>
+              <td>${pills(records.map((record) => orgOf(record).toUpperCase()), "green")}</td>
+              <td>${pills(Array.from(new Set(records.map(normalizeStatus))), statusClass)}</td>
+              <td class="hide-sm">${pills(records.flatMap((record) => targets(record)), "gold")}</td>
+              <td>
+                <div class="actions">
+                  <button class="btn white" type="button" data-action="preview" data-key="${esc(group.key)}" aria-label="Preview ${esc(name)}">
+                    <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                  </button>
+                  <a class="btn green" href="/admin/admin-official-create.html?id=${encodeURIComponent(lead.id || "")}" data-requires-write aria-label="Edit ${esc(name)}">
+                    <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                  </a>
+                  <a class="btn gold" href="/admin/admin-official-create.html?profile=${profileParam}&new_position=1" data-requires-write aria-label="Add new position for ${esc(name)}">
+                    <i class="fa-solid fa-clone" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join("");
+
+        applyRoleControls();
+      }
+
+      function render() {
+        if (state.loading) {
+          renderLoading();
+          return;
+        }
+
+        const mode = $("viewMode").value;
+        $("gridView").classList.toggle("hidden-view", mode !== "grid");
+        $("listView").classList.toggle("hidden-view", mode !== "list");
+        $("tableView").classList.toggle("hidden-view", mode !== "table");
+        renderGrid();
+        renderList();
+        renderTable();
+      }
+
+      async function loadRecords() {
+        state.loading = true;
+        renderLoading();
+        setLoadStatus("Loading records", "info", "fa-spinner");
+
+        try {
+          if (!state.activeTable) await chooseTable();
+
+          const result = await state.client
+            .from(state.activeTable)
+            .select("*")
+            .order("display_order", { ascending: true, nullsFirst: false })
+            .range(0, 1999);
+
+          if (result.error) throw result.error;
+
+          state.records = result.data || [];
+          buildGroups();
+          setStats();
+          state.loading = false;
+          setLoadStatus(`${state.activeTable} - ${state.records.length} records`, "success", "fa-database");
+          applyFilters();
+
+          if (!state.records.length) {
+            showNotice("No official records were returned. Confirm the officials table contains records and your RLS policy allows this admin account to read them.");
+          } else {
+            hideNotice();
+          }
+
+          toast("Officials records refreshed.", "success");
+        } catch (error) {
+          state.loading = false;
+          const message = describeSupabaseError(error);
+          setLoadStatus("Load failed", "error", "fa-triangle-exclamation");
+          $("gridView").innerHTML = emptyState("Unable to load officials", message, "fa-triangle-exclamation");
+          $("listView").innerHTML = emptyState("Unable to load officials", message, "fa-triangle-exclamation");
+          $("recordsBody").innerHTML = `<tr><td colspan="6">${emptyState("Unable to load officials", message, "fa-triangle-exclamation")}</td></tr>`;
+          toast(message, "error");
+        }
+      }
+
+      function findGroup(key) {
+        return state.groups.find((group) => group.key === key);
+      }
+
+      function openPreview(key) {
+        const group = findGroup(key);
+        if (!group) return;
+
+        const image = displayImage(group);
+        const name = displayName(group);
+        const primary = primaryRecord(group);
+        const profileParam = encodeURIComponent(group.key);
+
+        $("previewContent").innerHTML = `
+          <div class="preview-grid">
+            <div class="preview-photo">
+              <img src="${esc(image)}" alt="${esc(name)} official portrait" onerror="this.src='${FALLBACK_IMAGE}'">
+            </div>
+            <div class="preview-body">
+              <div class="modal-title-row">
+                <div>
+                  <span class="chip">
+                    <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+                    ${group.records.length} mapped role(s)
+                  </span>
+                  <h2 id="previewTitle" class="preview-title display-font">${esc(name)}</h2>
+                </div>
+                <div class="actions">
+                  <a class="btn gold" href="/admin/admin-official-create.html?profile=${profileParam}&new_position=1" data-requires-write>
+                    <i class="fa-solid fa-clone" aria-hidden="true"></i>
+                    New Position
+                  </a>
+                  <button class="btn white" type="button" data-action="close-modal" aria-label="Close preview">
+                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+
+              <p class="preview-summary">${esc(primary.short_info || primary.position || "No summary available.")}</p>
+
+              <div class="modal-role-list">
+                ${group.records.map((record) => `
+                  <div class="modal-role-item">
+                    <div class="modal-role-row">
+                      <div>
+                        <strong>${esc(record.position || "Official")}</strong>
+                        <small>${esc(orgOf(record).toUpperCase())} - ${esc(SECTION_LABELS[groupOf(record)] || groupOf(record) || "Section")} - ${esc(normalizeStatus(record))} - ${esc(targets(record).join(", ") || "No target")}</small>
+                      </div>
+                      <div class="actions">
+                        <a class="btn green" href="/admin/admin-official-create.html?id=${encodeURIComponent(record.id || "")}" data-requires-write>
+                          <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                          Edit
+                        </a>
+                        <button class="btn white" type="button" data-action="toggle-status" data-id="${esc(record.id || "")}" data-requires-write>
+                          <i class="fa-solid fa-bullhorn" aria-hidden="true"></i>
+                          Status
+                        </button>
+                        <a class="btn gold" target="_blank" rel="noopener" href="/pages/official-details.html?profile=${profileParam}&id=${encodeURIComponent(record.id || "")}&slug=${encodeURIComponent(record.slug || "")}">
+                          <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+                          Dossier
+                        </a>
+                        <button class="btn red" type="button" data-action="delete-record" data-id="${esc(record.id || "")}" data-requires-write aria-label="Delete this role record">
+                          <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          </div>
+        `;
+
+        applyRoleControls();
+        openModal("previewModal");
+      }
+
+      function openModal(id) {
+        const modal = $(id);
+        if (!modal) return;
+        state.lastFocus = document.activeElement;
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("body-lock");
+
+        window.setTimeout(() => {
+          const target = modal.querySelector("[data-action='close-modal'], a, button, input, select, textarea, [tabindex]:not([tabindex='-1'])");
+          if (target) target.focus();
+        }, 0);
+      }
+
+      function closeModals() {
+        document.querySelectorAll(".modal").forEach((modal) => {
+          modal.classList.remove("is-open");
+          modal.setAttribute("aria-hidden", "true");
+        });
+        document.body.classList.remove("body-lock");
+        if (state.lastFocus && typeof state.lastFocus.focus === "function") {
+          state.lastFocus.focus();
+        }
+      }
+
+      function handleModalKeydown(event) {
+        const modal = document.querySelector(".modal.is-open");
+        if (!modal) return;
+
+        if (event.key === "Escape") {
+          event.preventDefault();
+          closeModals();
+          return;
+        }
+
+        if (event.key !== "Tab") return;
+
+        const focusable = Array.from(modal.querySelectorAll(
+          "a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])"
+        )).filter((node) => node.offsetParent !== null);
+
+        if (!focusable.length) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+
+      async function toggleStatus(id) {
+        if (!state.canWrite) return toast("Only superadmin/admin can update status.", "error");
+        const record = state.records.find((item) => String(item.id) === String(id));
+        if (!record) return;
+
+        const status = normalizeStatus(record) === "published" ? "draft" : "published";
+        const result = await state.client
+          .from(state.activeTable)
+          .update({ status, updated_at: new Date().toISOString() })
+          .eq("id", id);
+
+        if (result.error) {
+          toast(describeSupabaseError(result.error), "error");
+          return;
+        }
+
+        toast(`Record set to ${status}.`, "success");
+        closeModals();
+        await loadRecords();
+      }
+
+      async function deleteRecord(id) {
+        if (!state.canWrite) return toast("Only superadmin/admin can delete records.", "error");
+        const ok = window.confirm("Delete this single official position record? Linked roles for the same person will be preserved.");
+        if (!ok) return;
+
+        const result = await state.client.from(state.activeTable).delete().eq("id", id);
+        if (result.error) {
+          toast(describeSupabaseError(result.error), "error");
+          return;
+        }
+
+        toast("Record deleted.", "success");
+        closeModals();
+        await loadRecords();
+      }
+
+      async function bulkStatus(status) {
+        if (!state.canWrite) return toast("Only superadmin/admin can update records.", "error");
+
+        const ids = state.filtered.flatMap((group) => group.records.map((record) => record.id)).filter(Boolean);
+        if (!ids.length) {
+          toast("No visible records to update.", "info");
+          return;
+        }
+
+        const ok = window.confirm(`Set ${ids.length} visible record(s) to ${status}?`);
+        if (!ok) return;
+
+        const result = await state.client
+          .from(state.activeTable)
+          .update({ status, updated_at: new Date().toISOString() })
+          .in("id", ids);
+
+        if (result.error) {
+          toast(describeSupabaseError(result.error), "error");
+          return;
+        }
+
+        toast(`Visible records set to ${status}.`, "success");
+        await loadRecords();
+      }
+
+      async function dedupeExact() {
+        if (!state.canWrite) return toast("Only superadmin/admin can remove duplicates.", "error");
+
+        const seen = new Map();
+        const remove = [];
+
+        state.records.slice().sort(newest).forEach((record) => {
+          if (!isRealName(record)) return;
+          const key = String(record.placement_key || "").trim() || [
+            identityKey(record),
+            orgOf(record),
+            groupOf(record),
+            String(record.position || "").trim().toLowerCase(),
+            String(record.seat || "").trim().toLowerCase()
+          ].join("|");
+
+          if (seen.has(key)) remove.push(record.id);
+          else seen.set(key, record.id);
+        });
+
+        if (!remove.length) {
+          toast("No exact duplicates found. Different positions were preserved.", "success");
+          return;
+        }
+
+        const ok = window.confirm(`Remove ${remove.length} exact duplicate record(s)? Different positions will be preserved.`);
+        if (!ok) return;
+
+        const result = await state.client.from(state.activeTable).delete().in("id", remove);
+        if (result.error) {
+          toast(describeSupabaseError(result.error), "error");
+          return;
+        }
+
+        toast("Exact duplicates removed.", "success");
+        await loadRecords();
+      }
+
+      function visibleRecords() {
+        return state.filtered.flatMap((group) => group.records);
+      }
+
+      function exportJson() {
+        const data = visibleRecords();
+        downloadText("apsg-officials-visible.json", JSON.stringify(data, null, 2), "application/json");
+      }
+
+      function csvEscape(value) {
+        const text = String(value ?? "");
+        return /[",\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+      }
+
+      function exportCsv() {
+        const rows = visibleRecords();
+        const headers = ["full_name", "position", "organization", "leadership_group", "status", "publish_targets", "slug", "profile_slug", "id"];
+        const csv = [
+          headers.join(","),
+          ...rows.map((record) => headers.map((key) => {
+            if (key === "organization") return csvEscape(orgOf(record));
+            if (key === "leadership_group") return csvEscape(groupOf(record));
+            if (key === "status") return csvEscape(normalizeStatus(record));
+            if (key === "publish_targets") return csvEscape(targets(record).join("|"));
+            return csvEscape(record[key]);
+          }).join(","))
+        ].join("\n");
+
+        downloadText("apsg-officials-visible.csv", csv, "text/csv");
+      }
+
+      function downloadText(filename, text, type) {
+        const blob = new Blob([text], { type });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      async function copyVisible() {
+        const text = state.filtered.map((group) => (
+          `${displayName(group)} - ${group.records.map((record) => record.position || "Official").join(" / ")}`
+        )).join("\n");
+
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
+          const area = document.createElement("textarea");
+          area.value = text;
+          area.setAttribute("readonly", "");
+          area.style.position = "fixed";
+          area.style.left = "-9999px";
+          document.body.appendChild(area);
+          area.select();
+          document.execCommand("copy");
+          area.remove();
+        }
+
+        toast("Visible list copied.", "success");
+      }
+
+      function applyImageMode() {
+        const mode = $("imageMode")?.value || "full";
+        document.body.dataset.imageMode = mode;
+        try { localStorage.setItem("apsgOfficialsImageMode", mode); } catch {}
+      }
+
+      function restoreDisplayPreferences() {
+        try {
+          const savedView = localStorage.getItem("apsgOfficialsViewMode");
+          const savedImage = localStorage.getItem("apsgOfficialsImageMode");
+          if (savedView && ["grid", "list", "table"].includes(savedView)) $("viewMode").value = savedView;
+          if (savedImage && ["full", "cover", "compact"].includes(savedImage)) $("imageMode").value = savedImage;
+        } catch {}
+        applyImageMode();
+      }
+
+      function resetFilters() {
+        $("searchInput").value = "";
+        $("orgFilter").value = "all";
+        $("groupFilter").value = "all";
+        $("statusFilter").value = "all";
+        $("targetFilter").value = "all";
+        $("viewMode").value = "grid";
+        $("imageMode").value = "full";
+        applyImageMode();
+        applyFilters();
+      }
+
+      function toggleSidebar(show) {
+        const sidebar = $("sidebar");
+        const overlay = $("mobileOverlay");
+        const button = $("mobileMenuBtn");
+        sidebar.classList.toggle("is-open", show);
+        overlay.classList.toggle("is-open", show);
+        button.setAttribute("aria-expanded", String(show));
+        if (show) {
+          const firstLink = sidebar.querySelector("a, button");
+          if (firstLink) firstLink.focus();
+        } else {
+          button.focus();
+        }
+      }
+
+      function handleAction(event) {
+        const actionNode = event.target.closest("[data-action]");
+        if (!actionNode) return;
+
+        const action = actionNode.dataset.action;
+        const key = actionNode.dataset.key;
+        const id = actionNode.dataset.id;
+
+        if (action === "preview") {
+          event.preventDefault();
+          openPreview(key);
+        } else if (action === "close-modal") {
+          event.preventDefault();
+          closeModals();
+        } else if (action === "toggle-status") {
+          event.preventDefault();
+          toggleStatus(id);
+        } else if (action === "delete-record") {
+          event.preventDefault();
+          deleteRecord(id);
+        }
+      }
+
+      function bind() {
+        if (state.bound) return;
+        state.bound = true;
+
+        ["searchInput", "orgFilter", "groupFilter", "statusFilter", "targetFilter", "viewMode", "imageMode"].forEach((id) => {
+          $(id).addEventListener("input", () => {
+            if (id === "imageMode") applyImageMode();
+            if (id === "viewMode") {
+              try { localStorage.setItem("apsgOfficialsViewMode", $("viewMode").value); } catch {}
+            }
+            applyFilters();
+          });
+          $(id).addEventListener("change", () => {
+            if (id === "imageMode") applyImageMode();
+            if (id === "viewMode") {
+              try { localStorage.setItem("apsgOfficialsViewMode", $("viewMode").value); } catch {}
+            }
+            applyFilters();
+          });
+        });
+
+        $("mobileMenuBtn").addEventListener("click", () => toggleSidebar(true));
+        $("mobileOverlay").addEventListener("click", () => toggleSidebar(false));
+        $("refreshBtn").addEventListener("click", loadRecords);
+        $("resetFiltersBtn").addEventListener("click", resetFilters);
+        $("bulkPublishBtn").addEventListener("click", () => bulkStatus("published"));
+        $("bulkDraftBtn").addEventListener("click", () => bulkStatus("draft"));
+        $("dedupeExactBtn").addEventListener("click", dedupeExact);
+        $("exportJsonBtn").addEventListener("click", exportJson);
+        $("exportCsvBtn").addEventListener("click", exportCsv);
+        $("copyVisibleBtn").addEventListener("click", copyVisible);
+
+        document.addEventListener("click", handleAction);
+        document.addEventListener("keydown", (event) => {
+          const modalIsOpen = Boolean(document.querySelector(".modal.is-open"));
+          if (modalIsOpen) {
+            handleModalKeydown(event);
+            return;
+          }
+
+          if (event.key === "Escape" && $("sidebar").classList.contains("is-open")) {
+            toggleSidebar(false);
+          }
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        bind();
+        restoreDisplayPreferences();
+        renderLoading();
+
+        state.client = await waitForClient();
+        if (!state.client) {
+          showAccessDenied("Supabase client not found", "Confirm /assets/js/supabase-clients.js exists and initializes the anon browser client.");
+          return;
+        }
+
+        const hasAccess = await requireAdminAccess();
+        if (!hasAccess) return;
+
+        await chooseTable();
+        await loadRecords();
+      });
+    })();
+  </script>
+  <script src="/assets/js/admin-unified.js" defer></script>
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

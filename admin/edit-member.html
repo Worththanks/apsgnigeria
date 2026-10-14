@@ -1,0 +1,2591 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#05351f" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>Edit Member & Account Details | APSG Admin</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any" />
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png" />
+    <link rel="icon" href="/assets/images/logo/apsg.png" sizes="any" />
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg.png" />
+
+    <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any" />
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/assets/css/tailwind-static.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link rel="stylesheet" href="/assets/css/dashboard.css" />
+    <style>
+      :root {
+        --deep: #05351f;
+        --deep-2: #031b0f;
+        --green: #0f8a4b;
+        --emerald: #0f766e;
+        --gold: #d6a92b;
+        --gold-soft: #ffe08a;
+        --cream: #fffaf0;
+        --ink: #07140e;
+        --muted: #64746a;
+        --danger: #991b1b;
+        --border: rgba(5, 53, 31, 0.1);
+        --gold-border: rgba(214, 169, 43, 0.24);
+        --shadow-card: 0 18px 52px rgba(5, 53, 31, 0.1);
+        --shadow-premium: 0 34px 110px rgba(5, 53, 31, 0.2);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body.edit-member-page {
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(
+            circle at 96% 0,
+            rgba(214, 169, 43, 0.15),
+            transparent 29rem
+          ),
+          radial-gradient(
+            circle at 0 10%,
+            rgba(15, 138, 75, 0.12),
+            transparent 31rem
+          ),
+          linear-gradient(180deg, #f8fbf7 0%, #eef6ef 100%);
+        overflow-x: hidden;
+      }
+      a {
+        text-decoration: none !important;
+      }
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+      .display-font {
+        font-family: "Playfair Display", Georgia, serif;
+      }
+      .skip-link {
+        position: fixed;
+        left: 1rem;
+        top: 0.75rem;
+        z-index: 1000;
+        transform: translateY(-150%);
+        border-radius: 999px;
+        background: var(--gold);
+        color: var(--deep);
+        padding: 0.62rem 0.9rem;
+        font-weight: 950;
+        box-shadow: var(--shadow-card);
+        transition: 0.18s ease;
+      }
+      .skip-link:focus {
+        transform: translateY(0);
+        outline: 3px solid rgba(214, 169, 43, 0.35);
+        outline-offset: 2px;
+      }
+      #mobile-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(5px);
+      }
+      .sidebar {
+        width: 16rem !important;
+        background: linear-gradient(
+          180deg,
+          #031b0f 0%,
+          #052414 58%,
+          #03140b 100%
+        );
+        color: #fff;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.2);
+      }
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 0.58rem;
+        min-height: 2.38rem;
+        padding: 0.58rem 0.72rem;
+        border-radius: 1rem;
+        color: rgba(255, 255, 255, 0.82) !important;
+        font-size: 0.74rem;
+        font-weight: 850;
+        transition: 0.18s ease;
+      }
+      .sidebar-link:hover,
+      .sidebar-link.active,
+      .sidebar-link:focus-visible {
+        background: rgba(214, 169, 43, 0.14);
+        color: #f8dc7a !important;
+        transform: translateX(2px);
+        outline: 0;
+      }
+      .sidebar-link.danger-link {
+        color: #fecaca !important;
+        background: rgba(239, 68, 68, 0.1);
+      }
+      .role-chip {
+        margin-left: auto;
+        padding: 0.16rem 0.38rem;
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.14);
+        color: #f8dc7a;
+        font-size: 0.5rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+      .role-chip.editor {
+        background: rgba(20, 168, 97, 0.13);
+        color: #abf5ce;
+      }
+      .role-level {
+        display: grid;
+        place-items: center;
+        min-height: 1.45rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+        font-size: 0.54rem;
+        font-weight: 950;
+        color: rgba(255, 255, 255, 0.55);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .role-level.active {
+        border-color: rgba(214, 169, 43, 0.4);
+        background: rgba(214, 169, 43, 0.18);
+        color: #f8dc7a;
+      }
+      .pulse-dot {
+        width: 0.45rem;
+        height: 0.45rem;
+        border-radius: 999px;
+        background: #10b981;
+        box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.15);
+      }
+      .topbar {
+        border-bottom: 1px solid rgba(5, 53, 31, 0.08);
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 10px 28px rgba(5, 53, 31, 0.055);
+      }
+      .lux-shell,
+      .lux-card,
+      .doc-card,
+      .metric-tile {
+        border: 1px solid rgba(214, 169, 43, 0.18);
+        background: rgba(255, 255, 255, 0.93);
+        box-shadow: var(--shadow-card);
+      }
+      .lux-shell,
+      .lux-card {
+        border-radius: 1.45rem;
+        overflow: hidden;
+      }
+      .doc-card,
+      .metric-tile {
+        border-radius: 1.1rem;
+      }
+      .lux-shell .relative.bg-gradient-to-r {
+        background:
+          radial-gradient(
+            circle at right top,
+            rgba(214, 169, 43, 0.3),
+            transparent 18rem
+          ),
+          linear-gradient(135deg, #031b0f 0%, #05351f 44%, #0f8a4b 100%) !important;
+        box-shadow: 0 28px 88px rgba(5, 53, 31, 0.22);
+      }
+      .profile-photo {
+        width: 7.2rem;
+        height: 8.2rem;
+        border-radius: 1.18rem;
+        border: 1px solid rgba(214, 169, 43, 0.32);
+        background: rgba(255, 255, 255, 0.08);
+        object-fit: contain;
+        object-position: center top;
+        padding: 0.15rem;
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+      }
+      .profile-photo.is-uploading {
+        opacity: 0.58;
+        filter: grayscale(0.3);
+      }
+      .reg-number {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.38rem;
+        border: 1px solid rgba(214, 169, 43, 0.32);
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.14);
+        color: #7a5a12;
+        padding: 0.45rem 0.72rem;
+        font-size: 0.72rem;
+        font-weight: 950;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+      .lux-shell .reg-number {
+        color: #ffe08a;
+        background: rgba(214, 169, 43, 0.13);
+        border-color: rgba(214, 169, 43, 0.34);
+      }
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.38rem;
+        min-height: 1.95rem;
+        padding: 0.42rem 0.68rem;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        font-size: 0.68rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.045em;
+        white-space: nowrap;
+      }
+      .status-verified {
+        background: rgba(16, 185, 129, 0.13);
+        color: #047857;
+        border-color: rgba(16, 185, 129, 0.2);
+      }
+      .status-pending {
+        background: #fff7ed;
+        color: #b45309;
+        border-color: #fed7aa;
+      }
+      .metric-tile {
+        padding: 0.78rem;
+        background: linear-gradient(135deg, #fff, rgba(255, 250, 240, 0.62));
+      }
+      .metric-label {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.62rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+      .metric-value {
+        margin: 0.16rem 0 0;
+        color: var(--deep);
+        font-size: 0.92rem;
+        font-weight: 950;
+        line-height: 1.2;
+        word-break: break-word;
+      }
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        color: var(--deep);
+        font-family: "Playfair Display", Georgia, serif;
+        font-weight: 950;
+      }
+      .section-title span {
+        display: grid;
+        place-items: center;
+        width: 2.35rem;
+        height: 2.35rem;
+        border-radius: 0.9rem;
+        background: rgba(214, 169, 43, 0.13);
+        color: #8a6616;
+      }
+      .input-wrap label {
+        display: block;
+        margin-bottom: 0.28rem;
+        color: var(--deep);
+        font-size: 0.64rem;
+        font-weight: 950;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .form-control {
+        min-height: 2.6rem !important;
+        border: 1px solid rgba(5, 53, 31, 0.12) !important;
+        border-radius: 1rem !important;
+        background: #fff !important;
+        color: #102017 !important;
+        font-size: 0.84rem !important;
+        font-weight: 780 !important;
+        padding: 0.62rem 0.78rem !important;
+        box-shadow: 0 10px 28px rgba(5, 53, 31, 0.035) !important;
+      }
+      .form-control:focus {
+        border-color: rgba(214, 169, 43, 0.62) !important;
+        box-shadow: 0 0 0 4px rgba(214, 169, 43, 0.14) !important;
+      }
+      .action-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 0.44rem !important;
+        min-height: 2.22rem !important;
+        border-radius: 999px !important;
+        border: 1px solid rgba(5, 53, 31, 0.1) !important;
+        padding: 0.52rem 0.78rem !important;
+        font-size: 0.72rem !important;
+        font-weight: 950 !important;
+        line-height: 1 !important;
+        box-shadow: 0 10px 24px rgba(5, 53, 31, 0.08) !important;
+        transition: 0.18s ease !important;
+      }
+      .action-btn:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.03);
+      }
+      .btn-ghost {
+        background: #fff !important;
+        color: var(--deep) !important;
+      }
+      .btn-green {
+        background: linear-gradient(135deg, #05351f, #0f8a4b) !important;
+        color: #fff !important;
+      }
+      .btn-gold {
+        background: linear-gradient(135deg, #d6a92b, #ffe08a) !important;
+        color: var(--deep) !important;
+      }
+      .btn-danger-soft {
+        background: #fee2e2 !important;
+        color: #991b1b !important;
+        border-color: #fecaca !important;
+      }
+      .dirty-banner {
+        display: none;
+        border: 1px solid rgba(214, 169, 43, 0.24);
+        border-radius: 1.1rem;
+        background: rgba(255, 250, 240, 0.96);
+        box-shadow: var(--shadow-card);
+      }
+      .dirty-banner.show {
+        display: flex;
+      }
+      .account-editor-panel {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(214, 169, 43, 0.25);
+        border-radius: 1.25rem;
+        background: linear-gradient(135deg, #031b0f, #05351f 52%, #0f8a4b);
+        color: #fff;
+        padding: 1rem;
+        box-shadow: 0 22px 62px rgba(5, 53, 31, 0.18);
+      }
+      .account-editor-panel::after {
+        content: "";
+        position: absolute;
+        right: -4rem;
+        top: -5rem;
+        width: 12rem;
+        height: 12rem;
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.22);
+        filter: blur(28px);
+      }
+      .account-editor-head {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: flex-start;
+        margin-bottom: 0.85rem;
+      }
+      .account-eyebrow {
+        margin: 0;
+        color: #ffe08a;
+        font-size: 0.64rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+      }
+      .account-editor-head h3 {
+        margin: 0.18rem 0 0;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 1.75rem;
+        font-weight: 950;
+        line-height: 1;
+      }
+      .account-editor-head p:not(.account-eyebrow) {
+        margin: 0.34rem 0 0;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+      .account-secure-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.38rem;
+        min-height: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 0.4rem 0.7rem;
+        color: #ffe08a;
+        font-size: 0.68rem;
+        font-weight: 950;
+      }
+      .account-editor-panel .input-wrap {
+        position: relative;
+        z-index: 1;
+      }
+      .account-editor-panel label {
+        color: rgba(255, 255, 255, 0.72);
+      }
+      .account-editor-panel .form-control {
+        background: rgba(255, 255, 255, 0.12) !important;
+        border-color: rgba(255, 255, 255, 0.14) !important;
+        color: #fff !important;
+      }
+      .account-editor-panel .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.45);
+      }
+      .account-editor-actions {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-top: 0.8rem;
+      }
+      .upload-area {
+        border: 1px dashed rgba(214, 169, 43, 0.35);
+        border-radius: 1rem;
+        background: rgba(214, 169, 43, 0.08);
+        padding: 0.78rem;
+      }
+      .upload-thumb {
+        width: 100%;
+        height: 13rem;
+        border-radius: 1rem;
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        background: #f6fbf7;
+        object-fit: contain;
+        object-position: center;
+        cursor: pointer;
+        padding: 0.25rem;
+      }
+      .doc-card {
+        padding: 0.9rem;
+        background: linear-gradient(135deg, #fff, rgba(255, 250, 240, 0.62));
+      }
+      .modal-content {
+        border: 1px solid rgba(214, 169, 43, 0.25) !important;
+        border-radius: 1.35rem !important;
+        overflow: hidden;
+        box-shadow: var(--shadow-premium) !important;
+      }
+      .modal-body {
+        min-height: 52vh;
+        background: #06150d;
+        display: grid;
+        place-items: center;
+        overflow: auto;
+      }
+      .modal-body iframe {
+        width: 100%;
+        height: min(75vh, 820px);
+        border: 0;
+        background: #fff;
+      }
+      .modal-body img {
+        max-width: 100%;
+        max-height: 75vh;
+        object-fit: contain;
+        transition: transform 0.18s ease;
+        transform-origin: center center;
+      }
+      .zoom-controls {
+        position: absolute;
+        right: 1rem;
+        bottom: 1rem;
+        display: flex;
+        gap: 0.42rem;
+        z-index: 5;
+      }
+      .zoom-btn {
+        display: grid;
+        place-items: center;
+        width: 2.35rem;
+        height: 2.35rem;
+        border: 1px solid rgba(214, 169, 43, 0.26);
+        border-radius: 999px;
+        background: #fff;
+        color: var(--deep);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+      }
+      .toast-box {
+        position: fixed;
+        left: 50%;
+        bottom: 1rem;
+        z-index: 2000;
+        display: none;
+        width: min(92vw, 34rem);
+        transform: translateX(-50%);
+        border: 1px solid rgba(214, 169, 43, 0.3);
+        border-radius: 1rem;
+        background: #05351f;
+        color: #fff;
+        padding: 0.85rem 1rem;
+        box-shadow: var(--shadow-premium);
+      }
+      .toast-box.show {
+        display: block;
+      }
+      .admin-data-note {
+        border: 1px solid rgba(214, 169, 43, 0.22);
+        border-radius: 1rem;
+        background: #fffaf0;
+        color: #533f0f;
+      }
+
+      .no-print {
+        display: none !important;
+      }
+      @media (min-width: 768px) {
+        .md\:ml-64 {
+          margin-left: 16rem !important;
+        }
+      }
+      @media (max-width: 767px) {
+        #sidebar {
+          width: 17rem !important;
+        }
+        .dirty-banner.show {
+          display: block;
+        }
+        .profile-photo {
+          width: 6rem;
+          height: 7rem;
+        }
+        .lux-shell .relative.z-10 {
+          align-items: stretch;
+        }
+        .upload-thumb {
+          height: 11rem;
+        }
+        .account-editor-head {
+          flex-direction: column;
+        }
+        .account-editor-actions .action-btn {
+          flex: 1;
+        }
+        .status-pill {
+          white-space: normal;
+        }
+        .metric-tile {
+          padding: 0.66rem;
+        }
+      }
+      @media print {
+        .no-print,
+        #sidebar,
+        #mobile-overlay,
+        .topbar,
+        .dirty-banner,
+        .upload-area,
+        .zoom-controls {
+          display: none !important;
+        }
+        .md\:ml-64 {
+          margin-left: 0 !important;
+        }
+        body {
+          background: #fff !important;
+        }
+        .lux-shell,
+        .lux-card,
+        .doc-card,
+        .metric-tile {
+          box-shadow: none !important;
+          border: 1px solid #ddd !important;
+        }
+        .lux-shell .relative.bg-gradient-to-r {
+          background: #fff !important;
+          color: #111 !important;
+        }
+        .lux-shell .relative.bg-gradient-to-r * {
+          color: #111 !important;
+        }
+        .profile-photo {
+          width: 5rem;
+          height: 5rem;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="/assets/css/admin-unified.css">
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+</head>
+  <body class="edit-member-page min-h-screen flex flex-col text-sm">
+    <a class="skip-link" href="#editMemberMain">Skip to editor</a>
+    <div
+      id="mobile-overlay"
+      class="hidden no-print"
+      onclick="closeSidebar()"
+      aria-hidden="true"
+    ></div>
+
+    <div class="flex flex-1">
+      <aside
+        id="sidebar"
+        class="sidebar fixed inset-y-0 left-0 z-50 flex flex-col w-64 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto"
+      >
+        <div class="relative overflow-hidden border-b border-white/10 p-4">
+          <div
+            class="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-yellow-400/20 blur-2xl"
+          ></div>
+          <a
+            href="/admin/dashboard.html"
+            class="relative z-10 flex items-center gap-3 text-white no-underline"
+            aria-label="APSG Admin Dashboard"
+          >
+            <span
+              class="grid h-11 w-11 place-items-center rounded-2xl border border-yellow-400/30 bg-white/10 shadow-lg"
+            >
+              <img
+                src="/assets/images/logo/apsg.png"
+                alt="APSG Logo"
+                class="h-7 w-auto"
+                onerror="
+                  this.style.display = 'none';
+                  this.nextElementSibling.style.display = 'block';
+                "
+              width="96" height="96" decoding="async">
+              <i class="fas fa-shield-halved hidden text-yellow-300"></i>
+            </span>
+            <span class="min-w-0">
+              <strong class="block text-base font-black leading-none"
+                >APSG Admin</strong
+              >
+              <small
+                class="mt-1 block text-[10px] font-black uppercase tracking-[.22em] text-yellow-300"
+                >Member Edit Desk</small
+              >
+            </span>
+          </a>
+        </div>
+        <nav
+          class="apsg-role-sidebar flex-1 space-y-1.5 overflow-y-auto p-2.5 pb-4"
+          aria-label="Admin navigation"
+        >
+          <p
+            class="px-2 py-1.5 text-[9px] font-black uppercase tracking-[0.28em] text-white/40"
+          >
+            Command Center
+          </p>
+          <a
+            href="/admin/dashboard.html"
+            class="sidebar-link"
+            data-access="viewer,editor,admin,superadmin"
+            ><i class="fas fa-chart-pie w-4 text-center"></i
+            ><span>Dashboard</span><span class="role-chip">Admin</span></a
+          >
+          <a
+            href="/admin/members.html"
+            class="sidebar-link active"
+            data-access="admin,superadmin"
+            ><i class="fas fa-users w-4 text-center"></i><span>Members</span
+            ><span class="role-chip">Admin</span></a
+          >
+          <a
+            href="/admin/account-details.html"
+            class="sidebar-link"
+            data-access="admin,superadmin"
+            ><i class="fas fa-building-columns w-4 text-center"></i
+            ><span>Account Details</span><span class="role-chip">Admin</span></a
+          >
+          <a
+            href="/admin/admin-leadership.html"
+            class="sidebar-link"
+            data-access="admin,superadmin"
+            ><i class="fa-solid fa-users-viewfinder w-4 text-center"></i
+            ><span>Leadership Desk</span><span class="role-chip">Admin</span></a
+          >
+          <a
+            href="/admin/admin-official-create.html"
+            class="sidebar-link"
+            data-access="admin,superadmin"
+            ><i class="fa-solid fa-user-pen w-4 text-center"></i
+            ><span>Create / Update</span><span class="role-chip">New</span></a
+          >
+          <a
+            href="/admin/admin-officials-manager.html"
+            class="sidebar-link"
+            data-access="admin,superadmin"
+            ><i class="fa-solid fa-table-list w-4 text-center"></i
+            ><span>Officials Manager</span
+            ><span class="role-chip">Admin</span></a
+          >
+          <a
+            href="/admin/member-details.html"
+            id="viewDossierSideLink"
+            class="sidebar-link"
+            data-access="admin,superadmin"
+            ><i class="fas fa-id-card-clip w-4 text-center"></i
+            ><span>View Dossier</span><span class="role-chip">Open</span></a
+          >
+
+          <p
+            class="px-2 pt-4 pb-1.5 text-[9px] font-black uppercase tracking-[0.28em] text-yellow-300/80"
+          >
+            Publishing Desk
+          </p>
+          <a
+            href="/admin/admin-blog.html"
+            class="sidebar-link"
+            data-access="editor,admin,superadmin"
+            ><i class="fas fa-newspaper w-4 text-center"></i
+            ><span>News & Updates</span
+            ><span class="role-chip editor">Editor</span></a
+          >
+          <a
+            href="/admin/admin-meeting.html"
+            class="sidebar-link"
+            data-access="editor,admin,superadmin"
+            ><i class="fas fa-users-line w-4 text-center"></i
+            ><span>Meetings</span
+            ><span class="role-chip editor">Editor</span></a
+          >
+          <a
+            href="/admin/admin-event.html"
+            class="sidebar-link"
+            data-access="editor,admin,superadmin"
+            ><i class="fas fa-calendar-check w-4 text-center"></i
+            ><span>Events</span><span class="role-chip editor">Editor</span></a
+          >
+          <a
+            href="/admin/admin-gallery.html"
+            class="sidebar-link"
+            data-access="editor,admin,superadmin"
+            ><i class="fa-solid fa-images w-4 text-center"></i
+            ><span>Gallery Albums</span
+            ><span class="role-chip editor">Editor</span></a
+          >
+
+          <p
+            class="px-2 pt-4 pb-1.5 text-[9px] font-black uppercase tracking-[0.28em] text-white/40"
+          >
+            Public Review
+          </p>
+          <a
+            href="/pages/blog.html"
+            class="sidebar-link"
+            target="_blank"
+            rel="noopener"
+            data-access="viewer,editor,admin,superadmin"
+            ><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i
+            ><span>View Blog</span></a
+          >
+          <a
+            href="/pages/meetings.html"
+            class="sidebar-link"
+            target="_blank"
+            rel="noopener"
+            data-access="viewer,editor,admin,superadmin"
+            ><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i
+            ><span>View Meetings</span></a
+          >
+          <a
+            href="/pages/events.html"
+            class="sidebar-link"
+            target="_blank"
+            rel="noopener"
+            data-access="viewer,editor,admin,superadmin"
+            ><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i
+            ><span>View Events</span></a
+          >
+          <a
+            href="/pages/gallery.html"
+            class="sidebar-link"
+            target="_blank"
+            rel="noopener"
+            data-access="viewer,editor,admin,superadmin"
+            ><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i
+            ><span>View Gallery</span></a
+          >
+          <a
+            href="/pages/leadership.html"
+            class="sidebar-link"
+            target="_blank"
+            rel="noopener"
+            data-access="viewer,editor,admin,superadmin"
+            ><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i
+            ><span>View Leadership</span></a
+          >
+          <a
+            href="/pages/cwdi.html"
+            class="sidebar-link"
+            target="_blank"
+            rel="noopener"
+            data-access="viewer,editor,admin,superadmin"
+            ><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i
+            ><span>View CWDI</span></a
+          >
+        </nav>
+        <div
+          class="mx-2.5 mb-3 rounded-2xl border border-yellow-400/20 bg-white/[0.06] p-3"
+        >
+          <div class="flex items-center gap-2.5">
+            <div
+              class="grid h-8 w-8 place-items-center rounded-xl bg-yellow-400 text-[#062112]"
+            >
+              <i class="fas fa-user-shield text-sm"></i>
+            </div>
+            <div class="min-w-0">
+              <p class="text-[11px] font-black mb-0">Role Access</p>
+              <p class="text-[10px] text-white/50 mb-0">
+                <span id="adminRoleLabel">Resolving role</span>
+              </p>
+            </div>
+          </div>
+          <div class="mt-3 grid grid-cols-2 gap-1.5">
+            <span class="role-level" data-role-level="viewer">Viewer</span>
+            <span class="role-level" data-role-level="editor">Editor</span>
+            <span class="role-level" data-role-level="admin">Admin</span>
+            <span class="role-level" data-role-level="superadmin"
+              >Superadmin</span
+            >
+          </div>
+          <div
+            class="mt-3 flex items-center gap-2 rounded-xl bg-black/20 px-2.5 py-2 text-[10px] text-white/60"
+          >
+            <span class="pulse-dot"></span
+            ><span>Authenticated admin session</span>
+          </div>
+        </div>
+        <div class="shrink-0 border-t border-white/10 bg-[#041f12] p-2.5">
+          <button
+            onclick="logout()"
+            class="sidebar-link danger-link w-full text-left"
+            type="button"
+          >
+            <i class="fas fa-right-from-bracket w-4 text-center"></i
+            ><span>Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      <div class="flex-1 flex flex-col md:ml-64">
+        <header
+          class="sticky top-0 z-40 border-b border-green-900/10 bg-white/82 backdrop-blur-xl shadow-sm"
+        >
+          <div class="flex items-center justify-between px-3 md:px-5 py-2.5">
+            <div class="flex items-center gap-2 min-w-0">
+              <button
+                id="mobile-toggle"
+                onclick="toggleSidebar()"
+                class="md:hidden grid h-9 w-9 place-items-center rounded-xl bg-green-900 text-white"
+              >
+                <i class="fas fa-bars"></i>
+              </button>
+              <a
+                href="/admin/members.html"
+                class="hidden sm:inline-flex items-center gap-2 text-green-800 hover:text-green-900 font-black no-underline"
+              >
+                <i class="fas fa-arrow-left"></i>
+                Back to Members
+              </a>
+            </div>
+            <div class="flex items-center gap-2 no-print">
+              <button
+                onclick="loadMember()"
+                class="action-btn btn-ghost py-2 px-3"
+              >
+                <i class="fas fa-rotate"></i
+                ><span class="hidden sm:inline">Refresh</span>
+              </button>
+              <button
+                onclick="copyEditorSummary()"
+                class="action-btn btn-ghost py-2 px-3"
+              >
+                <i class="fas fa-copy"></i
+                ><span class="hidden sm:inline">Copy Summary</span>
+              </button>
+              <button
+                onclick="window.print()"
+                class="action-btn btn-ghost py-2 px-3"
+              >
+                <i class="fas fa-print"></i
+                ><span class="hidden sm:inline">Print</span>
+              </button>
+              <button
+                onclick="logout()"
+                class="action-btn btn-danger-soft py-2 px-3"
+              >
+                <i class="fas fa-right-from-bracket"></i>
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <main
+          id="editMemberMain"
+          class="flex-1 p-3 md:p-5 overflow-auto max-w-screen-2xl mx-auto w-full"
+          tabindex="-1"
+        >
+          <div
+            id="dirtyBanner"
+            class="dirty-banner items-center justify-between gap-3 px-4 py-3 mb-4 no-print"
+          >
+            <div class="flex items-center gap-3">
+              <span
+                class="grid h-9 w-9 place-items-center rounded-full bg-yellow-400 text-green-950"
+                ><i class="fas fa-pen-to-square"></i
+              ></span>
+              <div>
+                <p class="font-black text-green-950 mb-0">
+                  Unsaved changes detected
+                </p>
+                <p class="text-xs text-slate-600 mb-0">
+                  Review and save before leaving this editor.
+                </p>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button
+                onclick="resetEditorChanges()"
+                class="action-btn btn-ghost py-2 px-3"
+              >
+                Reset
+              </button>
+              <button
+                onclick="savePersonalInfo()"
+                class="action-btn btn-green py-2 px-3"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+
+          <section class="lux-shell rounded-[1.5rem] overflow-hidden mb-4">
+            <div
+              class="relative bg-gradient-to-r from-[#042515] via-[#07361f] to-[#0f766e] text-white p-4 md:p-5"
+            >
+              <div
+                class="absolute -right-16 -top-20 h-48 w-48 rounded-full bg-yellow-400/20 blur-2xl"
+              ></div>
+              <div
+                class="relative z-10 flex flex-col lg:flex-row lg:items-center gap-4"
+              >
+                <div class="flex items-center gap-4 flex-1 min-w-0">
+                  <div class="relative shrink-0">
+                    <img
+                      src="/assets/images/profile-placeholder.png"
+                      alt="Profile Photo"
+                      class="profile-photo"
+                      id="profilePhoto"
+                    />
+                    <button
+                      type="button"
+                      onclick="
+                        document.getElementById('profileFileInput').click()
+                      "
+                      class="absolute -bottom-2 -right-2 grid h-9 w-9 place-items-center rounded-full bg-yellow-400 text-green-950 shadow-lg no-print"
+                      title="Change profile photo"
+                    >
+                      <i class="fas fa-camera"></i>
+                    </button>
+                  </div>
+                  <div class="min-w-0">
+                    <div
+                      class="reg-number mb-2"
+                      id="detailRegNumber"
+                      title="Click to copy registration number"
+                    >
+                      <i class="fas fa-fingerprint"></i>—
+                    </div>
+                    <h1
+                      class="text-2xl md:text-4xl font-black tracking-tight mb-1 truncate"
+                      id="detailFullName"
+                    >
+                      Loading...
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-2">
+                      <p
+                        class="text-white/74 font-bold mb-0"
+                        id="detailDesignation"
+                      >
+                        —
+                      </p>
+                      <span id="verifiedPill" class="status-pill status-pending"
+                        ><i class="fas fa-clock"></i>Pending</span
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 gap-2 w-full lg:w-auto"
+                >
+                  <div class="metric-tile bg-white/10 border-white/15">
+                    <p class="metric-label text-white/55">State</p>
+                    <p class="metric-value text-white" id="tileState">—</p>
+                  </div>
+                  <div class="metric-tile bg-white/10 border-white/15">
+                    <p class="metric-label text-white/55">Documents</p>
+                    <p class="metric-value text-white" id="tileDocs">0/2</p>
+                  </div>
+                  <div class="metric-tile bg-white/10 border-white/15">
+                    <p class="metric-label text-white/55">Joined</p>
+                    <p class="metric-value text-white" id="tileJoined">—</p>
+                  </div>
+                  <div class="metric-tile bg-white/10 border-white/15">
+                    <p class="metric-label text-white/55">Readiness</p>
+                    <p class="metric-value text-white" id="tileReadiness">0%</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="p-3 md:p-4 grid grid-cols-1 lg:grid-cols-[0.7fr_0.3fr] gap-3"
+            >
+              <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+                <div class="metric-tile">
+                  <p class="metric-label">Phone</p>
+                  <p class="metric-value truncate" id="tilePhone">—</p>
+                </div>
+                <div class="metric-tile">
+                  <p class="metric-label">LGA / LCDA</p>
+                  <p class="metric-value truncate" id="tileLga">—</p>
+                </div>
+                <div class="metric-tile">
+                  <p class="metric-label">Ward</p>
+                  <p class="metric-value truncate" id="tileWard">—</p>
+                </div>
+                <div class="metric-tile account-metric-tile">
+                  <p class="metric-label">Account</p>
+                  <p class="metric-value truncate" id="tileAccount">—</p>
+                </div>
+              </div>
+              <div class="flex flex-wrap lg:justify-end gap-2 no-print">
+                <a href="/admin/members.html" class="action-btn btn-ghost"
+                  ><i class="fas fa-list"></i>Members</a
+                >
+                <a
+                  id="viewDossierLink"
+                  href="/admin/member-details.html"
+                  class="action-btn btn-gold"
+                  ><i class="fas fa-id-card"></i>Dossier</a
+                >
+                <button
+                  id="saveTopBtn"
+                  onclick="savePersonalInfo()"
+                  class="action-btn btn-green"
+                >
+                  <i class="fas fa-floppy-disk"></i>Save All
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section class="grid grid-cols-1 xl:grid-cols-[0.62fr_0.38fr] gap-4">
+            <div class="space-y-4">
+              <div class="lux-card p-4 md:p-5">
+                <div class="flex items-center justify-between gap-3 mb-4">
+                  <h2 class="section-title text-xl mb-0">
+                    <span><i class="fas fa-user-pen"></i></span>Edit Member
+                    Record
+                  </h2>
+                  <button
+                    onclick="resetEditorChanges()"
+                    class="action-btn btn-ghost py-2 px-3 no-print"
+                  >
+                    <i class="fas fa-rotate-left"></i>Reset
+                  </button>
+                </div>
+
+                <form
+                  class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm"
+                  onsubmit="
+                    event.preventDefault();
+                    savePersonalInfo();
+                  "
+                >
+                  <div class="input-wrap">
+                    <label for="firstNameInput">First Name</label>
+                    <input
+                      type="text"
+                      id="firstNameInput"
+                      class="form-control"
+                      autocomplete="given-name"
+                    />
+                  </div>
+                  <div class="input-wrap">
+                    <label for="lastNameInput">Last Name</label>
+                    <input
+                      type="text"
+                      id="lastNameInput"
+                      class="form-control"
+                      autocomplete="family-name"
+                    />
+                  </div>
+                  <div class="input-wrap md:col-span-2">
+                    <label for="designationInput">Designation</label>
+                    <input
+                      type="text"
+                      id="designationInput"
+                      class="form-control"
+                      placeholder="Member / Coordinator / Secretary"
+                    />
+                  </div>
+                  <div class="input-wrap">
+                    <label for="phoneInput">Phone</label>
+                    <input
+                      type="tel"
+                      id="phoneInput"
+                      class="form-control"
+                      autocomplete="tel"
+                    />
+                  </div>
+                  <div class="input-wrap">
+                    <label for="emailInput">Email</label>
+                    <input
+                      type="email"
+                      id="emailInput"
+                      class="form-control"
+                      autocomplete="email"
+                    />
+                  </div>
+                  <div class="md:col-span-2 account-editor-panel">
+                    <div class="account-editor-head">
+                      <div>
+                        <p class="account-eyebrow">
+                          <i class="fas fa-building-columns"></i> Member Account
+                          Details
+                        </p>
+                        <h3>Bank Account Information</h3>
+                        <p>
+                          Update the member account number and bank name. These
+                          fields are saved to
+                          <strong>members.account_number</strong> and
+                          <strong>members.bank_name</strong>.
+                        </p>
+                      </div>
+                      <span class="account-secure-badge"
+                        ><i class="fas fa-shield-halved"></i> Editable</span
+                      >
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div class="input-wrap account-input-wrap">
+                        <label for="accountNumberInput">Account Number</label>
+                        <input
+                          type="text"
+                          id="accountNumberInput"
+                          class="form-control account-control"
+                          inputmode="numeric"
+                          autocomplete="off"
+                          placeholder="Enter account number"
+                        />
+                      </div>
+                      <div class="input-wrap account-input-wrap">
+                        <label for="bankNameInput">Bank</label>
+                        <input
+                          type="text"
+                          id="bankNameInput"
+                          class="form-control account-control"
+                          autocomplete="organization"
+                          placeholder="Enter bank name"
+                        />
+                      </div>
+                    </div>
+                    <div class="account-editor-actions no-print">
+                      <button
+                        type="button"
+                        onclick="resetEditorChanges()"
+                        class="action-btn btn-ghost py-2 px-3"
+                      >
+                        <i class="fas fa-rotate-left"></i>Reset Account
+                      </button>
+                      <button
+                        type="button"
+                        onclick="saveAccountDetails()"
+                        class="action-btn btn-gold py-2 px-3"
+                      >
+                        <i class="fas fa-building-columns"></i>Save Account
+                        Details
+                      </button>
+                    </div>
+                  </div>
+                  <div class="input-wrap">
+                    <label for="stateInput">State</label>
+                    <input type="text" id="stateInput" class="form-control" />
+                  </div>
+                  <div class="input-wrap">
+                    <label for="lgaInput">LGA / LCDA</label>
+                    <input type="text" id="lgaInput" class="form-control" />
+                  </div>
+                  <div class="input-wrap md:col-span-2">
+                    <label for="wardInput">Ward</label>
+                    <input type="text" id="wardInput" class="form-control" />
+                  </div>
+                  <div class="input-wrap">
+                    <label for="pvcNumberInput">PVC Number / VIN</label>
+                    <input
+                      type="text"
+                      id="pvcNumberInput"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="input-wrap">
+                    <label for="apcNumberInput">APC Card Number</label>
+                    <input
+                      type="text"
+                      id="apcNumberInput"
+                      class="form-control"
+                    />
+                  </div>
+                  <div
+                    class="md:col-span-2 rounded-2xl bg-green-50/80 border border-green-900/10 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 no-print"
+                  >
+                    <label class="flex items-center gap-3 cursor-pointer mb-0">
+                      <input
+                        type="checkbox"
+                        id="verifiedInput"
+                        class="w-5 h-5 accent-green-700"
+                      />
+                      <span class="font-black text-green-950"
+                        >Mark member as verified</span
+                      >
+                    </label>
+                    <button
+                      type="submit"
+                      id="savePersonalBtn"
+                      class="action-btn btn-green"
+                    >
+                      <i class="fas fa-floppy-disk"></i>Save Member Changes
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <div class="lux-card p-4 md:p-5">
+                <div class="flex items-center justify-between gap-3 mb-4">
+                  <h2 class="section-title text-xl mb-0">
+                    <span><i class="fas fa-chart-line"></i></span>Editor
+                    Intelligence
+                  </h2>
+                  <span id="healthTier" class="status-pill status-pending"
+                    >Incomplete</span
+                  >
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div class="metric-tile">
+                    <p class="metric-label">Profile Photo</p>
+                    <p class="metric-value" id="profileStatusTile">Missing</p>
+                  </div>
+                  <div class="metric-tile">
+                    <p class="metric-label">PVC Document</p>
+                    <p class="metric-value" id="pvcStatusTile">Missing</p>
+                  </div>
+                  <div class="metric-tile">
+                    <p class="metric-label">APC Document</p>
+                    <p class="metric-value" id="apcStatusTile">Missing</p>
+                  </div>
+                </div>
+                <div class="mt-4">
+                  <div class="flex items-center justify-between mb-2">
+                    <p
+                      class="text-xs uppercase tracking-[0.16em] text-slate-500 font-black mb-0"
+                    >
+                      Record Readiness
+                    </p>
+                    <p
+                      id="readinessText"
+                      class="font-black text-green-950 mb-0"
+                    >
+                      0%
+                    </p>
+                  </div>
+                  <div class="h-3 rounded-full bg-slate-100 overflow-hidden">
+                    <div
+                      id="readinessBar"
+                      class="h-full rounded-full bg-gradient-to-r from-green-700 via-emerald-600 to-yellow-400"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div class="lux-card p-4 md:p-5 no-print">
+                <h2 class="section-title text-xl mb-4">
+                  <span><i class="fas fa-image-portrait"></i></span>Profile
+                  Photo
+                </h2>
+                <div class="upload-area">
+                  <input
+                    type="file"
+                    id="profileFileInput"
+                    accept="image/*"
+                    class="hidden"
+                  />
+                  <button
+                    type="button"
+                    onclick="
+                      document.getElementById('profileFileInput').click()
+                    "
+                    class="action-btn btn-gold w-full"
+                  >
+                    <i class="fas fa-cloud-arrow-up"></i>Select Profile Photo
+                  </button>
+                  <p
+                    id="profileFileName"
+                    class="text-xs text-slate-500 mt-2 mb-2"
+                  >
+                    No file chosen
+                  </p>
+                  <button
+                    id="profileUploadBtn"
+                    class="action-btn btn-green w-full"
+                    disabled
+                  >
+                    <i class="fas fa-upload"></i>Upload Photo
+                  </button>
+                  <p
+                    id="profileStatus"
+                    class="mt-2 text-xs font-bold text-slate-500 mb-0"
+                  ></p>
+                  <p
+                    class="mt-2 text-[11px] leading-relaxed text-slate-500 mb-0"
+                  >
+                    Saved to <strong>members.profile_photo_path</strong> and
+                    Supabase Storage <strong>uploads/profile</strong>.
+                  </p>
+                </div>
+              </div>
+
+              <div class="lux-card p-4 md:p-5">
+                <h2 class="section-title text-xl mb-4">
+                  <span><i class="fas fa-folder-open"></i></span>Document Vault
+                </h2>
+                <div class="grid grid-cols-1 gap-3">
+                  <div class="doc-card">
+                    <div class="flex items-center justify-between gap-3 mb-2">
+                      <div>
+                        <p class="font-black text-green-950 mb-0">
+                          PVC Document
+                        </p>
+                        <p class="text-xs text-slate-500 mb-0">
+                          Current PVC / VIN evidence
+                        </p>
+                      </div>
+                      <span id="pvcDocBadge" class="status-pill status-pending"
+                        >Missing</span
+                      >
+                    </div>
+                    <img
+                      src="/assets/images/pdf-placeholder.png"
+                      alt="PVC Preview"
+                      class="upload-thumb mb-3"
+                      id="pvcPreview"
+                    />
+                    <div class="flex gap-2 mb-3 no-print">
+                      <button
+                        class="action-btn btn-green flex-1"
+                        id="pvcViewBtn"
+                        disabled
+                      >
+                        <i class="fas fa-eye"></i>View
+                      </button>
+                      <button
+                        class="action-btn btn-ghost flex-1 hidden"
+                        id="pvcDownloadBtn"
+                      >
+                        <i class="fas fa-download"></i>Download
+                      </button>
+                    </div>
+                    <div class="upload-area no-print">
+                      <input
+                        type="file"
+                        id="pvcFileInput"
+                        accept="image/*,application/pdf"
+                        class="hidden"
+                      />
+                      <button
+                        type="button"
+                        onclick="
+                          document.getElementById('pvcFileInput').click()
+                        "
+                        class="action-btn btn-gold w-full"
+                      >
+                        <i class="fas fa-file-arrow-up"></i>Select / Replace PVC
+                      </button>
+                      <p
+                        id="pvcFileName"
+                        class="text-xs text-slate-500 mt-2 mb-2"
+                      >
+                        No file chosen
+                      </p>
+                      <button
+                        id="pvcUploadBtn"
+                        class="action-btn btn-green w-full"
+                        disabled
+                      >
+                        <i class="fas fa-upload"></i>Upload PVC
+                      </button>
+                      <p
+                        id="pvcStatus"
+                        class="mt-2 text-xs font-bold text-slate-500 mb-0"
+                      ></p>
+                    </div>
+                  </div>
+
+                  <div class="doc-card">
+                    <div class="flex items-center justify-between gap-3 mb-2">
+                      <div>
+                        <p class="font-black text-green-950 mb-0">APC Card</p>
+                        <p class="text-xs text-slate-500 mb-0">
+                          Current APC membership card evidence
+                        </p>
+                      </div>
+                      <span id="apcDocBadge" class="status-pill status-pending"
+                        >Missing</span
+                      >
+                    </div>
+                    <img
+                      src="/assets/images/pdf-placeholder.png"
+                      alt="APC Preview"
+                      class="upload-thumb mb-3"
+                      id="apcPreview"
+                    />
+                    <div class="flex gap-2 mb-3 no-print">
+                      <button
+                        class="action-btn btn-green flex-1"
+                        id="apcViewBtn"
+                        disabled
+                      >
+                        <i class="fas fa-eye"></i>View
+                      </button>
+                      <button
+                        class="action-btn btn-ghost flex-1 hidden"
+                        id="apcDownloadBtn"
+                      >
+                        <i class="fas fa-download"></i>Download
+                      </button>
+                    </div>
+                    <div class="upload-area no-print">
+                      <input
+                        type="file"
+                        id="apcFileInput"
+                        accept="image/*,application/pdf"
+                        class="hidden"
+                      />
+                      <button
+                        type="button"
+                        onclick="
+                          document.getElementById('apcFileInput').click()
+                        "
+                        class="action-btn btn-gold w-full"
+                      >
+                        <i class="fas fa-file-arrow-up"></i>Select / Replace APC
+                      </button>
+                      <p
+                        id="apcFileName"
+                        class="text-xs text-slate-500 mt-2 mb-2"
+                      >
+                        No file chosen
+                      </p>
+                      <button
+                        id="apcUploadBtn"
+                        class="action-btn btn-green w-full"
+                        disabled
+                      >
+                        <i class="fas fa-upload"></i>Upload APC
+                      </button>
+                      <p
+                        id="apcStatus"
+                        class="mt-2 text-xs font-bold text-slate-500 mb-0"
+                      ></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div
+            id="errorMessage"
+            class="hidden text-center mt-8 p-6 lux-card text-red-700"
+          >
+            <i class="fas fa-triangle-exclamation text-3xl mb-2"></i>
+            <p class="text-lg font-black mb-1">
+              Member not found or error loading data.
+            </p>
+            <a
+              href="/admin/members.html"
+              class="action-btn btn-ghost mt-3 no-underline"
+              >Return to Members</a
+            >
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div class="modal fade" id="previewModal" tabindex="-1">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content shadow-2xl">
+          <div
+            class="modal-header bg-gradient-to-r from-[#042515] via-[#07361f] to-[#0f766e] text-white border-0"
+          >
+            <div>
+              <p
+                class="text-[10px] uppercase tracking-[0.22em] text-yellow-300 font-black mb-0"
+              >
+                Document Vault
+              </p>
+              <h5 class="modal-title font-black">Document Preview</h5>
+            </div>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body p-0 relative">
+            <iframe id="previewFrame" class="d-none"></iframe>
+            <img id="previewImage" class="d-none" alt="Document preview" />
+            <div class="zoom-controls">
+              <button class="zoom-btn" onclick="zoomIn()" title="Zoom in">
+                <i class="fas fa-search-plus"></i>
+              </button>
+              <button class="zoom-btn" onclick="zoomOut()" title="Zoom out">
+                <i class="fas fa-search-minus"></i>
+              </button>
+              <button class="zoom-btn" onclick="resetZoom()" title="Reset">
+                <i class="fas fa-rotate"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toastBox" class="toast-box"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/supabase-clients.js"></script>
+  <script src="/assets/js/apsg-settings.js"></script>
+    <script src="/assets/js/admin-auth.js"></script>
+    <script>
+      let zoomLevel = 1;
+      let currentMember = null;
+      let originalSnapshot = null;
+      let currentDocs = { profile: false, pvc: false, apc: false };
+      let canWriteMember = false;
+      let currentAdminRole = "";
+
+      const els = {
+        sidebar: document.getElementById("sidebar"),
+        overlay: document.getElementById("mobile-overlay"),
+        dirtyBanner: document.getElementById("dirtyBanner"),
+        toastBox: document.getElementById("toastBox"),
+        profilePhoto: document.getElementById("profilePhoto"),
+        detailRegNumber: document.getElementById("detailRegNumber"),
+        detailFullName: document.getElementById("detailFullName"),
+        detailDesignation: document.getElementById("detailDesignation"),
+        verifiedPill: document.getElementById("verifiedPill"),
+        firstNameInput: document.getElementById("firstNameInput"),
+        lastNameInput: document.getElementById("lastNameInput"),
+        designationInput: document.getElementById("designationInput"),
+        phoneInput: document.getElementById("phoneInput"),
+        emailInput: document.getElementById("emailInput"),
+        stateInput: document.getElementById("stateInput"),
+        lgaInput: document.getElementById("lgaInput"),
+        wardInput: document.getElementById("wardInput"),
+        accountNumberInput: document.getElementById("accountNumberInput"),
+        bankNameInput: document.getElementById("bankNameInput"),
+        pvcNumberInput: document.getElementById("pvcNumberInput"),
+        apcNumberInput: document.getElementById("apcNumberInput"),
+        verifiedInput: document.getElementById("verifiedInput"),
+        pvcPreview: document.getElementById("pvcPreview"),
+        pvcViewBtn: document.getElementById("pvcViewBtn"),
+        pvcDownloadBtn: document.getElementById("pvcDownloadBtn"),
+        apcPreview: document.getElementById("apcPreview"),
+        apcViewBtn: document.getElementById("apcViewBtn"),
+        apcDownloadBtn: document.getElementById("apcDownloadBtn"),
+        savePersonalBtn: document.getElementById("savePersonalBtn"),
+        errorMessage: document.getElementById("errorMessage"),
+        tileState: document.getElementById("tileState"),
+        tileDocs: document.getElementById("tileDocs"),
+        tileJoined: document.getElementById("tileJoined"),
+        tileReadiness: document.getElementById("tileReadiness"),
+        tilePhone: document.getElementById("tilePhone"),
+        tileAccount: document.getElementById("tileAccount"),
+        tileLga: document.getElementById("tileLga"),
+        tileWard: document.getElementById("tileWard"),
+        profileStatusTile: document.getElementById("profileStatusTile"),
+        pvcStatusTile: document.getElementById("pvcStatusTile"),
+        apcStatusTile: document.getElementById("apcStatusTile"),
+        readinessText: document.getElementById("readinessText"),
+        readinessBar: document.getElementById("readinessBar"),
+        healthTier: document.getElementById("healthTier"),
+        pvcDocBadge: document.getElementById("pvcDocBadge"),
+        apcDocBadge: document.getElementById("apcDocBadge"),
+        viewDossierLink: document.getElementById("viewDossierLink"),
+        viewDossierSideLink: document.getElementById("viewDossierSideLink"),
+      };
+
+      const editableInputs = [
+        "firstNameInput",
+        "lastNameInput",
+        "designationInput",
+        "phoneInput",
+        "emailInput",
+        "accountNumberInput",
+        "bankNameInput",
+        "stateInput",
+        "lgaInput",
+        "wardInput",
+        "pvcNumberInput",
+        "apcNumberInput",
+        "verifiedInput",
+      ];
+
+      function showToast(message, type = "success") {
+        const icon =
+          type === "error"
+            ? "triangle-exclamation"
+            : type === "warning"
+              ? "circle-exclamation"
+              : "circle-check";
+        els.toastBox.innerHTML = `<div class="flex items-start gap-3"><i class="fas fa-${icon} mt-1 text-yellow-300"></i><div class="font-bold">${escapeHtml(message)}</div></div>`;
+        els.toastBox.classList.add("show");
+        clearTimeout(showToast._t);
+        showToast._t = setTimeout(
+          () => els.toastBox.classList.remove("show"),
+          3200,
+        );
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "").replace(
+          /[&<>'"]/g,
+          (char) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              "'": "&#039;",
+              '"': "&quot;",
+            })[char],
+        );
+      }
+
+      function isExternalUrl(path) {
+        return /^https?:\/\//i.test(String(path || ""));
+      }
+
+      function cleanStoragePath(path) {
+        return String(path || "")
+          .replace(/^uploads\//, "")
+          .replace(/^public\//, "");
+      }
+
+      function getPublicUrl(path) {
+        if (!path) return "";
+        if (isExternalUrl(path)) return path;
+        const cleaned = cleanStoragePath(path);
+        const { data } = supabaseClient.storage
+          .from("uploads")
+          .getPublicUrl(cleaned);
+        return data?.publicUrl || "";
+      }
+
+      function getMemberAvatarPath(member) {
+        return (
+          member?.profile_photo_path ||
+          member?.avatar_url ||
+          member?.profile_image_url ||
+          ""
+        );
+      }
+
+      function decodeRouteIdentifier(value) {
+        const raw = String(value ?? "").trim();
+        if (!raw) return "";
+        try { return decodeURIComponent(raw); } catch (error) { return raw; }
+      }
+
+      function getMemberRouteIdentifier(member) {
+        if (!member) return "";
+        return String(
+          member.id ??
+          member.member_id ??
+          member.user_id ??
+          member.reg_number ??
+          member.registration_number ??
+          ""
+        ).trim();
+      }
+
+      function getMemberRouteKey(member) {
+        if (!member) return "id";
+        if (member.id !== undefined && member.id !== null && String(member.id).trim()) return "id";
+        if (member.member_id !== undefined && member.member_id !== null && String(member.member_id).trim()) return "member_id";
+        if (member.user_id !== undefined && member.user_id !== null && String(member.user_id).trim()) return "user_id";
+        return "reg_number";
+      }
+
+      function buildMemberEditHref(member) {
+        const identifier = getMemberRouteIdentifier(member);
+        if (!identifier) return "/admin/members.html";
+        return `/admin/edit-member.html?${getMemberRouteKey(member)}=${encodeURIComponent(identifier)}`;
+      }
+
+      function buildMemberDetailsHref(member) {
+        const identifier = getMemberRouteIdentifier(member);
+        if (!identifier) return "/admin/members.html";
+        return `/admin/member-details.html?${getMemberRouteKey(member)}=${encodeURIComponent(identifier)}`;
+      }
+
+      function getRequestedMemberReference() {
+        const params = new URLSearchParams(location.search);
+        return {
+          id: decodeRouteIdentifier(
+            params.get("id") ||
+            params.get("member_id") ||
+            params.get("memberId") ||
+            ""
+          ),
+          reg: decodeRouteIdentifier(
+            params.get("reg") ||
+            params.get("reg_number") ||
+            params.get("registration_number") ||
+            ""
+          ),
+        };
+      }
+
+      async function fetchMemberForEdit(ref) {
+        const raw = decodeRouteIdentifier(ref?.id || ref?.reg || "");
+        if (!raw) return null;
+        const columns = ref?.reg && !ref?.id
+          ? ["reg_number", "registration_number", "id", "member_id", "user_id"]
+          : ["id", "member_id", "user_id", "reg_number", "registration_number"];
+        for (const column of columns) {
+          const { data, error } = await supabaseClient
+            .from("members")
+            .select("*")
+            .eq(column, raw)
+            .maybeSingle();
+          if (data) return data;
+          if (error && !["PGRST116", "42703", "PGRST204"].includes(error.code) && !/column|schema cache/i.test(String(error.message || ""))) {
+            console.warn(`Edit member lookup by ${column} failed`, error);
+          }
+        }
+        return null;
+      }
+
+      function describeSupabaseError(error) {
+        const message = String(
+          error?.message || error || "Unknown Supabase error.",
+        );
+        const code = String(error?.code || "");
+        if (!navigator.onLine)
+          return "Network appears offline. Check the internet connection and refresh.";
+        if (code === "42P01" || /relation .* does not exist/i.test(message))
+          return "Required Supabase table was not found. Confirm members and admin_profiles exist.";
+        if (
+          code === "42501" ||
+          /permission denied|row-level security|rls/i.test(message)
+        )
+          return "Supabase RLS denied this request. Confirm this admin has an active admin_profiles role and the required policy.";
+        if (/failed to fetch|network|timeout/i.test(message))
+          return "Network or Supabase connection issue. Check Supabase project status and try again.";
+        return message;
+      }
+
+      function updateRoleUi(role) {
+        currentAdminRole = String(role || "none").toLowerCase();
+        const label = document.getElementById("adminRoleLabel");
+        if (label) label.textContent = currentAdminRole;
+        document.querySelectorAll("[data-role-level]").forEach((el) => {
+          el.classList.toggle(
+            "active",
+            el.dataset.roleLevel === currentAdminRole,
+          );
+        });
+        document.querySelectorAll("[data-access]").forEach((link) => {
+          const allowed = String(link.dataset.access || "")
+            .split(",")
+            .map((x) => x.trim().toLowerCase())
+            .filter(Boolean);
+          link.hidden = !!(
+            allowed.length && !allowed.includes(currentAdminRole)
+          );
+        });
+      }
+
+      async function resolveAdminProfile(user) {
+        if (!supabaseClient || !user) return null;
+        const fields = "id,user_id,email,role,is_active,status";
+        const email = String(user.email || "").toLowerCase();
+        let result = await supabaseClient
+          .from("admin_profiles")
+          .select(fields)
+          .eq("id", user.id)
+          .limit(1)
+          .maybeSingle();
+        if (!result.error && result.data) return result.data;
+        result = await supabaseClient
+          .from("admin_profiles")
+          .select(fields)
+          .eq("user_id", user.id)
+          .limit(1)
+          .maybeSingle();
+        if (!result.error && result.data) return result.data;
+        result = await supabaseClient
+          .from("admin_profiles")
+          .select(fields)
+          .ilike("email", email)
+          .limit(1)
+          .maybeSingle();
+        if (result.error) throw result.error;
+        return result.data || null;
+      }
+
+      async function ensureAdminSession() {
+        if (typeof supabaseClient === "undefined" || !supabaseClient.auth) {
+          showToast(
+            "Supabase Auth is unavailable. Confirm /assets/js/supabase-clients.js is loaded.",
+            "error",
+          );
+          return false;
+        }
+        try {
+          const { data, error } = await supabaseClient.auth.getSession();
+          if (error) throw error;
+          if (!data?.session?.user) {
+            const next = encodeURIComponent(
+              location.pathname + location.search,
+            );
+            window.location.href = `/admin/login.html?redirect=${next}`;
+            return false;
+          }
+          const profile = await resolveAdminProfile(data.session.user);
+          const role = String(profile?.role || "").toLowerCase();
+          const active =
+            profile &&
+            profile.is_active !== false &&
+            String(profile.status || "active").toLowerCase() !== "inactive";
+          if (!profile || !active || !["admin", "superadmin"].includes(role)) {
+            updateRoleUi(role || "none");
+            showToast(
+              "Access denied. Edit Member requires an active admin or superadmin role.",
+              "error",
+            );
+            return false;
+          }
+          canWriteMember = true;
+          updateRoleUi(role);
+          return true;
+        } catch (error) {
+          console.error(error);
+          showToast(describeSupabaseError(error), "error");
+          return false;
+        }
+      }
+
+      function showDataError(message, error) {
+        els.errorMessage.classList.remove("hidden");
+        const details = error?.message
+          ? `<p class="admin-data-note mt-3 p-3 text-xs text-left"><strong>Supabase message:</strong> ${escapeHtml(error.message)}</p>`
+          : "";
+        els.errorMessage.innerHTML = `
+                <i class="fas fa-triangle-exclamation text-3xl mb-2"></i>
+                <p class="text-lg font-black mb-1">${escapeHtml(message)}</p>
+                <p class="text-sm text-gray-600">Confirm the URL contains a valid member id or registration number, and that the admin is logged in.</p>
+                ${details}
+                <a href="/admin/members.html" class="action-btn btn-ghost mt-3 no-underline">Return to Members</a>
+            `;
+      }
+
+      function getFormSnapshot() {
+        return {
+          first_name: els.firstNameInput.value.trim(),
+          last_name: els.lastNameInput.value.trim(),
+          designation: els.designationInput.value.trim(),
+          phone: els.phoneInput.value.trim(),
+          email: els.emailInput.value.trim(),
+          state: els.stateInput.value.trim(),
+          lga: els.lgaInput.value.trim(),
+          ward: els.wardInput.value.trim(),
+          account_number: normalizeAccountNumberInput(
+            els.accountNumberInput.value,
+          ),
+          bank_name: normalizeBankNameInput(els.bankNameInput.value),
+          pvc_number: els.pvcNumberInput.value.trim(),
+          apc_card_number: els.apcNumberInput.value.trim(),
+          verified: els.verifiedInput.checked,
+        };
+      }
+
+      function markDirtyState() {
+        if (!originalSnapshot) return;
+        const now = JSON.stringify(getFormSnapshot());
+        const was = JSON.stringify(originalSnapshot);
+        els.dirtyBanner.classList.toggle("show", now !== was);
+      }
+
+      function syncHeader(member = currentMember) {
+        if (!member) return;
+        const fullName =
+          `${member.first_name || ""} ${member.last_name || ""}`.trim() ||
+          "N/A";
+        els.detailRegNumber.innerHTML = `<i class="fas fa-fingerprint"></i>${escapeHtml(member.reg_number || "—")}`;
+        els.detailFullName.textContent = fullName;
+        els.detailDesignation.textContent = member.designation || "Member";
+        els.tileState.textContent = member.state || "—";
+        els.tilePhone.textContent = member.phone || "—";
+        els.tileAccount.textContent = member.account_number
+          ? `${member.bank_name || "Bank"} • ${member.account_number}`
+          : "—";
+        els.tileLga.textContent = member.lga || "—";
+        els.tileWard.textContent = member.ward || "—";
+        els.tileJoined.textContent = member.created_at
+          ? new Date(member.created_at).toLocaleDateString("en-NG", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })
+          : "—";
+        setVerifiedUI(Boolean(member.verified));
+      }
+
+      function setVerifiedUI(isVerified) {
+        els.verifiedInput.checked = isVerified;
+        els.verifiedPill.className = `status-pill ${isVerified ? "status-verified" : "status-pending"}`;
+        els.verifiedPill.innerHTML = isVerified
+          ? '<i class="fas fa-circle-check"></i>Verified'
+          : '<i class="fas fa-clock"></i>Pending';
+      }
+
+      function updateReadiness() {
+        const required = getFormSnapshot();
+        const requiredValues = [
+          required.first_name,
+          required.last_name,
+          required.phone,
+          required.state,
+          required.lga,
+          required.ward,
+          required.account_number,
+          required.bank_name,
+          required.pvc_number,
+          required.apc_card_number,
+        ];
+        const completedFields = requiredValues.filter(Boolean).length;
+        const docScore =
+          (currentDocs.profile ? 1 : 0) +
+          (currentDocs.pvc ? 1 : 0) +
+          (currentDocs.apc ? 1 : 0);
+        const totalScore = completedFields + docScore;
+        const percent = Math.round((totalScore / 13) * 100);
+        const docCount = (currentDocs.pvc ? 1 : 0) + (currentDocs.apc ? 1 : 0);
+
+        els.tileDocs.textContent = `${docCount}/2`;
+        els.tileReadiness.textContent = `${percent}%`;
+        els.readinessText.textContent = `${percent}%`;
+        els.readinessBar.style.width = `${percent}%`;
+        els.profileStatusTile.textContent = currentDocs.profile
+          ? "Uploaded"
+          : "Missing";
+        els.pvcStatusTile.textContent = currentDocs.pvc
+          ? "Uploaded"
+          : "Missing";
+        els.apcStatusTile.textContent = currentDocs.apc
+          ? "Uploaded"
+          : "Missing";
+
+        let tier = "Incomplete";
+        let tierClass = "status-pending";
+        if (percent >= 90) {
+          tier = "Excellent";
+          tierClass = "status-verified";
+        } else if (percent >= 70) {
+          tier = "Review Ready";
+          tierClass = "status-verified";
+        } else if (percent >= 45) {
+          tier = "Needs Attention";
+          tierClass = "status-pending";
+        }
+
+        els.healthTier.className = `status-pill ${tierClass}`;
+        els.healthTier.innerHTML = `<i class="fas fa-gauge-high"></i>${tier}`;
+      }
+
+
+      function selectorCardHtml(title, subtitle, rows) {
+        const empty = `<div class="admin-selector-row"><div><strong>No recent members found</strong><span>Use the member registry to refresh records or confirm Supabase access.</span></div><a class="admin-selector-action" href="/admin/members.html"><i class="fas fa-users"></i>Members</a></div>`;
+        const items = rows.length ? rows.map(member => {
+          const full = `${member.first_name || ''} ${member.last_name || ''}`.trim() || member.name || 'Unnamed member';
+          const href = buildMemberEditHref(member);
+          const detailsHref = buildMemberDetailsHref(member);
+          const reg = member.reg_number || member.phone || 'No registration number';
+          return `<div class="admin-selector-row"><div><strong>${escapeHtml(full)}</strong><span>${escapeHtml(reg)} • ${escapeHtml(member.state || 'No state')} • ${escapeHtml(member.lga || 'No LGA')}</span></div><div class="admin-selector-row-actions"><a class="admin-selector-action" href="${href}"><i class="fas fa-pen-to-square"></i>Edit Profile</a><a class="admin-selector-action" href="${detailsHref}"><i class="fas fa-id-card"></i>Dossier</a></div></div>`;
+        }).join('') : empty;
+        return `<section class="admin-selector-card"><p class="official-chip"><i class="fas fa-pen-to-square"></i>Member Editor</p><h2>${escapeHtml(title)}</h2><p>${escapeHtml(subtitle)}</p><form class="admin-selector-search" id="memberSelectorSearch"><input type="search" name="q" placeholder="Search name, phone or registration number" aria-label="Search members"><button type="submit"><i class="fas fa-search"></i>Search</button><a class="admin-selector-action" href="/admin/members.html"><i class="fas fa-table"></i>Open Registry</a></form><div id="memberSelectorResults" class="admin-selector-results">${items}</div></section>`;
+      }
+      async function showEditMemberSelector() {
+        const hasSession = await ensureAdminSession();
+        if (!hasSession) return;
+        const root = document.getElementById('editMemberMain');
+        if (!root) return;
+        let rows = [];
+        try {
+          const { data } = await supabaseClient.from('members').select('id,reg_number,first_name,last_name,name,phone,state,lga,created_at').order('created_at',{ascending:false}).limit(10);
+          rows = Array.isArray(data) ? data : [];
+        } catch (error) { console.info('Edit selector recent members skipped:', error?.message || error); }
+        root.innerHTML = selectorCardHtml('Select a member to edit profile', 'Edit Member now requires a valid member id in the URL. Choose a recent record below or search the registry.', rows);
+        const form = document.getElementById('memberSelectorSearch');
+        form?.addEventListener('submit', async event => {
+          event.preventDefault();
+          const q = new FormData(form).get('q')?.toString().trim();
+          const box = document.getElementById('memberSelectorResults');
+          if (!q) return;
+          box.innerHTML = '<div class="admin-selector-row"><div><strong>Searching...</strong><span>Please wait.</span></div></div>';
+          try {
+            const safe = q.replace(/[,%]/g,'');
+            const { data, error } = await supabaseClient.from('members').select('id,reg_number,first_name,last_name,name,phone,state,lga,created_at').or(`first_name.ilike.%${safe}%,last_name.ilike.%${safe}%,reg_number.ilike.%${safe}%,phone.ilike.%${safe}%`).limit(20);
+            if (error) throw error;
+            box.innerHTML = selectorCardHtml('','',Array.isArray(data)?data:[]).match(/<div id="memberSelectorResults" class="admin-selector-results">([\s\S]*)<\/div><\/section>$/)?.[1] || '';
+          } catch (error) {
+            box.innerHTML = `<div class="admin-error-panel">${escapeHtml(describeSupabaseError(error))}</div>`;
+          }
+        });
+      }
+      async function loadMember() {
+        try {
+          els.errorMessage.classList.add("hidden");
+          const ref = getRequestedMemberReference();
+          if (!ref.id && !ref.reg) {
+            await showEditMemberSelector();
+            return;
+          }
+          const hasSession = await ensureAdminSession();
+          if (!hasSession) return;
+
+          const member = await fetchMemberForEdit(ref);
+          if (!member) throw new Error("Member not found");
+
+          currentMember = member;
+          const detailsHref = buildMemberDetailsHref(member);
+          els.viewDossierLink.href = detailsHref;
+          els.viewDossierSideLink.href = detailsHref;
+
+          els.firstNameInput.value = member.first_name || "";
+          els.lastNameInput.value = member.last_name || "";
+          els.designationInput.value = member.designation || "";
+          els.phoneInput.value = member.phone || "";
+          els.emailInput.value = member.email || "";
+          els.stateInput.value = member.state || "";
+          els.lgaInput.value = member.lga || "";
+          els.wardInput.value = member.ward || "";
+          els.accountNumberInput.value = member.account_number || "";
+          els.bankNameInput.value = member.bank_name || "";
+          els.pvcNumberInput.value = member.pvc_number || "";
+          els.apcNumberInput.value = member.apc_card_number || "";
+          setVerifiedUI(Boolean(member.verified));
+
+          const avatarPath = getMemberAvatarPath(member);
+          if (avatarPath) {
+            els.profilePhoto.src = getPublicUrl(avatarPath);
+            currentDocs.profile = true;
+          } else {
+            els.profilePhoto.src = "/assets/images/profile-placeholder.png";
+            currentDocs.profile = false;
+          }
+
+          await setupDocument(member.pvc_upload_path, "pvc");
+          await setupDocument(member.apc_upload_path, "apc");
+
+          syncHeader(member);
+          originalSnapshot = getFormSnapshot();
+          updateReadiness();
+          markDirtyState();
+          showToast("Member record loaded from Supabase.");
+        } catch (e) {
+          console.error(e);
+          showDataError("Member not found or error loading data.", e);
+          showToast("Member not found or error loading data.", "error");
+        }
+      }
+
+      async function savePersonalInfo() {
+        if (!currentMember) return;
+        if (!canWriteMember) {
+          showToast(
+            "Only active admin/superadmin can save member changes.",
+            "error",
+          );
+          return;
+        }
+
+        const updates = {
+          ...getFormSnapshot(),
+          updated_at: new Date().toISOString(),
+        };
+        els.savePersonalBtn.disabled = true;
+        document.getElementById("saveTopBtn").disabled = true;
+
+        const { error } = await supabaseClient
+          .from("members")
+          .update(updates)
+          .eq("id", currentMember.id);
+
+        els.savePersonalBtn.disabled = false;
+        document.getElementById("saveTopBtn").disabled = false;
+
+        if (error) {
+          showToast(
+            "Error saving changes: " + describeSupabaseError(error),
+            "error",
+          );
+          return;
+        }
+
+        currentMember = { ...currentMember, ...updates };
+        originalSnapshot = getFormSnapshot();
+        syncHeader(currentMember);
+        updateReadiness();
+        markDirtyState();
+        showToast("Member changes saved successfully.");
+      }
+
+      function resetEditorChanges() {
+        if (!currentMember) return;
+        els.firstNameInput.value = currentMember.first_name || "";
+        els.lastNameInput.value = currentMember.last_name || "";
+        els.designationInput.value = currentMember.designation || "";
+        els.phoneInput.value = currentMember.phone || "";
+        els.emailInput.value = currentMember.email || "";
+        els.stateInput.value = currentMember.state || "";
+        els.lgaInput.value = currentMember.lga || "";
+        els.wardInput.value = currentMember.ward || "";
+        els.accountNumberInput.value = currentMember.account_number || "";
+        els.bankNameInput.value = currentMember.bank_name || "";
+        els.pvcNumberInput.value = currentMember.pvc_number || "";
+        els.apcNumberInput.value = currentMember.apc_card_number || "";
+        setVerifiedUI(Boolean(currentMember.verified));
+        originalSnapshot = getFormSnapshot();
+        updateReadiness();
+        markDirtyState();
+        showToast("Editor reset to the loaded member record.", "warning");
+      }
+
+      async function setupDocument(uploadPath, type) {
+        const previewEl = document.getElementById(`${type}Preview`);
+        const viewBtn = document.getElementById(`${type}ViewBtn`);
+        const downloadBtn = document.getElementById(`${type}DownloadBtn`);
+        const badge = document.getElementById(`${type}DocBadge`);
+        const pdfPlaceholder = "/assets/images/pdf-placeholder.png";
+        const noUpload = "/assets/images/no-upload.png";
+
+        if (!uploadPath) {
+          previewEl.src = noUpload;
+          previewEl.onclick = null;
+          viewBtn.onclick = null;
+          viewBtn.disabled = true;
+          downloadBtn.classList.add("hidden");
+          currentDocs[type] = false;
+          badge.className = "status-pill status-pending";
+          badge.textContent = "Missing";
+          updateReadiness();
+          return;
+        }
+
+        const publicUrl = getPublicUrl(uploadPath);
+        const ref = isExternalUrl(uploadPath)
+          ? publicUrl
+          : cleanStoragePath(uploadPath);
+        const isPdf = String(ref).split("?")[0].toLowerCase().endsWith(".pdf");
+        const isImage =
+          /\.(jpg|jpeg|png|gif|webp|avif|bmp|svg)$/i.test(
+            String(ref).split("?")[0],
+          ) ||
+          (!isPdf && isExternalUrl(uploadPath));
+        const previewSrc = isPdf
+          ? pdfPlaceholder
+          : isImage
+            ? publicUrl
+            : noUpload;
+
+        previewEl.src = previewSrc;
+        previewEl.onclick = () =>
+          openPreview(publicUrl, isPdf ? "pdf" : "image");
+        viewBtn.onclick = () => openPreview(publicUrl, isPdf ? "pdf" : "image");
+        viewBtn.disabled = false;
+        downloadBtn.onclick = () => {
+          const a = document.createElement("a");
+          a.href = publicUrl;
+          a.download =
+            String(uploadPath).split("/").pop() || `${type}-document`;
+          a.target = "_blank";
+          a.click();
+        };
+        downloadBtn.classList.remove("hidden");
+        currentDocs[type] = true;
+        badge.className = "status-pill status-verified";
+        badge.textContent = "Uploaded";
+        updateReadiness();
+      }
+
+      function wireUpload(type, inputId, column, previewId, statusId) {
+        const input = document.getElementById(inputId);
+        const uploadBtn = document.getElementById(`${type}UploadBtn`);
+        const fileName = document.getElementById(`${type}FileName`);
+        const statusEl = document.getElementById(statusId);
+
+        input.addEventListener("change", function () {
+          const file = this.files[0];
+          fileName.textContent = file?.name || "No file chosen";
+          uploadBtn.disabled = !file;
+          if (!file) return;
+
+          const maxSize =
+            type === "profile" ? 3 * 1024 * 1024 : 5 * 1024 * 1024;
+          if (file.size > maxSize) {
+            statusEl.textContent = `File is too large. Maximum allowed is ${Math.round(maxSize / 1024 / 1024)}MB.`;
+            statusEl.className = "mt-2 text-xs font-bold text-red-700 mb-0";
+            uploadBtn.disabled = true;
+            return;
+          }
+
+          if (type === "profile" && file.type.startsWith("image/")) {
+            els.profilePhoto.src = URL.createObjectURL(file);
+            statusEl.textContent =
+              "Preview ready. Click Upload Photo to save it.";
+            statusEl.className = "mt-2 text-xs font-bold text-green-700 mb-0";
+          } else {
+            statusEl.textContent = "Ready to upload.";
+            statusEl.className = "mt-2 text-xs font-bold text-green-700 mb-0";
+          }
+        });
+        uploadBtn.addEventListener("click", () =>
+          uploadFile(type, inputId, column, previewId, statusId),
+        );
+      }
+
+      async function uploadFile(type, inputId, column, previewId, statusId) {
+        if (!canWriteMember) {
+          showToast(
+            "Only active admin/superadmin can upload or replace files.",
+            "error",
+          );
+          return;
+        }
+        const input = document.getElementById(inputId);
+        const file = input.files[0];
+        if (!file || !currentMember) return;
+
+        const statusEl = document.getElementById(statusId);
+        const uploadBtn = document.getElementById(`${type}UploadBtn`);
+        const fileNameEl = document.getElementById(`${type}FileName`);
+        const maxSize = type === "profile" ? 3 * 1024 * 1024 : 5 * 1024 * 1024;
+
+        if (file.size > maxSize) {
+          statusEl.textContent = `Upload blocked: maximum file size is ${Math.round(maxSize / 1024 / 1024)}MB.`;
+          statusEl.className = "mt-2 text-xs font-bold text-red-700 mb-0";
+          return;
+        }
+
+        statusEl.textContent = "Uploading to Supabase...";
+        statusEl.className = "mt-2 text-xs font-bold text-slate-600 mb-0";
+        uploadBtn.disabled = true;
+        if (type === "profile") els.profilePhoto.classList.add("is-uploading");
+
+        try {
+          const ext =
+            (file.name.split(".").pop() || "bin")
+              .toLowerCase()
+              .replace(/[^a-z0-9]/g, "") || "bin";
+          if (type === "profile" && !file.type.startsWith("image/"))
+            throw new Error("Profile upload must be an image file.");
+          const folder = type === "profile" ? "profile" : type;
+          const memberSlug = String(
+            currentMember.id || currentMember.reg_number || "member",
+          ).replace(/[^a-z0-9-]+/gi, "-");
+          const filename = `${folder}/${memberSlug}_${Date.now()}.${ext}`;
+
+          const { error: uploadError } = await supabaseClient.storage
+            .from("uploads")
+            .upload(filename, file, {
+              cacheControl: "3600",
+              upsert: true,
+            });
+          if (uploadError) throw uploadError;
+
+          const updates = { [column]: filename };
+          const { error: updateError } = await supabaseClient
+            .from("members")
+            .update(updates)
+            .eq("id", currentMember.id);
+          if (updateError) throw updateError;
+
+          currentMember[column] = filename;
+          statusEl.textContent = "Uploaded and saved successfully.";
+          statusEl.className = "mt-2 text-xs font-bold text-green-700 mb-0";
+
+          if (type === "profile") {
+            els.profilePhoto.src = getPublicUrl(filename);
+            currentDocs.profile = true;
+          } else {
+            await setupDocument(filename, type);
+          }
+
+          input.value = "";
+          fileNameEl.textContent = "No file chosen";
+          uploadBtn.disabled = true;
+          updateReadiness();
+          showToast(
+            `${type.toUpperCase()} upload completed and saved to Supabase.`,
+          );
+        } catch (error) {
+          statusEl.textContent =
+            "Upload failed: " + (error.message || "Please try again.");
+          statusEl.className = "mt-2 text-xs font-bold text-red-700 mb-0";
+          uploadBtn.disabled = false;
+          showToast("Upload failed: " + describeSupabaseError(error), "error");
+        } finally {
+          if (type === "profile")
+            els.profilePhoto.classList.remove("is-uploading");
+        }
+      }
+
+      function openPreview(url, type) {
+        const frame = document.getElementById("previewFrame");
+        const img = document.getElementById("previewImage");
+        const zoomControls = document.querySelector(".zoom-controls");
+        resetZoom();
+        if (type === "pdf") {
+          frame.src = url;
+          frame.classList.remove("d-none");
+          img.classList.add("d-none");
+          zoomControls.style.display = "none";
+        } else {
+          img.src = url;
+          img.classList.remove("d-none");
+          frame.classList.add("d-none");
+          zoomControls.style.display = "flex";
+        }
+        new bootstrap.Modal(document.getElementById("previewModal")).show();
+      }
+
+      async function saveAccountDetails() {
+        if (!currentMember) {
+          showToast("No member loaded yet.", "warning");
+          return;
+        }
+        await savePersonalInfo();
+      }
+
+      async function copyEditorSummary() {
+        const summary = currentMember
+          ? [
+              `APSG Member Edit Summary`,
+              `Reg Number: ${currentMember.reg_number || "N/A"}`,
+              `Name: ${els.detailFullName.textContent || "N/A"}`,
+              `Designation: ${els.designationInput.value || "Member"}`,
+              `Phone: ${els.phoneInput.value || "N/A"}`,
+              `Account Number: ${els.accountNumberInput.value || "N/A"}`,
+              `Bank: ${els.bankNameInput.value || "N/A"}`,
+              `State/LGA/Ward: ${els.stateInput.value || "N/A"} / ${els.lgaInput.value || "N/A"} / ${els.wardInput.value || "N/A"}`,
+              `PVC: ${els.pvcNumberInput.value || "N/A"}`,
+              `APC Card: ${els.apcNumberInput.value || "N/A"}`,
+              `Verification Status: ${els.verifiedInput.checked ? "Verified" : "Pending"}`,
+            ].join("\n")
+          : "No member loaded.";
+
+        try {
+          await navigator.clipboard.writeText(summary);
+          showToast("Member summary copied.");
+        } catch (error) {
+          showToast("Unable to copy summary.", "error");
+        }
+      }
+
+      window.zoomIn = () => {
+        zoomLevel += 0.15;
+        document.getElementById("previewImage").style.transform =
+          `scale(${zoomLevel})`;
+      };
+      window.zoomOut = () => {
+        if (zoomLevel > 0.2) zoomLevel -= 0.15;
+        document.getElementById("previewImage").style.transform =
+          `scale(${zoomLevel})`;
+      };
+      window.resetZoom = () => {
+        zoomLevel = 1;
+        document.getElementById("previewImage").style.transform = "scale(1)";
+      };
+
+      function toggleSidebar() {
+        els.sidebar.classList.toggle("-translate-x-full");
+        els.overlay.classList.toggle("hidden");
+      }
+
+      function closeSidebar() {
+        els.sidebar.classList.add("-translate-x-full");
+        els.overlay.classList.add("hidden");
+      }
+
+      async function logout() {
+        if (typeof supabaseClient !== "undefined")
+          await supabaseClient.auth.signOut();
+        window.location.href = "/admin/login.html";
+      }
+
+      function normalizeAccountNumberInput(value) {
+        return String(value || "")
+          .replace(/[^0-9]/g, "")
+          .slice(0, 20);
+      }
+
+      function normalizeBankNameInput(value) {
+        return String(value || "")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+
+      if (els.accountNumberInput) {
+        els.accountNumberInput.addEventListener("input", () => {
+          const clean = normalizeAccountNumberInput(
+            els.accountNumberInput.value,
+          );
+          if (els.accountNumberInput.value !== clean)
+            els.accountNumberInput.value = clean;
+        });
+      }
+      if (els.bankNameInput) {
+        els.bankNameInput.addEventListener("blur", () => {
+          els.bankNameInput.value = normalizeBankNameInput(
+            els.bankNameInput.value,
+          );
+          markDirtyState();
+        });
+      }
+
+      editableInputs.forEach((key) => {
+        const el = els[key];
+        if (el)
+          el.addEventListener(
+            key === "verifiedInput" ? "change" : "input",
+            () => {
+              if (key === "verifiedInput") setVerifiedUI(el.checked);
+              updateReadiness();
+              markDirtyState();
+            },
+          );
+      });
+
+      els.detailRegNumber.addEventListener("click", async () => {
+        const value = currentMember?.reg_number;
+        if (!value) return;
+        try {
+          await navigator.clipboard.writeText(value);
+          showToast("Registration number copied.");
+        } catch (error) {
+          showToast("Unable to copy registration number.", "error");
+        }
+      });
+
+      wireUpload(
+        "profile",
+        "profileFileInput",
+        "profile_photo_path",
+        "profilePhoto",
+        "profileStatus",
+      );
+      wireUpload(
+        "pvc",
+        "pvcFileInput",
+        "pvc_upload_path",
+        "pvcPreview",
+        "pvcStatus",
+      );
+      wireUpload(
+        "apc",
+        "apcFileInput",
+        "apc_upload_path",
+        "apcPreview",
+        "apcStatus",
+      );
+
+      window.toggleSidebar = toggleSidebar;
+      window.closeSidebar = closeSidebar;
+      window.logout = logout;
+      window.savePersonalInfo = savePersonalInfo;
+      window.saveAccountDetails = saveAccountDetails;
+      window.resetEditorChanges = resetEditorChanges;
+      window.copyEditorSummary = copyEditorSummary;
+      window.openPreview = openPreview;
+      window.loadMember = loadMember;
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeSidebar();
+      });
+
+      window.addEventListener("beforeunload", (event) => {
+        if (!originalSnapshot) return;
+        if (
+          JSON.stringify(getFormSnapshot()) !== JSON.stringify(originalSnapshot)
+        ) {
+          event.preventDefault();
+          event.returnValue = "";
+        }
+      });
+
+      document.addEventListener("DOMContentLoaded", loadMember);
+    </script>
+    <script src="/assets/js/admin-unified.js" defer></script>
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

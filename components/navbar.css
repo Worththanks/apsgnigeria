@@ -1,0 +1,898 @@
+/* ===================================================
+   APSG Floating Mega Navbar 2026
+   Glass Government-Luxury Edition
+=================================================== */
+:root {
+  --apsg-primary: #006400;
+  --apsg-primary-light: #228b22;
+  --apsg-primary-dark: #043d20;
+  --apsg-deep: #021a0d;
+  --apsg-gold: #ffd700;
+  --apsg-gold-dark: #d6a31f;
+  --apsg-cream: #fffaf0;
+  --apsg-white: #ffffff;
+  --apsg-radius: 999px;
+  --apsg-shadow: 0 22px 70px rgba(0, 40, 18, 0.28);
+  --apsg-transition: 260ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.apsg-menu-open { overflow: hidden; }
+
+.apsg-floating-navbar,
+.apsg-floating-navbar * { box-sizing: border-box; }
+
+.apsg-floating-navbar {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1480px, calc(100% - 28px));
+  z-index: 1400;
+  transition: top var(--apsg-transition), transform var(--apsg-transition), width var(--apsg-transition);
+}
+
+.apsg-floating-navbar.is-scrolled {
+  top: 10px;
+  width: min(1420px, calc(100% - 20px));
+}
+
+.apsg-navbar-shell {
+  min-height: 76px;
+  padding: 0.72rem 0.82rem 0.72rem 1rem;
+  border: 1px solid rgba(255, 215, 0, 0.28);
+  border-radius: var(--apsg-radius);
+  background:
+    linear-gradient(135deg, rgba(0, 100, 0, 0.88), rgba(4, 61, 32, 0.90)),
+    radial-gradient(circle at top left, rgba(255, 215, 0, 0.24), transparent 28rem);
+  backdrop-filter: blur(22px) saturate(1.28);
+  -webkit-backdrop-filter: blur(22px) saturate(1.28);
+  box-shadow: var(--apsg-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  position: relative;
+  overflow: visible;
+}
+
+.apsg-navbar-shell::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.24), transparent);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+}
+
+.apsg-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.72rem;
+  text-decoration: none;
+  color: var(--apsg-white);
+  min-width: fit-content;
+}
+
+.apsg-brand-mark {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(255,250,240,0.78));
+  border: 1px solid rgba(255, 215, 0, 0.58);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255,255,255,0.95);
+  overflow: hidden;
+}
+
+.apsg-brand-mark img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  transition: transform var(--apsg-transition);
+}
+
+.apsg-brand:hover .apsg-brand-mark img { transform: scale(1.08) rotate(4deg); }
+
+.apsg-brand-copy { line-height: 1.05; }
+.apsg-brand-copy strong { display: block; font-size: 1.02rem; font-weight: 950; letter-spacing: -0.03em; }
+.apsg-brand-copy small { display: block; margin-top: 0.17rem; color: rgba(255, 215, 0, 0.86); font-size: 0.68rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.16em; }
+
+.apsg-desktop-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.18rem;
+  flex: 1;
+}
+
+.apsg-desktop-nav > a,
+.apsg-dropdown > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  padding: 0.72rem 0.86rem;
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.92);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 850;
+  letter-spacing: -0.02em;
+  transition: var(--apsg-transition);
+  white-space: nowrap;
+  position: relative;
+}
+
+.apsg-desktop-nav > a:hover,
+.apsg-dropdown:hover > a,
+.apsg-desktop-nav > a.active,
+.apsg-dropdown > a.active {
+  color: var(--apsg-gold);
+  background: rgba(255, 255, 255, 0.10);
+  box-shadow: inset 0 0 0 1px rgba(255, 215, 0, 0.18);
+}
+
+.apsg-dropdown { position: relative; }
+.apsg-dropdown > a i { font-size: 0.66rem; transition: transform var(--apsg-transition); }
+.apsg-dropdown:hover > a i { transform: rotate(180deg); }
+
+.apsg-mega-menu {
+  position: absolute;
+  top: calc(100% + 18px);
+  left: 50%;
+  transform: translateX(-50%) translateY(12px) scale(0.98);
+  width: min(820px, 92vw);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--apsg-transition), transform var(--apsg-transition), visibility var(--apsg-transition);
+  border-radius: 28px;
+  padding: 1.2rem;
+  background:
+    linear-gradient(135deg, rgba(2, 26, 13, 0.97), rgba(4, 61, 32, 0.96)),
+    radial-gradient(circle at top, rgba(255, 215, 0, 0.20), transparent 24rem);
+  border: 1px solid rgba(255, 215, 0, 0.30);
+  box-shadow: 0 30px 85px rgba(0, 22, 9, 0.46), inset 0 1px 0 rgba(255,255,255,0.12);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: grid;
+  grid-template-columns: 0.38fr 0.62fr;
+  gap: 1rem;
+}
+
+.apsg-mega-wide { width: min(960px, 94vw); }
+
+.apsg-dropdown:hover .apsg-mega-menu,
+.apsg-dropdown:focus-within .apsg-mega-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+
+.apsg-mega-menu::before {
+  content: '';
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translateX(-50%) rotate(45deg);
+  background: rgba(2, 26, 13, 0.98);
+  border-left: 1px solid rgba(255, 215, 0, 0.28);
+  border-top: 1px solid rgba(255, 215, 0, 0.28);
+}
+
+.apsg-mega-feature {
+  border-radius: 22px;
+  padding: 1rem;
+  background: linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+.apsg-mini-badge {
+  display: inline-flex;
+  border-radius: 999px;
+  background: rgba(255, 215, 0, 0.14);
+  color: var(--apsg-gold);
+  border: 1px solid rgba(255, 215, 0, 0.26);
+  padding: 0.38rem 0.64rem;
+  font-size: 0.66rem;
+  font-weight: 950;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.apsg-mega-feature h3 {
+  margin: 0.9rem 0 0.45rem;
+  color: #fff;
+  font-size: 1.25rem;
+  line-height: 1.05;
+  font-weight: 950;
+  letter-spacing: -0.04em;
+}
+
+.apsg-mega-feature p { color: rgba(255,255,255,0.68); margin: 0; font-size: 0.86rem; line-height: 1.55; }
+
+.apsg-mega-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.apsg-mega-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+.apsg-mega-grid section {
+  border-radius: 22px;
+  padding: 1rem;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+.apsg-mega-grid h4 {
+  color: var(--apsg-gold);
+  margin: 0 0 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.apsg-mega-grid a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  padding: 0.58rem 0;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  font-size: 0.9rem;
+  font-weight: 750;
+  transition: var(--apsg-transition);
+}
+
+.apsg-mega-grid a::after {
+  content: '›';
+  color: var(--apsg-gold);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: var(--apsg-transition);
+}
+
+.apsg-mega-grid a:hover {
+  color: var(--apsg-gold);
+  padding-left: 0.35rem;
+}
+
+.apsg-mega-grid a:hover::after { opacity: 1; transform: translateX(0); }
+
+.apsg-actions { display: flex; align-items: center; gap: 0.55rem; }
+
+.apsg-login-link {
+  color: rgba(255,255,255,0.78);
+  text-decoration: none;
+  padding: 0.68rem 0.85rem;
+  border-radius: 999px;
+  font-weight: 850;
+  transition: var(--apsg-transition);
+}
+.apsg-login-link:hover { color: var(--apsg-gold); background: rgba(255,255,255,0.08); }
+
+.apsg-join-btn,
+.apsg-mobile-join {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ffe97a, var(--apsg-gold));
+  color: var(--apsg-deep);
+  text-decoration: none;
+  font-weight: 950;
+  padding: 0.78rem 1.18rem;
+  box-shadow: 0 12px 28px rgba(255, 215, 0, 0.28);
+  transition: var(--apsg-transition);
+  white-space: nowrap;
+}
+.apsg-join-btn:hover,
+.apsg-mobile-join:hover { transform: translateY(-2px); filter: brightness(1.04); }
+
+.apsg-mobile-toggle {
+  display: none;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(255, 215, 0, 0.24);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  cursor: pointer;
+  padding: 0;
+  place-items: center;
+  transition: var(--apsg-transition);
+}
+.apsg-mobile-toggle span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: #fff;
+  border-radius: 999px;
+  margin: 3px auto;
+  transition: var(--apsg-transition);
+}
+.apsg-mobile-toggle:hover { background: rgba(255,215,0,0.16); }
+
+.apsg-mobile-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1490;
+  background: rgba(0, 12, 5, 0.68);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: var(--apsg-transition);
+}
+
+.apsg-mobile-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(390px, 88vw);
+  height: 100dvh;
+  z-index: 1500;
+  transform: translateX(102%);
+  transition: transform 360ms cubic-bezier(0.32, 0.72, 0, 1);
+  background:
+    linear-gradient(180deg, rgba(2, 26, 13, 0.98), rgba(4, 61, 32, 0.98)),
+    radial-gradient(circle at top right, rgba(255, 215, 0, 0.20), transparent 20rem);
+  border-left: 1px solid rgba(255, 215, 0, 0.28);
+  box-shadow: -24px 0 70px rgba(0,0,0,0.44);
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+body.apsg-menu-open .apsg-mobile-overlay { opacity: 1; visibility: visible; pointer-events: auto; }
+body.apsg-menu-open .apsg-mobile-sidebar { transform: translateX(0); }
+
+.apsg-sidebar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+
+.apsg-sidebar-close {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 215, 0, 0.22);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  cursor: pointer;
+}
+
+.apsg-sidebar-body { padding: 1rem 0 2rem; display: grid; gap: 0.55rem; }
+.apsg-sidebar-body > a,
+.apsg-mobile-submenu-toggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.88);
+  text-decoration: none;
+  padding: 0.95rem 1rem;
+  font-size: 0.96rem;
+  font-weight: 850;
+  cursor: pointer;
+  transition: var(--apsg-transition);
+}
+.apsg-sidebar-body > a:hover,
+.apsg-mobile-submenu-toggle:hover,
+.apsg-sidebar-body > a.active { color: var(--apsg-gold); background: rgba(255,255,255,0.10); }
+
+.apsg-mobile-submenu-toggle i { transition: transform var(--apsg-transition); }
+.apsg-mobile-group.open .apsg-mobile-submenu-toggle i { transform: rotate(180deg); }
+
+.apsg-mobile-submenu {
+  display: none;
+  margin: 0.45rem 0 0.75rem;
+  padding: 0.75rem;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.055);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.apsg-mobile-group.open .apsg-mobile-submenu { display: block; }
+
+.apsg-mobile-submenu p {
+  margin: 0.8rem 0 0.35rem;
+  color: var(--apsg-gold);
+  font-size: 0.68rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+.apsg-mobile-submenu p:first-child { margin-top: 0; }
+
+.apsg-mobile-submenu a {
+  display: block;
+  color: rgba(255,255,255,0.78);
+  text-decoration: none;
+  padding: 0.62rem 0.55rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 750;
+  transition: var(--apsg-transition);
+}
+.apsg-mobile-submenu a:hover { color: var(--apsg-gold); background: rgba(255,255,255,0.07); padding-left: 0.9rem; }
+
+.apsg-mobile-join { margin-top: 0.45rem; padding-block: 1rem; }
+
+.apsg-floating-navbar a:focus-visible,
+.apsg-floating-navbar button:focus-visible,
+.apsg-mobile-sidebar a:focus-visible,
+.apsg-mobile-sidebar button:focus-visible {
+  outline: 3px solid var(--apsg-gold);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1220px) {
+  .apsg-brand-copy { display: none; }
+  .apsg-desktop-nav > a,
+  .apsg-dropdown > a { padding-inline: 0.68rem; font-size: 0.84rem; }
+}
+
+@media (max-width: 1040px) {
+  .apsg-floating-navbar { top: 12px; width: calc(100% - 18px); }
+  .apsg-navbar-shell { min-height: 68px; padding: 0.56rem 0.65rem 0.56rem 0.72rem; }
+  .apsg-brand-copy { display: block; }
+  .apsg-desktop-nav,
+  .apsg-login-link,
+  .apsg-join-btn { display: none; }
+  .apsg-mobile-toggle { display: grid; }
+  .apsg-brand-mark { width: 48px; height: 48px; }
+  .apsg-brand-mark img { width: 38px; height: 38px; }
+}
+
+@media (max-width: 520px) {
+  .apsg-brand-copy strong { font-size: 0.92rem; }
+  .apsg-brand-copy small { font-size: 0.58rem; }
+  .apsg-navbar-shell { border-radius: 24px; }
+  .apsg-floating-navbar { top: 8px; width: calc(100% - 12px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apsg-floating-navbar,
+  .apsg-floating-navbar *,
+  .apsg-mobile-overlay,
+  .apsg-mobile-sidebar { transition: none !important; }
+}
+
+@media print {
+  .apsg-floating-navbar,
+  .apsg-mobile-overlay,
+  .apsg-mobile-sidebar { display: none !important; }
+}
+
+/* ===================================================
+   APSG Floating Mega Navbar 2026 - Stability + Compact Mega Patch
+   Fixes: disappearing mega menu, over-wide Events/Get Involved menus,
+   and forces submenu items to stay on one clean line.
+=================================================== */
+
+/* 1) Keep dropdown open while cursor travels from nav item to mega panel */
+.apsg-dropdown {
+  position: relative;
+  isolation: isolate;
+}
+
+.apsg-dropdown::after {
+  content: '';
+  position: absolute;
+  left: -14px;
+  right: -14px;
+  top: 100%;
+  height: 16px;
+  background: transparent;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+/* 2) Compact content-sized mega menu instead of wide fixed banners */
+.apsg-mega-menu {
+  top: calc(100% + 10px);
+  width: max-content;
+  min-width: min(520px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
+  grid-template-columns: minmax(210px, 235px) max-content;
+  align-items: stretch;
+  gap: 0.72rem;
+  padding: 0.82rem;
+  border-radius: 22px;
+  z-index: 1500;
+  overflow: visible;
+  transition:
+    opacity 180ms ease,
+    transform 220ms cubic-bezier(0.4, 0, 0.2, 1),
+    visibility 0s linear 120ms;
+}
+
+.apsg-dropdown:hover .apsg-mega-menu,
+.apsg-dropdown:focus-within .apsg-mega-menu,
+.apsg-mega-menu:hover {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0) scale(1);
+  transition-delay: 0s;
+}
+
+.apsg-mega-menu::before {
+  top: -7px;
+  width: 14px;
+  height: 14px;
+  z-index: 0;
+}
+
+/* 3) Reduce the left feature/banner so Events and Get Involved do not feel too wide */
+.apsg-mega-feature {
+  width: 225px;
+  min-width: 225px;
+  padding: 0.86rem;
+  border-radius: 18px;
+}
+
+.apsg-mega-feature h3 {
+  font-size: 1.02rem;
+  line-height: 1.12;
+  margin-top: 0.68rem;
+}
+
+.apsg-mega-feature p {
+  font-size: 0.76rem;
+  line-height: 1.42;
+}
+
+.apsg-mini-badge {
+  font-size: 0.58rem;
+  padding: 0.32rem 0.52rem;
+}
+
+/* 4) Make each submenu group stay on one row; do not stretch columns */
+.apsg-mega-grid,
+.apsg-mega-grid.three {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: stretch;
+  gap: 0.65rem;
+  grid-template-columns: none;
+  width: max-content;
+  max-width: min(650px, calc(100vw - 300px));
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 215, 0, 0.55) rgba(255, 255, 255, 0.08);
+}
+
+.apsg-mega-grid::-webkit-scrollbar { height: 6px; }
+.apsg-mega-grid::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.08); border-radius: 999px; }
+.apsg-mega-grid::-webkit-scrollbar-thumb { background: rgba(255, 215, 0, 0.55); border-radius: 999px; }
+
+.apsg-mega-grid section {
+  flex: 0 0 auto;
+  width: max-content;
+  min-width: 172px;
+  max-width: none;
+  padding: 0.82rem;
+  border-radius: 18px;
+}
+
+.apsg-mega-grid h4 {
+  margin-bottom: 0.45rem;
+  font-size: 0.64rem;
+  white-space: nowrap;
+}
+
+.apsg-mega-grid a {
+  width: 100%;
+  min-width: max-content;
+  white-space: nowrap;
+  gap: 1.05rem;
+  padding: 0.46rem 0;
+  font-size: 0.82rem;
+  line-height: 1.1;
+}
+
+.apsg-mega-grid a:hover {
+  padding-left: 0.25rem;
+}
+
+/* 5) Only wider menus, like Chapters, should use more space. Still one line. */
+.apsg-mega-wide {
+  width: max-content;
+  min-width: min(700px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
+}
+
+.apsg-mega-wide .apsg-mega-feature {
+  width: 205px;
+  min-width: 205px;
+}
+
+.apsg-mega-wide .apsg-mega-grid,
+.apsg-mega-grid.three {
+  max-width: min(780px, calc(100vw - 270px));
+}
+
+/* 6) Better edge positioning so menus do not escape the viewport */
+.apsg-dropdown:first-child .apsg-mega-menu,
+.apsg-dropdown:nth-child(2) .apsg-mega-menu {
+  left: 0;
+  transform: translateX(0) translateY(12px) scale(0.98);
+}
+
+.apsg-dropdown:first-child:hover .apsg-mega-menu,
+.apsg-dropdown:first-child:focus-within .apsg-mega-menu,
+.apsg-dropdown:nth-child(2):hover .apsg-mega-menu,
+.apsg-dropdown:nth-child(2):focus-within .apsg-mega-menu {
+  transform: translateX(0) translateY(0) scale(1);
+}
+
+.apsg-dropdown:last-child .apsg-mega-menu,
+.apsg-dropdown:nth-last-child(1) .apsg-mega-menu,
+.apsg-dropdown:nth-last-child(2) .apsg-mega-menu {
+  left: auto;
+  right: 0;
+  transform: translateX(0) translateY(12px) scale(0.98);
+}
+
+.apsg-dropdown:last-child:hover .apsg-mega-menu,
+.apsg-dropdown:last-child:focus-within .apsg-mega-menu,
+.apsg-dropdown:nth-last-child(1):hover .apsg-mega-menu,
+.apsg-dropdown:nth-last-child(1):focus-within .apsg-mega-menu,
+.apsg-dropdown:nth-last-child(2):hover .apsg-mega-menu,
+.apsg-dropdown:nth-last-child(2):focus-within .apsg-mega-menu {
+  transform: translateX(0) translateY(0) scale(1);
+}
+
+/* 7) Responsive fallback: stack feature and submenu row on smaller desktops */
+@media (max-width: 1160px) {
+  .apsg-mega-menu,
+  .apsg-mega-wide {
+    grid-template-columns: 1fr;
+    min-width: min(520px, calc(100vw - 28px));
+  }
+
+  .apsg-mega-feature {
+    width: auto;
+    min-width: 0;
+  }
+
+  .apsg-mega-grid,
+  .apsg-mega-grid.three,
+  .apsg-mega-wide .apsg-mega-grid {
+    max-width: calc(100vw - 70px);
+  }
+}
+
+@media (max-width: 1040px) {
+  .apsg-dropdown::after,
+  .apsg-mega-menu {
+    display: none;
+  }
+}
+
+/* ===================================================
+   APSG Navbar State Details Link Patch
+   Add below navbar.css if your menu still looks too wide.
+=================================================== */
+.apsg-mega-feature .apsg-feature-link {
+  display: inline-flex;
+  margin-top: 1rem;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ffe97a, var(--apsg-gold, #ffd700));
+  color: var(--apsg-deep, #021a0d);
+  padding: 0.72rem 1rem;
+  font-size: 0.78rem;
+  font-weight: 950;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 12px 28px rgba(255, 215, 0, 0.22);
+}
+
+.apsg-mega-feature .apsg-feature-link:hover {
+  transform: translateY(-2px);
+  color: var(--apsg-deep, #021a0d);
+}
+
+.apsg-mega-compact {
+  width: max-content !important;
+  min-width: 420px;
+  max-width: min(620px, calc(100vw - 32px));
+  grid-template-columns: 1fr !important;
+}
+
+.apsg-mega-grid-one-line,
+.apsg-mega-grid.three {
+  align-items: start;
+}
+
+.apsg-mega-grid section,
+.apsg-mega-grid a {
+  min-width: max-content;
+}
+
+.apsg-mega-grid a {
+  white-space: nowrap;
+}
+
+@media (max-width: 1040px) {
+  .apsg-mega-compact,
+  .apsg-mega-wide {
+    width: auto !important;
+    min-width: 0;
+  }
+}
+
+/* ===================================================
+   APSG Navbar Chapters Full-Zone Patch
+   Adds all 6 geopolitical zones without making Events/Get Involved wide
+=================================================== */
+
+.apsg-chapters-dropdown .apsg-mega-chapters {
+  width: min(1180px, calc(100vw - 32px));
+  left: 50%;
+  top: calc(100% + 10px);
+  display: grid;
+  grid-template-columns: minmax(230px, 0.24fr) minmax(0, 0.76fr);
+  gap: 1rem;
+  padding: 1rem;
+  max-height: min(78vh, 680px);
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 215, 0, 0.55) rgba(255,255,255,0.08);
+}
+
+.apsg-chapters-dropdown::after,
+.apsg-dropdown::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 14px;
+}
+
+.apsg-chapter-feature {
+  min-width: 0;
+}
+
+.apsg-feature-link {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: 0.85rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ffe97a, var(--apsg-gold));
+  color: var(--apsg-deep) !important;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 950;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.apsg-zone-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(160px, 1fr));
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.apsg-zone-board section {
+  min-width: 0;
+  border-radius: 20px;
+  padding: 0.88rem;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+.apsg-zone-board h4 {
+  color: var(--apsg-gold);
+  margin: 0 0 0.55rem;
+  font-size: 0.66rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+}
+
+.apsg-zone-board a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.84);
+  text-decoration: none;
+  padding: 0.44rem 0;
+  border-top: 1px solid rgba(255,255,255,0.065);
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1.1;
+  white-space: nowrap;
+  transition: var(--apsg-transition);
+}
+
+.apsg-zone-board a::after {
+  content: '›';
+  color: var(--apsg-gold);
+  opacity: 0;
+  transform: translateX(-5px);
+  transition: var(--apsg-transition);
+}
+
+.apsg-zone-board a:hover {
+  color: var(--apsg-gold);
+  padding-left: 0.25rem;
+}
+
+.apsg-zone-board a:hover::after {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.apsg-mega-compact {
+  width: max-content !important;
+  min-width: 420px;
+  max-width: min(640px, calc(100vw - 32px));
+  top: calc(100% + 10px);
+}
+
+.apsg-mega-grid-one-line {
+  grid-template-columns: repeat(2, max-content) !important;
+  gap: 0.85rem !important;
+}
+
+.apsg-mega-grid-one-line section,
+.apsg-mega-compact section {
+  min-width: 180px;
+  width: max-content;
+}
+
+.apsg-mega-grid-one-line a,
+.apsg-mega-compact a {
+  white-space: nowrap;
+}
+
+@media (max-width: 1180px) {
+  .apsg-chapters-dropdown .apsg-mega-chapters {
+    width: min(1040px, calc(100vw - 24px));
+    grid-template-columns: 1fr;
+  }
+
+  .apsg-zone-board {
+    grid-template-columns: repeat(3, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 1040px) {
+  .apsg-chapters-dropdown .apsg-mega-chapters,
+  .apsg-mega-compact {
+    display: none !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .apsg-zone-board {
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+  }
+}
+

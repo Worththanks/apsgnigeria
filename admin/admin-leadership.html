@@ -1,0 +1,3456 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#05351f" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <base href="/" />
+    <title>Leadership Desk | APSG Admin</title>
+    <link rel="icon" href="/assets/images/logo/apsg.png" sizes="any" />
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+      defer
+    ></script>
+    <script src="/assets/js/supabase-clients.js" defer></script>
+    <script src="/assets/js/apsg-settings.js" defer></script>
+    <script src="/assets/js/admin-auth.js" defer></script>
+    <style>
+      :root {
+        --deep: #05351f;
+        --deep-2: #031b0f;
+        --green: #0f8a4b;
+        --emerald: #14a861;
+        --gold: #d6a92b;
+        --gold-soft: #ffe6a3;
+        --cream: #fffaf0;
+        --paper: #fff;
+        --soft: #f6fbf7;
+        --ink: #07140e;
+        --muted: #64746a;
+        --danger: #991b1b;
+        --danger-bg: #fee2e2;
+        --border: rgba(5, 53, 31, 0.1);
+        --gold-border: rgba(214, 169, 43, 0.26);
+        --shadow-card: 0 18px 52px rgba(5, 53, 31, 0.1);
+        --shadow-premium: 0 34px 110px rgba(5, 53, 31, 0.2);
+        --radius-xl: 1.35rem;
+        --radius-2xl: 1.75rem;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        min-height: 100%;
+        scroll-behavior: smooth;
+      }
+      body {
+        min-height: 100vh;
+        margin: 0;
+        overflow-x: hidden;
+        color: var(--ink);
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        font-size: 14px;
+        background:
+          radial-gradient(
+            circle at 96% 0,
+            rgba(214, 169, 43, 0.14),
+            transparent 28rem
+          ),
+          radial-gradient(
+            circle at 0 8%,
+            rgba(15, 138, 75, 0.11),
+            transparent 31rem
+          ),
+          linear-gradient(180deg, #f8fbf7 0%, #eef6ef 100%);
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      img {
+        display: block;
+        max-width: 100%;
+      }
+      .display-font {
+        font-family: "Playfair Display", Georgia, serif;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      .skip-link {
+        position: fixed;
+        left: 1rem;
+        top: 0.75rem;
+        z-index: 500;
+        transform: translateY(-140%);
+        border-radius: 999px;
+        background: var(--gold);
+        color: var(--deep);
+        padding: 0.65rem 0.95rem;
+        font-weight: 950;
+        box-shadow: var(--shadow-card);
+        transition: transform 0.18s ease;
+      }
+      .skip-link:focus {
+        transform: translateY(0);
+      }
+
+      .mobile-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        display: none;
+        border: 0;
+        background: rgba(0, 0, 0, 0.42);
+      }
+      .mobile-overlay.is-open {
+        display: block;
+      }
+      .sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        z-index: 50;
+        width: 16rem;
+        overflow-y: auto;
+        color: #fff;
+        background: linear-gradient(180deg, #031b0f, #052414 60%, #03140b);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        transform: translateX(-100%);
+        transition: transform 0.28s ease;
+      }
+      .sidebar.is-open {
+        transform: translateX(0);
+      }
+      .sidebar-brand {
+        position: relative;
+        overflow: hidden;
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .sidebar-brand::after {
+        content: "";
+        position: absolute;
+        right: -3rem;
+        top: -3rem;
+        width: 8rem;
+        height: 8rem;
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.22);
+        filter: blur(28px);
+      }
+      .brand-link {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .brand-mark {
+        display: grid;
+        place-items: center;
+        width: 2.85rem;
+        height: 2.85rem;
+        border: 1px solid rgba(214, 169, 43, 0.32);
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+      }
+      .brand-mark img {
+        width: 2rem;
+        height: 2rem;
+        object-fit: contain;
+      }
+      .brand-title {
+        display: block;
+        font-size: 1rem;
+        font-weight: 950;
+        line-height: 1;
+      }
+      .brand-kicker {
+        display: block;
+        margin-top: 0.28rem;
+        color: var(--gold-soft);
+        font-size: 0.58rem;
+        font-weight: 950;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+      }
+      .sidebar-nav {
+        padding: 0.72rem;
+      }
+      .sidebar-heading {
+        margin: 0.85rem 0.4rem 0.35rem;
+        color: rgba(255, 255, 255, 0.42);
+        font-size: 0.56rem;
+        font-weight: 950;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+      }
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 0.58rem;
+        min-height: 2.42rem;
+        margin-bottom: 0.25rem;
+        padding: 0.58rem 0.72rem;
+        border-radius: 1rem;
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 0.76rem;
+        font-weight: 850;
+        transition:
+          background 0.18s ease,
+          color 0.18s ease,
+          transform 0.18s ease;
+      }
+      .sidebar-link:hover,
+      .sidebar-link.active,
+      .sidebar-link:focus-visible {
+        background: rgba(214, 169, 43, 0.14);
+        color: #f8dc7a;
+        transform: translateX(2px);
+        outline: 0;
+      }
+      .sidebar-link i {
+        width: 1rem;
+        text-align: center;
+      }
+      .role-chip {
+        margin-left: auto;
+        padding: 0.16rem 0.38rem;
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.14);
+        color: #f8dc7a;
+        font-size: 0.5rem;
+        font-weight: 950;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .sidebar-footer {
+        margin-top: 1rem;
+        padding: 0.72rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .main-wrap {
+        min-height: 100vh;
+        transition: margin-left 0.28s ease;
+      }
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        min-height: 3.8rem;
+        padding: 0.62rem 0.8rem;
+        border-bottom: 1px solid rgba(5, 53, 31, 0.08);
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(18px);
+      }
+      .topbar-inner,
+      .flex-row,
+      .hero-inner,
+      .panel-head,
+      .modal-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.8rem;
+      }
+      .topbar-title {
+        min-width: 0;
+      }
+      .topbar-title p,
+      .eyebrow {
+        margin: 0;
+        color: #8a6616;
+        font-size: 0.62rem;
+        font-weight: 950;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+      }
+      .topbar-title h1 {
+        margin: 0.14rem 0 0;
+        color: var(--deep);
+        font-size: 1.04rem;
+        font-weight: 950;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .mobile-menu-btn {
+        display: grid;
+        flex: 0 0 auto;
+        place-items: center;
+        width: 2.4rem;
+        height: 2.4rem;
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        background: #fff;
+        color: var(--deep);
+      }
+      .top-actions {
+        display: none;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      main {
+        padding: 0.75rem;
+      }
+      .hero {
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 0.85rem;
+        padding: 1rem;
+        border: 1px solid rgba(214, 169, 43, 0.2);
+        border-radius: var(--radius-2xl);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.98),
+          rgba(255, 250, 240, 0.84)
+        );
+        box-shadow: var(--shadow-card);
+      }
+      .hero::after {
+        content: "";
+        position: absolute;
+        right: -4rem;
+        top: -5rem;
+        width: 14rem;
+        height: 14rem;
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.2);
+        filter: blur(30px);
+      }
+      .hero-inner {
+        position: relative;
+        z-index: 1;
+        align-items: flex-end;
+        flex-wrap: wrap;
+      }
+      .hero-copy {
+        max-width: 58rem;
+      }
+      .hero h2 {
+        margin: 0.6rem 0 0;
+        color: var(--deep);
+        font-size: clamp(2rem, 5vw, 4rem);
+        font-weight: 950;
+        line-height: 0.92;
+        letter-spacing: -0.035em;
+      }
+      .hero p {
+        max-width: 54rem;
+        margin: 0.78rem 0 0;
+        color: #58675e;
+        font-weight: 650;
+        line-height: 1.65;
+      }
+      .hero-actions,
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .chip,
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.36rem;
+        border-radius: 999px;
+        font-weight: 950;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      .chip {
+        min-height: 1.62rem;
+        padding: 0.34rem 0.66rem;
+        border: 1px solid rgba(214, 169, 43, 0.26);
+        background: rgba(214, 169, 43, 0.12);
+        color: #73540c;
+        font-size: 0.58rem;
+        letter-spacing: 0.14em;
+      }
+      .chip.success {
+        border-color: rgba(15, 138, 75, 0.2);
+        background: rgba(15, 138, 75, 0.1);
+        color: var(--deep);
+      }
+      .chip.danger {
+        border-color: #fecaca;
+        background: #fee2e2;
+        color: var(--danger);
+      }
+      .pill {
+        padding: 0.35rem 0.58rem;
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        background: #fff;
+        color: var(--deep);
+        font-size: 0.62rem;
+        letter-spacing: 0.04em;
+      }
+      .pill.gold {
+        border-color: rgba(214, 169, 43, 0.28);
+        background: rgba(214, 169, 43, 0.13);
+        color: #73540c;
+      }
+      .pill.green {
+        border-color: rgba(15, 138, 75, 0.18);
+        background: rgba(15, 138, 75, 0.11);
+        color: var(--deep);
+      }
+      .pill.red {
+        border-color: #fecaca;
+        background: #fee2e2;
+        color: var(--danger);
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        min-height: 2.35rem;
+        padding: 0.58rem 0.9rem;
+        border: 0;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 950;
+        line-height: 1;
+        transition:
+          transform 0.18s ease,
+          box-shadow 0.18s ease,
+          background 0.18s ease,
+          opacity 0.18s ease;
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+      .btn:focus-visible,
+      .input:focus,
+      .select:focus,
+      .textarea:focus {
+        outline: 3px solid rgba(214, 169, 43, 0.28);
+        outline-offset: 2px;
+      }
+      .btn.green {
+        background: linear-gradient(135deg, var(--deep), var(--green));
+        color: #fff;
+        box-shadow: 0 14px 34px rgba(5, 53, 31, 0.18);
+      }
+      .btn.gold {
+        background: linear-gradient(135deg, var(--gold), #ffe08a);
+        color: var(--deep);
+        box-shadow: 0 12px 28px rgba(214, 169, 43, 0.2);
+      }
+      .btn.white {
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        background: #fff;
+        color: var(--deep);
+      }
+      .btn.red {
+        border: 1px solid #fecaca;
+        background: #fee2e2;
+        color: var(--danger);
+      }
+      .btn[disabled],
+      .btn.is-disabled {
+        cursor: not-allowed;
+        opacity: 0.55;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.55rem;
+        margin-bottom: 0.85rem;
+      }
+      .stat-card {
+        position: relative;
+        overflow: hidden;
+        min-height: 5.4rem;
+        padding: 0.84rem;
+        border: 1px solid rgba(5, 53, 31, 0.08);
+        border-radius: 1.15rem;
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 14px 34px rgba(5, 53, 31, 0.06);
+      }
+      .stat-card::after {
+        content: "";
+        position: absolute;
+        right: -0.9rem;
+        bottom: -0.9rem;
+        width: 3.6rem;
+        height: 3.6rem;
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.12);
+      }
+      .stat-card p {
+        position: relative;
+        z-index: 1;
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.58rem;
+        font-weight: 950;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .stat-card strong {
+        position: relative;
+        z-index: 1;
+        display: block;
+        margin-top: 0.22rem;
+        color: var(--deep);
+        font-size: 1.45rem;
+        font-weight: 950;
+        letter-spacing: -0.035em;
+      }
+
+      .layout-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+      }
+      .card {
+        border: 1px solid rgba(214, 169, 43, 0.18);
+        border-radius: var(--radius-xl);
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 18px 48px rgba(5, 53, 31, 0.075);
+      }
+      .panel {
+        padding: 0.9rem;
+      }
+      .panel-title {
+        margin-bottom: 0.85rem;
+        padding: 0.85rem;
+        border: 1px solid rgba(214, 169, 43, 0.18);
+        border-radius: 1.05rem;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.96),
+          rgba(255, 250, 240, 0.8)
+        );
+      }
+      .panel-title h3 {
+        margin: 0.55rem 0 0;
+        color: var(--deep);
+        font-size: clamp(1.45rem, 3vw, 2.15rem);
+        font-weight: 950;
+        line-height: 0.98;
+        letter-spacing: -0.03em;
+      }
+      .panel-title p {
+        margin: 0.45rem 0 0;
+        color: var(--muted);
+        font-weight: 700;
+        line-height: 1.45;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+      .field.full {
+        grid-column: 1 / -1;
+      }
+      .label {
+        display: block;
+        margin: 0 0 0.3rem;
+        color: var(--deep);
+        font-size: 0.64rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+      .input,
+      .select,
+      .textarea {
+        width: 100%;
+        min-height: 2.75rem;
+        border: 1px solid rgba(5, 53, 31, 0.12);
+        border-radius: 0.95rem;
+        background: #fff;
+        color: #102017;
+        padding: 0.68rem 0.78rem;
+        font-size: 0.82rem;
+        font-weight: 750;
+      }
+      .textarea {
+        min-height: 6rem;
+        resize: vertical;
+        line-height: 1.5;
+      }
+      .textarea.short {
+        min-height: 4.4rem;
+      }
+      .textarea.tall {
+        min-height: 9rem;
+      }
+      .help {
+        margin: 0.32rem 0 0;
+        color: var(--muted);
+        font-size: 0.7rem;
+        font-weight: 700;
+        line-height: 1.45;
+      }
+
+      .route-card,
+      .upload-card,
+      .targets-card,
+      .preview-card,
+      .identity-card {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(214, 169, 43, 0.18);
+        border-radius: 1.05rem;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.96),
+          rgba(250, 246, 235, 0.82)
+        );
+        box-shadow: 0 12px 28px rgba(5, 53, 31, 0.055);
+        padding: 0.85rem;
+      }
+      .route-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.7rem;
+        margin-top: 0.8rem;
+      }
+      .routing-summary {
+        margin: 0.7rem 0 0;
+        padding: 0.62rem 0.7rem;
+        border: 1px dashed rgba(15, 138, 75, 0.18);
+        border-radius: 0.9rem;
+        background: rgba(255, 255, 255, 0.72);
+        color: rgba(5, 53, 31, 0.76);
+        font-size: 0.72rem;
+        font-weight: 800;
+        line-height: 1.4;
+      }
+      .target-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+        gap: 0.55rem;
+        margin-top: 0.8rem;
+      }
+      .target-option,
+      .check-card {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        min-height: 2.75rem;
+        padding: 0.65rem 0.72rem;
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        border-radius: 0.95rem;
+        background: rgba(255, 255, 255, 0.86);
+        color: #173321;
+        font-size: 0.75rem;
+        font-weight: 850;
+      }
+      .target-option small {
+        display: block;
+        margin-top: 0.12rem;
+        color: var(--muted);
+        font-size: 0.6rem;
+        font-weight: 750;
+      }
+      .target-option input,
+      .check-card input {
+        width: 1.1rem;
+        height: 1.1rem;
+        accent-color: var(--green);
+      }
+
+      .target-option.future-location {
+        align-items: flex-start;
+        border-color: rgba(214, 169, 43, 0.32);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 250, 240, 0.98),
+          rgba(255, 255, 255, 0.9)
+        );
+      }
+      .target-option .target-meta {
+        display: grid;
+        gap: 0.08rem;
+        min-width: 0;
+      }
+      .target-option .target-key {
+        color: #8a6616;
+        font-size: 0.56rem;
+        font-weight: 950;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .future-location-builder {
+        margin-top: 0.75rem;
+        padding: 0.75rem;
+        border: 1px solid rgba(15, 138, 75, 0.12);
+        border-radius: 1rem;
+        background: linear-gradient(
+          135deg,
+          rgba(15, 138, 75, 0.07),
+          rgba(255, 255, 255, 0.88)
+        );
+      }
+      .future-location-builder .future-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.55rem;
+        margin-top: 0.6rem;
+      }
+      .custom-location-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-top: 0.65rem;
+      }
+      .custom-location-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.36rem 0.56rem;
+        border: 1px solid rgba(214, 169, 43, 0.24);
+        border-radius: 999px;
+        background: #fff;
+        color: var(--deep);
+        font-size: 0.65rem;
+        font-weight: 900;
+      }
+      .custom-location-chip button {
+        display: grid;
+        place-items: center;
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 0;
+        border-radius: 999px;
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .identity-results-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.55rem;
+        margin-top: 0.55rem;
+      }
+      .identity-source-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.28rem;
+        padding: 0.18rem 0.42rem;
+        border-radius: 999px;
+        background: rgba(15, 138, 75, 0.1);
+        color: var(--deep);
+        font-size: 0.56rem;
+        font-weight: 950;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      @media (min-width: 760px) {
+        .future-location-builder .future-grid {
+          grid-template-columns: minmax(8rem, 0.72fr) minmax(10rem, 1fr) minmax(
+              12rem,
+              1.25fr
+            ) auto;
+          align-items: end;
+        }
+      }
+
+      .image-layout {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        margin-top: 0.85rem;
+      }
+      .image-preview {
+        overflow: hidden;
+        min-height: 15rem;
+        border: 1px solid rgba(214, 169, 43, 0.26);
+        border-radius: 1.1rem;
+        background: linear-gradient(135deg, var(--deep), #0b5d34);
+      }
+      .image-preview img {
+        width: 100%;
+        height: 100%;
+        min-height: 15rem;
+        object-fit: contain;
+        object-position: top center;
+        background: linear-gradient(135deg, var(--deep), #0b5d34);
+      }
+      body.image-fill .image-preview img,
+      body.image-fill .official-photo img,
+      body.image-fill .live-photo img {
+        object-fit: cover;
+      }
+      body.image-compact .image-preview {
+        min-height: 9.5rem;
+      }
+      body.image-compact .image-preview img {
+        min-height: 9.5rem;
+      }
+      .live-card {
+        overflow: hidden;
+        border: 1px solid rgba(214, 169, 43, 0.22);
+        border-radius: 1.25rem;
+        background: linear-gradient(145deg, #fff, var(--cream));
+        box-shadow: 0 18px 42px rgba(5, 53, 31, 0.1);
+      }
+      .live-photo {
+        min-height: 18rem;
+        background: linear-gradient(135deg, var(--deep), #0b5d34);
+      }
+      .live-photo img {
+        width: 100%;
+        height: 100%;
+        min-height: 18rem;
+        object-fit: contain;
+        object-position: top center;
+        background: linear-gradient(135deg, var(--deep), #0b5d34);
+      }
+      .live-body {
+        padding: 1rem;
+      }
+      .live-title {
+        margin: 0.55rem 0 0;
+        color: var(--deep);
+        font-size: 2rem;
+        font-weight: 950;
+        line-height: 0.98;
+        letter-spacing: -0.03em;
+      }
+      .live-summary {
+        margin: 0.65rem 0 0;
+        color: #5c6961;
+        font-size: 0.9rem;
+        font-weight: 650;
+        line-height: 1.55;
+      }
+
+      .records-panel {
+        display: flex;
+        flex-direction: column;
+        min-height: 22rem;
+      }
+      .records-toolbar {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+        margin-bottom: 0.75rem;
+      }
+      .records-list {
+        display: grid;
+        gap: 0.65rem;
+      }
+      .official-card {
+        display: grid;
+        grid-template-columns: 4.6rem 1fr;
+        gap: 0.75rem;
+        padding: 0.65rem;
+        border: 1px solid rgba(5, 53, 31, 0.08);
+        border-radius: 1.05rem;
+        background: #fff;
+        box-shadow: 0 10px 24px rgba(5, 53, 31, 0.055);
+      }
+      .official-card.grid-mode {
+        display: block;
+        overflow: hidden;
+        padding: 0;
+        border-color: rgba(214, 169, 43, 0.2);
+        background: linear-gradient(145deg, #fff, var(--cream));
+      }
+      .official-photo {
+        overflow: hidden;
+        width: 4.6rem;
+        min-height: 5.4rem;
+        border-radius: 0.85rem;
+        background: linear-gradient(135deg, var(--deep), #0b5d34);
+      }
+      .official-card.grid-mode .official-photo {
+        width: 100%;
+        height: 14rem;
+        border-radius: 0;
+      }
+      .official-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: top center;
+        background: linear-gradient(135deg, var(--deep), #0b5d34);
+      }
+      .official-body {
+        min-width: 0;
+      }
+      .official-card.grid-mode .official-body {
+        padding: 0.85rem;
+      }
+      .official-name {
+        margin: 0;
+        color: var(--deep);
+        font-size: 1rem;
+        font-weight: 950;
+        line-height: 1.1;
+      }
+      .official-card.grid-mode .official-name {
+        font-size: 1.35rem;
+        font-family: "Playfair Display", Georgia, serif;
+      }
+      .official-meta {
+        display: block;
+        margin: 0.2rem 0 0.45rem;
+        color: var(--muted);
+        font-size: 0.72rem;
+        font-weight: 800;
+        line-height: 1.35;
+      }
+      .official-summary {
+        margin: 0.45rem 0 0;
+        color: #5d6a62;
+        font-size: 0.75rem;
+        font-weight: 650;
+        line-height: 1.45;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        overflow: hidden;
+      }
+      .official-actions {
+        margin-top: 0.6rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+      }
+      .official-actions .btn {
+        min-height: 2rem;
+        padding: 0.46rem 0.65rem;
+        font-size: 0.68rem;
+      }
+      .records-grid-mode {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+
+      .notice,
+      .empty-state,
+      .access-state,
+      .loading-state {
+        padding: 1rem;
+        border: 1px solid rgba(214, 169, 43, 0.2);
+        border-radius: var(--radius-xl);
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: var(--shadow-card);
+      }
+      .empty-state,
+      .access-state,
+      .loading-state {
+        text-align: center;
+      }
+      .empty-state i,
+      .access-state i {
+        display: grid;
+        place-items: center;
+        width: 3.4rem;
+        height: 3.4rem;
+        margin: 0 auto 0.8rem;
+        border-radius: 1.1rem;
+        background: rgba(214, 169, 43, 0.14);
+        color: #8a6616;
+        font-size: 1.35rem;
+      }
+      .empty-state h3,
+      .access-state h3 {
+        margin: 0;
+        color: var(--deep);
+        font-size: 1.45rem;
+        font-weight: 950;
+        letter-spacing: -0.02em;
+      }
+      .empty-state p,
+      .access-state p {
+        max-width: 44rem;
+        margin: 0.5rem auto 0;
+        color: var(--muted);
+        font-weight: 700;
+        line-height: 1.55;
+      }
+      .hidden-view {
+        display: none !important;
+      }
+
+      .sticky-actions {
+        position: sticky;
+        bottom: 0.75rem;
+        z-index: 10;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+        padding: 0.65rem;
+        border: 1px solid rgba(214, 169, 43, 0.22);
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(15px);
+        box-shadow: 0 18px 48px rgba(5, 53, 31, 0.12);
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 1.2rem;
+        z-index: 200;
+        display: none;
+        width: min(92vw, 36rem);
+        transform: translateX(-50%);
+        border: 1px solid rgba(214, 169, 43, 0.3);
+        border-radius: 1rem;
+        background: var(--deep);
+        color: #fff;
+        padding: 0.78rem 1rem;
+        font-size: 0.84rem;
+        font-weight: 850;
+        line-height: 1.45;
+        box-shadow: 0 18px 52px rgba(5, 53, 31, 0.22);
+      }
+      .toast.show {
+        display: block;
+      }
+      .body-lock {
+        overflow: hidden;
+      }
+
+      @media (min-width: 640px) {
+        .top-actions {
+          display: flex;
+        }
+        .stats-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .form-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .route-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .image-layout {
+          grid-template-columns: 12rem 1fr;
+          align-items: start;
+        }
+        .records-toolbar {
+          grid-template-columns: 1fr 10rem 11rem;
+        }
+        .records-grid-mode {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (min-width: 768px) {
+        .sidebar {
+          transform: translateX(0);
+        }
+        .mobile-overlay {
+          display: none !important;
+        }
+        .main-wrap {
+          margin-left: 16rem;
+        }
+        .mobile-menu-btn {
+          display: none;
+        }
+        main {
+          padding: 1rem;
+        }
+        .hero {
+          padding: 1.25rem;
+        }
+      }
+      @media (min-width: 1180px) {
+        .stats-grid {
+          grid-template-columns: repeat(6, minmax(0, 1fr));
+        }
+        .layout-grid {
+          grid-template-columns: minmax(0, 1.12fr) minmax(26rem, 0.88fr);
+          align-items: start;
+        }
+        .records-panel {
+          position: sticky;
+          top: 4.55rem;
+          max-height: calc(100vh - 5.4rem);
+          overflow: auto;
+        }
+      }
+      @media (min-width: 1450px) {
+        .records-grid-mode {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 720px) {
+        .btn {
+          width: 100%;
+        }
+        .hero-actions,
+        .sticky-actions {
+          width: 100%;
+        }
+        .hero-inner,
+        .panel-head,
+        .topbar-inner {
+          align-items: stretch;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="/assets/css/admin-unified.css" />
+    <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+</head>
+  <body class="image-contain">
+    <a class="skip-link" href="#mainContent">Skip to leadership desk</a>
+    <button
+      id="mobileOverlay"
+      class="mobile-overlay"
+      type="button"
+      aria-label="Close admin navigation"
+    ></button>
+
+    <aside id="sidebar" class="sidebar" aria-label="APSG admin navigation">
+      <div class="sidebar-brand">
+        <a
+          href="/admin/dashboard.html"
+          class="brand-link"
+          aria-label="Open APSG admin dashboard"
+        >
+          <span class="brand-mark"
+            ><img
+              src="/assets/images/logo/apsg.png"
+              alt="APSG logo"
+              onerror="this.style.display = 'none'"
+          width="96" height="96" decoding="async"></span>
+          <span
+            ><strong class="brand-title">APSG Admin</strong
+            ><small class="brand-kicker">Leadership Control</small></span
+          >
+        </a>
+      </div>
+      <nav class="sidebar-nav">
+        <p class="sidebar-heading">Command Center</p>
+        <a
+          href="/admin/dashboard.html"
+          class="sidebar-link"
+          data-access="viewer,editor,admin,superadmin"
+          ><i class="fas fa-chart-pie" aria-hidden="true"></i>Dashboard<span
+            class="role-chip"
+            >Admin</span
+          ></a
+        >
+        <a
+          href="/admin/members.html"
+          class="sidebar-link"
+          data-access="admin,superadmin"
+          ><i class="fas fa-users" aria-hidden="true"></i>Members<span
+            class="role-chip"
+            >Admin</span
+          ></a
+        >
+        <a
+          href="/admin/account-details.html"
+          class="sidebar-link"
+          data-access="admin,superadmin"
+          ><i class="fas fa-building-columns" aria-hidden="true"></i>Account
+          Details<span class="role-chip">Admin</span></a
+        >
+        <a
+          href="/admin/admin-leadership.html"
+          class="sidebar-link active"
+          data-access="admin,superadmin"
+          aria-current="page"
+          ><i class="fa-solid fa-users-viewfinder" aria-hidden="true"></i
+          >Leadership Desk<span class="role-chip">Admin</span></a
+        >
+        <a
+          href="/admin/admin-official-create.html"
+          class="sidebar-link"
+          data-access="admin,superadmin"
+          ><i class="fa-solid fa-user-pen" aria-hidden="true"></i>Create /
+          Update<span class="role-chip">New</span></a
+        >
+        <a
+          href="/admin/admin-officials-manager.html"
+          class="sidebar-link"
+          data-access="admin,superadmin"
+          ><i class="fa-solid fa-table-list" aria-hidden="true"></i>Officials
+          Manager<span class="role-chip">Admin</span></a
+        >
+        <p class="sidebar-heading">Publishing Desk</p>
+        <a
+          href="/admin/admin-blog.html"
+          class="sidebar-link"
+          data-access="editor,admin,superadmin"
+          ><i class="fas fa-newspaper" aria-hidden="true"></i>News &
+          Updates<span class="role-chip">Editor</span></a
+        >
+        <a
+          href="/admin/admin-meeting.html"
+          class="sidebar-link"
+          data-access="editor,admin,superadmin"
+          ><i class="fas fa-users-line" aria-hidden="true"></i>Meetings<span
+            class="role-chip"
+            >Editor</span
+          ></a
+        >
+        <a
+          href="/admin/admin-event.html"
+          class="sidebar-link"
+          data-access="editor,admin,superadmin"
+          ><i class="fas fa-calendar-check" aria-hidden="true"></i>Events<span
+            class="role-chip"
+            >Editor</span
+          ></a
+        >
+        <a
+          href="/admin/admin-gallery.html"
+          class="sidebar-link"
+          data-access="editor,admin,superadmin"
+          ><i class="fa-solid fa-images" aria-hidden="true"></i>Gallery
+          Albums<span class="role-chip">Editor</span></a
+        >
+        <p class="sidebar-heading">Public Review</p>
+        <a
+          href="/pages/leadership.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i
+          >Leadership</a
+        >
+        <a
+          href="/pages/bot.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i
+          >BOT</a
+        >
+        <a
+          href="/pages/cwdi.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i
+          >CWDI</a
+        >
+        <a
+          href="/pages/mp.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i
+          >Matrons & Patrons</a
+        >
+        <a
+          href="/pages/nat-exec.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i
+          >NATEXCO</a
+        >
+        <a
+          href="/pages/state.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i
+          >State Executives</a
+        >
+      </nav>
+      <div class="sidebar-footer">
+        <button
+          id="logoutBtn"
+          class="sidebar-link"
+          type="button"
+          style="
+            width: 100%;
+            border: 0;
+            background: rgba(153, 27, 27, 0.14);
+            color: #fecaca;
+          "
+        >
+          <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i
+          >Logout
+        </button>
+      </div>
+    </aside>
+
+    <div class="main-wrap">
+      <header class="topbar">
+        <div class="topbar-inner">
+          <div
+            class="flex-row"
+            style="justify-content: flex-start; min-width: 0"
+          >
+            <button
+              id="mobileMenuBtn"
+              class="mobile-menu-btn"
+              type="button"
+              aria-label="Open admin navigation"
+              aria-controls="sidebar"
+              aria-expanded="false"
+            >
+              <i class="fa-solid fa-bars" aria-hidden="true"></i>
+            </button>
+            <div class="topbar-title">
+              <p>APC Progressive Support Group APSG Nigeria</p>
+              <h1>Leadership & Officials Manager</h1>
+            </div>
+          </div>
+          <div class="top-actions">
+            <span id="adminRoleChip" class="chip success"
+              ><i class="fa-solid fa-shield-halved" aria-hidden="true"></i
+              >Checking</span
+            >
+            <button id="refreshBtn" type="button" class="btn white">
+              <i class="fa-solid fa-rotate" aria-hidden="true"></i>Refresh
+            </button>
+            <a href="/admin/admin-official-create.html" class="btn green"
+              ><i class="fa-solid fa-user-pen" aria-hidden="true"></i>Premium
+              Studio</a
+            >
+            <a href="/admin/admin-officials-manager.html" class="btn white"
+              ><i class="fa-solid fa-table-list" aria-hidden="true"></i>Full
+              Manager</a
+            >
+            <a
+              href="/pages/leadership.html"
+              target="_blank"
+              rel="noopener"
+              class="btn gold"
+              ><i
+                class="fa-solid fa-arrow-up-right-from-square"
+                aria-hidden="true"
+              ></i
+              >Public</a
+            >
+          </div>
+        </div>
+      </header>
+
+      <main id="mainContent" tabindex="-1">
+        <section
+          id="accessNotice"
+          class="notice hidden-view"
+          aria-live="polite"
+        ></section>
+
+        <section class="hero" aria-labelledby="pageTitle">
+          <div class="hero-inner">
+            <div class="hero-copy">
+              <span class="chip"
+                ><i class="fa-solid fa-id-card" aria-hidden="true"></i>
+                APSG/CWDI Officials Leadership Control Desk</span
+              >
+            </div>
+            <div class="hero-actions">
+              <button id="refreshHeroBtn" type="button" class="btn white">
+                <i class="fa-solid fa-rotate" aria-hidden="true"></i>Refresh
+              </button>
+              <a href="/admin/admin-official-create.html" class="btn green"
+                ><i
+                  class="fa-solid fa-up-right-from-square"
+                  aria-hidden="true"
+                ></i
+                >Open Premium Studio</a
+              >
+              <a href="/admin/admin-officials-manager.html" class="btn white"
+                ><i class="fa-solid fa-layer-group" aria-hidden="true"></i
+                >Deduped Manager</a
+              >
+            </div>
+          </div>
+        </section>
+
+        <section class="stats-grid" aria-label="Leadership summary">
+          <div class="stat-card">
+            <p>Total Officials</p>
+            <strong id="statTotal">0</strong>
+          </div>
+          <div class="stat-card">
+            <p>Published</p>
+            <strong id="statPublished">0</strong>
+          </div>
+          <div class="stat-card">
+            <p>Draft</p>
+            <strong id="statDraft">0</strong>
+          </div>
+          <div class="stat-card">
+            <p>APSG</p>
+            <strong id="statAPSG">0</strong>
+          </div>
+          <div class="stat-card">
+            <p>CWDI</p>
+            <strong id="statCWDI">0</strong>
+          </div>
+          <div class="stat-card">
+            <p>Person Groups</p>
+            <strong id="statGroups">0</strong>
+          </div>
+        </section>
+
+        <div class="layout-grid">
+          <section class="card panel" aria-labelledby="formTitle">
+            <div class="panel-title">
+              <div class="panel-head">
+                <div>
+                  <span class="chip"
+                    ><i class="fa-solid fa-user-pen" aria-hidden="true"></i>
+                    Create / Update Record</span
+                  >
+                  <h3 id="formTitle" class="display-font">
+                    Leadership Record Studio
+                  </h3>
+                  <p>
+                    Use this compact desk for quick updates. Use the Premium
+                    Studio for advanced profile/position mapping workflows.
+                  </p>
+                </div>
+                <div class="actions">
+                  <span id="modeBadge" class="chip"
+                    ><i class="fa-solid fa-circle-plus" aria-hidden="true"></i
+                    >Create</span
+                  ><span id="tableBadge" class="chip"
+                    ><i class="fa-solid fa-database" aria-hidden="true"></i
+                    >Connecting</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <form id="officialForm" autocomplete="off">
+              <input id="id" type="hidden" />
+              <div class="form-grid">
+                <div class="field full identity-card">
+                  <div class="panel-head">
+                    <div>
+                      <span class="chip"
+                        ><i
+                          class="fa-solid fa-fingerprint"
+                          aria-hidden="true"
+                        ></i>
+                        Member / Profile Identity</span
+                      >
+                      <p class="help">
+                        Search existing members or officials. Same person should
+                        keep the same slug and image URL.
+                      </p>
+                    </div>
+                    <span id="identityBadge" class="chip"
+                      ><i class="fa-solid fa-layer-group" aria-hidden="true"></i
+                      >0 linked</span
+                    >
+                  </div>
+                  <label
+                    class="label"
+                    for="memberPicker"
+                    style="margin-top: 0.75rem"
+                    >Search member or official</label
+                  >
+                  <input
+                    id="memberPicker"
+                    class="input"
+                    list="memberOptions"
+                    placeholder="Type a registered member or existing official name"
+                  />
+                  <datalist id="memberOptions"></datalist>
+                  <div
+                    id="identityMatches"
+                    class="records-list"
+                    style="margin-top: 0.75rem"
+                  >
+                    <p class="help">
+                      Enter a name, slug, or image URL to see linked records.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="label" for="full_name">Full Name *</label
+                  ><input
+                    id="full_name"
+                    class="input"
+                    required
+                    placeholder="Official full name"
+                    autocomplete="name"
+                  />
+                </div>
+                <div class="field">
+                  <label class="label" for="slug">Shared Profile Slug</label
+                  ><input
+                    id="slug"
+                    class="input"
+                    placeholder="auto-generated; keep same for same person"
+                  />
+                  <p class="help">
+                    Same official = same slug. New position can still use the
+                    same slug.
+                  </p>
+                </div>
+
+                <div class="field full route-card">
+                  <div class="panel-head">
+                    <div>
+                      <span class="chip"
+                        ><i class="fa-solid fa-sitemap" aria-hidden="true"></i>
+                        Organization Routing</span
+                      >
+                      <p class="help">
+                        Choose the organization and section. Related fields and
+                        publish targets will be mapped automatically.
+                      </p>
+                    </div>
+                    <span id="orgRouteBadge" class="chip"
+                      ><i
+                        class="fa-solid fa-building-user"
+                        aria-hidden="true"
+                      ></i
+                      >APSG</span
+                    >
+                  </div>
+                  <div class="route-grid">
+                    <div>
+                      <label class="label" for="organization"
+                        >Organization / Group</label
+                      ><select id="organization" class="select">
+                        <option value="apsg">
+                          APSG - APC Progressive Support Group
+                        </option>
+                        <option value="cwdi">
+                          CWDI - Confident Women Development Initiative
+                        </option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="label" for="leadership_group"
+                        >Leadership Section</label
+                      ><select id="leadership_group" class="select"></select>
+                    </div>
+                  </div>
+                  <input
+                    id="organization_key"
+                    type="hidden"
+                    value="apsg"
+                  /><input
+                    id="section_key"
+                    type="hidden"
+                    value="board_bot"
+                  /><input
+                    id="group_route_key"
+                    type="hidden"
+                    value="apsg_board_bot"
+                  />
+                  <p id="orgRoutingSummary" class="routing-summary">
+                    This record will be grouped under <strong>APSG</strong> ->
+                    <strong>Board Members / BOT</strong>.
+                  </p>
+                </div>
+
+                <div class="field">
+                  <label class="label" for="level">Level *</label
+                  ><select id="level" class="select" required>
+                    <option value="bot">BOT / Board of Trustees</option>
+                    <option value="patronage">Matron / Patron / Adviser</option>
+                    <option value="national">National</option>
+                    <option value="state">State</option>
+                    <option value="lga">LGA</option>
+                    <option value="ward">Ward</option>
+                    <option value="pu">Polling Unit</option>
+                    <option value="volunteer">Volunteer</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label class="label" for="position"
+                    >Position / Designation *</label
+                  ><input
+                    id="position"
+                    class="input"
+                    list="positionSuggestions"
+                    required
+                    placeholder="Type any office title"
+                  /><datalist id="positionSuggestions">
+                    <option value="Director General"></option>
+                    <option value="National Convener"></option>
+                    <option
+                      value="Director General and National Convener"
+                    ></option>
+                    <option value="Deputy Director General"></option>
+                    <option value="National General Secretary"></option>
+                    <option
+                      value="Personal Assistant to the Director-General"
+                    ></option>
+                    <option value="ICT and Media Director"></option>
+                    <option value="Special Adviser, Youth Affairs"></option>
+                    <option value="Board Member"></option>
+                    <option value="Patron"></option>
+                    <option value="Grand Patron"></option>
+                    <option value="National Patron"></option>
+                    <option value="Matron"></option>
+                    <option value="Grand Matron"></option>
+                    <option value="National Matron"></option>
+                    <option value="Executive Director"></option>
+                    <option value="State Coordinator"></option>
+                    <option value="State Chairman"></option>
+                    <option value="Women Leader"></option>
+                  </datalist>
+                </div>
+                <div class="field">
+                  <label class="label" for="category">Display Category</label
+                  ><select id="category" class="select">
+                    <option value="national_executive">
+                      National Executive
+                    </option>
+                    <option value="bot">BOT / Board Secretariat</option>
+                    <option value="matron">Matron</option>
+                    <option value="patron">Patron</option>
+                    <option value="state_executive">State Executive</option>
+                    <option value="adviser">Adviser</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label class="label" for="seat">Seat / Council</label
+                  ><input
+                    id="seat"
+                    class="input"
+                    placeholder="e.g. Patron Council"
+                  />
+                </div>
+                <div class="field">
+                  <label class="label" for="state">State</label
+                  ><input
+                    id="state"
+                    class="input"
+                    placeholder="National / Ogun / Lagos"
+                  />
+                </div>
+                <div class="field">
+                  <label class="label" for="zone">Zone</label
+                  ><input
+                    id="zone"
+                    class="input"
+                    placeholder="National / South West"
+                  />
+                </div>
+                <div class="field">
+                  <label class="label" for="lga">LGA / LCDA</label
+                  ><input id="lga" class="input" placeholder="LGA / LCDA" />
+                </div>
+                <div class="field">
+                  <label class="label" for="ward">Ward</label
+                  ><input id="ward" class="input" placeholder="Ward" />
+                </div>
+
+                <div class="field full upload-card">
+                  <div class="panel-head">
+                    <div>
+                      <span class="chip"
+                        ><i class="fa-solid fa-image" aria-hidden="true"></i>
+                        Official Image</span
+                      >
+                      <p class="help">
+                        Full-image mode prevents headshots from being cut. Fill
+                        mode is available for card-crop testing.
+                      </p>
+                    </div>
+                    <span id="bucketBadge" class="chip"
+                      ><i class="fa-solid fa-box-archive" aria-hidden="true"></i
+                      >officials</span
+                    >
+                  </div>
+                  <div class="image-layout">
+                    <div class="image-preview">
+                      <img
+                        id="officialImagePreview"
+                        src="/assets/images/logo/apsg.png"
+                        alt="Official image preview"
+                        onerror="this.src = '/assets/images/logo/apsg.png'"
+                      width="96" height="96" decoding="async">
+                    </div>
+                    <div>
+                      <label class="label" for="image_url">Image URL</label
+                      ><input
+                        id="image_url"
+                        class="input"
+                        placeholder="Supabase public URL or image path"
+                      />
+                      <div
+                        class="form-grid"
+                        style="
+                          margin-top: 0.65rem;
+                          grid-template-columns: 1fr auto auto;
+                        "
+                      >
+                        <input
+                          id="official_image_file"
+                          type="file"
+                          accept="image/*"
+                          class="input"
+                          aria-label="Select official image"
+                        />
+                        <button
+                          id="uploadImageBtn"
+                          type="button"
+                          class="btn green"
+                        >
+                          <i
+                            class="fa-solid fa-cloud-arrow-up"
+                            aria-hidden="true"
+                          ></i
+                          >Upload
+                        </button>
+                        <button
+                          id="clearImageBtn"
+                          type="button"
+                          class="btn white"
+                        >
+                          <i
+                            class="fa-solid fa-image-circle-xmark"
+                            aria-hidden="true"
+                          ></i
+                          >Clear
+                        </button>
+                      </div>
+                      <label
+                        class="label"
+                        for="imageMode"
+                        style="margin-top: 0.65rem"
+                        >Image Display Mode</label
+                      >
+                      <select id="imageMode" class="select">
+                        <option value="contain">Full Image</option>
+                        <option value="fill">Fill / Crop</option>
+                        <option value="compact">Compact Full Image</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="field full">
+                  <label class="label" for="short_info">Card Excerpt *</label
+                  ><textarea
+                    id="short_info"
+                    class="textarea short"
+                    maxlength="400"
+                    required
+                    placeholder="Short excerpt shown on public leadership cards."
+                  ></textarea>
+                  <p class="help">
+                    <span id="shortInfoCount">0</span>/400 characters. This
+                    should be brief and official.
+                  </p>
+                </div>
+                <div class="field full">
+                  <label class="label" for="credentials">Credentials</label
+                  ><textarea
+                    id="credentials"
+                    class="textarea"
+                    placeholder="One credential, appointment, or recognition per line."
+                  ></textarea>
+                </div>
+                <div class="field full">
+                  <label class="label" for="biography"
+                    >Biography / Dossier</label
+                  ><textarea
+                    id="biography"
+                    class="textarea tall"
+                    placeholder="Full profile details shown on official-details page."
+                  ></textarea>
+                </div>
+                <div class="field">
+                  <label class="label" for="display_order">Display Order</label
+                  ><input
+                    id="display_order"
+                    type="number"
+                    class="input"
+                    value="999"
+                    min="1"
+                  />
+                </div>
+                <div class="field">
+                  <label class="label" for="status">Status</label
+                  ><select id="status" class="select">
+                    <option value="published">Published</option>
+                    <option value="draft">Draft</option>
+                  </select>
+                </div>
+
+                <div class="field full targets-card">
+                  <div class="panel-head">
+                    <div>
+                      <span class="chip"
+                        ><i class="fa-solid fa-bullhorn" aria-hidden="true"></i>
+                        Publish Location</span
+                      >
+                      <p class="help">
+                        Controls the public pages where this role appears. Add
+                        future public pages here without editing the code.
+                      </p>
+                    </div>
+                    <span id="publishTargetSummary" class="chip"
+                      ><i
+                        class="fa-solid fa-location-dot"
+                        aria-hidden="true"
+                      ></i
+                      >Leadership</span
+                    >
+                  </div>
+                  <div id="publishTargetGrid" class="target-grid"></div>
+                  <div
+                    class="future-location-builder"
+                    aria-label="Create future publish location"
+                  >
+                    <div class="panel-head" style="align-items: flex-start">
+                      <div>
+                        <span class="chip success"
+                          ><i
+                            class="fa-solid fa-sparkles"
+                            aria-hidden="true"
+                          ></i>
+                          Future Location Builder</span
+                        >
+                        <p class="help">
+                          Create a clean target key, label and public path. The
+                          key is saved into <strong>publish_targets</strong>.
+                        </p>
+                      </div>
+                    </div>
+                    <div class="future-grid">
+                      <div>
+                        <label class="label" for="newTargetKey"
+                          >Target Key</label
+                        ><input
+                          id="newTargetKey"
+                          class="input"
+                          placeholder="e.g. youth_directorate"
+                        />
+                      </div>
+                      <div>
+                        <label class="label" for="newTargetLabel"
+                          >Display Label</label
+                        ><input
+                          id="newTargetLabel"
+                          class="input"
+                          placeholder="e.g. Youth Directorate"
+                        />
+                      </div>
+                      <div>
+                        <label class="label" for="newTargetPath"
+                          >Public Page Path</label
+                        ><input
+                          id="newTargetPath"
+                          class="input"
+                          placeholder="/pages/youth-directorate.html"
+                        />
+                      </div>
+                      <button
+                        id="addCustomTargetBtn"
+                        type="button"
+                        class="btn gold"
+                      >
+                        <i class="fa-solid fa-plus" aria-hidden="true"></i>Add
+                        Location
+                      </button>
+                    </div>
+                    <div
+                      id="customTargetList"
+                      class="custom-location-list"
+                    ></div>
+                  </div>
+                  <div class="actions" style="margin-top: 0.65rem">
+                    <button
+                      id="selectAllTargets"
+                      type="button"
+                      class="btn white"
+                    >
+                      <i class="fa-solid fa-check-double" aria-hidden="true"></i
+                      >Select All</button
+                    ><button id="clearTargets" type="button" class="btn white">
+                      <i class="fa-solid fa-eraser" aria-hidden="true"></i>Clear
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  class="field full"
+                  style="
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+                    gap: 0.6rem;
+                  "
+                >
+                  <label class="check-card"
+                    ><input id="is_featured" type="checkbox" />Featured
+                    profile</label
+                  ><label class="check-card"
+                    ><input id="open_details_after_save" type="checkbox" />Open
+                    dossier after save</label
+                  ><label class="check-card"
+                    ><input
+                      id="return_manager_after_save"
+                      type="checkbox"
+                    />Return to manager after save</label
+                  >
+                </div>
+              </div>
+              <div class="sticky-actions">
+                <button id="saveOfficialBtn" class="btn green" type="submit">
+                  <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i
+                  ><span id="saveOfficialBtnText">Save Official</span></button
+                ><button id="saveDraftBtn" class="btn gold" type="button">
+                  <i class="fa-solid fa-eye-slash" aria-hidden="true"></i>Save
+                  Draft</button
+                ><button
+                  id="duplicatePositionBtn"
+                  class="btn white"
+                  type="button"
+                >
+                  <i class="fa-solid fa-clone" aria-hidden="true"></i>New
+                  Position Same Person</button
+                ><button id="resetOfficialBtn" class="btn white" type="button">
+                  <i class="fa-solid fa-rotate-left" aria-hidden="true"></i
+                  >Reset
+                </button>
+              </div>
+            </form>
+          </section>
+
+          <aside
+            class="records-panel card panel"
+            aria-labelledby="recordsTitle"
+          >
+            <div class="panel-title">
+              <div class="panel-head">
+                <div>
+                  <span class="chip"
+                    ><i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+                    Live Preview + Records</span
+                  >
+                  <h3 id="recordsTitle" class="display-font">
+                    Existing Officials
+                  </h3>
+                  <p>
+                    Search, filter and open existing records. Use Full Manager
+                    for advanced dedupe and bulk actions.
+                  </p>
+                </div>
+                <a href="/admin/admin-officials-manager.html" class="btn gold"
+                  ><i class="fa-solid fa-table-list" aria-hidden="true"></i>Full
+                  Manager</a
+                >
+              </div>
+            </div>
+
+            <div class="preview-card" style="margin-bottom: 0.75rem">
+              <div class="panel-head">
+                <span class="chip"
+                  ><i class="fa-solid fa-eye" aria-hidden="true"></i> Public
+                  Card Preview</span
+                ><a
+                  id="openDossierTop"
+                  class="btn white"
+                  href="/pages/official-details.html"
+                  target="_blank"
+                  rel="noopener"
+                  ><i class="fa-solid fa-file-lines" aria-hidden="true"></i
+                  >Dossier</a
+                >
+              </div>
+              <article class="live-card" style="margin-top: 0.75rem">
+                <div class="live-photo">
+                  <img
+                    id="livePreviewImage"
+                    src="/assets/images/logo/apsg.png"
+                    alt="Live official card preview"
+                    onerror="this.src = '/assets/images/logo/apsg.png'"
+                  width="96" height="96" decoding="async">
+                </div>
+                <div class="live-body">
+                  <div id="livePreviewBadges" class="actions">
+                    <span class="pill green">APSG</span
+                    ><span class="pill gold">Leadership</span>
+                  </div>
+                  <h4 id="livePreviewName" class="live-title display-font">
+                    Official Name
+                  </h4>
+                  <p
+                    id="livePreviewPosition"
+                    class="help"
+                    style="color: var(--deep); font-weight: 950"
+                  >
+                    Position
+                  </p>
+                  <p id="livePreviewSummary" class="live-summary">
+                    Card excerpt preview will appear here.
+                  </p>
+                </div>
+              </article>
+            </div>
+
+            <div class="records-toolbar">
+              <input
+                id="officialSearch"
+                class="input"
+                type="search"
+                placeholder="Search officials..."
+              />
+              <select
+                id="organizationFilter"
+                class="select"
+                aria-label="Filter organization"
+              >
+                <option value="all">All Groups</option>
+                <option value="apsg">APSG</option>
+                <option value="cwdi">CWDI</option>
+              </select>
+              <select
+                id="officialFilter"
+                class="select"
+                aria-label="Filter records"
+              >
+                <option value="all">All Records</option>
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+                <option value="leadership">Leadership</option>
+                <option value="bot">BOT</option>
+                <option value="cwdi">CWDI</option>
+                <option value="mp">Matrons/Patrons</option>
+                <option value="national_executive">NATEXCO</option>
+                <option value="state_executive">State Executive</option>
+                <option value="matron">Category: Matron</option>
+                <option value="patron">Category: Patron</option>
+              </select>
+            </div>
+            <div
+              class="records-toolbar"
+              style="grid-template-columns: 1fr 10rem 10rem"
+            >
+              <select id="recordsViewMode" class="select">
+                <option value="list">List View</option>
+                <option value="grid">Grid View</option>
+              </select>
+              <button id="reloadRecordsBtn" type="button" class="btn white">
+                <i class="fa-solid fa-rotate" aria-hidden="true"></i>Reload
+              </button>
+              <span id="supabaseStatus" class="chip"
+                ><i class="fa-solid fa-database" aria-hidden="true"></i
+                >Connecting</span
+              >
+            </div>
+            <div
+              id="officialList"
+              class="records-list"
+              aria-live="polite"
+            ></div>
+          </aside>
+        </div>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      window.APSG_OFFICIALS_TABLES = window.APSG_OFFICIALS_TABLES || [
+        "apsg_officials",
+        "officials",
+        "leadership_officials",
+      ];
+      window.APSG_MEMBER_TABLES = window.APSG_MEMBER_TABLES || [
+        "members",
+        "apsg_members",
+        "registrations",
+        "member_registrations",
+        "profiles",
+      ];
+      window.APSG_STORAGE_BUCKET = window.APSG_STORAGE_BUCKET || "officials";
+      window.APSG_IMAGE_FOLDER = window.APSG_IMAGE_FOLDER || "officials";
+    </script>
+
+    <script>
+      (function () {
+        "use strict";
+
+        const FALLBACK_IMAGE = "/assets/images/logo/apsg.png";
+        const ALLOWED_ROLES = new Set(["superadmin", "admin"]);
+        const ORG_LABELS = { apsg: "APSG", cwdi: "CWDI" };
+        const SECTION_LABELS = {
+          board_bot: "Board Members / BOT",
+          patrons: "Patrons",
+          matrons: "Matrons",
+          executive_directors: "Executive Directors",
+          executive_leadership: "Executive Leadership",
+        };
+        const SECTION_OPTIONS = {
+          apsg: [
+            ["board_bot", "Board Members / BOT"],
+            ["patrons", "Patrons"],
+            ["matrons", "Matrons"],
+            ["executive_directors", "Executive Directors"],
+          ],
+          cwdi: [
+            ["board_bot", "Board Members / BOT"],
+            ["patrons", "Patrons"],
+            ["matrons", "Matrons"],
+            ["executive_leadership", "Executive Leadership"],
+          ],
+        };
+        const ROUTE_MAP = {
+          board_bot: {
+            level: "bot",
+            category: "bot",
+            seat: "Board / BOT",
+            targets: ["leadership", "bot"],
+          },
+          patrons: {
+            level: "patronage",
+            category: "patron",
+            seat: "Patron Council",
+            targets: ["leadership", "mp"],
+          },
+          matrons: {
+            level: "patronage",
+            category: "matron",
+            seat: "Matron Council",
+            targets: ["leadership", "mp"],
+          },
+          executive_directors: {
+            level: "national",
+            category: "national_executive",
+            seat: "Executive Directors",
+            targets: ["leadership", "national_executive"],
+          },
+          executive_leadership: {
+            level: "national",
+            category: "national_executive",
+            seat: "Executive Leadership",
+            targets: ["leadership", "cwdi", "national_executive"],
+          },
+        };
+        const DEFAULT_TARGETS = [
+          ["leadership", "Leadership Overview", "/pages/leadership.html"],
+          ["bot", "BOT / Board", "/pages/bot.html"],
+          ["cwdi", "CWDI Directory", "/pages/cwdi.html"],
+          ["mp", "Matrons & Patrons", "/pages/mp.html"],
+          ["national_executive", "NATEXCO", "/pages/nat-exec.html"],
+          ["state_executive", "State Executive", "/pages/state-details.html"],
+        ];
+
+        const state = {
+          client: null,
+          activeTable: "",
+          memberTable: "",
+          records: [],
+          members: [],
+          identityChoices: [],
+          customTargets: [],
+          filtered: [],
+          currentRecord: null,
+          adminRole: "",
+          canWrite: false,
+          loading: true,
+          bound: false,
+        };
+        const $ = (id) => document.getElementById(id);
+
+        function esc(value) {
+          return String(value ?? "").replace(
+            /[&<>"']/g,
+            (char) =>
+              ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;",
+              })[char],
+          );
+        }
+        function slugify(value) {
+          return (
+            String(value || "")
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/^-|-$/g, "") || "official"
+          );
+        }
+        function canonicalSlug(value) {
+          return slugify(
+            String(value || "").replace(
+              /^(apsg|cwdi)[-_](board[-_]bot|patrons|matrons|executive[-_]directors|executive[-_]leadership)[-_]/i,
+              "",
+            ),
+          );
+        }
+        function cleanImage(value) {
+          const url = String(value || "").trim();
+          if (
+            !url ||
+            /^(null|undefined|n\/a)$/i.test(url) ||
+            /logo\/apsg|assets\/images\/logo/i.test(url)
+          )
+            return "";
+          return url;
+        }
+        function orgOf(record) {
+          return String(
+            record.organization_key || record.organization || "apsg",
+          ).toLowerCase();
+        }
+        function groupOf(record) {
+          return record.leadership_group || record.section_key || "";
+        }
+        function normalizeStatus(record) {
+          return String(record.status || "published").toLowerCase();
+        }
+        function isRealName(record) {
+          const name = String(record.full_name || record.name || "").trim();
+          return (
+            name.length > 2 &&
+            !/^(official|unnamed|unnamed official|name|full name|test|placeholder|null|n\/a|tbd)$/i.test(
+              name,
+            )
+          );
+        }
+        function identityKey(record) {
+          return (
+            String(record.profile_slug || record.profile_key || "").trim() ||
+            canonicalSlug(record.slug) ||
+            cleanImage(record.image_url).toLowerCase() ||
+            slugify(record.full_name || record.name || "")
+          );
+        }
+        function targetsOf(record) {
+          const raw = record.publish_targets || [];
+          if (Array.isArray(raw)) return raw.filter(Boolean);
+          if (typeof raw === "string") {
+            try {
+              const parsed = JSON.parse(raw);
+              return Array.isArray(parsed)
+                ? parsed.filter(Boolean)
+                : raw
+                    .split(",")
+                    .map((item) => item.trim())
+                    .filter(Boolean);
+            } catch {
+              return raw
+                .split(",")
+                .map((item) => item.trim())
+                .filter(Boolean);
+            }
+          }
+          return [];
+        }
+        function placementKeyOf(record) {
+          const position = slugify(
+            record.position || record.designation || record.role || "official",
+          );
+          return `${orgOf(record)}:${groupOf(record) || "board_bot"}:${record.category || ""}:${position}`;
+        }
+        function displayImage(record) {
+          return cleanImage(record.image_url) || FALLBACK_IMAGE;
+        }
+
+        function titleCase(value) {
+          return String(value || "")
+            .replace(/[-_.]+/g, " ")
+            .replace(/\s+/g, " ")
+            .trim()
+            .toLowerCase()
+            .replace(/\b\w/g, (char) => char.toUpperCase());
+        }
+        function emailToName(value) {
+          const email = String(value || "").trim();
+          if (!email.includes("@")) return "";
+          const local = email.split("@")[0].replace(/\d+/g, " ");
+          return titleCase(local);
+        }
+        function fullPersonName(person) {
+          const direct =
+            person.full_name ||
+            person.fullName ||
+            person.name ||
+            person.member_name ||
+            person.memberName ||
+            person.display_name ||
+            person.displayName;
+          const first =
+            person.first_name ||
+            person.firstname ||
+            person.firstName ||
+            person.given_name ||
+            person.givenName;
+          const middle =
+            person.middle_name ||
+            person.middlename ||
+            person.other_name ||
+            person.other_names ||
+            person.otherNames;
+          const last =
+            person.last_name ||
+            person.lastname ||
+            person.surname ||
+            person.family_name ||
+            person.familyName;
+          const joined = [first, middle, last].filter(Boolean).join(" ").trim();
+          const official =
+            person.position && (person.full_name || person.name)
+              ? person.full_name || person.name
+              : "";
+          return String(
+            direct || joined || official || emailToName(person.email) || "",
+          )
+            .replace(/\s+/g, " ")
+            .trim();
+        }
+        function locationKey(value) {
+          return slugify(value).replace(/-/g, "_");
+        }
+        function loadCustomTargets() {
+          try {
+            state.customTargets = JSON.parse(
+              localStorage.getItem("apsgCustomPublishTargets") || "[]",
+            ).filter((item) => item && item.value && item.label);
+          } catch {
+            state.customTargets = [];
+          }
+        }
+        function saveCustomTargets() {
+          localStorage.setItem(
+            "apsgCustomPublishTargets",
+            JSON.stringify(state.customTargets),
+          );
+        }
+        function targetKeySet() {
+          return new Set(
+            [
+              ...DEFAULT_TARGETS,
+              ...state.customTargets.map((item) => [
+                item.value,
+                item.label,
+                item.path,
+              ]),
+            ].map(([value]) => value),
+          );
+        }
+        function allTargets(extraSelected = []) {
+          const map = new Map();
+          DEFAULT_TARGETS.forEach(([value, label, path]) =>
+            map.set(value, { value, label, path, custom: false }),
+          );
+          state.customTargets.forEach((item) =>
+            map.set(item.value, {
+              value: item.value,
+              label: item.label,
+              path: item.path || "Custom public section",
+              custom: true,
+            }),
+          );
+          extraSelected.forEach((value) => {
+            if (value && !map.has(value))
+              map.set(value, {
+                value,
+                label: titleCase(value),
+                path: "Saved custom target",
+                custom: true,
+                unknown: true,
+              });
+          });
+          return Array.from(map.values());
+        }
+        function targetLabel(value) {
+          const target = allTargets([value]).find(
+            (item) => item.value === value,
+          );
+          return target ? target.label : titleCase(value);
+        }
+        function renderCustomTargetList() {
+          const list = $("customTargetList");
+          if (!list) return;
+          if (!state.customTargets.length) {
+            list.innerHTML = `<span class="help">No custom publish locations added yet.</span>`;
+            return;
+          }
+          list.innerHTML = state.customTargets
+            .map(
+              (item) =>
+                `<span class="custom-location-chip"><i class="fa-solid fa-location-dot" aria-hidden="true"></i>${esc(item.label)} <small>${esc(item.value)}</small><button type="button" data-action="remove-target" data-target="${esc(item.value)}" aria-label="Remove ${esc(item.label)}"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></span>`,
+            )
+            .join("");
+        }
+        function refreshTargetFilters() {
+          const filter = $("officialFilter");
+          if (!filter) return;
+          filter
+            .querySelectorAll("option[data-custom-target]")
+            .forEach((item) => item.remove());
+          const known = new Set(
+            Array.from(filter.options).map((option) => option.value),
+          );
+          const dynamic = new Map();
+          state.customTargets.forEach((item) =>
+            dynamic.set(item.value, item.label),
+          );
+          state.records.flatMap(targetsOf).forEach((value) => {
+            if (value && !known.has(value) && !dynamic.has(value))
+              dynamic.set(value, targetLabel(value));
+          });
+          dynamic.forEach((label, value) => {
+            if (known.has(value)) return;
+            const option = document.createElement("option");
+            option.value = value;
+            option.dataset.customTarget = "true";
+            option.textContent = `Target: ${label}`;
+            filter.appendChild(option);
+          });
+        }
+        function addCustomTarget() {
+          const keyInput = $("newTargetKey");
+          const labelInput = $("newTargetLabel");
+          const pathInput = $("newTargetPath");
+          const label = String(labelInput.value || keyInput.value || "").trim();
+          const value = locationKey(keyInput.value || label);
+          const path =
+            String(pathInput.value || "").trim() ||
+            `/pages/${slugify(label || value)}.html`;
+          if (!value || !label)
+            return toast(
+              "Add a target key and label for the new publish location.",
+              "error",
+            );
+          const exists = allTargets().some((item) => item.value === value);
+          if (!exists) {
+            state.customTargets.push({ value, label, path });
+            saveCustomTargets();
+          }
+          const selected = Array.from(new Set([...selectedTargets(), value]));
+          buildTargets(selected);
+          refreshTargetFilters();
+          keyInput.value = "";
+          labelInput.value = "";
+          pathInput.value = "";
+          toast(`Publish location added: ${label}`, "success");
+        }
+        function removeCustomTarget(value) {
+          state.customTargets = state.customTargets.filter(
+            (item) => item.value !== value,
+          );
+          saveCustomTargets();
+          buildTargets(selectedTargets().filter((item) => item !== value));
+          refreshTargetFilters();
+          toast("Custom publish location removed.", "success");
+        }
+        function rebuildIdentityOptions() {
+          const list = $("memberOptions");
+          if (!list) return;
+          const choices = [];
+          const seen = new Set();
+          const addChoice = (source, type) => {
+            const name = fullPersonName(source);
+            if (!name) return;
+            const key = `${type}:${slugify(name)}:${source.id || source.email || source.slug || ""}`;
+            if (seen.has(key)) return;
+            seen.add(key);
+            choices.push({
+              value: name,
+              name,
+              email: source.email || "",
+              source,
+              type,
+            });
+          };
+          state.records
+            .filter(isRealName)
+            .forEach((record) => addChoice(record, "official"));
+          state.members.forEach((member) => addChoice(member, "member"));
+          state.identityChoices = choices.sort((a, b) =>
+            a.name.localeCompare(b.name),
+          );
+          list.innerHTML = state.identityChoices
+            .map(
+              (choice) =>
+                `<option value="${esc(choice.value)}" label="${esc(choice.type.toUpperCase())}${choice.email ? ` - ${esc(choice.email)}` : ""}"></option>`,
+            )
+            .join("");
+        }
+
+        function toast(message, type = "info") {
+          const node = $("toast");
+          if (!node) return;
+          node.textContent = message;
+          node.dataset.type = type;
+          node.classList.add("show");
+          window.clearTimeout(toast._timer);
+          toast._timer = window.setTimeout(
+            () => node.classList.remove("show"),
+            4200,
+          );
+        }
+        function setText(id, value) {
+          const node = $(id);
+          if (node) node.textContent = value;
+        }
+        function setStatus(message, type = "info", icon = "fa-database") {
+          const node = $("supabaseStatus");
+          if (!node) return;
+          node.className =
+            `chip ${type === "error" ? "danger" : type === "success" ? "success" : ""}`.trim();
+          node.innerHTML = `<i class="fa-solid ${icon}" aria-hidden="true"></i>${esc(message)}`;
+        }
+        function describeSupabaseError(error) {
+          const message = String(
+            error?.message || error || "Unknown Supabase error.",
+          );
+          const code = String(error?.code || "");
+          if (!navigator.onLine)
+            return "Network appears offline. Check your internet connection and refresh.";
+          if (code === "42P01" || /relation .* does not exist/i.test(message))
+            return "The required Supabase table was not found. Confirm the table names configured for this project.";
+          if (
+            code === "42501" ||
+            /permission denied|row-level security|rls/i.test(message)
+          )
+            return "Supabase RLS denied this request. Confirm admin_profiles and RLS policies allow this signed-in admin.";
+          if (/bucket|storage/i.test(message))
+            return "Supabase Storage bucket or image path issue. Confirm the officials storage bucket exists and is publicly readable.";
+          if (/failed to fetch|network|timeout/i.test(message))
+            return "Network or Supabase connection issue. Check internet and Supabase project status.";
+          return message;
+        }
+
+        function getClient() {
+          state.client =
+            window.supabaseClient ||
+            window.apsgSupabase ||
+            window.APSG_SUPABASE ||
+            (window.APSG && window.APSG.supabase) ||
+            null;
+          return state.client && typeof state.client.from === "function"
+            ? state.client
+            : null;
+        }
+        async function waitForClient() {
+          for (let i = 0; i < 30; i += 1) {
+            const client = getClient();
+            if (client) return client;
+            await new Promise((resolve) => window.setTimeout(resolve, 100));
+          }
+          return null;
+        }
+
+        async function resolveAdminRole(user) {
+          const client = state.client;
+          if (!client || !user) return null;
+          const email = String(user.email || "").toLowerCase();
+          let result = await client
+            .from("admin_profiles")
+            .select("id,user_id,email,role,is_active,status")
+            .eq("id", user.id)
+            .limit(1)
+            .maybeSingle();
+          if (!result.error && result.data) return result.data;
+          result = await client
+            .from("admin_profiles")
+            .select("id,user_id,email,role,is_active,status")
+            .eq("user_id", user.id)
+            .limit(1)
+            .maybeSingle();
+          if (!result.error && result.data) return result.data;
+          result = await client
+            .from("admin_profiles")
+            .select("id,user_id,email,role,is_active,status")
+            .ilike("email", email)
+            .limit(1)
+            .maybeSingle();
+          if (result.error) throw result.error;
+          return result.data || null;
+        }
+
+        function showAccessDenied(title, message) {
+          state.loading = false;
+          $("officialList").innerHTML =
+            `<div class="access-state"><i class="fa-solid fa-lock" aria-hidden="true"></i><h3>${esc(title)}</h3><p>${esc(message)}</p><div class="actions" style="justify-content:center; margin-top:1rem;"><a class="btn green" href="/admin/login.html">Go to Login</a><a class="btn white" href="/admin/dashboard.html">Return to Dashboard</a></div></div>`;
+          setStatus("Access denied", "error", "fa-lock");
+        }
+        async function requireAdminAccess() {
+          const client = state.client;
+          if (!client?.auth?.getSession) {
+            showAccessDenied(
+              "Supabase Auth unavailable",
+              "Confirm /assets/js/supabase-clients.js loads before this page script.",
+            );
+            return false;
+          }
+          const { data, error } = await client.auth.getSession();
+          if (error) {
+            showAccessDenied(
+              "Session check failed",
+              describeSupabaseError(error),
+            );
+            return false;
+          }
+          const session = data?.session;
+          if (!session?.user) {
+            const redirect = encodeURIComponent(
+              `${location.pathname}${location.search}`,
+            );
+            location.href = `/admin/login.html?redirect=${redirect}`;
+            return false;
+          }
+          try {
+            const profile = await resolveAdminRole(session.user);
+            const role = String(profile?.role || "").toLowerCase();
+            const active =
+              profile &&
+              profile.is_active !== false &&
+              String(profile.status || "active").toLowerCase() !== "inactive";
+            if (!profile || !active || !ALLOWED_ROLES.has(role)) {
+              showAccessDenied(
+                "Insufficient admin permission",
+                "This Leadership Desk requires an active superadmin or admin role in public.admin_profiles.",
+              );
+              return false;
+            }
+            state.adminRole = role;
+            state.canWrite = true;
+            const chip = $("adminRoleChip");
+            if (chip)
+              chip.innerHTML = `<i class="fa-solid fa-shield-halved" aria-hidden="true"></i>${esc(role)}`;
+            return true;
+          } catch (error) {
+            showAccessDenied(
+              "Role verification failed",
+              describeSupabaseError(error),
+            );
+            return false;
+          }
+        }
+
+        async function chooseTable() {
+          const tables = window.APSG_OFFICIALS_TABLES || ["apsg_officials"];
+          const errors = [];
+          for (const table of tables) {
+            const result = await state.client.from(table).select("id").limit(1);
+            if (!result.error) {
+              state.activeTable = table;
+              $("tableBadge").innerHTML =
+                `<i class="fa-solid fa-database" aria-hidden="true"></i>${esc(table)}`;
+              setStatus(table, "success", "fa-database");
+              return table;
+            }
+            errors.push(`${table}: ${describeSupabaseError(result.error)}`);
+          }
+          state.activeTable = tables[0];
+          throw new Error(errors.join(" | "));
+        }
+        async function chooseMemberTable() {
+          const tables = window.APSG_MEMBER_TABLES || [];
+          for (const table of tables) {
+            const result = await state.client.from(table).select("*").limit(1);
+            if (!result.error) {
+              state.memberTable = table;
+              return table;
+            }
+          }
+          return "";
+        }
+
+        async function loadMembers() {
+          if (!state.memberTable) await chooseMemberTable();
+          if (!state.memberTable) {
+            rebuildIdentityOptions();
+            return;
+          }
+          const result = await state.client
+            .from(state.memberTable)
+            .select("*")
+            .limit(1200);
+          if (result.error) {
+            rebuildIdentityOptions();
+            return;
+          }
+          state.members = result.data || [];
+          rebuildIdentityOptions();
+        }
+
+        function buildTargets(selected = []) {
+          const targets = allTargets(selected);
+          $("publishTargetGrid").innerHTML = targets
+            .map(
+              (item) =>
+                `<label class="target-option ${item.custom ? "future-location" : ""}"><input type="checkbox" name="publish_targets" value="${esc(item.value)}" ${selected.includes(item.value) ? "checked" : ""}><span class="target-meta"><strong>${esc(item.label)}</strong><small>${esc(item.path || "Custom public section")}</small><em class="target-key">${esc(item.value)}</em></span></label>`,
+            )
+            .join("");
+          document
+            .querySelectorAll("input[name='publish_targets']")
+            .forEach((item) =>
+              item.addEventListener("change", updateTargetSummary),
+            );
+          renderCustomTargetList();
+          updateTargetSummary();
+        }
+        function selectedTargets() {
+          return Array.from(
+            document.querySelectorAll("input[name='publish_targets']:checked"),
+          ).map((item) => item.value);
+        }
+        function updateTargetSummary() {
+          const values = selectedTargets();
+          $("publishTargetSummary").innerHTML =
+            `<i class="fa-solid fa-location-dot" aria-hidden="true"></i>${values.length ? esc(values.map(targetLabel).join(", ")) : "No target"}`;
+          updatePreview();
+        }
+        function rebuildSections(keep = "") {
+          const org = $("organization").value || "apsg";
+          const options = SECTION_OPTIONS[org] || SECTION_OPTIONS.apsg;
+          $("leadership_group").innerHTML = options
+            .map(
+              ([value, label]) => `<option value="${value}">${label}</option>`,
+            )
+            .join("");
+          $("leadership_group").value =
+            keep && options.some(([value]) => value === keep)
+              ? keep
+              : options[0][0];
+        }
+        function applyRoute(forceSeat = false) {
+          const org = $("organization").value || "apsg";
+          const group = $("leadership_group").value || "board_bot";
+          const route = ROUTE_MAP[group] || ROUTE_MAP.board_bot;
+          const orgLabel = ORG_LABELS[org] || org.toUpperCase();
+          $("organization_key").value = org;
+          $("section_key").value = group;
+          $("group_route_key").value = `${org}_${group}`;
+          $("orgRouteBadge").innerHTML =
+            `<i class="fa-solid fa-building-user" aria-hidden="true"></i>${orgLabel}`;
+          $("orgRoutingSummary").innerHTML =
+            `This record will be grouped under <strong>${orgLabel}</strong> -> <strong>${SECTION_LABELS[group] || group}</strong>.`;
+          $("level").value = route.level;
+          $("category").value = route.category;
+          const autoSeat = `${orgLabel} ${route.seat}`;
+          if (forceSeat || !$("seat").value) $("seat").value = autoSeat;
+          buildTargets(
+            Array.from(
+              new Set([
+                ...(route.targets || ["leadership"]),
+                ...(org === "cwdi" ? ["cwdi"] : []),
+              ]),
+            ),
+          );
+          updatePreview();
+        }
+
+        async function loadRecords() {
+          state.loading = true;
+          renderLoading();
+          setStatus("Loading", "info", "fa-spinner");
+          try {
+            if (!state.activeTable) await chooseTable();
+            const result = await state.client
+              .from(state.activeTable)
+              .select("*")
+              .order("display_order", { ascending: true, nullsFirst: false })
+              .range(0, 1999);
+            if (result.error) throw result.error;
+            state.records = result.data || [];
+            rebuildIdentityOptions();
+            refreshTargetFilters();
+            state.loading = false;
+            setStats();
+            applyFilters();
+            setStatus(
+              `${state.records.length} records`,
+              "success",
+              "fa-database",
+            );
+          } catch (error) {
+            state.loading = false;
+            const message = describeSupabaseError(error);
+            $("officialList").innerHTML = emptyState(
+              "Unable to load records",
+              message,
+              "fa-triangle-exclamation",
+            );
+            setStatus("Load failed", "error", "fa-triangle-exclamation");
+            toast(message, "error");
+          }
+        }
+        function setStats() {
+          const usable = state.records.filter(isRealName);
+          const groups = new Set(usable.map(identityKey));
+          setText("statTotal", usable.length);
+          setText(
+            "statPublished",
+            usable.filter((r) => normalizeStatus(r) === "published").length,
+          );
+          setText(
+            "statDraft",
+            usable.filter((r) => normalizeStatus(r) === "draft").length,
+          );
+          setText("statAPSG", usable.filter((r) => orgOf(r) === "apsg").length);
+          setText("statCWDI", usable.filter((r) => orgOf(r) === "cwdi").length);
+          setText("statGroups", groups.size);
+        }
+        function renderLoading() {
+          $("officialList").innerHTML =
+            `<div class="loading-state"><p class="help">Loading leadership records...</p></div>`;
+        }
+        function emptyState(title, message, icon = "fa-circle-info") {
+          return `<div class="empty-state"><i class="fa-solid ${esc(icon)}" aria-hidden="true"></i><h3>${esc(title)}</h3><p>${esc(message)}</p></div>`;
+        }
+        function applyFilters() {
+          const query = $("officialSearch").value.trim().toLowerCase();
+          const org = $("organizationFilter").value;
+          const filter = $("officialFilter").value;
+          state.filtered = state.records.filter(isRealName).filter((record) => {
+            const text = [
+              record.full_name,
+              record.name,
+              record.slug,
+              record.profile_slug,
+              record.profile_key,
+              record.position,
+              record.short_info,
+              record.category,
+              orgOf(record),
+              groupOf(record),
+              targetsOf(record).join(" "),
+              normalizeStatus(record),
+            ]
+              .join(" ")
+              .toLowerCase();
+            const targetValues = targetsOf(record);
+            const route = `${orgOf(record)}_${groupOf(record)}`;
+            return (
+              (!query || text.includes(query)) &&
+              (org === "all" || orgOf(record) === org) &&
+              (filter === "all" ||
+                normalizeStatus(record) === filter ||
+                targetValues.includes(filter) ||
+                record.category === filter ||
+                route === filter)
+            );
+          });
+          renderRecords();
+        }
+        function renderRecords() {
+          const wrap = $("officialList");
+          if (!state.filtered.length) {
+            wrap.className = "records-list";
+            wrap.innerHTML = emptyState(
+              "No matching officials",
+              "Try another search, organization or status filter.",
+              "fa-magnifying-glass",
+            );
+            return;
+          }
+          const mode = $("recordsViewMode").value;
+          wrap.className =
+            mode === "grid" ? "records-list records-grid-mode" : "records-list";
+          wrap.innerHTML = state.filtered
+            .map((record) => renderRecordCard(record, mode))
+            .join("");
+        }
+        function pills(values, cls = "") {
+          return Array.from(new Set(values.filter(Boolean)))
+            .map(
+              (value) => `<span class="pill ${esc(cls)}">${esc(value)}</span>`,
+            )
+            .join("");
+        }
+        function renderRecordCard(record, mode) {
+          const id = encodeURIComponent(record.id || "");
+          const name = record.full_name || record.name || "Unnamed Official";
+          const profile = encodeURIComponent(identityKey(record));
+          const statusClass =
+            normalizeStatus(record) === "draft" ? "red" : "green";
+          return `<article class="official-card ${mode === "grid" ? "grid-mode" : ""}"><div class="official-photo"><img src="${esc(displayImage(record))}" alt="${esc(name)} portrait" loading="lazy" decoding="async" onerror="this.src='${FALLBACK_IMAGE}'"></div><div class="official-body"><h4 class="official-name">${esc(name)}</h4><small class="official-meta">${esc(record.position || "Official")} - ${esc(ORG_LABELS[orgOf(record)] || orgOf(record).toUpperCase())} - ${esc(SECTION_LABELS[groupOf(record)] || groupOf(record) || "Section")}</small><div class="actions">${pills([normalizeStatus(record)], statusClass)}${pills(targetsOf(record).slice(0, 2), "gold")}</div><p class="official-summary">${esc(record.short_info || record.biography || "No summary available.")}</p><div class="official-actions"><button class="btn white" type="button" data-action="edit" data-id="${esc(record.id || "")}"><i class="fa-solid fa-pen" aria-hidden="true"></i>Edit</button><a class="btn gold" href="/admin/admin-official-create.html?profile=${profile}&new_position=1"><i class="fa-solid fa-clone" aria-hidden="true"></i>New Position</a><a class="btn white" href="/pages/official-details.html?profile=${profile}&id=${id}&slug=${encodeURIComponent(record.slug || "")}" target="_blank" rel="noopener"><i class="fa-solid fa-file-lines" aria-hidden="true"></i>Dossier</a></div></div></article>`;
+        }
+
+        function fill(record) {
+          state.currentRecord = record || null;
+          $("id").value = record?.id || "";
+          $("full_name").value = record?.full_name || record?.name || "";
+          $("slug").value =
+            record?.slug || slugify(record?.full_name || record?.name || "");
+          $("organization").value = orgOf(record || { organization: "apsg" });
+          rebuildSections(groupOf(record || {}));
+          $("leadership_group").value =
+            groupOf(record || {}) || $("leadership_group").value;
+          applyRoute(false);
+          $("level").value = record?.level || $("level").value;
+          $("position").value = record?.position || "";
+          $("category").value = record?.category || $("category").value;
+          $("seat").value = record?.seat || $("seat").value;
+          $("state").value = record?.state || "";
+          $("zone").value = record?.zone || "";
+          $("lga").value = record?.lga || "";
+          $("ward").value = record?.ward || "";
+          $("image_url").value = record?.image_url || "";
+          $("officialImagePreview").src = record?.image_url || FALLBACK_IMAGE;
+          $("short_info").value = record?.short_info || "";
+          $("credentials").value = record?.credentials || "";
+          $("biography").value = record?.biography || "";
+          $("display_order").value = record?.display_order || 999;
+          $("status").value = normalizeStatus(record || {});
+          $("is_featured").checked = Boolean(record?.is_featured);
+          buildTargets(
+            targetsOf(record || {}).length
+              ? targetsOf(record)
+              : selectedTargets(),
+          );
+          $("modeBadge").innerHTML = record?.id
+            ? `<i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>Update`
+            : `<i class="fa-solid fa-circle-plus" aria-hidden="true"></i>Create`;
+          $("saveOfficialBtnText").textContent = record?.id
+            ? "Update Official"
+            : "Save Official";
+          $("shortInfoCount").textContent = $("short_info").value.length;
+          checkIdentity();
+          updatePreview();
+        }
+        function formRecord() {
+          const full = $("full_name").value.trim();
+          const org = $("organization").value || "apsg";
+          const group = $("leadership_group").value || "board_bot";
+          const baseSlug = canonicalSlug($("slug").value.trim() || full);
+          const payload = {
+            id: $("id").value,
+            full_name: full,
+            slug: $("slug").value.trim() || slugify(full),
+            organization: org,
+            organization_key: org,
+            leadership_group: group,
+            section_key: group,
+            group_route_key: `${org}_${group}`,
+            level: $("level").value,
+            position: $("position").value.trim(),
+            category: $("category").value,
+            seat: $("seat").value.trim(),
+            state: $("state").value.trim(),
+            zone: $("zone").value.trim() || "National",
+            lga: $("lga").value.trim(),
+            ward: $("ward").value.trim(),
+            image_url: $("image_url").value.trim(),
+            short_info: $("short_info").value.trim(),
+            credentials: $("credentials").value.trim(),
+            biography: $("biography").value.trim(),
+            display_order: Number($("display_order").value || 999),
+            status: $("status").value,
+            publish_targets: selectedTargets(),
+            is_featured: $("is_featured").checked,
+            profile_slug: baseSlug,
+            profile_key: baseSlug,
+            canonical_profile: false,
+            updated_at: new Date().toISOString(),
+          };
+          payload.placement_key = placementKeyOf(payload);
+          const existingCanonical = state.records.some(
+            (r) =>
+              identityKey(r) === baseSlug &&
+              (r.canonical_profile === true ||
+                String(r.canonical_profile).toLowerCase() === "true") &&
+              String(r.id) !== String(payload.id || ""),
+          );
+          payload.canonical_profile =
+            !existingCanonical ||
+            Boolean(state.currentRecord?.canonical_profile);
+          return payload;
+        }
+        function exactDuplicate(payload) {
+          return state.records.find(
+            (record) =>
+              String(record.id) !== String(payload.id || "") &&
+              ((record.placement_key &&
+                record.placement_key === payload.placement_key) ||
+                (identityKey(record) === identityKey(payload) &&
+                  orgOf(record) === payload.organization_key &&
+                  groupOf(record) === payload.leadership_group &&
+                  String(record.position || "")
+                    .trim()
+                    .toLowerCase() === payload.position.toLowerCase())),
+          );
+        }
+        function checkIdentity() {
+          const temp = formRecord();
+          const key = identityKey(temp);
+          const linked = key
+            ? state.records.filter(
+                (record) => identityKey(record) === key && isRealName(record),
+              )
+            : [];
+          $("identityBadge").innerHTML =
+            `<i class="fa-solid fa-layer-group" aria-hidden="true"></i>${linked.length} linked`;
+          if (!linked.length) {
+            $("identityMatches").innerHTML =
+              `<p class="help">No linked profile found yet. This will create a new person identity.</p>`;
+            return;
+          }
+          $("identityMatches").innerHTML = linked
+            .slice(0, 4)
+            .map(
+              (record) =>
+                `<article class="official-card"><div class="official-photo"><img src="${esc(displayImage(record))}" alt="${esc(record.full_name || "Official")} portrait" onerror="this.src='${FALLBACK_IMAGE}'"></div><div class="official-body"><h4 class="official-name">${esc(record.full_name || "Unnamed")}</h4><small class="official-meta">${esc(record.position || "Official")} - ${esc(ORG_LABELS[orgOf(record)] || orgOf(record).toUpperCase())} - ${esc(normalizeStatus(record))}</small><div class="official-actions"><button type="button" class="btn white" data-action="edit" data-id="${esc(record.id || "")}"><i class="fa-solid fa-pen" aria-hidden="true"></i>Edit</button></div></div></article>`,
+            )
+            .join("");
+        }
+        function updatePreview() {
+          const image = $("image_url").value.trim() || FALLBACK_IMAGE;
+          const name = $("full_name").value.trim() || "Official Name";
+          const org = $("organization").value || "apsg";
+          const position = $("position").value.trim() || "Position";
+          const summary =
+            $("short_info").value.trim() ||
+            "Card excerpt preview will appear here.";
+          $("officialImagePreview").src = image;
+          $("livePreviewImage").src = image;
+          $("livePreviewName").textContent = name;
+          $("livePreviewPosition").textContent = position;
+          $("livePreviewSummary").textContent = summary;
+          $("livePreviewBadges").innerHTML =
+            `${pills([ORG_LABELS[org] || org.toUpperCase()], "green")}${pills(selectedTargets().slice(0, 2), "gold")}`;
+          const profile = encodeURIComponent(
+            canonicalSlug($("slug").value || name),
+          );
+          $("openDossierTop").href =
+            `/pages/official-details.html?profile=${profile}&id=${encodeURIComponent($("id").value)}&slug=${encodeURIComponent($("slug").value)}`;
+        }
+
+        async function save(event, forceStatus = "") {
+          event.preventDefault();
+          if (!state.canWrite)
+            return toast(
+              "Only superadmin/admin can save leadership records.",
+              "error",
+            );
+          const payload = formRecord();
+          if (forceStatus) payload.status = forceStatus;
+          if (!payload.full_name || !payload.position || !payload.short_info) {
+            toast(
+              "Full name, position and card excerpt are required.",
+              "error",
+            );
+            return;
+          }
+          const duplicate = exactDuplicate(payload);
+          let id = payload.id;
+          delete payload.id;
+          if (duplicate && !id) {
+            const ok = window.confirm(
+              "An exact same position already exists for this profile. Update that existing record instead of creating a duplicate?",
+            );
+            if (ok) id = duplicate.id;
+          }
+          let result;
+          try {
+            if (id)
+              result = await state.client
+                .from(state.activeTable)
+                .update(payload)
+                .eq("id", id)
+                .select()
+                .single();
+            else {
+              payload.created_at = new Date().toISOString();
+              result = await state.client
+                .from(state.activeTable)
+                .insert(payload)
+                .select()
+                .single();
+            }
+            if (result.error) throw result.error;
+            toast(
+              id
+                ? "Official updated successfully."
+                : "Official created successfully.",
+              "success",
+            );
+            await loadRecords();
+            fill(result.data);
+            if ($("open_details_after_save").checked)
+              window.open(
+                `/pages/official-details.html?profile=${encodeURIComponent(result.data.profile_slug || result.data.profile_key || canonicalSlug(result.data.slug || result.data.full_name))}&id=${encodeURIComponent(result.data.id)}&slug=${encodeURIComponent(result.data.slug || "")}`,
+                "_blank",
+              );
+            if ($("return_manager_after_save").checked)
+              location.href = "/admin/admin-officials-manager.html";
+          } catch (error) {
+            toast(describeSupabaseError(error), "error");
+          }
+        }
+        async function uploadImage() {
+          if (!state.client?.storage)
+            return toast("Supabase storage unavailable.", "error");
+          const file = $("official_image_file").files[0];
+          if (!file) return toast("Select an image first.", "info");
+          const safe = (file.name || "official.jpg").replace(
+            /[^a-zA-Z0-9._-]/g,
+            "-",
+          );
+          const path = `${window.APSG_IMAGE_FOLDER}/${Date.now()}-${safe}`;
+          const up = await state.client.storage
+            .from(window.APSG_STORAGE_BUCKET)
+            .upload(path, file, { upsert: true, cacheControl: "3600" });
+          if (up.error) return toast(describeSupabaseError(up.error), "error");
+          const url = state.client.storage
+            .from(window.APSG_STORAGE_BUCKET)
+            .getPublicUrl(path).data.publicUrl;
+          $("image_url").value = url;
+          updatePreview();
+          checkIdentity();
+          toast("Image uploaded and attached.", "success");
+        }
+        function resetForm() {
+          $("officialForm").reset();
+          state.currentRecord = null;
+          $("id").value = "";
+          $("display_order").value = 999;
+          rebuildSections();
+          applyRoute(true);
+          buildTargets(["leadership"]);
+          $("modeBadge").innerHTML =
+            `<i class="fa-solid fa-circle-plus" aria-hidden="true"></i>Create`;
+          $("saveOfficialBtnText").textContent = "Save Official";
+          updatePreview();
+          checkIdentity();
+        }
+        function duplicatePosition() {
+          const keep = {
+            full_name: $("full_name").value,
+            slug: $("slug").value,
+            image_url: $("image_url").value,
+            short_info: $("short_info").value,
+            credentials: $("credentials").value,
+            biography: $("biography").value,
+          };
+          resetForm();
+          $("full_name").value = keep.full_name;
+          $("slug").value = keep.slug;
+          $("image_url").value = keep.image_url;
+          $("short_info").value = keep.short_info;
+          $("credentials").value = keep.credentials;
+          $("biography").value = keep.biography;
+          $("position").value = "";
+          $("modeBadge").innerHTML =
+            `<i class="fa-solid fa-clone" aria-hidden="true"></i>New Position`;
+          $("saveOfficialBtnText").textContent = "Save New Position";
+          updatePreview();
+          checkIdentity();
+          $("position").focus();
+        }
+        function maybeFillFromMember() {
+          const value = $("memberPicker").value.trim().toLowerCase();
+          if (!value) return;
+          const choice = state.identityChoices.find(
+            (item) =>
+              item.value.toLowerCase() === value ||
+              item.email.toLowerCase() === value,
+          );
+          if (!choice) return;
+          const source = choice.source;
+          const name = fullPersonName(source) || choice.value;
+          if (name) $("full_name").value = name;
+          if (source.slug && !$("slug").value) $("slug").value = source.slug;
+          if (source.profile_slug && !$("slug").value)
+            $("slug").value = source.profile_slug;
+          if (
+            source.image_url ||
+            source.photo_url ||
+            source.avatar_url ||
+            source.passport_url
+          )
+            $("image_url").value =
+              source.image_url ||
+              source.photo_url ||
+              source.avatar_url ||
+              source.passport_url;
+          if (source.position && !$("position").value)
+            $("position").value = source.position;
+          if (source.short_info && !$("short_info").value) {
+            $("short_info").value = source.short_info;
+            $("shortInfoCount").textContent = $("short_info").value.length;
+          }
+          if (source.state && !$("state").value)
+            $("state").value = source.state;
+          if (source.zone && !$("zone").value) $("zone").value = source.zone;
+          if (source.lga && !$("lga").value) $("lga").value = source.lga;
+          if (source.ward && !$("ward").value) $("ward").value = source.ward;
+          if (!$("slug").value) $("slug").value = slugify(name);
+          updatePreview();
+          checkIdentity();
+          toast(
+            `${choice.type === "official" ? "Official" : "Member"} loaded: ${name}`,
+            "success",
+          );
+        }
+        function handleImageMode() {
+          const mode = $("imageMode").value;
+          document.body.classList.remove(
+            "image-contain",
+            "image-fill",
+            "image-compact",
+          );
+          document.body.classList.add(
+            mode === "fill"
+              ? "image-fill"
+              : mode === "compact"
+                ? "image-compact"
+                : "image-contain",
+          );
+          localStorage.setItem("apsgLeadershipImageMode", mode);
+        }
+        function handleAction(event) {
+          const node = event.target.closest("[data-action]");
+          if (!node) return;
+          const action = node.dataset.action;
+          const id = node.dataset.id;
+          if (action === "edit") {
+            event.preventDefault();
+            const record = state.records.find(
+              (item) => String(item.id) === String(id),
+            );
+            if (record) {
+              fill(record);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+          } else if (action === "remove-target") {
+            event.preventDefault();
+            removeCustomTarget(node.dataset.target || "");
+          }
+        }
+        async function loadRequested() {
+          const qs = new URLSearchParams(location.search);
+          const id = qs.get("id");
+          if (!id) {
+            fill(null);
+            return;
+          }
+          const result = await state.client
+            .from(state.activeTable)
+            .select("*")
+            .eq("id", id)
+            .maybeSingle();
+          if (!result.error && result.data) fill(result.data);
+          else fill(null);
+        }
+        async function logout() {
+          if (state.client?.auth) await state.client.auth.signOut();
+          location.href = "/admin/login.html";
+        }
+        function toggleSidebar(show) {
+          const sidebar = $("sidebar");
+          const overlay = $("mobileOverlay");
+          const button = $("mobileMenuBtn");
+          sidebar.classList.toggle("is-open", show);
+          overlay.classList.toggle("is-open", show);
+          button.setAttribute("aria-expanded", String(show));
+          if (show) {
+            const first = sidebar.querySelector("a, button");
+            if (first) first.focus();
+          } else button.focus();
+        }
+
+        function bind() {
+          if (state.bound) return;
+          state.bound = true;
+          [
+            "full_name",
+            "slug",
+            "image_url",
+            "position",
+            "short_info",
+            "status",
+            "category",
+            "seat",
+            "state",
+            "zone",
+            "lga",
+            "ward",
+          ].forEach((id) => {
+            $(id).addEventListener("input", () => {
+              if (id === "full_name" && !$("slug").value)
+                $("slug").value = slugify($("full_name").value);
+              if (id === "short_info")
+                $("shortInfoCount").textContent = $("short_info").value.length;
+              updatePreview();
+              checkIdentity();
+            });
+          });
+          $("memberPicker").addEventListener("change", maybeFillFromMember);
+          $("memberPicker").addEventListener("blur", maybeFillFromMember);
+          $("organization").addEventListener("change", () => {
+            rebuildSections();
+            applyRoute(true);
+            checkIdentity();
+          });
+          $("leadership_group").addEventListener("change", () => {
+            applyRoute(true);
+            checkIdentity();
+          });
+          $("officialForm").addEventListener("submit", (event) => save(event));
+          $("saveDraftBtn").addEventListener("click", (event) =>
+            save(event, "draft"),
+          );
+          $("uploadImageBtn").addEventListener("click", uploadImage);
+          $("clearImageBtn").addEventListener("click", () => {
+            $("image_url").value = "";
+            $("official_image_file").value = "";
+            updatePreview();
+          });
+          $("resetOfficialBtn").addEventListener("click", resetForm);
+          $("duplicatePositionBtn").addEventListener(
+            "click",
+            duplicatePosition,
+          );
+          $("selectAllTargets").addEventListener("click", () => {
+            document
+              .querySelectorAll("input[name='publish_targets']")
+              .forEach((item) => (item.checked = true));
+            updateTargetSummary();
+          });
+          $("clearTargets").addEventListener("click", () => {
+            document
+              .querySelectorAll("input[name='publish_targets']")
+              .forEach((item) => (item.checked = false));
+            updateTargetSummary();
+          });
+          $("addCustomTargetBtn").addEventListener("click", addCustomTarget);
+          ["newTargetKey", "newTargetLabel"].forEach((id) =>
+            $(id).addEventListener("input", () => {
+              if (id === "newTargetLabel" && !$("newTargetKey").value)
+                $("newTargetKey").value = locationKey(
+                  $("newTargetLabel").value,
+                );
+            }),
+          );
+          [
+            "officialSearch",
+            "organizationFilter",
+            "officialFilter",
+            "recordsViewMode",
+          ].forEach((id) => {
+            $(id).addEventListener("input", applyFilters);
+            $(id).addEventListener("change", () => {
+              if (id === "recordsViewMode")
+                localStorage.setItem("apsgLeadershipRecordsView", $(id).value);
+              applyFilters();
+            });
+          });
+          $("imageMode").addEventListener("change", handleImageMode);
+          $("refreshBtn").addEventListener("click", loadRecords);
+          $("refreshHeroBtn").addEventListener("click", loadRecords);
+          $("reloadRecordsBtn").addEventListener("click", loadRecords);
+          $("mobileMenuBtn").addEventListener("click", () =>
+            toggleSidebar(true),
+          );
+          $("mobileOverlay").addEventListener("click", () =>
+            toggleSidebar(false),
+          );
+          $("logoutBtn").addEventListener("click", logout);
+          document.addEventListener("click", handleAction);
+          document.addEventListener("keydown", (event) => {
+            if (
+              event.key === "Escape" &&
+              $("sidebar").classList.contains("is-open")
+            )
+              toggleSidebar(false);
+          });
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+          bind();
+          loadCustomTargets();
+          rebuildSections();
+          buildTargets(["leadership"]);
+          refreshTargetFilters();
+          $("imageMode").value =
+            localStorage.getItem("apsgLeadershipImageMode") || "contain";
+          $("recordsViewMode").value =
+            localStorage.getItem("apsgLeadershipRecordsView") || "list";
+          handleImageMode();
+          renderLoading();
+          state.client = await waitForClient();
+          if (!state.client) {
+            showAccessDenied(
+              "Supabase client not found",
+              "Confirm /assets/js/supabase-clients.js exists and initializes the anon browser client.",
+            );
+            return;
+          }
+          const hasAccess = await requireAdminAccess();
+          if (!hasAccess) return;
+          try {
+            await chooseTable();
+            await loadMembers();
+            await loadRecords();
+            rebuildIdentityOptions();
+            refreshTargetFilters();
+            await loadRequested();
+          } catch (error) {
+            showAccessDenied(
+              "Leadership desk failed to initialize",
+              describeSupabaseError(error),
+            );
+          }
+        });
+      })();
+    </script>
+    <script src="/assets/js/admin-unified.js" defer></script>
+    <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

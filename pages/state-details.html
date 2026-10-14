@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content="#05351f">
+  <base href="/">
+  <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any">
+  <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="stylesheet" href="/components/navbar.css">
+  <link rel="stylesheet" href="/components/footer.css">
+  <link rel="stylesheet" href="/assets/css/leadership-directory.css">
+  <link rel="stylesheet" href="/assets/css/tailwind-static.css">
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif'],display:['Playfair Display','Georgia','serif']},colors:{apsgDeep:'#05351f',apsgForest:'#082716',apsgGreen:'#0f7a3d',apsgEmerald:'#0f766e',apsgGold:'#d8ad34',apsgCream:'#fffaf0'},boxShadow:{palace:'0 34px 110px rgba(5, 53, 31, 0.22)',gold:'0 16px 42px rgba(216, 173, 52, 0.24)',card:'0 18px 52px rgba(5, 53, 31, 0.12)'}}}}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/apsg-analytics-tracker.js"></script>
+  <title>State Chapter Details | APSG Nigeria</title>
+  <meta name="description" content="APSG State Chapter details page with dynamic dashboard-published state executives, grassroots mobilisation and registration pathway.">
+
+  <style id="state-executive-premium-build">
+    /* Premium compact State Details build layer - Executive Desk like leadership.html */
+    .state-details-page{background:radial-gradient(circle at 0 0,rgba(216,173,52,.13),transparent 30rem),linear-gradient(180deg,#f8fbf7 0%,#fffaf0 42%,#f6fbf7 100%);color:#07140e;}
+    .state-details-page .premium-panel{border:1px solid rgba(216,173,52,.24);background:linear-gradient(135deg,rgba(255,255,255,.94),rgba(255,250,240,.86));box-shadow:0 32px 100px rgba(5,53,31,.14);}
+    .state-details-page .chapter-card{position:relative;overflow:hidden;border:1px solid rgba(216,173,52,.22);background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,250,240,.74));box-shadow:0 20px 55px rgba(5,53,31,.09);border-radius:1.75rem;}
+    .state-details-page .chapter-card::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,#05351f,#d8ad34,#0f7a3d);opacity:.9;}
+    .state-details-page .metric-card{border-radius:1.25rem;border:1px solid rgba(15,122,61,.1);background:rgba(255,255,255,.82);box-shadow:0 12px 32px rgba(5,53,31,.07);}
+    .state-details-page aside.bg-gradient-to-b{padding:1rem!important;}
+    .state-details-page aside.bg-gradient-to-b nav{margin-top:1rem!important;}
+    .state-details-page aside.bg-gradient-to-b nav a{min-height:2.65rem;border-radius:1rem!important;padding:.72rem .85rem!important;background:rgba(255,255,255,.105)!important;border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 1px rgba(255,255,255,.05);}
+    .state-details-page aside.bg-gradient-to-b .state-select{min-height:2.65rem;border-radius:1rem!important;color:#fff;background:rgba(255,255,255,.12)!important;}
+    .state-details-page aside.bg-gradient-to-b .state-select option{color:#102018;}
+    #executives.executive-desk-premium{padding:1rem!important;border-radius:1.65rem;background:linear-gradient(135deg,#fffef9 0%,#fff8e6 48%,#f8fbf7 100%);}
+    #executives .exec-desk-head{margin:-.1rem -.1rem .85rem;padding:.9rem 1rem;border-radius:1.25rem;border:1px solid rgba(216,173,52,.2);background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(255,250,240,.88));box-shadow:0 16px 40px rgba(5,53,31,.07);}
+    #executives .exec-desk-head p{font-size:.62rem;letter-spacing:.22em;}
+    #executives .exec-desk-head h3{font-size:clamp(1.55rem,2.8vw,2.6rem);line-height:.95;}
+    #executiveGrid{display:grid!important;grid-template-columns:repeat(1,minmax(0,1fr))!important;gap:1rem!important;align-items:stretch;}
+    @media (min-width:768px){#executiveGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}
+    @media (min-width:1180px){#executiveGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;max-width:100%!important;}}
+    #executiveGrid > *{min-width:0;}
+    .state-exec-card{position:relative;overflow:hidden;border-radius:1.35rem;border:1px solid rgba(216,173,52,.28);background:#fff;box-shadow:0 20px 48px rgba(5,53,31,.11);transition:transform .28s ease, box-shadow .28s ease, border-color .28s ease;}
+    .state-exec-card:hover{transform:translateY(-5px);box-shadow:0 28px 70px rgba(5,53,31,.17);border-color:rgba(216,173,52,.48);}
+    .state-exec-photo-wrap{position:relative;overflow:hidden;height:22rem;background:linear-gradient(135deg,#07351f,#0f7a3d);border-bottom:1px solid rgba(216,173,52,.22);}
+    .state-exec-photo{width:100%;height:100%;object-fit:cover;object-position:top center;display:block;transition:transform .7s ease;filter:saturate(1.02) contrast(1.02);}
+    .state-exec-card:hover .state-exec-photo{transform:scale(1.045);}
+    .state-exec-index{position:absolute;left:.85rem;top:.85rem;z-index:3;display:grid;width:2.25rem;height:2.25rem;place-items:center;border-radius:999px;background:#d8ad34;color:#05351f;font-weight:900;font-size:.78rem;box-shadow:0 10px 24px rgba(0,0,0,.18);}
+    .state-exec-ribbon{position:absolute;right:.75rem;top:.85rem;z-index:3;max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-radius:999px;background:#05351f;color:#fff;padding:.38rem .7rem;font-size:.58rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em;box-shadow:0 10px 24px rgba(0,0,0,.18);}
+    .state-exec-body{padding:1.05rem;text-align:left;background:linear-gradient(180deg,#ffffff 0%,#fffaf0 100%);}
+    .state-exec-role{display:inline-flex;align-items:center;gap:.4rem;max-width:100%;border:1px solid rgba(216,173,52,.34);background:rgba(216,173,52,.12);color:#73540c;padding:.42rem .68rem;border-radius:999px;font-size:.63rem;font-weight:900;text-transform:uppercase;letter-spacing:.06em;}
+    .state-exec-name{margin-top:.75rem;color:#05351f;font-weight:900;font-size:1.03rem;line-height:1.12;}
+    .state-exec-summary{margin-top:.5rem;color:#5f6f66;font-size:.78rem;line-height:1.45;max-height:4.45em;overflow:hidden;}
+    .state-exec-actions{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.85rem;}
+    .state-exec-btn{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;min-height:2.15rem;padding:.55rem .78rem;border-radius:999px;font-size:.68rem;font-weight:900;line-height:1;text-decoration:none;transition:.25s ease;}
+    .state-exec-btn.quick{background:#05351f;color:#fff;}
+    .state-exec-btn.quick:hover{background:#0f7a3d;}
+    .state-exec-btn.dossier{border:1px solid rgba(216,173,52,.42);background:rgba(216,173,52,.14);color:#73540c;}
+    .state-exec-btn.dossier:hover{background:#d8ad34;color:#05351f;}
+    .state-exec-cat{display:inline-flex;align-items:center;gap:.35rem;margin:.7rem auto 0;padding:.38rem .72rem;border-radius:999px;border:1px solid rgba(15,122,61,.16);background:rgba(15,122,61,.09);color:#0a4e2b;font-size:.62rem;font-weight:900;text-transform:uppercase;}
+    .state-exec-empty{grid-column:1/-1;border:1px dashed rgba(216,173,52,.45);border-radius:1.5rem;background:rgba(255,250,240,.72);padding:2rem;text-align:center;color:#526459;}
+    .state-exec-modal{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;padding:1rem;}
+    .state-exec-modal.is-open{display:flex;}
+    .state-exec-modal-backdrop{position:absolute;inset:0;background:rgba(1,20,11,.72);backdrop-filter:blur(10px);}
+    .state-exec-modal-card{position:relative;z-index:2;width:min(960px,100%);overflow:hidden;border-radius:2rem;background:#fff;border:1px solid rgba(216,173,52,.28);box-shadow:0 34px 110px rgba(5,53,31,.35);}
+    .state-exec-modal-grid{display:grid;grid-template-columns:1fr;}
+    @media(min-width:768px){.state-exec-modal-grid{grid-template-columns:.42fr .58fr;}}
+    .state-exec-modal-photo{min-height:22rem;background:#05351f;position:relative;}
+    .state-exec-modal-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;}
+    .state-exec-modal-content{padding:1.5rem;}
+    .state-exec-close{position:absolute;right:1rem;top:1rem;z-index:5;width:2.4rem;height:2.4rem;border-radius:999px;background:#f3f5f2;color:#33443a;border:0;}
+    @media(max-width:767px){.state-details-page aside.bg-gradient-to-b{padding:1rem!important;}#executives.executive-desk-premium{padding:.85rem!important}.state-exec-photo-wrap{height:20rem;}}
+
+    /* Final Executive Desk override: leadership-style two-column profile cards */
+    #executives #executiveGrid,
+    .state-details-page #executiveGrid{
+      display:grid!important;
+      grid-template-columns:1fr!important;
+      gap:1.15rem!important;
+      align-items:stretch!important;
+    }
+    @media (min-width:900px){
+      #executives #executiveGrid,
+      .state-details-page #executiveGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+    }
+    #executives .state-exec-card{
+      min-height:100%;
+      border-radius:1.45rem!important;
+      background:#fff!important;
+      box-shadow:0 22px 56px rgba(5,53,31,.13)!important;
+    }
+    #executives .state-exec-photo-wrap{
+      height:clamp(21rem,34vw,28rem)!important;
+      width:100%!important;
+      border-radius:1.35rem 1.35rem 0 0;
+    }
+    #executives .state-exec-photo{
+      width:100%!important;
+      height:100%!important;
+      object-fit:cover!important;
+      object-position:top center!important;
+      display:block!important;
+    }
+    #executives .state-exec-actions{justify-content:flex-start;}
+    #executives .state-exec-btn.quick{background:#05351f!important;color:#fff!important;}
+    #executives .state-exec-btn.dossier{background:rgba(216,173,52,.16)!important;color:#73540c!important;border:1px solid rgba(216,173,52,.42)!important;}
+
+  </style>
+  <link rel="canonical" href="https://apsgnigeria.org/pages/state-details.html">
+  <meta property="og:url" content="https://apsgnigeria.org/pages/state-details.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="https://apsgnigeria.org/assets/images/logo/apsg1.png">
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+  <meta name="keywords" content="APSG Nigeria, APC Progressive Support Group, APC support group, grassroots mobilisation, CWDI, Nigeria politics, APSG membership">
+  <meta property="og:site_name" content="APSG Nigeria">
+  <meta property="og:title" content="State Chapter Details | APSG Nigeria">
+  <meta property="og:description" content="APSG State Chapter details page with dynamic dashboard-published state executives, grassroots mobilisation and registration pathway.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:title" content="State Chapter Details | APSG Nigeria">
+  <meta name="twitter:description" content="APSG State Chapter details page with dynamic dashboard-published state executives, grassroots mobilisation and registration pathway.">
+  <meta name="twitter:image" content="https://apsgnigeria.org/assets/images/og-image.jpg">
+  <script type="application/ld+json" data-apsg-static-schema>[{"@context":"https://schema.org","@type":"Organization","name":"APC Progressive Support Group (APSG)","alternateName":"APSG Nigeria","url":"https://apsgnigeria.org/","logo":"https://apsgnigeria.org/assets/images/logo/apsg1.png","sameAs":[]},{"@context":"https://schema.org","@type":"WebPage","name":"State Chapter Details | APSG Nigeria","description":"APSG State Chapter details page with dynamic dashboard-published state executives, grassroots mobilisation and registration pathway.","url":"https://apsgnigeria.org/pages/state-details.html","isPartOf":{"@type":"WebSite","name":"APSG Nigeria","url":"https://apsgnigeria.org/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://apsgnigeria.org/"},{"@type":"ListItem","position":2,"name":"Pages","item":"https://apsgnigeria.org/pages"},{"@type":"ListItem","position":3,"name":"State Details","item":"https://apsgnigeria.org/pages/state-details.html"}]}]</script>
+</head>
+<body class="state-details-page min-h-screen flex flex-col overflow-x-hidden">
+  <div id="navbar" role="navigation" aria-label="Main Navigation"></div>
+  <main id="main-content" class="flex-grow">
+    <section class="hero-luxury text-white pt-32 md:pt-40 pb-24 md:pb-32"><div class="luxury-orb -top-28 -left-24"></div><div class="luxury-orb bottom-0 -right-20"></div><div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="grid lg:grid-cols-[1.08fr_0.92fr] gap-8 items-center"><div class="text-center lg:text-left"><div class="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs md:text-sm font-black shadow-lg backdrop-blur-md"><span class="h-2.5 w-2.5 rounded-full bg-apsgGold animate-pulse"></span> APSG Nigeria State Chapter Profile</div><h1 id="heroTitle" class="display-font mt-6 text-4xl sm:text-5xl md:text-7xl font-black leading-[0.95] tracking-tight drop-shadow-2xl">State Chapter Details</h1><p id="heroSubtitle" class="mt-6 max-w-2xl mx-auto lg:mx-0 text-base md:text-xl text-white/82 leading-relaxed">View APSG chapter structure, grassroots mobilisation focus, zone information and published state executives.</p><div class="mt-7 flex flex-wrap justify-center lg:justify-start gap-3 no-print"><a href="/pages/state.html" class="official-btn gold"><i class="fa-solid fa-map-location-dot"></i> All Chapters</a><a id="heroRegisterBtn" href="/pages/register.html" class="official-btn"><i class="fa-solid fa-user-plus"></i> Register in this State</a></div></div><div class="glass-panel rounded-[2rem] p-5 md:p-6"><div class="flex items-center gap-4 rounded-3xl border border-white/10 bg-white/10 p-4"><img src="/assets/images/logo/apsg1.png" alt="APSG Logo" class="h-16 w-16 rounded-2xl object-contain bg-white/90 p-2" onerror="this.style.display='none'" width="96" height="96" decoding="async"><div class="text-left min-w-0"><p class="text-[10px] uppercase tracking-[0.24em] text-apsgGold font-black">Official Chapter Desk</p><p id="heroStateName" class="mt-1 text-2xl font-black truncate">Select State</p><p id="heroZoneName" class="text-sm text-white/64">Nigeria Geopolitical Zone</p></div></div><div class="gold-line my-5"></div><div class="grid grid-cols-3 gap-3"><div class="rounded-3xl border border-white/10 bg-white/10 p-4 text-center"><p id="heroZoneShort" class="text-2xl font-black text-apsgGold">NG</p><p class="mt-1 text-[10px] uppercase tracking-[0.22em] text-white/58 font-black">Zone</p></div><div class="rounded-3xl border border-white/10 bg-white/10 p-4 text-center"><p id="heroCapital" class="text-2xl font-black text-apsgGold truncate">—</p><p class="mt-1 text-[10px] uppercase tracking-[0.22em] text-white/58 font-black">Capital</p></div><div class="rounded-3xl border border-white/10 bg-white/10 p-4 text-center"><p id="heroPriority" class="text-2xl font-black text-apsgGold">Active</p><p class="mt-1 text-[10px] uppercase tracking-[0.22em] text-white/58 font-black">Status</p></div></div></div></div></div></section>
+    <section class="relative z-20 -mt-12 pb-16 md:pb-24 px-4 sm:px-6 lg:px-8"><div class="max-w-7xl mx-auto"><div class="premium-panel rounded-[2rem] overflow-hidden"><div class="grid lg:grid-cols-[0.32fr_0.68fr] gap-0"><aside class="bg-gradient-to-b from-[#05351f] to-[#092915] text-white p-6 md:p-8 no-print"><div class="lg:sticky lg:top-28"><div class="flex items-center gap-3 mb-6"><div class="grid h-12 w-12 place-items-center rounded-2xl bg-apsgGold text-apsgDeep shadow-gold"><i class="fa-solid fa-map text-xl"></i></div><div><p class="text-[10px] uppercase tracking-[0.24em] text-white/45 font-black">APSG Nigeria</p><h2 class="text-xl font-black">State Desk</h2></div></div><label for="stateSelect" class="block text-[10px] uppercase tracking-[0.24em] text-apsgGold font-black mb-2">Select State</label><select id="stateSelect" class="state-select w-full rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white font-black"><option value="" class="text-gray-900">Choose a state</option></select><nav class="mt-6 space-y-2 text-sm"><a href="#overview" class="flex items-center justify-between rounded-2xl bg-white/10 px-4 py-3 font-black text-white/82 hover:text-apsgGold transition"><span>Chapter Overview</span><i class="fa-solid fa-chevron-right text-xs"></i></a><a href="#structure" class="flex items-center justify-between rounded-2xl bg-white/10 px-4 py-3 font-black text-white/82 hover:text-apsgGold transition"><span>Chapter Structure</span><i class="fa-solid fa-chevron-right text-xs"></i></a><a href="#executives" class="flex items-center justify-between rounded-2xl bg-white/10 px-4 py-3 font-black text-white/82 hover:text-apsgGold transition"><span>Executive Desk</span><i class="fa-solid fa-chevron-right text-xs"></i></a><a href="#related" class="flex items-center justify-between rounded-2xl bg-white/10 px-4 py-3 font-black text-white/82 hover:text-apsgGold transition"><span>Related States</span><i class="fa-solid fa-chevron-right text-xs"></i></a></nav><div class="mt-6 rounded-3xl border border-apsgGold/25 bg-apsgGold/10 p-5"><p class="text-[10px] uppercase tracking-[0.24em] text-apsgGold font-black">Chapter Note</p><p class="mt-2 text-sm leading-relaxed text-white/72">This single template serves all states and reads state executives from Supabase.</p></div><div class="mt-6 grid grid-cols-2 gap-3"><button type="button" onclick="window.print()" class="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-xs font-black uppercase tracking-wider text-white/75 hover:text-apsgGold transition"><i class="fa-solid fa-print mr-1"></i> Print</button><button type="button" id="copyStateBtn" class="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-xs font-black uppercase tracking-wider text-white/75 hover:text-apsgGold transition"><i class="fa-solid fa-copy mr-1"></i> Copy</button></div></div></aside><article class="p-5 md:p-8 lg:p-10"><header class="mb-8"><div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4"><div><span class="official-chip"><i class="fa-solid fa-location-dot"></i> State Chapter Profile</span><h2 id="pageStateTitle" class="display-font mt-4 text-3xl md:text-5xl font-black text-apsgDeep tracking-tight">Select a State Chapter</h2><p id="pageStateIntro" class="mt-3 text-base md:text-lg text-gray-600 leading-relaxed max-w-3xl">Choose a state to view its APSG chapter details.</p></div><a href="/pages/state.html" class="official-btn btn-white no-print"><i class="fa-solid fa-arrow-left"></i> Back to Chapters</a></div></header><section id="overview" class="chapter-card p-6 md:p-8 mb-8"><div class="grid md:grid-cols-3 gap-4"><div class="metric-card p-5"><p class="text-[10px] uppercase tracking-[0.22em] text-gray-500 font-black">State</p><p id="metricState" class="mt-2 text-2xl font-black text-apsgDeep">—</p></div><div class="metric-card p-5"><p class="text-[10px] uppercase tracking-[0.22em] text-gray-500 font-black">Geopolitical Zone</p><p id="metricZone" class="mt-2 text-2xl font-black text-apsgDeep">—</p></div><div class="metric-card p-5"><p class="text-[10px] uppercase tracking-[0.22em] text-gray-500 font-black">Chapter Capital Desk</p><p id="metricCapital" class="mt-2 text-2xl font-black text-apsgDeep">—</p></div></div><div class="mt-6 rounded-3xl bg-gradient-to-r from-apsgDeep via-apsgGreen to-apsgEmerald p-6 text-white overflow-hidden relative"><div class="absolute -top-20 -right-16 h-56 w-56 rounded-full bg-apsgGold/20 blur-2xl"></div><div class="relative z-10"><p class="text-xs uppercase tracking-[0.28em] text-apsgGold font-black">Mobilisation Mandate</p><h3 id="mandateTitle" class="display-font mt-2 text-2xl md:text-4xl font-black leading-tight">APSG State Chapter</h3><p id="mandateText" class="mt-3 text-white/76 leading-relaxed max-w-4xl">This chapter supports grassroots mobilisation.</p></div></div></section><section id="structure" class="chapter-card p-6 md:p-8 mb-8"><div class="mb-6"><p class="text-xs uppercase tracking-[0.26em] text-apsgGold font-black">Chapter Chain</p><h3 class="display-font text-3xl md:text-4xl font-black text-apsgDeep">State Chapter Structure</h3></div><div class="space-y-5"><div class="structure-step"><div class="structure-dot">1</div><div class="rounded-3xl border border-apsgGreen/10 bg-white/80 p-5 shadow-soft"><p class="font-black text-apsgDeep">State Executive Council</p><p class="mt-1 text-gray-700">Coordinates state-level mobilisation, reporting, verification and chapter strategy.</p></div></div><div class="structure-step"><div class="structure-dot">2</div><div class="rounded-3xl border border-apsgGreen/10 bg-white/80 p-5 shadow-soft"><p class="font-black text-apsgDeep">Senatorial & Zonal Coordinators</p><p class="mt-1 text-gray-700">Support regional coordination and campaign structure across senatorial districts.</p></div></div><div class="structure-step"><div class="structure-dot">3</div><div class="rounded-3xl border border-apsgGreen/10 bg-white/80 p-5 shadow-soft"><p id="localStructureTitle" class="font-black text-apsgDeep">LGA / LCDA Coordinators</p><p id="localStructureText" class="mt-1 text-gray-700">Drive local government mobilisation.</p></div></div><div class="structure-step"><div class="structure-dot">4</div><div class="rounded-3xl border border-apsgGreen/10 bg-white/80 p-5 shadow-soft"><p class="font-black text-apsgDeep">Ward & Polling Unit Mobilisers</p><p class="mt-1 text-gray-700">Connect the APSG movement to grassroots communities.</p></div></div></div></section><section id="executives" class="chapter-card executive-desk-premium mb-8"><div class="exec-desk-head flex flex-col md:flex-row md:items-center md:justify-between gap-3"><div><p class="text-xs uppercase tracking-[0.26em] text-apsgGold font-black">Executive Desk</p><h3 class="display-font font-black text-apsgDeep">Published Chapter Executives</h3></div><span id="priorityBadge" class="official-chip"><i class="fa-solid fa-shield-halved"></i> Chapter Active</span></div><div id="executiveGrid"><div class="state-exec-empty"><i class="fa-solid fa-spinner fa-spin text-apsgGold"></i><p class="mt-2 font-black text-apsgDeep">Loading chapter executives...</p></div></div></section><section id="related" class="chapter-card p-6 md:p-8 mb-8"><div class="mb-6"><p class="text-xs uppercase tracking-[0.26em] text-apsgGold font-black">Same Zone</p><h3 id="relatedTitle" class="display-font text-3xl md:text-4xl font-black text-apsgDeep">Related State Chapters</h3></div><div id="relatedStates" class="flex flex-wrap gap-3"></div></section><section class="relative overflow-hidden rounded-[2rem] bg-gradient-to-r from-apsgDeep via-apsgGreen to-apsgEmerald p-7 md:p-10 text-center text-white"><div class="absolute -top-24 -right-20 h-64 w-64 rounded-full bg-apsgGold/20 blur-2xl"></div><div class="relative z-10 max-w-3xl mx-auto"><p class="text-xs uppercase tracking-[0.28em] text-apsgGold font-black">Join Your Chapter</p><h3 id="ctaTitle" class="display-font mt-3 text-3xl md:text-5xl font-black leading-tight">Be Part of APSG in Your State</h3><p id="ctaText" class="mt-4 text-white/76 leading-relaxed">Register today and connect with the APSG structure.</p><div class="mt-7 flex flex-col sm:flex-row justify-center gap-3 no-print"><a id="registerBtn" href="/pages/register.html" class="official-btn gold"><i class="fa-solid fa-user-plus"></i> Register Now</a><a href="/pages/member-login.html" class="official-btn"><i class="fa-solid fa-right-to-bracket"></i> Member Login</a></div></div></section></article></div></div></div></section>
+  </main>
+  <button id="backToTop" type="button" class="no-print fixed bottom-5 right-5 z-50 hidden h-12 w-12 rounded-full bg-apsgDeep text-apsgGold shadow-palace" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
+  <div id="stateExecQuickModal" class="state-exec-modal no-print" aria-hidden="true">
+    <div class="state-exec-modal-backdrop" data-state-exec-close></div>
+    <div class="state-exec-modal-card">
+      <button type="button" class="state-exec-close" data-state-exec-close aria-label="Close quick view"><i class="fa-solid fa-times"></i></button>
+      <div class="state-exec-modal-grid">
+        <div class="state-exec-modal-photo"><img id="stateExecModalPhoto" src="/assets/images/logo/apsg1.png" alt="Executive photo" width="96" height="96" decoding="async"></div>
+        <div class="state-exec-modal-content">
+          <p class="text-xs uppercase tracking-[.28em] text-apsgGold font-black">Quick View</p>
+          <h3 id="stateExecModalName" class="display-font mt-2 text-3xl md:text-4xl font-black text-apsgDeep leading-tight"></h3>
+          <p id="stateExecModalRole" class="mt-3 inline-flex rounded-full border border-apsgGold/30 bg-apsgGold/10 px-4 py-2 text-xs font-black uppercase tracking-[.16em] text-[#72530b]"></p>
+          <div class="gold-line my-5"></div>
+          <div class="grid grid-cols-2 gap-3 text-sm">
+            <div class="rounded-2xl border border-apsgGreen/10 bg-gray-50 p-4"><p class="text-[10px] uppercase tracking-[.2em] text-gray-500 font-black">Category</p><p id="stateExecModalCategory" class="mt-1 font-black text-apsgDeep"></p></div>
+            <div class="rounded-2xl border border-apsgGreen/10 bg-gray-50 p-4"><p class="text-[10px] uppercase tracking-[.2em] text-gray-500 font-black">Seat</p><p id="stateExecModalSeat" class="mt-1 font-black text-apsgDeep"></p></div>
+            <div class="rounded-2xl border border-apsgGreen/10 bg-gray-50 p-4 col-span-2"><p class="text-[10px] uppercase tracking-[.2em] text-gray-500 font-black">Profile Summary</p><p id="stateExecModalSummary" class="mt-1 text-gray-700 leading-relaxed"></p></div>
+          </div>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <a id="stateExecModalDossier" href="/pages/official-details.html" class="state-exec-btn dossier"><i class="fa-solid fa-file-lines"></i> View Dossier</a>
+            <button type="button" class="state-exec-btn quick" data-state-exec-close><i class="fa-solid fa-check"></i> Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div id="footer"></div>
+<script id="apsg-state-details-routing-config">
+  window.APSG_STATE_DETAILS_CONFIG = { org: 'APSG', target: 'state_executive', excludeOrg: 'CWDI' };
+</script>
+<script src="/assets/js/supabase-clients.js"></script>
+  <script src="/assets/js/apsg-settings.js"></script><script src="/assets/js/leadership-data.js"></script><script src="/assets/js/leadership-public.js"></script><script src="/assets/js/state-public.js"></script>
+
+
+<style id="state-executive-premium-css">
+  #executives.chapter-card{padding:1rem!important;border-radius:1.75rem!important;background:radial-gradient(circle at top right,rgba(216,173,52,.14),transparent 18rem),linear-gradient(135deg,#fffef9 0%,#fff8e8 48%,#f8fbf7 100%)!important;border:1px solid rgba(216,173,52,.28)!important;box-shadow:0 24px 70px rgba(5,53,31,.13)!important;}
+  #executives>.mb-6{margin-bottom:1rem!important;padding:.95rem 1rem!important;border-radius:1.35rem!important;border:1px solid rgba(216,173,52,.22)!important;background:rgba(255,255,255,.88)!important;box-shadow:0 16px 40px rgba(5,53,31,.07)!important;}
+  .state-exec-modal.is-open{display:flex!important;}
+  .state-exec-modal-card{max-height:92vh;overflow:auto;}
+  .state-exec-modal-photo img{object-fit:cover!important;object-position:top center!important;}
+</style>
+<script type="module" src="/components/navbar.js"></script><script type="module" src="/components/footer.js"></script>
+
+<script id="apsg-state-register-prefill">
+(function(){
+  function currentState(){
+    const fromSelect=document.getElementById('stateSelect')?.value;
+    const fromHero=document.getElementById('heroStateName')?.textContent;
+    return String(fromSelect||fromHero||'').replace(/Select State|—/gi,'').trim();
+  }
+  function apply(){
+    const state=currentState();
+    document.querySelectorAll('a[href*="/pages/register.html"]').forEach(a=>{
+      try{
+        const url=new URL(a.getAttribute('href'),location.origin);
+        if(state) url.searchParams.set('state',state);
+        url.searchParams.set('level','state');
+        a.setAttribute('href',url.pathname+url.search+url.hash);
+      }catch(e){}
+    });
+  }
+  document.addEventListener('DOMContentLoaded',apply);
+  document.getElementById('stateSelect')?.addEventListener('change',()=>setTimeout(apply,80));
+  new MutationObserver(()=>setTimeout(apply,80)).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
+
+
+
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

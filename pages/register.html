@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="/">
+    <!-- Ensures component fetches like components/navbar.html resolve to /components/navbar.html even when this page is served from /pages/. -->
+    <title>APC Progressive Support Group (APSG) Membership Registration | 2027 and Beyond</title>
+    <link rel="stylesheet" href="/assets/css/tailwind-static.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any" />
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png" />
+    <link rel="icon" href="/assets/images/logo/apsg.png" sizes="any">
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg.png">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="APSG Nigeria | Progressive Unity for a Greater Nigeria">
+    <meta property="og:description" content="Grassroots mobilisation platform supporting APC across Nigeria.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://apsgnigeria.org">
+    <meta property="og:image" content="https://apsgnigeria.org/assets/images/og-image.jpg">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="APSG Nigeria | Progressive Unity for a Greater Nigeria">
+    <meta name="twitter:description" content="Grassroots mobilisation platform supporting APC across Nigeria.">
+    <meta name="twitter:image" content="https://apsgnigeria.org/assets/images/og-image.jpg">
+
+    <!-- Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+   
+    <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="stylesheet" href="/components/navbar.css">
+  <link rel="stylesheet" href="/components/footer.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0f8a4b',
+                        'primary-dark': '#086334',
+                        accent: '#0f766e',
+                        'accent-light': '#ecfdf5',
+                        secondary: '#d6a92b',
+                        ink: '#07140e',
+                        'government-green': '#05351f',
+                    },
+                    boxShadow: {
+                        'royal': '0 24px 70px rgba(5, 53, 31, 0.22)',
+                        'gold': '0 16px 40px rgba(214, 169, 43, 0.22)',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.6s ease-out both',
+                        'float-soft': 'floatSoft 7s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(18px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        floatSoft: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-14px)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 0 rgba(214,169,43,0)' },
+                            '50%': { boxShadow: '0 0 35px rgba(214,169,43,0.35)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+
+        /* APSG duplicate phone confirmation flow */
+        .duplicate-modal-shell {
+            position: fixed;
+            inset: 0;
+            z-index: 70;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            background: rgba(3, 23, 13, .86);
+            backdrop-filter: blur(16px);
+        }
+
+        .duplicate-modal-shell.hidden { display: none; }
+
+        .duplicate-flow-card {
+            width: min(100%, 46rem);
+            max-height: 92vh;
+            overflow: hidden;
+            border-radius: 1.75rem;
+            background: linear-gradient(180deg, #ffffff, #fffaf0);
+            border: 1px solid rgba(214, 169, 43, .32);
+            box-shadow: 0 34px 95px rgba(5, 53, 31, .32);
+        }
+
+        .duplicate-flow-head {
+            position: relative;
+            overflow: hidden;
+            padding: 1.2rem 1.35rem;
+            color: #ffffff;
+            background: linear-gradient(135deg, #05351f, #0f8a4b 58%, #0f766e);
+        }
+
+        .duplicate-flow-head::after {
+            content: '';
+            position: absolute;
+            right: -4rem;
+            top: -5rem;
+            width: 13rem;
+            height: 13rem;
+            border-radius: 999px;
+            background: rgba(214, 169, 43, .22);
+            filter: blur(10px);
+        }
+
+        .duplicate-flow-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            border-radius: 999px;
+            border: 1px solid rgba(214, 169, 43, .42);
+            background: rgba(255, 255, 255, .12);
+            color: #f7d46c;
+            padding: .42rem .78rem;
+            font-size: .68rem;
+            font-weight: 950;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
+
+        .duplicate-flow-body {
+            max-height: 68vh;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .duplicate-step.hidden { display: none; }
+
+        .duplicate-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: .75rem;
+        }
+
+        .duplicate-id-card {
+            border-radius: 1.15rem;
+            border: 1px solid rgba(15, 138, 75, .13);
+            background: rgba(255, 255, 255, .86);
+            padding: .85rem;
+            box-shadow: 0 10px 28px rgba(5, 53, 31, .06);
+        }
+
+        .duplicate-id-card p {
+            margin: 0 0 .25rem;
+            font-size: .66rem;
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            color: #64748b;
+        }
+
+        .duplicate-id-card strong {
+            display: block;
+            color: #05351f;
+            font-weight: 950;
+            overflow-wrap: anywhere;
+        }
+
+        .duplicate-warning {
+            border-radius: 1.2rem;
+            border: 1px solid rgba(214, 169, 43, .35);
+            background: rgba(255, 250, 240, .94);
+            color: #5a4304;
+            padding: .9rem;
+            font-size: .86rem;
+            font-weight: 800;
+        }
+
+        .duplicate-error {
+            border-radius: 1.2rem;
+            border: 1px solid rgba(239, 68, 68, .24);
+            background: rgba(254, 242, 242, .94);
+            color: #b91c1c;
+            padding: .9rem;
+            font-size: .86rem;
+            font-weight: 800;
+        }
+
+        .duplicate-success {
+            border-radius: 1.2rem;
+            border: 1px solid rgba(15, 138, 75, .18);
+            background: rgba(240, 253, 244, .96);
+            color: #065f46;
+            padding: .9rem;
+            font-size: .86rem;
+            font-weight: 800;
+        }
+
+        .duplicate-apsg-id {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            max-width: 100%;
+            border-radius: 999px;
+            border: 1px solid rgba(214, 169, 43, .55);
+            background: #ffffff;
+            color: #05351f;
+            padding: .7rem 1rem;
+            font-weight: 950;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            box-shadow: 0 12px 30px rgba(5, 53, 31, .08);
+        }
+
+        .duplicate-secondary-btn {
+            border: 1px solid rgba(5, 53, 31, .16);
+            background: #ffffff;
+            color: #05351f;
+            padding: .82rem 1rem;
+            border-radius: 999px;
+            font-weight: 950;
+            transition: transform .18s ease, background .18s ease;
+        }
+
+        .duplicate-secondary-btn:hover {
+            background: #fffaf0;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 640px) {
+            .duplicate-grid { grid-template-columns: 1fr; }
+            .duplicate-flow-card { border-radius: 1.25rem; }
+        }
+    </style>
+    <style id="future-designation-polish">
+      #customDesignationWrap { position: relative; }
+      #customDesignationWrap .form-icon { top: 1.25rem; }
+    </style>
+  <link rel="canonical" href="https://apsgnigeria.org/pages/register.html">
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+  <meta name="keywords" content="APSG Nigeria, APC Progressive Support Group, APC support group, grassroots mobilisation, CWDI, Nigeria politics, APSG membership">
+  <meta property="og:site_name" content="APSG Nigeria">
+  <script type="application/ld+json" data-apsg-static-schema>[{"@context":"https://schema.org","@type":"Organization","name":"APC Progressive Support Group (APSG)","alternateName":"APSG Nigeria","url":"https://apsgnigeria.org/","logo":"https://apsgnigeria.org/assets/images/logo/apsg1.png","sameAs":[]},{"@context":"https://schema.org","@type":"WebPage","name":"APC Progressive Support Group (APSG) Membership Registration | 2027 and Beyond","description":"Official APC Progressive Support Group (APSG) Nigeria platform for mobilisation, leadership, events, membership and community support.","url":"https://apsgnigeria.org/pages/register.html","isPartOf":{"@type":"WebSite","name":"APSG Nigeria","url":"https://apsgnigeria.org/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://apsgnigeria.org/"},{"@type":"ListItem","position":2,"name":"Pages","item":"https://apsgnigeria.org/pages"},{"@type":"ListItem","position":3,"name":"Register","item":"https://apsgnigeria.org/pages/register.html"}]}]</script>
+    <meta name="description" content="Register with APSG to join the stakeholder community, support civic engagement and participate in official membership activities.">
+
+</head>
+<body class="min-h-screen overflow-x-hidden">
+    <!-- Navbar Component (loaded via JS) -->
+    <div id="navbar" role="navigation" aria-label="Main Navigation"></div>
+
+    <!-- Hero Header with Logo -->
+    <header class="hero text-white relative overflow-hidden pt-8 pb-20 md:pt-10 md:pb-28">
+        <div class="luxury-orb -top-24 -left-20 animate-float-soft"></div>
+        <div class="luxury-orb bottom-10 -right-28 animate-float-soft" style="animation-delay: 1.7s;"></div>
+
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="max-w-5xl mx-auto grid lg:grid-cols-[1.25fr_0.75fr] gap-6 items-center">
+                <div class="text-center lg:text-left animate-fade-in">
+                    <div class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-bold shadow-lg backdrop-blur-md">
+                        <span class="h-2.5 w-2.5 rounded-full bg-secondary animate-pulse"></span>
+                        Official APSG Membership Registration
+                    </div>
+                    <h1 class="display-font mt-4 text-3xl md:text-5xl lg:text-6xl font-extrabold leading-[0.95] tracking-tight drop-shadow-2xl">
+                        APC Progressive Support Group
+                    </h1>
+                    <h2 class="mt-3 text-xl md:text-3xl font-black tracking-tight text-white/95">
+                        Membership Registration
+                    </h2>
+                    <p class="mt-3 max-w-xl mx-auto lg:mx-0 text-sm md:text-base text-white/82 leading-relaxed">
+                        A refined, secure and structured registration experience for official APSG verification, coordination and nationwide records.
+                    </p>
+                    <div class="mt-5 flex flex-wrap justify-center lg:justify-start gap-2">
+                        <div class="rounded-xl border border-white/15 bg-white/10 px-3 py-2 backdrop-blur-md">
+                            <p class="text-xs uppercase tracking-[0.22em] text-white/58">Programme</p>
+                            <p class="font-black text-secondary">2027 & Beyond</p>
+                        </div>
+                        <div class="rounded-xl border border-white/15 bg-white/10 px-3 py-2 backdrop-blur-md">
+                            <p class="text-xs uppercase tracking-[0.22em] text-white/58">Coverage</p>
+                            <p class="font-black text-secondary">Nationwide</p>
+                        </div>
+                        <div class="rounded-xl border border-white/15 bg-white/10 px-3 py-2 backdrop-blur-md">
+                            <p class="text-xs uppercase tracking-[0.22em] text-white/58">Status</p>
+                            <p class="font-black text-secondary">Verification Ready</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="government-seal rounded-[1.5rem] p-4 md:p-5 text-center animate-fade-in">
+                    <div class="mx-auto grid h-20 w-20 place-items-center rounded-full border border-secondary/60 bg-white/10 shadow-gold animate-pulse-glow">
+                        <img src="/assets/images/logo/apsg1.png" alt="APSG Logo" class="h-12 w-12 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" width="96" height="96" decoding="async">
+                        <i class="fas fa-shield-halved text-4xl text-secondary hidden"></i>
+                    </div>
+                    <div class="gold-line my-4"></div>
+                    <h3 class="text-xl font-black">Secure Registration Desk</h3>
+                    <p class="mt-2 text-xs leading-relaxed text-white/75">
+                        Enter accurate membership, location and verification details. Review your information before final submission.
+                    </p>
+                    <div class="mt-4 grid grid-cols-3 gap-2 text-center">
+                        <div class="rounded-xl bg-white/10 p-2 border border-white/10">
+                            <i class="fas fa-lock text-secondary"></i>
+                            <p class="mt-2 text-[11px] font-bold text-white/70">Secure</p>
+                        </div>
+                        <div class="rounded-xl bg-white/10 p-2 border border-white/10">
+                            <i class="fas fa-id-card text-secondary"></i>
+                            <p class="mt-2 text-[11px] font-bold text-white/70">Verified</p>
+                        </div>
+                        <div class="rounded-xl bg-white/10 p-2 border border-white/10">
+                            <i class="fas fa-map-location-dot text-secondary"></i>
+                            <p class="mt-2 text-[11px] font-bold text-white/70">Mapped</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Form Section -->
+    <section class="px-3 md:px-4 pb-10 md:pb-14 -mt-14 md:-mt-20 relative z-20">
+        <div class="container mx-auto max-w-5xl">
+            <div class="registration-trust-strip rounded-[1.35rem] p-3 md:p-4 mb-4 animate-fade-in">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="trust-pill">
+                        <i class="fas fa-landmark"></i>
+                        <div>
+                            <p class="text-[11px] uppercase tracking-[0.18em] text-gray-500 font-black">Official Portal</p>
+                            <p class="text-sm font-black text-government-green">APSG Membership Desk</p>
+                        </div>
+                    </div>
+                    <div class="trust-pill">
+                        <i class="fas fa-shield-halved"></i>
+                        <div>
+                            <p class="text-[11px] uppercase tracking-[0.18em] text-gray-500 font-black">Private Record</p>
+                            <p class="text-sm font-black text-government-green">Verification Use Only</p>
+                        </div>
+                    </div>
+                    <div class="trust-pill">
+                        <i class="fas fa-eye"></i>
+                        <div>
+                            <p class="text-[11px] uppercase tracking-[0.18em] text-gray-500 font-black">Review First</p>
+                            <p class="text-sm font-black text-government-green">Preview Before Submit</p>
+                        </div>
+                    </div>
+                    <div class="trust-pill">
+                        <i class="fas fa-receipt"></i>
+                        <div>
+                            <p class="text-[11px] uppercase tracking-[0.18em] text-gray-500 font-black">Instant Receipt</p>
+                            <p class="text-sm font-black text-government-green">Copy / Print Number</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="premium-panel rounded-[1.5rem] md:rounded-[2rem] overflow-hidden animate-fade-in">
+                <div class="relative overflow-hidden bg-gradient-to-r from-government-green via-primary-dark to-accent text-white p-4 md:p-6">
+                    <div class="absolute -right-20 -top-24 h-56 w-56 rounded-full bg-secondary/20 blur-2xl"></div>
+                    <div class="absolute -left-12 bottom-0 h-36 w-36 rounded-full bg-white/10 blur-xl"></div>
+                    <div class="relative z-10 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                        <div>
+                            <p class="text-xs md:text-sm uppercase tracking-[0.28em] text-secondary font-black">APSG Registration Portal</p>
+                            <h2 class="display-font mt-1 text-2xl md:text-4xl font-extrabold tracking-tight">Join Us Now</h2>
+                            <p class="mt-2 text-white/78 text-xs md:text-base max-w-2xl">Official APC Progressive Support Group (APSG) Registration Form</p>
+                        </div>
+                        <div class="flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-3 py-2 backdrop-blur-md">
+                            <i class="fas fa-circle-check text-secondary text-xl"></i>
+                            <div>
+                                <p class="text-xs uppercase tracking-widest text-white/55 font-bold">Step</p>
+                                <p class="font-black">Complete, Preview, Submit</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative z-10 mt-4 rounded-xl border border-white/15 bg-white/10 p-2 portal-mini-progress">
+                        <div class="grid grid-cols-3 gap-2 text-center text-[11px] md:text-xs font-black text-white/82">
+                            <span><i class="fas fa-pen-to-square text-secondary mr-1"></i>Complete</span>
+                            <span><i class="fas fa-magnifying-glass text-secondary mr-1"></i>Review</span>
+                            <span><i class="fas fa-certificate text-secondary mr-1"></i>Receive Number</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid lg:grid-cols-[0.30fr_0.70fr] gap-0">
+                    <aside class="bg-gradient-to-b from-[#07361f] to-[#092816] text-white p-4 md:p-6">
+                        <div class="sticky top-6">
+                            <h3 class="text-lg font-black">Before You Submit</h3>
+                            <p class="mt-2 text-xs leading-relaxed text-white/70">Use the same details on your PVC and APC card where applicable. Your registration number will be generated after successful submission.</p>
+                            <div class="mt-5 space-y-3">
+                                <div class="flex gap-3 rounded-xl border border-white/10 bg-white/10 p-3">
+                                    <div class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-secondary text-government-green font-black text-sm">1</div>
+                                    <div>
+                                        <p class="font-extrabold">Personal Details</p>
+                                        <p class="text-xs text-white/62">Name, contact and role level.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-3 rounded-xl border border-white/10 bg-white/10 p-3">
+                                    <div class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-secondary text-government-green font-black text-sm">2</div>
+                                    <div>
+                                        <p class="font-extrabold">Location Details</p>
+                                        <p class="text-xs text-white/62">State, LGA/LCDA and ward selection.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-3 rounded-xl border border-white/10 bg-white/10 p-3">
+                                    <div class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-secondary text-government-green font-black text-sm">3</div>
+                                    <div>
+                                        <p class="font-extrabold">Verification</p>
+                                        <p class="text-xs text-white/62">PVC, APC card and optional uploads.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-5 rounded-2xl border border-secondary/25 bg-secondary/10 p-4">
+                                <i class="fas fa-triangle-exclamation text-secondary"></i>
+                                <p class="mt-2 text-xs leading-relaxed text-white/75">Please review every entry carefully. Incorrect details may delay verification.</p>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <div class="p-4 md:p-6 lg:p-7">
+                        <div id="lagosNote" class="bg-secondary/10 border border-secondary/40 rounded-xl p-3 mb-5 hidden text-[#5a4304] text-xs md:text-sm shadow-sm">
+                            <strong>Lagos State:</strong> Select your exact LGA or LCDA (all 57 shown). Wards loaded from parent LGA.
+                        </div>
+
+                        <form id="regForm" class="space-y-5" novalidate>
+                            <!-- Name Row -->
+                            <div>
+                                <h3 class="section-title text-base md:text-lg mb-3"><span><i class="fas fa-user"></i></span>Personal Information</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="field-card">
+                                        <label for="firstName" class="block text-xs font-bold text-gray-700 mb-1.5">First Name *</label>
+                                        <i class="fas fa-user form-icon"></i>
+                                        <input type="text" id="firstName" required autocomplete="given-name" placeholder="Enter first name" class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                    </div>
+                                    <div class="field-card">
+                                        <label for="lastName" class="block text-xs font-bold text-gray-700 mb-1.5">Last Name *</label>
+                                        <i class="fas fa-user form-icon"></i>
+                                        <input type="text" id="lastName" required autocomplete="family-name" placeholder="Enter last name" class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Level & Designation Row -->
+                            <div>
+                                <h3 class="section-title text-base md:text-lg mb-3"><span><i class="fas fa-sitemap"></i></span>Role & Designation</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="field-card">
+                                        <label for="level" class="block text-xs font-bold text-gray-700 mb-1.5">Level *</label>
+                                        <i class="fas fa-sitemap form-icon"></i>
+                                        <select id="level" required class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                            <option value="">Select Level</option>
+                                            <option value="bot">BOT / Board of Trustees</option>
+                                            <option value="patronage">Matron / Patron / Adviser</option>
+                                            <option value="national">National Executive</option>
+                                            <option value="state">State Executive</option>
+                                            <option value="lga">LGA</option>
+                                            <option value="ward">Ward</option>
+                                            <option value="pu">Polling Unit</option>
+                                            <option value="volunteer">Volunteer</option>
+                                        </select>
+                                    </div>
+                                    <div class="field-card">
+                                        <label for="designation" class="block text-xs font-bold text-gray-700 mb-1.5">Designation *</label>
+                                        <i class="fas fa-id-badge form-icon"></i>
+                                        <select id="designation" required disabled class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                            <option value="">Select Designation</option>
+                                        </select>
+                                        <div id="customDesignationWrap" class="mt-2 hidden">
+                                            <i class="fas fa-pen-nib form-icon"></i>
+                                            <input type="text" id="customDesignation" list="customDesignationSuggestions" placeholder="Type new designation / future position" class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                            <datalist id="customDesignationSuggestions">
+                                                <option value="Deputy National Coordinator"></option>
+                                                <option value="Director of Women Mobilisation"></option>
+                                                <option value="Diaspora Coordinator"></option>
+                                                <option value="Director of Strategic Communication"></option>
+                                                <option value="South-West Zonal Coordinator"></option>
+                                                <option value="National Youth Mobilisation Director"></option>
+                                                <option value="Special Adviser on Diaspora Affairs"></option>
+                                            </datalist>
+                                            <p class="text-[11px] text-gray-500 mt-1.5">Future-ready: choose Other / Custom Designation above, then type the new role.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Contact -->
+                            <div>
+                                <h3 class="section-title text-base md:text-lg mb-3"><span><i class="fas fa-address-book"></i></span>Contact Details</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="field-card">
+                                        <label for="phone" class="block text-xs font-bold text-gray-700 mb-1.5">Phone Number (WhatsApp preferred) *</label>
+                                        <i class="fas fa-phone form-icon"></i>
+                                        <input type="tel" id="phone" required pattern="\+?[0-9]{10,15}" autocomplete="tel" placeholder="e.g. 08012345678" class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                    </div>
+                                    <div class="field-card">
+                                        <label for="email" class="block text-xs font-bold text-gray-700 mb-1.5">Email Address</label>
+                                        <i class="fas fa-envelope form-icon"></i>
+                                        <input type="email" id="email" autocomplete="email" placeholder="name@example.com" class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Location -->
+                            <div class="space-y-3">
+                                <h3 class="section-title text-base md:text-lg"><span><i class="fas fa-map-location-dot"></i></span>Location Details</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    <div class="field-card">
+                                        <label for="state" class="block text-xs font-bold text-gray-700 mb-1.5">State *</label>
+                                        <i class="fas fa-map-marker-alt form-icon"></i>
+                                        <select id="state" required class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                            <option value="">Select State</option>
+                                        </select>
+                                    </div>
+                                    <div class="field-card">
+                                        <label for="lga" class="block text-xs font-bold text-gray-700 mb-1.5">LGA/LCDA *</label>
+                                        <i class="fas fa-city form-icon"></i>
+                                        <select id="lga" disabled required class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                            <option value="">Select LGA/LCDA</option>
+                                        </select>
+                                        <div class="loading-note mt-1.5" id="lga-loading">Loading LGAs...</div>
+                                    </div>
+                                    <div class="field-card">
+                                        <label for="ward" class="block text-xs font-bold text-gray-700 mb-1.5">Ward *</label>
+                                        <i class="fas fa-map-pin form-icon"></i>
+                                        <select id="ward" disabled required class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                            <option value="">Select Ward</option>
+                                        </select>
+                                        <div class="loading-note mt-1.5" id="ward-loading"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PVC & APC Numbers -->
+                            <div>
+                                <h3 class="section-title text-base md:text-lg mb-3"><span><i class="fas fa-id-card"></i></span>Verification Numbers</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="field-card">
+                                        <label for="pvc" class="block text-xs font-bold text-gray-700 mb-1.5">PVC Number (VIN) *</label>
+                                        <i class="fas fa-id-card form-icon"></i>
+                                        <input type="text" id="pvc" required placeholder="Enter your PVC/VIN number" class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                    </div>
+                                    <div class="field-card">
+                                        <label for="apcCard" class="block text-xs font-bold text-gray-700 mb-1.5">APC Card Number *</label>
+                                        <i class="fas fa-id-badge form-icon"></i>
+                                        <input type="text" id="apcCard" required placeholder="Enter APC card number" class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Uploads -->
+                            <div>
+                                <h3 class="section-title text-base md:text-lg mb-3"><span><i class="fas fa-cloud-arrow-up"></i></span>Document Uploads</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="field-card">
+                                        <label for="pvcUpload" class="block text-xs font-bold text-gray-700 mb-1.5">Upload PVC (Recommended)</label>
+                                        <input type="file" id="pvcUpload" accept="image/*,application/pdf" class="w-full px-3 py-2.5 border rounded-xl text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:bg-primary file:text-white file:font-bold hover:file:bg-primary-dark cursor-pointer transition">
+                                        <p class="text-[11px] text-gray-500 mt-1.5">JPEG, PNG, PDF (max 5MB)</p>
+                                    </div>
+                                    <div class="field-card">
+                                        <label for="apcUpload" class="block text-xs font-bold text-gray-700 mb-1.5">Upload APC Card (Recommended)</label>
+                                        <input type="file" id="apcUpload" accept="image/*,application/pdf" class="w-full px-3 py-2.5 border rounded-xl text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:bg-primary file:text-white file:font-bold hover:file:bg-primary-dark cursor-pointer transition">
+                                        <p class="text-[11px] text-gray-500 mt-1.5">JPEG, PNG, PDF (max 5MB)</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Consent -->
+                            <div class="rounded-2xl p-4 border border-secondary/35 bg-gradient-to-r from-secondary/10 via-white to-accent-light shadow-sm">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" id="consent" required class="mt-1 w-5 h-5 text-primary rounded focus:ring-primary">
+                                    <label for="consent" class="text-xs md:text-sm text-gray-700 leading-relaxed">
+                                        I consent to APSG/APC using my details for official verification and mobilization only. Data is confidential.
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="flex flex-col md:flex-row gap-3 pt-1">
+                                <button type="button" id="previewBtn" class="group flex-1 bg-secondary hover:bg-[#c79718] text-government-green font-black py-3 rounded-xl transition text-base shadow-gold hover:-translate-y-0.5">
+                                    <i class="fas fa-eye mr-2 group-hover:scale-110 transition"></i>Preview Details
+                                </button>
+                                <button type="button" id="directSubmitBtn" class="group flex-1 bg-gradient-to-r from-primary to-accent hover:from-primary-dark hover:to-primary text-white font-black py-3 rounded-xl transition flex items-center justify-center gap-2 text-base shadow-royal hover:-translate-y-0.5">
+                                    <span class="spinner"><i class="fas fa-spinner fa-spin"></i></span>
+                                    <i class="fas fa-paper-plane group-hover:translate-x-1 transition"></i>
+                                    Submit Directly
+                                </button>
+                            </div>
+                        </form>
+
+                        <div id="formMessage" class="mt-5"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detailed Preview Modal -->
+    <div id="previewModal" class="fixed inset-0 bg-[#03170d]/80 backdrop-blur-sm flex items-center justify-center z-50 hidden px-3">
+        <div class="bg-white rounded-[1.5rem] max-w-3xl w-full my-6 shadow-2xl max-h-[90vh] overflow-hidden animate-fade-in border border-secondary/25">
+            <div class="relative overflow-hidden bg-gradient-to-r from-government-green via-primary-dark to-accent text-white p-4 md:p-5 text-center">
+                <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px); background-size: 34px 34px;"></div>
+                <div class="relative z-10">
+                    <p class="text-xs uppercase tracking-[0.28em] text-secondary font-black">Review Before Submission</p>
+                    <h3 class="display-font text-2xl md:text-3xl font-extrabold mt-1">Registration Preview</h3>
+                    <p class="opacity-80 mt-2">Please review your details carefully before submitting</p>
+                </div>
+            </div>
+            <div class="p-4 md:p-6 overflow-y-auto max-h-[60vh]">
+                <div id="previewContent" class="space-y-5 text-gray-700">
+                    <!-- Content populated dynamically -->
+                </div>
+                <div class="mt-5 p-4 bg-accent-light rounded-xl border border-primary/15">
+                    <p class="text-center font-bold text-primary">Your unique APSG Registration Number will be generated upon successful submission.</p>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex flex-col md:flex-row gap-3 bg-gray-50">
+                <button onclick="closePreview()" class="flex-1 bg-white hover:bg-gray-100 border border-gray-200 text-gray-800 font-black py-3 rounded-xl transition">Edit Details</button>
+                <button onclick="submitForm()" class="flex-1 bg-gradient-to-r from-primary to-accent hover:from-primary-dark hover:to-primary text-white font-black py-3 rounded-xl transition flex items-center justify-center gap-3 shadow-royal">
+                    <span class="spinner"><i class="fas fa-spinner fa-spin"></i></span>
+                    Confirm & Submit
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Duplicate Phone / Existing Member Confirmation Modal -->
+    <div id="duplicateMemberModal" class="duplicate-modal-shell hidden" aria-live="polite" aria-modal="true" role="dialog">
+        <div class="duplicate-flow-card">
+            <div class="duplicate-flow-head">
+                <div class="relative z-10 flex items-start justify-between gap-3">
+                    <div>
+                        <span class="duplicate-flow-chip"><i class="fas fa-phone-volume"></i> Existing Phone Check</span>
+                        <h3 class="display-font mt-2 text-2xl md:text-3xl font-extrabold">Possible Existing APSG Record</h3>
+                        <p class="mt-1 text-sm text-white/72">This phone number is already connected to an APSG record. Please confirm before creating a new registration.</p>
+                    </div>
+                    <button type="button" onclick="closeDuplicateMemberModal()" class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/90 text-government-green shadow hover:bg-secondary/20 transition" aria-label="Close existing member check">
+                        <i class="fas fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="duplicate-flow-body">
+                <div id="duplicateConfirmStep" class="duplicate-step space-y-4">
+                    <div class="duplicate-warning">
+                        <i class="fas fa-circle-question mr-1"></i> Are you the member shown below?
+                    </div>
+                    <div class="duplicate-grid">
+                        <div class="duplicate-id-card"><p>Name</p><strong id="duplicateCandidateName">-</strong></div>
+                        <div class="duplicate-id-card"><p>State</p><strong id="duplicateCandidateState">-</strong></div>
+                        <div class="duplicate-id-card"><p>LGA</p><strong id="duplicateCandidateLga">-</strong></div>
+                        <div class="duplicate-id-card"><p>Ward</p><strong id="duplicateCandidateWard">-</strong></div>
+                    </div>
+                    <p id="duplicateAttemptText" class="text-xs font-black uppercase tracking-[0.14em] text-gray-500"></p>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <button type="button" id="duplicateYesBtn" class="flex-1 bg-secondary hover:bg-[#c79718] text-government-green font-black py-3 rounded-full transition shadow-gold">
+                            <i class="fas fa-circle-check mr-1"></i> Yes, this is me
+                        </button>
+                        <button type="button" id="duplicateNoBtn" class="duplicate-secondary-btn flex-1">
+                            <i class="fas fa-circle-xmark mr-1"></i> No
+                        </button>
+                    </div>
+                </div>
+
+                <div id="duplicateRevealStep" class="duplicate-step hidden space-y-4">
+                    <div class="duplicate-success">
+                        <i class="fas fa-fingerprint mr-1"></i> Your APSG ID has been found. Please verify your phone number again to login.
+                    </div>
+                    <div class="rounded-2xl border border-secondary/30 bg-white p-4">
+                        <p class="text-xs uppercase tracking-[0.22em] text-secondary font-black mb-2">Your APSG ID is</p>
+                        <span id="duplicateRecoveredApsgId" class="duplicate-apsg-id"><i class="fas fa-fingerprint text-secondary"></i>-</span>
+                    </div>
+                    <div class="duplicate-grid">
+                        <div class="duplicate-id-card"><p>Full Name</p><strong id="duplicateRecoveredName">-</strong></div>
+                        <div class="duplicate-id-card"><p>State</p><strong id="duplicateRecoveredState">-</strong></div>
+                        <div class="duplicate-id-card"><p>LGA</p><strong id="duplicateRecoveredLga">-</strong></div>
+                        <div class="duplicate-id-card"><p>Ward</p><strong id="duplicateRecoveredWard">-</strong></div>
+                    </div>
+                    <div>
+                        <label for="duplicatePhoneVerifyInput" class="block text-xs font-black uppercase tracking-[0.16em] text-gray-600 mb-2">Enter Your Phone Number To Login</label>
+                        <div class="relative">
+                            <i class="fas fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-primary"></i>
+                            <input type="tel" id="duplicatePhoneVerifyInput" placeholder="Re-enter your registered phone number" class="input-with-icon w-full px-3 py-3 border rounded-xl transition text-sm pl-11">
+                        </div>
+                    </div>
+                    <p id="duplicateVerifyError" class="duplicate-error hidden"></p>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <button type="button" id="duplicateLoginBtn" class="flex-1 bg-gradient-to-r from-primary to-accent hover:from-primary-dark hover:to-primary text-white font-black py-3 rounded-full transition shadow-royal">
+                            <i class="fas fa-right-to-bracket mr-1"></i> Login To My Portal
+                        </button>
+                        <button type="button" id="duplicateStartOverBtn" class="duplicate-secondary-btn flex-1">
+                            <i class="fas fa-rotate-left mr-1"></i> Start Over
+                        </button>
+                    </div>
+                </div>
+
+                <div id="duplicateContactStep" class="duplicate-step hidden space-y-4">
+                    <div class="duplicate-error">
+                        <i class="fas fa-user-group mr-1"></i> We could not confirm your identity after multiple attempts. Please contact your coordinator for help.
+                    </div>
+                    <div class="rounded-2xl border border-secondary/30 bg-white p-4 text-sm text-gray-700">
+                        <p class="font-black text-government-green"><i class="fas fa-circle-info text-secondary mr-1"></i> Next step</p>
+                        <p class="mt-1 leading-relaxed">Ask your APSG coordinator to confirm your registration number, phone number, state, LGA and ward before trying again.</p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <button type="button" id="duplicateChangePhoneBtn" class="flex-1 bg-secondary hover:bg-[#c79718] text-government-green font-black py-3 rounded-full transition shadow-gold">
+                            <i class="fas fa-pen mr-1"></i> Change Phone Number
+                        </button>
+                        <a href="/pages/contact.html" class="duplicate-secondary-btn flex-1 text-center no-underline">
+                            <i class="fas fa-address-book mr-1"></i> Contact APSG
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Premium Success Pop-out Modal -->
+    <div id="successModal" class="fixed inset-0 bg-[#03170d]/85 backdrop-blur-md flex items-center justify-center z-[60] hidden px-3">
+        <div class="success-popout rounded-[1.6rem] max-w-3xl w-full my-6 max-h-[92vh] overflow-hidden animate-fade-in relative">
+            <button type="button" onclick="closeSuccessModal()" class="absolute right-4 top-4 z-20 grid h-9 w-9 place-items-center rounded-full bg-white/90 text-government-green shadow hover:bg-secondary/20 transition" aria-label="Close success message">
+                <i class="fas fa-xmark"></i>
+            </button>
+            <div class="relative overflow-hidden bg-gradient-to-r from-government-green via-primary-dark to-accent text-white px-5 py-5 md:px-7 text-center">
+                <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px); background-size: 30px 30px;"></div>
+                <div class="relative z-10">
+                    <div class="success-logo-shell">
+                        <img src="/assets/images/logo/apsg1.png" alt="APSG Logo" onerror="this.onerror=null;this.src='/assets/images/logo/apsg.png';" width="96" height="96" decoding="async">
+                        <span class="success-check-badge"><i class="fas fa-check"></i></span>
+                    </div>
+                    <p class="mt-3 text-xs uppercase tracking-[0.30em] text-secondary font-black">Official Registration Certificate</p>
+                    <h3 class="display-font mt-1 text-3xl md:text-4xl font-extrabold">Congratulations</h3>
+                    <p class="mt-2 text-sm md:text-base text-white/78">Your APSG membership record has been captured successfully.</p>
+                </div>
+            </div>
+            <div id="successContent" class="p-4 md:p-6 overflow-y-auto max-h-[66vh]"></div>
+        </div>
+    </div>
+    <div class="floating-help-card hidden lg:block rounded-2xl p-4">
+        <p class="text-xs uppercase tracking-[0.20em] text-secondary font-black">Need Help?</p>
+        <p class="mt-1 text-sm font-black text-government-green">Use accurate PVC/APC details before submitting.</p>
+        <a href="/pages/contact.html" class="mt-3 inline-flex items-center gap-2 text-sm font-black text-primary hover:text-primary-dark">
+            Contact APSG <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+
+    <!-- Footer Component (loaded via JS) -->
+    <div id="footer"></div>
+
+<!-- Full Scripts -->
+<script>
+    // Nigerian States
+    const states = [
+        "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue", "Borno",
+        "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", "Gombe", "Imo",
+        "Jigawa", "Kaduna", "Kano", "Katsina", "Kebbi", "Kogi", "Kwara", "Lagos",
+        "Nasarawa", "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau", "Rivers",
+        "Sokoto", "Taraba", "Yobe", "Zamfara", "FCT"
+    ];
+
+    const stateSelect = document.getElementById('state');
+    states.forEach(state => {
+        const option = document.createElement('option');
+        option.value = state;
+        option.textContent = state === "FCT" ? "Federal Capital Territory (FCT)" : state;
+        stateSelect.appendChild(option);
+    });
+
+    // Location loading
+    let nigeriaData = null;
+    const lgaSelect = document.getElementById('lga');
+    const wardSelect = document.getElementById('ward');
+    const lgaLoading = document.getElementById('lga-loading');
+    const wardLoading = document.getElementById('ward-loading');
+    const lagosNote = document.getElementById('lagosNote');
+
+    const lagosAll = ["Agege","Orile-Agege","Ajeromi-Ifelodun","Ifelodun","Alimosho","Agbado/Oke-Odo","Ayobo/Ipaja","Egbe-Idimu","Igando-Ikotun","Mosan-Okunola","Amuwo-Odofin","Oriade","Apapa","Apapa-Iganmu","Badagry","Badagry West","Oto-Awori","Olorunda","Epe","Eredo","Eti-Osa","Eti-Osa East","Eti-Osa West","Iru/Victoria Island","Ikoyi-Obalende","Lekki","Ibeju-Lekki","Ifako-Ijaiye","Ojodu","Ojokoro","Ikeja","Onigbongbo","Ikorodu","Igbogbo-Bayeku","Ijede","Imota","Ikorodu North","Ikorodu West","Kosofe","Agboyi-Ketu","Ikosi-Isheri","Lagos Island","Lagos Island East","Lagos Mainland","Yaba","Mushin","Odi-Olowo/Ojuwoye","Ojo","Iba","Oshodi-Isolo","Ejigbo","Isolo","Shomolu","Bariga","Surulere","Coker-Aguda","Itire-Ikate"].sort();
+
+    const lagosMapping = {
+        "Orile-Agege": "Agege",
+        "Ifelodun": "Ajeromi-Ifelodun",
+        "Agbado/Oke-Odo": "Alimosho",
+        "Ayobo/Ipaja": "Alimosho",
+        "Egbe-Idimu": "Alimosho",
+        "Igando-Ikotun": "Alimosho",
+        "Mosan-Okunola": "Alimosho",
+        "Oriade": "Amuwo-Odofin",
+        "Apapa-Iganmu": "Apapa",
+        "Badagry West": "Badagry",
+        "Oto-Awori": "Badagry",
+        "Olorunda": "Badagry",
+        "Eredo": "Epe",
+        "Eti-Osa East": "Eti-Osa",
+        "Eti-Osa West": "Eti-Osa",
+        "Iru/Victoria Island": "Eti-Osa",
+        "Ikoyi-Obalende": "Eti-Osa",
+        "Lekki": "Eti-Osa",
+        "Ojodu": "Ojodu",
+        "Ojokoro": "Ifako-Ijaiye",
+        "Onigbongbo": "Ikeja",
+        "Igbogbo-Bayeku": "Ikorodu",
+        "Ijede": "Ikorodu",
+        "Imota": "Ikorodu",
+        "Ikorodu North": "Ikorodu",
+        "Ikorodu West": "Ikorodu",
+        "Agboyi-Ketu": "Kosofe",
+        "Ikosi-Isheri": "Kosofe",
+        "Lagos Island East": "Lagos Island",
+        "Yaba": "Lagos Mainland",
+        "Odi-Olowo/Ojuwoye": "Mushin",
+        "Iba": "Ojo",
+        "Ejigbo": "Oshodi-Isolo",
+        "Isolo": "Oshodi-Isolo",
+        "Bariga": "Shomolu",
+        "Coker-Aguda": "Surulere",
+        "Itire-Ikate": "Surulere"
+    };
+
+    const stateCodes = {
+        "Abia": "AB", "Adamawa": "AD", "Akwa Ibom": "AK", "Anambra": "AN", "Bauchi": "BA",
+        "Bayelsa": "BY", "Benue": "BE", "Borno": "BO", "Cross River": "CR", "Delta": "DE",
+        "Ebonyi": "EB", "Edo": "ED", "Ekiti": "EK", "Enugu": "EN", "Gombe": "GO",
+        "Imo": "IM", "Jigawa": "JI", "Kaduna": "KD", "Kano": "KN", "Katsina": "KT",
+        "Kebbi": "KE", "Kogi": "KO", "Kwara": "KW", "Lagos": "LA", "Nasarawa": "NA",
+        "Niger": "NI", "Ogun": "OG", "Ondo": "ON", "Osun": "OS", "Oyo": "OY",
+        "Plateau": "PL", "Rivers": "RI", "Sokoto": "SO", "Taraba": "TA", "Yobe": "YO",
+        "Zamfara": "ZA", "FCT": "FC"
+    };
+
+    fetch('/assets/files/lgas-with-wards.json')
+        .then(r => r.ok ? r.json() : Promise.reject('File not found'))
+        .then(data => { nigeriaData = data; lgaLoading.textContent = ''; })
+        .catch(() => lgaLoading.textContent = 'Error loading data');
+
+    stateSelect.addEventListener('change', () => {
+        const s = stateSelect.value;
+        lgaSelect.innerHTML = '<option value="">Select LGA/LCDA</option>';
+        wardSelect.innerHTML = '<option value="">Select Ward</option>';
+        lgaSelect.disabled = true;
+        wardSelect.disabled = true;
+        wardLoading.textContent = 'Select LGA/LCDA first';
+        lagosNote.style.display = 'none';
+
+        if (s && nigeriaData) {
+            let lgas = s === 'Lagos' ? lagosAll : Object.keys(nigeriaData[s] || {}).sort();
+            if (s === 'Lagos') lagosNote.style.display = 'block';
+            lgas.forEach(n => {
+                const o = document.createElement('option');
+                o.value = n;
+                o.textContent = n;
+                lgaSelect.appendChild(o);
+            });
+            lgaSelect.disabled = false;
+            lgaLoading.textContent = '';
+        }
+    });
+
+    lgaSelect.addEventListener('change', () => {
+        const s = stateSelect.value;
+        let l = lgaSelect.value;
+        wardSelect.innerHTML = '<option value="">Select Ward</option>';
+        wardSelect.disabled = true;
+        wardLoading.textContent = 'Loading wards...';
+
+        if (s && l && nigeriaData && nigeriaData[s]) {
+            let parent = s === 'Lagos' && lagosMapping[l] ? lagosMapping[l] : l;
+            if (nigeriaData[s][parent]) {
+                const wards = nigeriaData[s][parent].map(w => w.name).sort();
+                wards.forEach(w => {
+                    const o = document.createElement('option');
+                    o.value = w;
+                    o.textContent = w;
+                    wardSelect.appendChild(o);
+                });
+                wardSelect.disabled = false;
+                wardLoading.textContent = '';
+            }
+        }
+    });
+
+    // Designation cascading
+    const roles = {
+        bot: ["Member","Board Chairperson","Board Secretary","Assistant Board Secretary 1","Assistant Board Secretary 2","BOT Member","Trustee","Board Adviser"],
+        patronage: ["Member","Global Grand Matron","National Grand Matron","State Grand Matron","Matron","National Grand Patron","State Grand Patron","Grand Patron & Adviser","Patron","Adviser","CWDI Matron"],
+        national: ["Member","Director General","Deputy Director General","National Coordinator","Deputy National Coordinator","National Secretary","National Organising Coordinator","National Mobilization Coordinator","National Women Coordinator","National Youth Coordinator","National Media & Communications Coordinator","National Digital Coordinator","National Finance Coordinator","National Strategy & Planning Coordinator","National Legal & Compliance Coordinator","APC Northerner Leader"],
+        state: ["Member","State Coordinator","Deputy State Coordinator","State Secretary","State Organising Coordinator","State Mobilization Coordinator","State Women Leader","Deputy State Women Leader","State Women Coordinator","State Youth Coordinator","State Media Coordinator","State Digital Coordinator","State Finance Coordinator","State Patron","State Matron","State Adviser"],
+        lga: ["Member","LGA Coordinator","Deputy LGA Coordinator","LGA Secretary","LGA Mobilization Coordinator","LGA Women Coordinator","LGA Youth Coordinator","LGA Media Coordinator"],
+        ward: ["Member","Ward Coordinator","Ward Secretary","Ward Mobilization Coordinator","Ward Women Coordinator","Ward Youth Coordinator"],
+        pu: ["Member","Polling Unit Coordinator","Polling Unit Mobilizer"],
+        volunteer: ["Member","Volunteer","Mobilization Volunteer","Campaign Volunteer","Media Volunteer","Protocol Volunteer","CWDI Volunteer"]
+    };
+
+    const levelSelect = document.getElementById("level");
+    const designationSelect = document.getElementById("designation");
+    const customDesignationWrap = document.getElementById("customDesignationWrap");
+    const customDesignationInput = document.getElementById("customDesignation");
+
+    function showCustomDesignation(show) {
+        if (!customDesignationWrap || !customDesignationInput) return;
+        customDesignationWrap.classList.toggle('hidden', !show);
+        customDesignationInput.required = !!show;
+        if (!show) customDesignationInput.value = '';
+    }
+
+    window.getDesignationValue = function getDesignationValue() {
+        if (designationSelect.value === '__custom') return (customDesignationInput?.value || '').trim();
+        return designationSelect.value;
+    };
+
+    designationSelect.addEventListener('change', () => {
+        showCustomDesignation(designationSelect.value === '__custom');
+    });
+
+    levelSelect.addEventListener("change", () => {
+        const level = levelSelect.value;
+        designationSelect.innerHTML = '<option value="">Select Designation</option>';
+        designationSelect.disabled = !level;
+        showCustomDesignation(false);
+        if (roles[level]) {
+            roles[level].forEach(role => {
+                const option = document.createElement("option");
+                option.value = role;
+                option.textContent = role;
+                designationSelect.appendChild(option);
+            });
+            const customOption = document.createElement('option');
+            customOption.value = '__custom';
+            customOption.textContent = 'Other / Custom Designation';
+            designationSelect.appendChild(customOption);
+        }
+    });
+</script>
+
+<script src="/assets/js/supabase-clients.js"></script>
+  <script src="/assets/js/apsg-settings.js"></script>
+<script type="module">
+    const form = document.getElementById('regForm');
+    const messageDiv = document.getElementById('formMessage');
+    const directSubmitBtn = document.getElementById('directSubmitBtn');
+    const previewBtn = document.getElementById('previewBtn');
+    const previewModal = document.getElementById('previewModal');
+    const previewContent = document.getElementById('previewContent');
+    const successModal = document.getElementById('successModal');
+    const successContent = document.getElementById('successContent');
+    let formData = null;
+    let currentSlide = 0;
+
+    // Concise validation
+    function validateForm() {
+        let valid = true;
+        const fields = form.querySelectorAll('[required]');
+        fields.forEach(f => {
+            const isValid = f.value.trim() && (!f.pattern || new RegExp(f.pattern).test(f.value.trim()));
+            f.classList.toggle('invalid-input', !isValid);
+            valid = valid && isValid;
+        });
+        const consent = document.getElementById('consent');
+        consent.classList.toggle('invalid-input', !consent.checked);
+        valid = valid && consent.checked;
+        return valid;
+    }
+
+    previewBtn.addEventListener('click', async () => {
+        if (validateForm()) {
+            const canContinue = await ensurePhoneIsNotAlreadyRegistered();
+            if (!canContinue) return;
+            populatePreview();
+            previewModal.classList.remove('hidden');
+        } else {
+            messageDiv.innerHTML = '<div class="bg-red-50 text-red-800 p-4 rounded-xl">Please correct the highlighted fields before previewing.</div>';
+        }
+    });
+
+    directSubmitBtn.addEventListener('click', async () => {
+        if (validateForm()) {
+            const canContinue = await ensurePhoneIsNotAlreadyRegistered();
+            if (!canContinue) return;
+            formData = null;
+            submitForm(true); // true for direct submit
+        } else {
+            messageDiv.innerHTML = '<div class="bg-red-50 text-red-800 p-4 rounded-xl">Please correct the highlighted fields before submitting.</div>';
+        }
+    });
+
+    function closePreview() {
+        previewModal.classList.add('hidden');
+    }
+
+
+    const MEMBER_DETAILS_URL = '/admin/member-details.html?mode=member';
+    let duplicateMatches = [];
+    let duplicateIndex = 0;
+    let duplicateNoCount = 0;
+    let selectedDuplicateMember = null;
+    let duplicateCheckBusy = false;
+
+    const duplicateEls = {
+        modal: document.getElementById('duplicateMemberModal'),
+        confirmStep: document.getElementById('duplicateConfirmStep'),
+        revealStep: document.getElementById('duplicateRevealStep'),
+        contactStep: document.getElementById('duplicateContactStep'),
+        candidateName: document.getElementById('duplicateCandidateName'),
+        candidateState: document.getElementById('duplicateCandidateState'),
+        candidateLga: document.getElementById('duplicateCandidateLga'),
+        candidateWard: document.getElementById('duplicateCandidateWard'),
+        attemptText: document.getElementById('duplicateAttemptText'),
+        yesBtn: document.getElementById('duplicateYesBtn'),
+        noBtn: document.getElementById('duplicateNoBtn'),
+        recoveredApsgId: document.getElementById('duplicateRecoveredApsgId'),
+        recoveredName: document.getElementById('duplicateRecoveredName'),
+        recoveredState: document.getElementById('duplicateRecoveredState'),
+        recoveredLga: document.getElementById('duplicateRecoveredLga'),
+        recoveredWard: document.getElementById('duplicateRecoveredWard'),
+        phoneVerifyInput: document.getElementById('duplicatePhoneVerifyInput'),
+        loginBtn: document.getElementById('duplicateLoginBtn'),
+        startOverBtn: document.getElementById('duplicateStartOverBtn'),
+        changePhoneBtn: document.getElementById('duplicateChangePhoneBtn'),
+        verifyError: document.getElementById('duplicateVerifyError')
+    };
+
+    function normalizePhone(value) {
+        return String(value || '').replace(/[\s\-()]/g, '').trim();
+    }
+
+    function phoneCandidates(value) {
+        const raw = normalizePhone(value);
+        const digits = raw.replace(/\D/g, '');
+        const list = [raw, digits];
+        if (digits.startsWith('234')) list.push('0' + digits.slice(3), '+234' + digits.slice(3));
+        if (digits.startsWith('0')) list.push('234' + digits.slice(1), '+234' + digits.slice(1));
+        if (digits.length === 10 && /^[789]/.test(digits)) list.push('0' + digits, '234' + digits, '+234' + digits);
+        return [...new Set(list.filter(Boolean))];
+    }
+
+    function textKey(value) {
+        return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+    }
+
+    function safeText(value, fallback = '-') {
+        const text = String(value || '').trim();
+        return text || fallback;
+    }
+
+    function fullName(member) {
+        return `${member?.first_name || ''} ${member?.last_name || ''}`.trim() || 'Unnamed Member';
+    }
+
+    function saveDuplicateMemberSession(member) {
+        sessionStorage.setItem('apsg_member_portal_verified', '1');
+        sessionStorage.setItem('apsg_member_portal_member_id', member.id || '');
+        sessionStorage.setItem('apsg_member_portal_member', JSON.stringify(member));
+        sessionStorage.setItem('apsg_member_portal_access_at', new Date().toISOString());
+    }
+
+    function memberLocalScore(member) {
+        const selected = [stateSelect.value, lgaSelect.value, wardSelect.value].map(textKey).filter(Boolean);
+        if (!selected.length) return 0;
+        const memberFields = [member.state, member.lga, member.lcda, member.ward].map(textKey).filter(Boolean);
+        let score = 0;
+        selected.forEach(sel => {
+            memberFields.forEach(field => {
+                if (field === sel) score += 4;
+                else if (field.includes(sel) || sel.includes(field)) score += 2;
+            });
+        });
+        return score;
+    }
+
+    function dedupeMembers(rows) {
+        const seen = new Set();
+        return (rows || []).filter(member => {
+            const key = String(member.id || member.reg_number || JSON.stringify(member));
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+    }
+
+    async function fetchExistingMembersByPhone(phone) {
+        const rpcResult = await supabaseClient.rpc('apsg_find_members_by_phone', { p_phone: phone });
+        if (!rpcResult.error && Array.isArray(rpcResult.data)) {
+            return dedupeMembers(rpcResult.data);
+        }
+
+        const candidates = phoneCandidates(phone);
+        if (!candidates.length) return [];
+        const { data, error } = await supabaseClient
+            .from('members')
+            .select('*')
+            .in('phone', candidates)
+            .order('created_at', { ascending: false })
+            .limit(20);
+        if (error) throw error;
+        return dedupeMembers(data);
+    }
+
+    async function findMemberByRegAndPhone(regNumber, phone) {
+        const rpcResult = await supabaseClient.rpc('apsg_member_login_by_reg_phone', {
+            p_reg_number: regNumber,
+            p_phone: phone
+        });
+        if (!rpcResult.error && Array.isArray(rpcResult.data) && rpcResult.data[0]) {
+            return rpcResult.data[0];
+        }
+
+        const candidates = phoneCandidates(phone);
+        for (const candidate of candidates) {
+            const { data } = await supabaseClient
+                .from('members')
+                .select('*')
+                .eq('reg_number', regNumber)
+                .eq('phone', candidate)
+                .maybeSingle();
+            if (data) return data;
+        }
+        throw new Error('Phone number does not match this APSG record');
+    }
+
+    function showDuplicateStep(step) {
+        duplicateEls.confirmStep.classList.toggle('hidden', step !== 'confirm');
+        duplicateEls.revealStep.classList.toggle('hidden', step !== 'reveal');
+        duplicateEls.contactStep.classList.toggle('hidden', step !== 'contact');
+        duplicateEls.verifyError?.classList.add('hidden');
+    }
+
+    function openDuplicateMemberModal() {
+        duplicateEls.modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+
+    function closeDuplicateMemberModal() {
+        duplicateEls.modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+
+    function renderDuplicateCandidate() {
+        const member = duplicateMatches[duplicateIndex];
+        if (!member) {
+            showDuplicateStep('contact');
+            return;
+        }
+        duplicateEls.candidateName.textContent = fullName(member);
+        duplicateEls.candidateState.textContent = safeText(member.state);
+        duplicateEls.candidateLga.textContent = safeText(member.lga || member.lcda);
+        duplicateEls.candidateWard.textContent = safeText(member.ward);
+        duplicateEls.attemptText.textContent = `Confirmation ${duplicateIndex + 1} of ${Math.min(duplicateMatches.length, 3)}`;
+        showDuplicateStep('confirm');
+    }
+
+    function confirmDuplicateYes() {
+        selectedDuplicateMember = duplicateMatches[duplicateIndex];
+        if (!selectedDuplicateMember) return;
+        duplicateEls.recoveredApsgId.innerHTML = `<i class="fas fa-fingerprint text-secondary"></i>${safeText(selectedDuplicateMember.reg_number)}`;
+        duplicateEls.recoveredName.textContent = fullName(selectedDuplicateMember);
+        duplicateEls.recoveredState.textContent = safeText(selectedDuplicateMember.state);
+        duplicateEls.recoveredLga.textContent = safeText(selectedDuplicateMember.lga || selectedDuplicateMember.lcda);
+        duplicateEls.recoveredWard.textContent = safeText(selectedDuplicateMember.ward);
+        duplicateEls.phoneVerifyInput.value = document.getElementById('phone').value.trim();
+        showDuplicateStep('reveal');
+        setTimeout(() => duplicateEls.phoneVerifyInput.focus(), 80);
+    }
+
+    function confirmDuplicateNo() {
+        duplicateNoCount += 1;
+        duplicateIndex += 1;
+        if (duplicateNoCount >= 3 || duplicateIndex >= duplicateMatches.length) {
+            showDuplicateStep('contact');
+            return;
+        }
+        renderDuplicateCandidate();
+    }
+
+    async function verifyDuplicateMemberLogin() {
+        if (!selectedDuplicateMember) {
+            showDuplicateStep('confirm');
+            return;
+        }
+        const phone = duplicateEls.phoneVerifyInput.value.trim();
+        if (!phone) {
+            duplicateEls.verifyError.textContent = 'Please enter your phone number to continue.';
+            duplicateEls.verifyError.classList.remove('hidden');
+            return;
+        }
+        const defaultHtml = '<i class="fas fa-right-to-bracket mr-1"></i> Login To My Portal';
+        duplicateEls.loginBtn.disabled = true;
+        duplicateEls.loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Checking...';
+        try {
+            const member = await findMemberByRegAndPhone(selectedDuplicateMember.reg_number, phone);
+            saveDuplicateMemberSession(member);
+            duplicateEls.verifyError.classList.add('hidden');
+            window.location.href = MEMBER_DETAILS_URL;
+        } catch (error) {
+            duplicateEls.verifyError.textContent = 'The phone number does not match this APSG record. Please try again or contact your coordinator.';
+            duplicateEls.verifyError.classList.remove('hidden');
+        } finally {
+            duplicateEls.loginBtn.disabled = false;
+            duplicateEls.loginBtn.innerHTML = defaultHtml;
+        }
+    }
+
+    async function ensurePhoneIsNotAlreadyRegistered() {
+        const phone = document.getElementById('phone').value.trim();
+        if (!phone || duplicateCheckBusy) return true;
+        duplicateCheckBusy = true;
+        try {
+            const matches = await fetchExistingMembersByPhone(phone);
+            if (!matches.length) return true;
+
+            duplicateMatches = matches
+                .map(member => ({ member, score: memberLocalScore(member) }))
+                .sort((a, b) => b.score - a.score)
+                .map(item => item.member)
+                .slice(0, 3);
+            duplicateIndex = 0;
+            duplicateNoCount = 0;
+            selectedDuplicateMember = null;
+            renderDuplicateCandidate();
+            openDuplicateMemberModal();
+            messageDiv.innerHTML = '<div class="bg-yellow-50 text-yellow-900 p-4 rounded-xl border border-yellow-200 font-bold">This phone number already exists in the APSG database. Please confirm the existing record instead of creating a duplicate.</div>';
+            return false;
+        } catch (error) {
+            messageDiv.innerHTML = '<div class="bg-red-50 text-red-800 p-4 rounded-xl">Unable to check duplicate phone number right now. Please try again.</div>';
+            return false;
+        } finally {
+            duplicateCheckBusy = false;
+        }
+    }
+
+    window.closeDuplicateMemberModal = closeDuplicateMemberModal;
+
+    function populatePreview() {
+        formData = {
+            firstName: document.getElementById('firstName').value.trim(),
+            lastName: document.getElementById('lastName').value.trim(),
+            level: levelSelect.options[levelSelect.selectedIndex].text,
+            designation: (window.getDesignationValue ? window.getDesignationValue() : designationSelect.value),
+            phone: document.getElementById('phone').value.trim(),
+            email: document.getElementById('email').value.trim() || 'Not provided',
+            state: stateSelect.value,
+            lga: lgaSelect.value,
+            ward: wardSelect.value,
+            pvc: document.getElementById('pvc').value.trim(),
+            apcCard: document.getElementById('apcCard').value.trim(),
+            pvcFile: document.getElementById('pvcUpload').files[0]?.name || 'No file selected',
+            apcFile: document.getElementById('apcUpload').files[0]?.name || 'No file selected'
+        };
+
+        previewContent.innerHTML = `
+            <div class="space-y-5">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">First Name</strong><br><span class="text-sm font-semibold">${formData.firstName}</span></div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">Last Name</strong><br><span class="text-sm font-semibold">${formData.lastName}</span></div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">Level</strong><br><span class="text-sm font-semibold">${formData.level}</span></div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">Designation</strong><br><span class="text-sm font-semibold">${formData.designation}</span></div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">Phone</strong><br><span class="text-sm font-semibold">${formData.phone}</span></div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">Email</strong><br><span class="text-sm font-semibold">${formData.email}</span></div>
+                </div>
+                <div class="bg-accent-light p-4 rounded-xl border border-primary/10">
+                    <h4 class="font-black text-primary text-base mb-3 text-center">Location Details</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-center">
+                        <div class="bg-white p-3 rounded-xl shadow-sm border border-white"><strong>State</strong><br><span class="text-sm font-black">${formData.state}</span></div>
+                        <div class="bg-white p-3 rounded-xl shadow-sm border border-white"><strong>LGA/LCDA</strong><br><span class="text-sm font-black">${formData.lga}</span></div>
+                        <div class="bg-white p-3 rounded-xl shadow-sm border border-white"><strong>Ward</strong><br><span class="text-sm font-black">${formData.ward}</span></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">PVC Number</strong><br><span class="text-sm font-semibold">${formData.pvc}</span></div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">APC Card Number</strong><br><span class="text-sm font-semibold">${formData.apcCard}</span></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">PVC Upload</strong><br><span class="text-sm font-semibold">${formData.pvcFile}</span></div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">APC Card Upload</strong><br><span class="text-sm font-semibold">${formData.apcFile}</span></div>
+                </div>
+            </div>
+        `;
+    }
+
+    async function submitForm(isDirect = false) {
+        const spinner = isDirect ? directSubmitBtn.querySelector('.spinner') : previewModal.querySelector('.spinner');
+        spinner.style.display = 'inline-block';
+        messageDiv.innerHTML = '';
+
+        try {
+            const canContinue = await ensurePhoneIsNotAlreadyRegistered();
+            if (!canContinue) return;
+            let pvcPath = null;
+            let apcPath = null;
+
+            const pvcFile = document.getElementById('pvcUpload').files[0];
+            if (pvcFile) {
+                const fileExt = pvcFile.name.split('.').pop();
+                const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+                const { data, error } = await supabaseClient.storage.from('uploads').upload(`pvc/${fileName}`, pvcFile);
+                if (error) throw error;
+                const { data: urlData } = supabaseClient.storage.from('uploads').getPublicUrl(`pvc/${fileName}`);
+                pvcPath = urlData.publicUrl;
+            }
+
+            const apcFile = document.getElementById('apcUpload').files[0];
+            if (apcFile) {
+                const fileExt = apcFile.name.split('.').pop();
+                const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+                const { data, error } = await supabaseClient.storage.from('uploads').upload(`apc/${fileName}`, apcFile);
+                if (error) throw error;
+                const { data: urlData } = supabaseClient.storage.from('uploads').getPublicUrl(`apc/${fileName}`);
+                apcPath = urlData.publicUrl;
+            }
+
+            const selectedState = formData ? formData.state : stateSelect.value;
+            const selectedLga = formData ? formData.lga : lgaSelect.value;
+            const stateCode = stateCodes[selectedState] || 'XX';
+            const parentLga = selectedState === 'Lagos' && lagosMapping[selectedLga] ? lagosMapping[selectedLga] : selectedLga;
+            const lgaCode = parentLga.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 3) || 'XXX';
+            const year = new Date().getFullYear();
+            const prefix = `APSG/${stateCode}/${lgaCode}/${year}/`;
+
+            let seq = 1;
+            const { data: existing, error: qError } = await supabaseClient
+                .from('members')
+                .select('reg_number')
+                .like('reg_number', `${prefix}%`)
+                .order('reg_number', { ascending: false })
+                .limit(1);
+            if (qError) throw qError;
+            if (existing && existing.length > 0) {
+                const lastNum = parseInt(existing[0].reg_number.split('/')[4] || '0', 10);
+                seq = lastNum + 1;
+            }
+            const regNumber = `${prefix}${seq.toString().padStart(6, '0')}`;
+
+            const firstName = formData ? formData.firstName : document.getElementById('firstName').value.trim();
+            const lastName = formData ? formData.lastName : document.getElementById('lastName').value.trim();
+
+            const insertData = {
+                reg_number: regNumber,
+                first_name: firstName,
+                last_name: lastName,
+                designation: formData ? formData.designation : (window.getDesignationValue ? window.getDesignationValue() : designationSelect.value),
+                phone: formData ? formData.phone : document.getElementById('phone').value.trim(),
+                email: formData ? (formData.email === 'Not provided' ? null : formData.email) : (document.getElementById('email').value.trim() || null),
+                state: formData ? formData.state : stateSelect.value,
+                lga: formData ? formData.lga : lgaSelect.value,
+                ward: formData ? formData.ward : wardSelect.value,
+                pvc_number: formData ? formData.pvc : document.getElementById('pvc').value.trim(),
+                apc_card_number: formData ? formData.apcCard : document.getElementById('apcCard').value.trim(),
+                pvc_upload_path: pvcPath,
+                apc_upload_path: apcPath,
+                state_code: stateCode,
+                lga_code: lgaCode
+            };
+
+            const { data: inserted, error: insertError } = await supabaseClient
+                .from('members')
+                .insert(insertData)
+                .select()
+                .single();
+
+            if (insertError) throw insertError;
+
+            if (!isDirect) closePreview();
+
+            // Enhanced success with uploads preview and slider
+            let uploadsHTML = '';
+            const uploads = [];
+            if (pvcPath) uploads.push({ url: pvcPath, type: pvcPath.endsWith('.pdf') ? 'pdf' : 'image', label: 'PVC Upload' });
+            if (apcPath) uploads.push({ url: apcPath, type: apcPath.endsWith('.pdf') ? 'pdf' : 'image', label: 'APC Card Upload' });
+
+            if (uploads.length > 0) {
+                uploadsHTML = `
+                    <div class="upload-slider mt-4 bg-white p-3 rounded-2xl shadow border border-primary/10">
+                        <h5 class="font-black text-primary mb-2 text-center text-sm">Your Uploads</h5>
+                        <div class="relative">
+                            <div class="slider-container flex" id="sliderContainer">
+                                ${uploads.map((u, i) => `
+                                    <div class="slider-item">
+                                        <p class="font-semibold mb-2">${u.label}</p>
+                                        ${u.type === 'pdf' ? 
+                                            `<iframe src="${u.url}" class="upload-preview border border-gray-300 rounded-lg" style="height: 220px;"></iframe>
+                                             <p class="mt-2 text-sm"><a href="${u.url}" target="_blank" class="text-primary hover:underline">View/Download PDF</a></p>` : 
+                                            `<img src="${u.url}" alt="${u.label}" class="upload-preview rounded-lg mx-auto">
+                                             <p class="mt-2 text-sm"><a href="${u.url}" target="_blank" class="text-primary hover:underline">View/Download Image</a></p>`}
+                                    </div>
+                                `).join('')}
+                            </div>
+                            ${uploads.length > 1 ? `
+                                <button class="slider-btn slider-btn-left" onclick="slideLeft()"><i class="fas fa-chevron-left"></i></button>
+                                <button class="slider-btn slider-btn-right" onclick="slideRight()"><i class="fas fa-chevron-right"></i></button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            } else {
+                uploadsHTML = '<p class="text-center text-gray-500 mt-3 text-sm">No uploads provided.</p>';
+            }
+
+            const successRecord = {
+                fullName: `${firstName} ${lastName}`.trim() || 'APSG Member',
+                designation: formData ? formData.designation : (window.getDesignationValue ? window.getDesignationValue() : designationSelect.value),
+                phone: formData ? formData.phone : document.getElementById('phone').value.trim(),
+                state: selectedState,
+                lga: selectedLga,
+                ward: formData ? formData.ward : wardSelect.value,
+                submittedAt: new Date().toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' })
+            };
+
+            messageDiv.innerHTML = '';
+            showSuccessModal(regNumber, uploadsHTML, successRecord);
+            form.reset();
+            formData = null;
+            levelSelect.dispatchEvent(new Event('change'));
+            lgaSelect.disabled = true;
+            wardSelect.disabled = true;
+
+            // Initialize slider if exists
+            if (uploads.length > 1) {
+                currentSlide = 0;
+            }
+        } catch (err) {
+            console.error(err);
+            messageDiv.innerHTML = `<div class="bg-red-50 text-red-800 p-6 rounded-xl">Error: ${err.message || 'Submission failed. Please try again.'}</div>`;
+        } finally {
+            spinner.style.display = 'none';
+        }
+    }
+
+
+    function showSuccessModal(regNumber, uploadsHTML, record = {}) {
+        successContent.innerHTML = `
+            <div class="text-center relative">
+                <img src="/assets/images/logo/apsg1.png" alt="APSG watermark" class="success-print-watermark" onerror="this.onerror=null;this.src='/assets/images/logo/apsg.png';" width="96" height="96" decoding="async">
+
+                <div class="official-receipt-brand rounded-2xl p-4 md:p-5 mb-4 text-left">
+                    <div class="relative z-10 flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
+                        <div class="receipt-logo-small shrink-0">
+                            <img src="/assets/images/logo/apsg1.png" alt="APSG Logo" onerror="this.onerror=null;this.src='/assets/images/logo/apsg.png';" width="96" height="96" decoding="async">
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-[11px] uppercase tracking-[0.28em] text-secondary font-black">APC Progressive Support Group</p>
+                            <h4 class="display-font mt-1 text-2xl md:text-3xl font-extrabold text-government-green">Official Membership Certificate</h4>
+                            <p class="mt-1 text-xs md:text-sm text-gray-600">Issued by APSG Nigeria Registration Portal for membership identification and verification record.</p>
+                        </div>
+                        <div class="print-auth-stamp rounded-xl px-3 py-2 text-center">
+                            <p class="text-[10px] uppercase tracking-widest text-government-green font-black">Status</p>
+                            <p class="text-sm font-black text-primary">Captured</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="success-reg-card rounded-2xl p-4 md:p-5 text-white text-center">
+                    <p class="text-[11px] md:text-xs uppercase tracking-[0.24em] text-secondary font-black">Official APSG Registration Number</p>
+                    <h3 class="mt-2 text-xl sm:text-2xl md:text-3xl font-black break-all px-2">${regNumber}</h3>
+                    <button type="button" onclick="copyRegistrationNumber('${regNumber}')" class="mt-3 inline-flex items-center justify-center gap-2 rounded-full bg-secondary px-4 py-2 text-sm font-black text-government-green shadow-gold hover:bg-[#c79718] transition">
+                        <i class="fas fa-copy"></i><span id="copyRegText">Copy Number</span>
+                    </button>
+                    <p class="mt-3 text-xs text-white/65">Save or screenshot this number. It is your unique APSG membership identifier.</p>
+                </div>
+
+                <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+                    <div class="receipt-mini-card"><p class="text-[11px] uppercase tracking-widest text-gray-500 font-black">Member</p><p class="mt-1 font-black text-government-green">${record.fullName || 'APSG Member'}</p></div>
+                    <div class="receipt-mini-card"><p class="text-[11px] uppercase tracking-widest text-gray-500 font-black">Designation</p><p class="mt-1 font-black text-government-green">${record.designation || 'Member'}</p></div>
+                    <div class="receipt-mini-card"><p class="text-[11px] uppercase tracking-widest text-gray-500 font-black">Location</p><p class="mt-1 font-black text-government-green">${record.state || '—'} • ${record.lga || '—'}</p></div>
+                    <div class="receipt-mini-card"><p class="text-[11px] uppercase tracking-widest text-gray-500 font-black">Submitted</p><p class="mt-1 font-black text-government-green">${record.submittedAt || 'Just now'}</p></div>
+                </div>
+
+                <div class="mt-4 rounded-2xl border border-secondary/30 bg-white p-4 text-left">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                        <div class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-accent-light text-primary border border-primary/15">
+                            <i class="fas fa-shield-halved"></i>
+                        </div>
+                        <div>
+                            <p class="font-black text-government-green">Authenticity Notice</p>
+                            <p class="mt-1 text-xs md:text-sm text-gray-600">This receipt carries the APSG logo, official registration number, member details and submission time. Keep a printed or digital copy for future verification.</p>
+                        </div>
+                    </div>
+                </div>
+
+                ${uploadsHTML}
+
+                <div class="compact-luxury-note mt-4 rounded-2xl p-4 text-left">
+                    <p class="font-black text-primary flex items-center gap-2"><i class="fas fa-list-check text-secondary"></i>Next Steps</p>
+                    <div class="mt-3 grid gap-2 text-sm text-gray-700">
+                        <p><strong>1.</strong> Your details will be reviewed by APSG coordinators.</p>
+                        <p><strong>2.</strong> Confirmation may be sent through WhatsApp or email.</p>
+                        <p><strong>3.</strong> Keep your registration number safe for future updates and events.</p>
+                    </div>
+                </div>
+
+                <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <button type="button" onclick="copyRegistrationNumber('${regNumber}')" class="success-action-btn bg-white border border-secondary/35 text-government-green shadow hover:bg-secondary/10">
+                        <i class="fas fa-copy"></i>Copy
+                    </button>
+                    <button type="button" onclick="printSuccessReceipt()" class="success-action-btn bg-secondary text-government-green shadow-gold hover:bg-[#c79718]">
+                        <i class="fas fa-print"></i>Print
+                    </button>
+                    <button type="button" onclick="closeSuccessModal()" class="success-action-btn bg-gradient-to-r from-primary to-accent text-white shadow-royal hover:from-primary-dark hover:to-primary">
+                        Done
+                    </button>
+                </div>
+            </div>
+        `;
+        successModal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+
+    function closeSuccessModal() {
+        successModal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+
+    window.copyRegistrationNumber = async function(regNumber) {
+        try {
+            await navigator.clipboard.writeText(regNumber);
+            const copyText = document.getElementById('copyRegText');
+            if (copyText) copyText.textContent = 'Copied';
+        } catch (e) {
+            const copyText = document.getElementById('copyRegText');
+            if (copyText) copyText.textContent = 'Copy manually';
+        }
+    };
+
+    window.printSuccessReceipt = function() {
+        window.print();
+    };
+
+    window.closeSuccessModal = closeSuccessModal;
+
+    window.slideLeft = function() {
+        const container = document.getElementById('sliderContainer');
+        currentSlide = (currentSlide > 0) ? currentSlide - 1 : container.children.length - 1;
+        container.style.transform = `translateX(-${currentSlide * 100}%)`;
+    };
+
+    window.slideRight = function() {
+        const container = document.getElementById('sliderContainer');
+        currentSlide = (currentSlide < container.children.length - 1) ? currentSlide + 1 : 0;
+        container.style.transform = `translateX(-${currentSlide * 100}%)`;
+    };
+
+
+    duplicateEls.yesBtn?.addEventListener('click', confirmDuplicateYes);
+    duplicateEls.noBtn?.addEventListener('click', confirmDuplicateNo);
+    duplicateEls.loginBtn?.addEventListener('click', verifyDuplicateMemberLogin);
+    duplicateEls.startOverBtn?.addEventListener('click', () => {
+        duplicateIndex = 0;
+        duplicateNoCount = 0;
+        selectedDuplicateMember = null;
+        renderDuplicateCandidate();
+    });
+    duplicateEls.changePhoneBtn?.addEventListener('click', () => {
+        closeDuplicateMemberModal();
+        document.getElementById('phone').focus();
+    });
+    duplicateEls.phoneVerifyInput?.addEventListener('keydown', event => {
+        if (event.key === 'Enter') verifyDuplicateMemberLogin();
+    });
+    document.getElementById('phone')?.addEventListener('blur', async () => {
+        const phone = document.getElementById('phone').value.trim();
+        if (phone && phone.replace(/\D/g, '').length >= 10) {
+            await ensurePhoneIsNotAlreadyRegistered();
+        }
+    });
+
+    // Query prefill: /pages/register.html?state=Ogun&level=state&designation=State%20Coordinator
+    function applyRegistrationQueryPrefill() {
+        const params = new URLSearchParams(location.search);
+        const state = params.get('state');
+        const level = params.get('level');
+        const designation = params.get('designation');
+        if (state && stateSelect) {
+            stateSelect.value = state;
+            stateSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        if (level && levelSelect) {
+            levelSelect.value = level;
+            levelSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        if (designation && designationSelect) {
+            setTimeout(() => {
+                const found = Array.from(designationSelect.options || []).some(opt => opt.value === designation);
+                designationSelect.value = found ? designation : '__custom';
+                designationSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                if (!found && customDesignationInput) customDesignationInput.value = designation;
+            }, 80);
+        }
+    }
+    document.addEventListener('DOMContentLoaded', applyRegistrationQueryPrefill);
+    applyRegistrationQueryPrefill();
+
+    window.closePreview = closePreview;
+    window.submitForm = submitForm;
+</script>
+
+
+    <!-- Navbar & Footer Component JS -->
+    <script type="module" src="/components/navbar.js"></script>
+    <script type="module" src="/components/footer.js"></script>
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

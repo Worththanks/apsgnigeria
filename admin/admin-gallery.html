@@ -1,0 +1,2092 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#05351f" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>Gallery Control Room | APSG Admin</title>
+    <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any" />
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <script>
+      if (localStorage.getItem("daynight-theme") === "carbon") {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="/assets/css/dashboard.css" />
+    <link rel="stylesheet" href="/assets/css/admin-gallery.css" />
+    <style>
+      :root {
+        --deep: #05351f;
+        --deep-2: #031b0f;
+        --green: #0f8a4b;
+        --emerald: #0f766e;
+        --gold: #d6a92b;
+        --gold-soft: #ffe7a3;
+        --cream: #fffaf0;
+        --paper: #fff;
+        --ink: #07140e;
+        --muted: #64746a;
+        --danger: #991b1b;
+        --border: rgba(5, 53, 31, 0.1);
+        --gold-border: rgba(214, 169, 43, 0.25);
+        --shadow-card: 0 18px 52px rgba(5, 53, 31, 0.1);
+        --shadow-premium: 0 34px 110px rgba(5, 53, 31, 0.2);
+        --sidebar: 16rem;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background:
+          radial-gradient(
+            circle at 96% 0,
+            rgba(214, 169, 43, 0.15),
+            transparent 29rem
+          ),
+          radial-gradient(
+            circle at 0 9%,
+            rgba(15, 138, 75, 0.12),
+            transparent 32rem
+          ),
+          linear-gradient(180deg, #f8fbf7 0%, #eef6ef 100%);
+        overflow-x: hidden;
+      }
+      .dark body,
+      html.dark body {
+        background: #06150d;
+        color: #f8fbf7;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      img {
+        display: block;
+        max-width: 100%;
+      }
+      .display-font {
+        font-family: "Playfair Display", Georgia, serif;
+      }
+      .hidden {
+        display: none !important;
+      }
+      .skip-link {
+        position: fixed;
+        left: 1rem;
+        top: 0.85rem;
+        z-index: 1000;
+        transform: translateY(-160%);
+        border-radius: 999px;
+        background: var(--gold);
+        color: var(--deep);
+        padding: 0.65rem 1rem;
+        font-weight: 950;
+        box-shadow: var(--shadow-card);
+        transition: transform 0.18s ease;
+      }
+      .skip-link:focus {
+        transform: translateY(0);
+        outline: 3px solid rgba(214, 169, 43, 0.35);
+        outline-offset: 2px;
+      }
+      .admin-sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        z-index: 50;
+        width: var(--sidebar);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        background: linear-gradient(
+          180deg,
+          #031b0f 0%,
+          #052414 58%,
+          #03140b 100%
+        );
+        color: #fff;
+        box-shadow: 0 22px 70px rgba(0, 0, 0, 0.22);
+        transition: transform 0.28s ease;
+      }
+      .sidebar-brand {
+        position: relative;
+        overflow: hidden;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1rem;
+      }
+      .sidebar-brand:after {
+        content: "";
+        position: absolute;
+        right: -2.4rem;
+        top: -2.6rem;
+        width: 8rem;
+        height: 8rem;
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.18);
+        filter: blur(22px);
+      }
+      .brand-link {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: #fff;
+      }
+      .brand-logo {
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        width: 2.65rem;
+        height: 2.65rem;
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(214, 169, 43, 0.3);
+        box-shadow: 0 12px 34px rgba(0, 0, 0, 0.16);
+      }
+      .brand-logo img {
+        width: auto;
+        height: 1.85rem;
+        object-fit: contain;
+      }
+      .brand-title {
+        display: block;
+        font-weight: 950;
+        font-size: 0.96rem;
+        line-height: 1;
+      }
+      .brand-kicker {
+        display: block;
+        margin-top: 0.22rem;
+        color: var(--gold);
+        font-size: 0.56rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+      }
+      .sidebar-nav {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0.68rem 0.62rem 1rem;
+      }
+      .sidebar-section {
+        padding: 0.55rem 0.5rem 0.32rem;
+        color: rgba(255, 255, 255, 0.38);
+        font-size: 0.54rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.28em;
+      }
+      .sidebar-section.gold {
+        color: rgba(214, 169, 43, 0.82);
+      }
+      .sidebar-link,
+      .admin-sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 0.58rem;
+        min-height: 2.42rem;
+        padding: 0.58rem 0.72rem;
+        border-radius: 1rem;
+        color: rgba(255, 255, 255, 0.84);
+        font-size: 0.74rem;
+        font-weight: 850;
+        line-height: 1;
+        text-decoration: none;
+        border: 0;
+        background: transparent;
+        transition:
+          background 0.18s ease,
+          color 0.18s ease,
+          transform 0.18s ease;
+      }
+      .sidebar-link i,
+      .admin-sidebar-link i {
+        width: 1rem;
+        text-align: center;
+      }
+      .sidebar-link:hover,
+      .sidebar-link.active,
+      .sidebar-link:focus-visible,
+      .admin-sidebar-link:hover,
+      .admin-sidebar-link.active,
+      .admin-sidebar-link:focus-visible {
+        background: rgba(214, 169, 43, 0.14);
+        color: #ffe7a3;
+        transform: translateX(2px);
+        outline: 0;
+      }
+      .role-chip {
+        margin-left: auto;
+        padding: 0.16rem 0.38rem;
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.14);
+        color: #f8dc7a;
+        font-size: 0.5rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+      .role-chip.editor {
+        background: rgba(20, 168, 97, 0.13);
+        color: #abf5ce;
+      }
+      .sidebar-footer {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        background: #041f12;
+        padding: 0.65rem;
+      }
+      .danger-link {
+        color: #fecaca !important;
+        background: rgba(239, 68, 68, 0.08) !important;
+      }
+      .apsg-role-card {
+        margin: 0.65rem;
+        border: 1px solid rgba(214, 169, 43, 0.2);
+        border-radius: 1.1rem;
+        background: rgba(255, 255, 255, 0.06);
+        padding: 0.78rem;
+      }
+      .role-level {
+        display: grid;
+        place-items: center;
+        min-height: 1.45rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 0.54rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .role-level.active {
+        border-color: rgba(214, 169, 43, 0.38);
+        background: rgba(214, 169, 43, 0.18);
+        color: #f8dc7a;
+      }
+      .pulse-dot {
+        width: 0.45rem;
+        height: 0.45rem;
+        border-radius: 999px;
+        background: #10b981;
+        box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.15);
+      }
+      .admin-main {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        margin-left: var(--sidebar);
+      }
+      .mobile-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 45;
+        background: rgba(0, 0, 0, 0.46);
+        backdrop-filter: blur(4px);
+      }
+      .admin-topbar {
+        position: sticky;
+        top: 0;
+        z-index: 35;
+        border-bottom: 1px solid rgba(5, 53, 31, 0.08);
+        background: rgba(255, 255, 255, 0.86);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 10px 28px rgba(5, 53, 31, 0.055);
+      }
+      .topbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.85rem;
+        padding: 0.62rem 1rem;
+      }
+      .mobile-toggle {
+        display: none;
+        place-items: center;
+        width: 2.35rem;
+        height: 2.35rem;
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        border-radius: 0.9rem;
+        background: #fff;
+        color: var(--deep);
+        box-shadow: 0 8px 18px rgba(5, 53, 31, 0.05);
+      }
+      .main-content {
+        width: min(100%, 1660px);
+        margin: 0 auto;
+        padding: 1rem;
+      }
+      .admin-btn,
+      .premium-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.46rem;
+        min-height: 2.32rem;
+        border: 0;
+        border-radius: 999px;
+        padding: 0.55rem 0.9rem;
+        font-size: 0.75rem;
+        font-weight: 950;
+        line-height: 1;
+        text-decoration: none;
+        box-shadow: 0 10px 26px rgba(5, 53, 31, 0.08);
+        transition:
+          transform 0.18s ease,
+          filter 0.18s ease;
+      }
+      .admin-btn:hover,
+      .premium-btn:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.03);
+      }
+      .admin-btn.green,
+      .premium-btn.green {
+        background: linear-gradient(135deg, var(--deep), var(--green));
+        color: #fff;
+      }
+      .admin-btn.gold,
+      .premium-btn.gold {
+        background: linear-gradient(135deg, var(--gold), #ffe08a);
+        color: var(--deep);
+      }
+      .admin-btn.white,
+      .premium-btn.ghost,
+      .admin-btn.ghost {
+        background: #fff;
+        color: var(--deep);
+        border: 1px solid rgba(5, 53, 31, 0.1);
+      }
+      .admin-btn.red {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+      }
+      .admin-btn:disabled,
+      .premium-btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        transform: none !important;
+      }
+      .top-role-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.38rem;
+        min-height: 2.15rem;
+        border: 1px solid rgba(214, 169, 43, 0.22);
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.11);
+        color: #73540c;
+        padding: 0.45rem 0.72rem;
+        font-size: 0.68rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .admin-hero,
+      .admin-card,
+      .admin-stat-card,
+      .drive-import-card,
+      .media-tab-panel,
+      .preview-card,
+      .admin-album-row {
+        border: 1px solid rgba(214, 169, 43, 0.18);
+        background: rgba(255, 255, 255, 0.93);
+        box-shadow: var(--shadow-card);
+        border-radius: 1.35rem;
+      }
+      .admin-hero {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.98),
+          rgba(255, 250, 240, 0.78)
+        );
+        padding: 1rem;
+      }
+      .admin-hero:after {
+        content: "";
+        position: absolute;
+        right: -4rem;
+        top: -5rem;
+        width: 15rem;
+        height: 15rem;
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.2);
+        filter: blur(34px);
+        pointer-events: none;
+      }
+      .hero-grid {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 1rem;
+        align-items: center;
+      }
+      .admin-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        min-height: 1.6rem;
+        border: 1px solid rgba(214, 169, 43, 0.25);
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.1);
+        color: #73540c;
+        padding: 0.32rem 0.68rem;
+        font-size: 0.58rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+      .hero-title {
+        margin: 0.55rem 0 0;
+        color: var(--deep);
+        font-size: clamp(1.8rem, 3vw, 3rem);
+        font-weight: 950;
+        line-height: 0.98;
+        letter-spacing: -0.035em;
+      }
+      .hero-copy {
+        margin: 0.6rem 0 0;
+        max-width: 58rem;
+        color: var(--muted);
+        font-size: 0.88rem;
+        font-weight: 650;
+        line-height: 1.55;
+      }
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.55rem;
+        min-width: 29rem;
+      }
+      .admin-stat-card {
+        padding: 0.85rem;
+        text-align: center;
+      }
+      .admin-stat-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.56rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+      .admin-stat-card strong {
+        display: block;
+        margin-top: 0.18rem;
+        color: var(--deep);
+        font-size: 1.55rem;
+        font-weight: 950;
+        line-height: 1;
+      }
+      .admin-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      .admin-card {
+        padding: 1rem;
+      }
+      .section-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.85rem;
+        margin-bottom: 1rem;
+      }
+      .section-kicker {
+        margin: 0;
+        color: #8a6616;
+        font-size: 0.6rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+      }
+      .section-title {
+        margin: 0.2rem 0 0;
+        color: var(--deep);
+        font-size: 1.35rem;
+        font-weight: 950;
+        line-height: 1.05;
+      }
+      .section-copy {
+        margin: 0.35rem 0 0;
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 650;
+        line-height: 1.45;
+      }
+      .admin-label {
+        display: block;
+        margin: 0 0 0.34rem;
+        color: var(--deep);
+        font-size: 0.63rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+      .admin-input,
+      .admin-select,
+      .admin-textarea {
+        width: 100%;
+        min-height: 2.55rem;
+        border: 1px solid rgba(5, 53, 31, 0.12);
+        border-radius: 0.95rem;
+        background: #fff;
+        color: #102017;
+        padding: 0.68rem 0.78rem;
+        font-size: 0.82rem;
+        font-weight: 750;
+        outline: 0;
+      }
+      .admin-textarea {
+        min-height: 6rem;
+        line-height: 1.5;
+        resize: vertical;
+      }
+      .admin-input:focus,
+      .admin-select:focus,
+      .admin-textarea:focus {
+        border-color: rgba(214, 169, 43, 0.62);
+        box-shadow: 0 0 0 4px rgba(214, 169, 43, 0.14);
+      }
+      .admin-help {
+        margin: 0.3rem 0 0;
+        color: var(--muted);
+        font-size: 0.68rem;
+        font-weight: 750;
+        line-height: 1.35;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.78rem;
+      }
+      .col-span-2 {
+        grid-column: 1/-1;
+      }
+      .drive-import-card {
+        padding: 0.9rem;
+        background: linear-gradient(
+          135deg,
+          rgba(66, 133, 244, 0.08),
+          rgba(255, 255, 255, 0.78)
+        );
+      }
+      .drive-import-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+      .drive-import-head h3 {
+        margin: 0.45rem 0 0.15rem;
+        color: var(--deep);
+        font-size: 1rem;
+        font-weight: 950;
+      }
+      .drive-import-head p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.75rem;
+        font-weight: 650;
+        line-height: 1.45;
+      }
+      .drive-check {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        min-height: 2.15rem;
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        border-radius: 999px;
+        background: #fff;
+        padding: 0.5rem 0.75rem;
+        color: var(--deep);
+        font-size: 0.72rem;
+        font-weight: 900;
+      }
+      .drive-check input {
+        accent-color: var(--gold);
+      }
+      .drive-import-summary {
+        margin: 0.7rem 0 0;
+        border: 1px solid rgba(214, 169, 43, 0.22);
+        border-radius: 0.95rem;
+        background: rgba(214, 169, 43, 0.1);
+        padding: 0.65rem 0.75rem;
+        color: var(--deep);
+        font-size: 0.75rem;
+        font-weight: 850;
+        line-height: 1.35;
+      }
+      .media-upload-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.48rem;
+        margin-bottom: 0.6rem;
+      }
+      .media-tab-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.42rem;
+        min-height: 2.2rem;
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        border-radius: 0.9rem;
+        background: #fff;
+        color: var(--deep);
+        padding: 0.52rem 0.75rem;
+        font-size: 0.74rem;
+        font-weight: 950;
+      }
+      .media-tab-btn.active {
+        background: linear-gradient(135deg, var(--deep), var(--green));
+        color: #fff;
+        border-color: transparent;
+      }
+      .media-tab-panel {
+        display: none;
+        padding: 0.75rem;
+        background: rgba(255, 250, 240, 0.62);
+      }
+      .media-tab-panel.active {
+        display: block;
+      }
+      .media-preview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+        gap: 0.72rem;
+        max-height: 28rem;
+        overflow: auto;
+        padding-right: 0.2rem;
+      }
+      .media-preview-card {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        border-radius: 1rem;
+        background: #fff;
+        box-shadow: 0 12px 28px rgba(5, 53, 31, 0.08);
+      }
+      .media-preview-card img {
+        width: 100%;
+        height: 7.5rem;
+        object-fit: contain;
+        background: #f6fbf7;
+        padding: 0.25rem;
+      }
+      .media-preview-card span {
+        position: absolute;
+        left: 0.55rem;
+        top: 0.55rem;
+        display: grid;
+        place-items: center;
+        width: 1.85rem;
+        height: 1.85rem;
+        border-radius: 999px;
+        background: rgba(5, 53, 31, 0.78);
+        color: #ffe7a3;
+      }
+      .media-preview-card strong {
+        display: block;
+        padding: 0.6rem 0.65rem;
+        color: var(--deep);
+        font-size: 0.72rem;
+        font-weight: 950;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .admin-list {
+        max-height: calc(100vh - 17rem);
+        overflow: auto;
+        padding-right: 0.25rem;
+      }
+      .admin-empty,
+      .admin-loading {
+        border: 1px dashed rgba(5, 53, 31, 0.16);
+        border-radius: 1rem;
+        background: #fff;
+        padding: 1rem;
+        color: var(--muted);
+        font-weight: 800;
+        text-align: center;
+      }
+      .admin-empty i {
+        display: block;
+        color: var(--gold);
+        font-size: 1.8rem;
+        margin-bottom: 0.45rem;
+      }
+      .admin-empty strong {
+        display: block;
+        color: var(--deep);
+        font-size: 0.95rem;
+      }
+      .admin-empty p {
+        margin: 0.25rem 0 0;
+        font-size: 0.76rem;
+        line-height: 1.45;
+      }
+      .gallery-tools {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.55rem;
+        margin-top: 0.9rem;
+      }
+      .gallery-tool {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        border: 1px solid rgba(214, 169, 43, 0.22);
+        background: rgba(255, 255, 255, 0.72);
+        color: var(--deep);
+        border-radius: 1rem;
+        padding: 0.65rem 0.7rem;
+        font-size: 0.7rem;
+        font-weight: 950;
+      }
+      .gallery-tool i {
+        color: var(--gold);
+      }
+      .search-row {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.75rem;
+      }
+      .search-box {
+        position: relative;
+        flex: 1 1 14rem;
+      }
+      .search-box i {
+        position: absolute;
+        left: 0.85rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--green);
+      }
+      .search-box input {
+        width: 100%;
+        min-height: 2.55rem;
+        border: 1px solid rgba(5, 53, 31, 0.12);
+        border-radius: 999px;
+        background: #fff;
+        padding: 0.6rem 0.8rem 0.6rem 2.25rem;
+        font-weight: 800;
+        outline: 0;
+      }
+      .admin-album-row {
+        display: grid;
+        grid-template-columns: 5.8rem minmax(0, 1fr) auto;
+        gap: 0.75rem;
+        align-items: center;
+        padding: 0.72rem;
+        margin-bottom: 0.65rem;
+      }
+      .admin-album-thumb {
+        display: grid;
+        place-items: center;
+        width: 5.8rem;
+        height: 4.8rem;
+        border-radius: 0.95rem;
+        background: linear-gradient(135deg, #f8fbf7, #fffaf0);
+        border: 1px solid rgba(5, 53, 31, 0.08);
+        overflow: hidden;
+        color: var(--gold);
+      }
+      .admin-album-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 0.16rem;
+      }
+      .admin-album-main strong {
+        display: block;
+        color: var(--deep);
+        font-size: 0.9rem;
+        font-weight: 950;
+        line-height: 1.15;
+      }
+     .admin-album-main p {
+  position: relative;
+  margin: 0.22rem 0 0;
+  max-height: calc(1.35em * 2);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 650;
+  line-height: 1.35;
+  overflow: hidden;
+}
+
+.admin-album-main p::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 38%;
+  height: 1.35em;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.96) 72%
+  );
+  pointer-events: none;
+}
+
+.dark .admin-album-main p::after {
+  background: linear-gradient(
+    90deg,
+    rgba(7, 23, 14, 0),
+    rgba(7, 23, 14, 0.96) 72%
+  );
+}
+      .admin-album-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.38rem;
+        margin-top: 0.48rem;
+      }
+      .admin-album-meta span,
+      .admin-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        border-radius: 999px;
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        background: #f8fbf7;
+        color: var(--deep);
+        padding: 0.28rem 0.46rem;
+        font-size: 0.6rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .admin-status.published {
+        background: #ecfdf5;
+        color: #047857;
+        border-color: #bbf7d0;
+      }
+      .admin-status.draft {
+        background: #fff7ed;
+        color: #b45309;
+        border-color: #fed7aa;
+      }
+      .admin-album-actions {
+        display: flex;
+        gap: 0.35rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      .admin-icon-btn {
+        display: grid;
+        place-items: center;
+        width: 2.08rem;
+        height: 2.08rem;
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        border-radius: 0.75rem;
+        background: #fff;
+        color: var(--deep);
+      }
+      .admin-icon-btn.view {
+        color: #047857;
+      }
+      .admin-icon-btn.edit {
+        color: #0f766e;
+      }
+      .admin-icon-btn.import {
+        color: #8a6616;
+      }
+      .admin-icon-btn.delete {
+        color: #991b1b;
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 1rem;
+        z-index: 1100;
+        display: none;
+        transform: translateX(-50%);
+        max-width: min(92vw, 34rem);
+        border: 1px solid rgba(214, 169, 43, 0.28);
+        border-radius: 1rem;
+        background: var(--deep);
+        color: #fff;
+        padding: 0.85rem 1rem;
+        font-weight: 900;
+        box-shadow: var(--shadow-premium);
+      }
+      .toast.show {
+        display: block;
+      }
+      .toast.error {
+        background: #7f1d1d;
+      }
+      .access-gate {
+        position: fixed;
+        left: 50%;
+        top: 0.85rem;
+        z-index: 900;
+        width: min(92vw, 44rem);
+        transform: translateX(-50%);
+        border: 1px solid rgba(214, 169, 43, 0.34);
+        border-radius: 1.15rem;
+        background: rgba(255, 255, 255, 0.97);
+        color: var(--deep);
+        padding: 0.9rem 1rem;
+        box-shadow: var(--shadow-premium);
+        font-weight: 850;
+      }
+      .access-gate.danger {
+        border-color: #fecaca;
+        background: #fff1f2;
+        color: #991b1b;
+      }
+      .access-gate.success {
+        border-color: rgba(16, 185, 129, 0.24);
+        background: #f0fdf4;
+        color: #065f46;
+      }
+      .access-gate strong {
+        display: block;
+        font-weight: 950;
+        margin-bottom: 0.12rem;
+      }
+      body[data-gallery-access="blocked"] #galleryForm {
+        opacity: 0.7;
+      }
+      body[data-gallery-access="blocked"] #galleryForm input,
+      body[data-gallery-access="blocked"] #galleryForm select,
+      body[data-gallery-access="blocked"] #galleryForm textarea {
+        cursor: not-allowed;
+      }
+      .dark .admin-topbar,
+      .dark .admin-hero,
+      .dark .admin-card,
+      .dark .admin-stat-card,
+      .dark .drive-import-card,
+      .dark .media-tab-panel,
+      .dark .admin-album-row,
+      .dark .preview-card {
+        background: rgba(7, 23, 14, 0.88);
+        border-color: rgba(214, 169, 43, 0.16);
+      }
+      .dark .section-title,
+      .dark .hero-title,
+      .dark .admin-stat-card strong,
+      .dark .admin-label,
+      .dark .admin-album-main strong {
+        color: #fff;
+      }
+      .dark .hero-copy,
+      .dark .section-copy,
+      .dark .admin-help,
+      .dark .admin-album-main p {
+        color: rgba(255, 255, 255, 0.65);
+      }
+      .dark .admin-input,
+      .dark .admin-select,
+      .dark .admin-textarea,
+      .dark .search-box input {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.12);
+        color: #fff;
+      }
+      .dark .admin-btn.white,
+      .dark .admin-empty,
+      .dark .admin-loading,
+      .dark .media-preview-card,
+      .dark .admin-icon-btn,
+      .dark .search-box input,
+      .dark .drive-check {
+        background: rgba(255, 255, 255, 0.07);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.12);
+      }
+      .dark .access-gate {
+        background: rgba(7, 23, 14, 0.96);
+        color: #fff;
+        border-color: rgba(214, 169, 43, 0.22);
+      }
+      .dark .access-gate.danger {
+        background: #2a1010;
+        color: #fecaca;
+      }
+      .dark .access-gate.success {
+        background: #062f1c;
+        color: #bbf7d0;
+      }
+      @media (max-width: 1180px) {
+        .admin-grid {
+          grid-template-columns: 1fr;
+        }
+        .hero-grid {
+          grid-template-columns: 1fr;
+        }
+        .stats-grid {
+          min-width: 0;
+          width: 100%;
+        }
+        .admin-list {
+          max-height: none;
+        }
+        .gallery-tools {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 767px) {
+        .admin-sidebar {
+          transform: translateX(-100%);
+        }
+        .admin-sidebar.open {
+          transform: translateX(0);
+        }
+        .admin-main {
+          margin-left: 0;
+        }
+        .mobile-toggle {
+          display: grid;
+        }
+        .main-content {
+          padding: 0.75rem;
+        }
+        .topbar-inner {
+          padding: 0.55rem 0.75rem;
+        }
+        .hide-sm {
+          display: none !important;
+        }
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+        .stats-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .admin-album-row {
+          grid-template-columns: 4.8rem minmax(0, 1fr);
+        }
+        .admin-album-thumb {
+          width: 4.8rem;
+          height: 4.4rem;
+        }
+        .admin-album-actions {
+          grid-column: 1/-1;
+          justify-content: stretch;
+        }
+        .admin-icon-btn {
+          flex: 1;
+        }
+        .gallery-tools {
+          grid-template-columns: 1fr;
+        }
+        .drive-import-head {
+          display: block;
+        }
+      }
+      @media (print) {
+        .admin-sidebar,
+        .admin-topbar,
+        .mobile-overlay,
+        .admin-btn,
+        .toast,
+        .access-gate,
+        .no-print {
+          display: none !important;
+        }
+        .admin-main {
+          margin-left: 0;
+        }
+        .main-content {
+          padding: 0;
+        }
+        .admin-hero,
+        .admin-card {
+          box-shadow: none !important;
+          border: 1px solid #ddd !important;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="/assets/css/admin-unified.css">
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+</head>
+  <body>
+    <a href="#galleryForm" class="skip-link">Skip to album editor</a>
+    <div
+      id="galleryAccessGate"
+      class="access-gate hidden"
+      role="status"
+      aria-live="polite"
+    ></div>
+    <div
+      id="mobileAdminOverlay"
+      class="mobile-overlay hidden"
+      onclick="toggleAdminSidebar(false)"
+      aria-hidden="true"
+    ></div>
+
+    <aside
+      id="adminSidebar"
+      class="admin-sidebar"
+      aria-label="APSG Admin Sidebar"
+    >
+      <div class="sidebar-brand">
+        <a
+          href="/admin/dashboard.html"
+          class="brand-link"
+          aria-label="APSG Admin Dashboard"
+        >
+          <span class="brand-logo"
+            ><img
+              src="/assets/images/logo/apsg.png"
+              alt="APSG"
+              onerror="this.src = '/assets/images/logo/apsg1.png'"
+          width="96" height="96" decoding="async"></span>
+          <span
+            ><span class="brand-title">APSG Admin</span
+            ><span class="brand-kicker">Gallery Control</span></span
+          >
+        </a>
+      </div>
+      <nav class="sidebar-nav apsg-role-sidebar" aria-label="Admin navigation">
+        <p class="sidebar-section">Command Center</p>
+        <a
+          href="/admin/dashboard.html"
+          class="sidebar-link"
+          data-access="viewer,editor,admin,superadmin"
+          ><i class="fas fa-chart-pie"></i><span>Dashboard</span
+          ><span class="role-chip">Admin</span></a
+        >
+        <a
+          href="/admin/members.html"
+          class="sidebar-link"
+          data-access="admin,superadmin"
+          ><i class="fas fa-users"></i><span>Members</span
+          ><span class="role-chip">Admin</span></a
+        >
+        <a
+          href="/admin/account-details.html"
+          class="sidebar-link"
+          data-access="admin,superadmin"
+          ><i class="fas fa-building-columns"></i><span>Account Details</span
+          ><span class="role-chip">Admin</span></a
+        >
+        <a
+          href="/admin/admin-leadership.html"
+          class="sidebar-link"
+          data-access="admin,superadmin"
+          ><i class="fa-solid fa-users-viewfinder"></i
+          ><span>Leadership Desk</span><span class="role-chip">Admin</span></a
+        >
+        <a
+          href="/admin/admin-official-create.html"
+          class="sidebar-link"
+          data-access="admin,superadmin"
+          ><i class="fa-solid fa-user-pen"></i><span>Create / Update</span
+          ><span class="role-chip">Admin</span></a
+        >
+        <a
+          href="/admin/admin-officials-manager.html"
+          class="sidebar-link"
+          data-access="admin,superadmin"
+          ><i class="fa-solid fa-table-list"></i><span>Officials Manager</span
+          ><span class="role-chip">Admin</span></a
+        >
+        <a
+          href="/admin/member-details.html"
+          class="sidebar-link"
+          data-access="admin,superadmin"
+          ><i class="fas fa-id-card-clip"></i><span>Member Dossier</span
+          ><span class="role-chip">Admin</span></a
+        >
+        <a
+          href="/admin/edit-member.html"
+          class="sidebar-link"
+          data-access="admin,superadmin"
+          ><i class="fas fa-user-pen"></i><span>Edit Member</span
+          ><span class="role-chip">Admin</span></a
+        >
+        <p class="sidebar-section gold">Publishing Desk</p>
+        <a
+          href="/admin/admin-blog.html"
+          class="sidebar-link"
+          data-access="editor,admin,superadmin"
+          ><i class="fas fa-newspaper"></i><span>News & Updates</span
+          ><span class="role-chip editor">Editor</span></a
+        >
+        <a
+          href="/admin/admin-meeting.html"
+          class="sidebar-link"
+          data-access="editor,admin,superadmin"
+          ><i class="fas fa-users-line"></i><span>Meetings</span
+          ><span class="role-chip editor">Editor</span></a
+        >
+        <a
+          href="/admin/admin-event.html"
+          class="sidebar-link"
+          data-access="editor,admin,superadmin"
+          ><i class="fas fa-calendar-check"></i><span>Events</span
+          ><span class="role-chip editor">Editor</span></a
+        >
+        <a
+          href="/admin/admin-gallery.html"
+          class="sidebar-link active"
+          data-access="editor,admin,superadmin"
+          aria-current="page"
+          ><i class="fa-solid fa-images"></i><span>Gallery Albums</span
+          ><span class="role-chip editor">Editor</span></a
+        >
+        <p class="sidebar-section">Public Review</p>
+        <a
+          href="/pages/blog.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View Blog</span></a
+        >
+        <a
+          href="/pages/meetings.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View Meetings</span></a
+        >
+        <a
+          href="/pages/events.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View Events</span></a
+        >
+        <a
+          href="/pages/gallery.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View Gallery</span></a
+        >
+        <a
+          href="/pages/leadership.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View Leadership</span></a
+        >
+        <a
+          href="/pages/bot.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View BOT</span></a
+        >
+        <a
+          href="/pages/cwdi.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View CWDI</span></a
+        >
+        <a
+          href="/pages/mp.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View Matrons & Patrons</span></a
+        >
+        <a
+          href="/pages/nat-exec.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View NATEXCO</span></a
+        >
+        <a
+          href="/pages/state.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View State Executives</span></a
+        >
+      </nav>
+      <div class="apsg-role-card">
+        <div style="display: flex; align-items: center; gap: 0.65rem">
+          <div
+            style="
+              display: grid;
+              place-items: center;
+              width: 2rem;
+              height: 2rem;
+              border-radius: 0.8rem;
+              background: var(--gold);
+              color: var(--deep);
+            "
+          >
+            <i class="fas fa-user-shield"></i>
+          </div>
+          <div style="min-width: 0">
+            <p style="margin: 0; font-size: 0.68rem; font-weight: 950">
+              Role Access
+            </p>
+            <p
+              style="
+                margin: 0.12rem 0 0;
+                color: rgba(255, 255, 255, 0.56);
+                font-size: 0.62rem;
+                font-weight: 700;
+              "
+            >
+              <span id="adminRoleLabel">Resolving role</span>
+            </p>
+          </div>
+        </div>
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.38rem;
+            margin-top: 0.65rem;
+          "
+        >
+          <span class="role-level" data-role-level="viewer">Viewer</span
+          ><span class="role-level" data-role-level="editor">Editor</span
+          ><span class="role-level" data-role-level="admin">Admin</span
+          ><span class="role-level" data-role-level="superadmin"
+            >Superadmin</span
+          >
+        </div>
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.65rem;
+            border-radius: 0.85rem;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.55rem 0.65rem;
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 0.62rem;
+            font-weight: 750;
+          "
+        >
+          <span class="pulse-dot"></span
+          ><span>Authenticated admin session</span>
+        </div>
+      </div>
+      <div class="sidebar-footer">
+        <button
+          onclick="logout()"
+          class="sidebar-link danger-link"
+          type="button"
+          style="width: 100%"
+        >
+          <i class="fas fa-right-from-bracket"></i><span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div class="topbar-inner">
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              gap: 0.75rem;
+              min-width: 0;
+            "
+          >
+            <button
+              class="mobile-toggle"
+              type="button"
+              onclick="toggleAdminSidebar(true)"
+              aria-label="Open sidebar"
+            >
+              <i class="fa-solid fa-bars"></i>
+            </button>
+            <div style="min-width: 0">
+              <p
+                style="
+                  margin: 0;
+                  color: #8a6616;
+                  font-size: 0.6rem;
+                  font-weight: 950;
+                  text-transform: uppercase;
+                  letter-spacing: 0.24em;
+                "
+              >
+                APSG Media Desk
+              </p>
+              <h1
+                style="
+                  margin: 0.12rem 0 0;
+                  color: var(--deep);
+                  font-size: 1.05rem;
+                  font-weight: 950;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
+                Gallery Control Room
+              </h1>
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+              flex-wrap: wrap;
+              justify-content: flex-end;
+            "
+          >
+            <span id="topRoleBadge" class="top-role-badge hide-sm"
+              ><i class="fas fa-user-shield"></i>Checking role</span
+            >
+            <button
+              type="button"
+              class="admin-btn white"
+              onclick="setGalleryTheme('snow')"
+              aria-label="Light mode"
+            >
+              <i class="fas fa-sun"></i>
+            </button>
+            <button
+              type="button"
+              class="admin-btn white"
+              onclick="setGalleryTheme('carbon')"
+              aria-label="Dark mode"
+            >
+              <i class="fas fa-moon"></i>
+            </button>
+            <a
+              href="/pages/gallery.html"
+              target="_blank"
+              rel="noopener"
+              class="admin-btn white hide-sm"
+              ><i class="fa-solid fa-arrow-up-right-from-square"></i>Public
+              Gallery</a
+            >
+            <a
+              href="https://drive.google.com"
+              target="_blank"
+              rel="noopener"
+              class="admin-btn gold hide-sm"
+              ><i class="fa-brands fa-google-drive"></i>Drive</a
+            >
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <section class="admin-hero">
+          <div class="hero-grid">
+            <div>
+              <span class="admin-chip"
+                ><i class="fa-solid fa-layer-group"></i> Premium Media Control
+                Room</span
+              >
+              <h2 class="display-font hero-title">
+                Official Gallery Publishing Desk
+              </h2>
+              <p class="hero-copy">
+                Create, import, preview and publish APSG photo/video albums from
+                Google Drive links. Albums are grouped by event and public media
+                names are generated automatically from the folder title.
+              </p>
+              <div class="gallery-tools no-print">
+                <span class="gallery-tool"
+                  ><i class="fa-brands fa-google-drive"></i> Drive folder
+                  import</span
+                >
+                <span class="gallery-tool"
+                  ><i class="fa-solid fa-wand-magic-sparkles"></i> Auto serial
+                  naming</span
+                >
+                <span class="gallery-tool"
+                  ><i class="fa-solid fa-photo-film"></i> Photo/video
+                  support</span
+                >
+                <span class="gallery-tool"
+                  ><i class="fa-solid fa-shield-halved"></i> Role
+                  protected</span
+                >
+              </div>
+            </div>
+            <div class="stats-grid">
+              <div class="admin-stat-card">
+                <p>Total Albums</p>
+                <strong data-admin-gallery-stat="albums">0</strong>
+              </div>
+              <div class="admin-stat-card">
+                <p>Published</p>
+                <strong data-admin-gallery-stat="published">0</strong>
+              </div>
+              <div class="admin-stat-card">
+                <p>Photos</p>
+                <strong data-admin-gallery-stat="photos">0</strong>
+              </div>
+              <div class="admin-stat-card">
+                <p>Videos</p>
+                <strong data-admin-gallery-stat="videos">0</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="admin-grid">
+          <section class="admin-card">
+            <div class="section-head">
+              <div>
+                <p class="section-kicker">Album Upload Desk</p>
+                <h2 class="display-font section-title">
+                  Create / Update Album
+                </h2>
+                <p class="section-copy">
+                  Paste Drive links, import folders, preview media and publish
+                  to the public gallery.
+                </p>
+              </div>
+              <span class="admin-chip"
+                ><i class="fa-solid fa-bolt"></i> Premium Mode</span
+              >
+            </div>
+
+            <form id="galleryForm" class="form-grid" autocomplete="off">
+              <div>
+                <label class="admin-label" for="albumTitle">Album Title</label
+                ><input
+                  id="albumTitle"
+                  class="admin-input"
+                  required
+                  placeholder="Lagos State Inauguration Gallery"
+                />
+              </div>
+              <div>
+                <label class="admin-label" for="albumSlug">Slug</label
+                ><input
+                  id="albumSlug"
+                  class="admin-input"
+                  placeholder="auto-generated"
+                />
+              </div>
+              <div>
+                <label class="admin-label" for="eventTitle"
+                  >Event / Group Name</label
+                ><input
+                  id="eventTitle"
+                  class="admin-input"
+                  placeholder="Lagos State Inauguration"
+                />
+              </div>
+              <div>
+                <label class="admin-label" for="folderName"
+                  >Automatic Public Name Prefix</label
+                ><input
+                  id="folderName"
+                  class="admin-input"
+                  placeholder="Folder name used for serial naming"
+                />
+                <p class="admin-help">
+                  Example: Lagos State Inauguration 01, Lagos State Inauguration
+                  02.
+                </p>
+              </div>
+              <div>
+                <label class="admin-label" for="albumCategory">Category</label
+                ><input
+                  id="albumCategory"
+                  class="admin-input"
+                  value="Event Gallery"
+                />
+              </div>
+              <div>
+                <label class="admin-label" for="eventDate">Event Date</label
+                ><input id="eventDate" type="date" class="admin-input" />
+              </div>
+              <div>
+                <label class="admin-label" for="venue">Venue</label
+                ><input
+                  id="venue"
+                  class="admin-input"
+                  placeholder="Venue / State / Location"
+                />
+              </div>
+              <div>
+                <label class="admin-label" for="status">Status</label
+                ><select id="status" class="admin-select">
+                  <option value="published">Published</option>
+                  <option value="draft">Draft</option>
+                </select>
+              </div>
+              <div class="col-span-2">
+                <label class="admin-label" for="albumDescription"
+                  >Description</label
+                ><textarea
+                  id="albumDescription"
+                  class="admin-textarea"
+                  rows="3"
+                  placeholder="Describe the event album..."
+                ></textarea>
+              </div>
+              <div class="col-span-2">
+                <label class="admin-label" for="driveFolderUrl"
+                  >Google Drive Folder URL</label
+                ><input
+                  id="driveFolderUrl"
+                  class="admin-input"
+                  placeholder="https://drive.google.com/drive/folders/..."
+                />
+                <p class="admin-help">
+                  Make the Drive folder public: Anyone with the link can view.
+                </p>
+              </div>
+
+              <div class="col-span-2 drive-import-card">
+                <div class="drive-import-head">
+                  <div>
+                    <span class="admin-chip"
+                      ><i class="fa-brands fa-google-drive"></i> One-click
+                      Folder Import</span
+                    >
+                    <h3>Import event-folder media</h3>
+                    <p>
+                      Paste one public Drive folder link, import images/videos,
+                      then save them under this album.
+                    </p>
+                  </div>
+                </div>
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: minmax(0, 1fr) auto auto;
+                    gap: 0.55rem;
+                    align-items: end;
+                    margin-top: 0.75rem;
+                  "
+                >
+                  <div>
+                    <label class="admin-label" for="driveApiKey"
+                      >Google Drive API Key</label
+                    ><input
+                      id="driveApiKey"
+                      class="admin-input"
+                      type="password"
+                      autocomplete="off"
+                      placeholder="Restricted browser API key for Google Drive API"
+                    />
+                    <p class="admin-help">
+                      Use a restricted browser key. Restrict it to your website
+                      domain in Google Cloud.
+                    </p>
+                  </div>
+                  <button
+                    id="saveDriveKeyBtn"
+                    class="admin-btn white"
+                    type="button"
+                  >
+                    <i class="fa-solid fa-key"></i>Save Key
+                  </button>
+                  <button
+                    id="importFolderBtn"
+                    class="admin-btn gold"
+                    type="button"
+                  >
+                    <i class="fa-brands fa-google-drive"></i>Import
+                  </button>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: center;
+                    gap: 0.55rem;
+                    margin-top: 0.65rem;
+                  "
+                >
+                  <label class="drive-check"
+                    ><input id="autoImportFolder" type="checkbox" checked />
+                    Auto-import on save when manual links are empty</label
+                  >
+                  <button
+                    id="clearFolderImportBtn"
+                    class="admin-btn white"
+                    type="button"
+                  >
+                    <i class="fa-solid fa-broom"></i>Clear Preview
+                  </button>
+                </div>
+                <p id="folderImportSummary" class="drive-import-summary">
+                  <i class="fa-brands fa-google-drive"></i> Paste a public
+                  folder link and click Import.
+                </p>
+              </div>
+
+              <div class="col-span-2">
+                <label class="admin-label" for="coverImageUrl"
+                  >Cover Image URL</label
+                ><input
+                  id="coverImageUrl"
+                  class="admin-input"
+                  placeholder="Optional. First photo becomes cover if blank."
+                />
+              </div>
+              <div class="col-span-2">
+                <label class="admin-label"
+                  >Multiple Media Upload From Google Drive Links</label
+                >
+                <div class="media-upload-tabs">
+                  <button
+                    type="button"
+                    class="media-tab-btn active"
+                    data-media-tab="photos"
+                  >
+                    <i class="fa-solid fa-images"></i> Photos
+                  </button>
+                  <button
+                    type="button"
+                    class="media-tab-btn"
+                    data-media-tab="videos"
+                  >
+                    <i class="fa-solid fa-video"></i> Videos
+                  </button>
+                  <button
+                    type="button"
+                    class="media-tab-btn"
+                    data-media-tab="mixed"
+                  >
+                    <i class="fa-solid fa-list"></i> Mixed
+                  </button>
+                </div>
+                <div class="media-tab-panel active" data-media-panel="photos">
+                  <textarea
+                    id="photoLinks"
+                    class="admin-textarea"
+                    rows="5"
+                    placeholder="Paste one Google Drive photo link per line"
+                  ></textarea>
+                  <p class="admin-help">
+                    Photo names will be generated automatically from the folder
+                    name and serial numbers.
+                  </p>
+                </div>
+                <div class="media-tab-panel" data-media-panel="videos">
+                  <textarea
+                    id="videoLinks"
+                    class="admin-textarea"
+                    rows="5"
+                    placeholder="Paste one Google Drive video link per line"
+                  ></textarea>
+                  <p class="admin-help">
+                    Videos open in the public gallery lightbox using Google
+                    Drive preview.
+                  </p>
+                </div>
+                <div class="media-tab-panel" data-media-panel="mixed">
+                  <textarea
+                    id="mediaLines"
+                    class="admin-textarea"
+                    rows="5"
+                    placeholder="Optional advanced format: URL | Caption | image/video"
+                  ></textarea>
+                  <p class="admin-help">
+                    Captions are optional. Public titles still use automatic
+                    folder serial naming.
+                  </p>
+                </div>
+              </div>
+              <div style="display: flex; align-items: end">
+                <label class="drive-check" style="border-radius: 1rem"
+                  ><input id="isFeatured" type="checkbox" /> Featured
+                  Album</label
+                >
+              </div>
+              <div
+                style="
+                  display: flex;
+                  align-items: end;
+                  justify-content: flex-end;
+                "
+              >
+                <p
+                  id="mediaUploadSummary"
+                  class="admin-help"
+                  style="margin-bottom: 0.55rem"
+                >
+                  0 items parsed
+                </p>
+              </div>
+              <div
+                class="col-span-2"
+                style="
+                  display: flex;
+                  flex-wrap: wrap;
+                  gap: 0.55rem;
+                  padding-top: 0.2rem;
+                "
+              >
+                <button
+                  id="saveGalleryBtn"
+                  class="admin-btn green"
+                  type="submit"
+                >
+                  <i class="fa-solid fa-floppy-disk"></i
+                  ><span id="saveGalleryBtnText">Save Album</span>
+                </button>
+                <button
+                  id="resetGalleryBtn"
+                  class="admin-btn white"
+                  type="button"
+                >
+                  <i class="fa-solid fa-rotate-left"></i>Reset
+                </button>
+                <button
+                  id="publishGalleryBtn"
+                  class="admin-btn gold"
+                  type="button"
+                >
+                  <i class="fa-solid fa-bullhorn"></i>Publish
+                </button>
+                <a
+                  href="/pages/gallery.html"
+                  target="_blank"
+                  rel="noopener"
+                  class="admin-btn white"
+                  ><i class="fa-solid fa-eye"></i>View Gallery</a
+                >
+              </div>
+            </form>
+
+            <div style="margin-top: 1rem">
+              <div class="section-head" style="margin-bottom: 0.75rem">
+                <div>
+                  <p class="section-kicker">Live Upload Preview</p>
+                  <h3 class="section-title" style="font-size: 1.1rem">
+                    Auto-named media preview
+                  </h3>
+                </div>
+                <span class="admin-chip"
+                  ><i class="fa-solid fa-wand-magic-sparkles"></i> Auto
+                  Named</span
+                >
+              </div>
+              <div id="mediaPreview" class="media-preview-grid"></div>
+            </div>
+          </section>
+
+          <aside class="admin-card">
+            <div class="section-head">
+              <div>
+                <p class="section-kicker">Album Records</p>
+                <h2 class="display-font section-title">Manage Albums</h2>
+                <p class="section-copy">
+                  Edit, re-import, delete, preview and manage albums.
+                </p>
+              </div>
+              <a
+                class="admin-btn white no-print"
+                href="/pages/gallery.html"
+                target="_blank"
+                rel="noopener"
+                ><i class="fa-solid fa-arrow-up-right-from-square"></i>Public</a
+              >
+            </div>
+            <div class="search-row">
+              <div class="search-box">
+                <i class="fa-solid fa-search"></i
+                ><input
+                  id="gallerySearchInput"
+                  placeholder="Search albums, venue, category..."
+                />
+              </div>
+              <select
+                id="galleryFilter"
+                class="admin-select"
+                style="max-width: 11rem"
+              >
+                <option value="all">All Albums</option>
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+              </select>
+            </div>
+            <div id="galleryAlbumList" class="admin-list"></div>
+          </aside>
+        </div>
+      </main>
+    </div>
+
+    <div id="galleryToast" class="toast"></div>
+    <script src="/assets/js/supabase-clients.js"></script>
+  <script src="/assets/js/apsg-settings.js"></script>
+    <script src="/assets/js/admin-auth.js"></script>
+    <script src="/assets/js/gallery-config.js"></script>
+    <script src="/assets/js/google-drive-folder-loader.js"></script>
+    <script src="/assets/js/gallery-manager.js"></script>
+    <script>
+      (function () {
+        const $ = (id) => document.getElementById(id);
+        function setGalleryTheme(mode) {
+          if (mode === "carbon") {
+            document.documentElement.classList.add("dark");
+            localStorage.setItem("daynight-theme", "carbon");
+          } else {
+            document.documentElement.classList.remove("dark");
+            localStorage.setItem("daynight-theme", "snow");
+          }
+        }
+        function toggleAdminSidebar(show) {
+          const sidebar = $("adminSidebar"),
+            overlay = $("mobileAdminOverlay");
+          if (!sidebar || !overlay) return;
+          sidebar.classList.toggle("open", Boolean(show));
+          sidebar.classList.toggle("-translate-x-full", !show);
+          overlay.classList.toggle("hidden", !show);
+        }
+        async function logout() {
+          const client =
+            window.supabaseClient ||
+            window.apsgSupabase ||
+            window.APSG_SUPABASE;
+          if (client?.auth) await client.auth.signOut();
+          location.href = "/admin/login.html";
+        }
+        function setRoleUi(role) {
+          role = String(role || "viewer").toLowerCase();
+          const label = $("adminRoleLabel");
+          if (label) label.textContent = role;
+          const top = $("topRoleBadge");
+          if (top) top.innerHTML = '<i class="fas fa-user-shield"></i>' + role;
+          document
+            .querySelectorAll("[data-role-level]")
+            .forEach((el) =>
+              el.classList.toggle("active", el.dataset.roleLevel === role),
+            );
+          document.querySelectorAll("[data-access]").forEach((link) => {
+            const allowed = String(link.dataset.access || "")
+              .split(",")
+              .map((x) => x.trim().toLowerCase())
+              .filter(Boolean);
+            link.hidden = Boolean(allowed.length && !allowed.includes(role));
+          });
+        }
+        async function resolveRoleUi() {
+          let role = "viewer";
+          try {
+            const client =
+              window.supabaseClient ||
+              window.apsgSupabase ||
+              window.APSG_SUPABASE;
+            if (client?.auth?.getSession) {
+              const session = (await client.auth.getSession())?.data?.session;
+              const email = String(session?.user?.email || "").toLowerCase();
+              if (session?.user) {
+                const fields = "id,user_id,email,role,is_active,status";
+                let res = await client
+                  .from("admin_profiles")
+                  .select(fields)
+                  .eq("id", session.user.id)
+                  .limit(1)
+                  .maybeSingle();
+                if (!res?.data)
+                  res = await client
+                    .from("admin_profiles")
+                    .select(fields)
+                    .eq("user_id", session.user.id)
+                    .limit(1)
+                    .maybeSingle();
+                if (!res?.data && email)
+                  res = await client
+                    .from("admin_profiles")
+                    .select(fields)
+                    .ilike("email", email)
+                    .limit(1)
+                    .maybeSingle();
+                if (
+                  res?.data &&
+                  res.data.is_active !== false &&
+                  String(res.data.status || "active").toLowerCase() !==
+                    "inactive"
+                )
+                  role = String(res.data.role || "viewer").toLowerCase();
+              }
+            }
+          } catch (e) {
+            console.warn("Role UI check failed", e);
+          }
+          setRoleUi(role);
+        }
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") toggleAdminSidebar(false);
+        });
+        document.addEventListener("DOMContentLoaded", resolveRoleUi);
+        window.toggleAdminSidebar = toggleAdminSidebar;
+        window.logout = logout;
+        window.setGalleryTheme = setGalleryTheme;
+      })();
+    </script>
+    <script src="/assets/js/admin-unified.js" defer></script>
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

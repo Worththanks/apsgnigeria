@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#05351f" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any" />
+  <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <link rel="stylesheet" href="/components/navbar.css" />
+  <link rel="stylesheet" href="/components/footer.css" />
+  <link rel="stylesheet" href="/assets/css/apsg-involvement.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase-clients.js"></script>
+  <script src="/assets/js/apsg-settings.js"></script>
+  <script src="/assets/js/apsg-analytics-tracker.js" defer></script>
+  <script src="/assets/js/apsg-involvement-system.js" defer></script>
+  <meta name="description" content="Apply to volunteer for APSG mobilisation, media, logistics, welfare, protocol, data and event support roles." />
+  <meta property="og:title" content="Volunteer With APSG | APSG Nigeria" />
+  <meta property="og:description" content="Apply to volunteer for APSG mobilisation, media, logistics, welfare, protocol, data and event support roles." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://apsgnigeria.org/assets/images/logo/apsg1.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href="https://apsgnigeria.org/pages/volunteer.html" />
+  <title>Volunteer With APSG | APSG Nigeria</title>
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+  <meta name="keywords" content="APSG Nigeria, APC Progressive Support Group, APC support group, grassroots mobilisation, CWDI, Nigeria politics, APSG membership">
+  <meta property="og:site_name" content="APSG Nigeria">
+  <meta property="og:url" content="https://apsgnigeria.org/pages/volunteer.html">
+  <meta name="twitter:title" content="Volunteer With APSG | APSG Nigeria">
+  <meta name="twitter:description" content="Apply to volunteer for APSG mobilisation, media, logistics, welfare, protocol, data and event support roles.">
+  <meta name="twitter:image" content="https://apsgnigeria.org/assets/images/og-image.jpg">
+  <script type="application/ld+json" data-apsg-static-schema>[{"@context":"https://schema.org","@type":"Organization","name":"APC Progressive Support Group (APSG)","alternateName":"APSG Nigeria","url":"https://apsgnigeria.org/","logo":"https://apsgnigeria.org/assets/images/logo/apsg1.png","sameAs":[]},{"@context":"https://schema.org","@type":"WebPage","name":"Volunteer With APSG | APSG Nigeria","description":"Apply to volunteer for APSG mobilisation, media, logistics, welfare, protocol, data and event support roles.","url":"https://apsgnigeria.org/pages/volunteer.html","isPartOf":{"@type":"WebSite","name":"APSG Nigeria","url":"https://apsgnigeria.org/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://apsgnigeria.org/"},{"@type":"ListItem","position":2,"name":"Pages","item":"https://apsgnigeria.org/pages"},{"@type":"ListItem","position":3,"name":"Volunteer","item":"https://apsgnigeria.org/pages/volunteer.html"}]}]</script>
+</head>
+<body class="page-shell soft-bg">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div id="navbar" role="navigation" aria-label="Main Navigation"></div>
+  <main id="main">
+<section class="premium-hero"><div class="container hero-grid"><div><span class="status-chip"><i class="fa-solid fa-handshake-angle"></i> Volunteer Mobilisation Desk</span><h1 class="display-font hero-title">Volunteer With APSG</h1><p class="hero-copy">Apply for mobilisation, media, logistics, welfare, protocol, data, social media, call center, youth, women and ward coordination support.</p><div class="hero-actions"><a class="premium-btn gold" href="#volunteerForm">Apply Now</a><a class="premium-btn white" href="/pages/rsvp.html">RSVP Instead</a></div></div><div class="glass-card" style="padding:1.1rem"><p class="section-kicker">Volunteer Status Flow</p><h2 class="display-font section-title" style="font-size:2rem">Submitted → Contacted → Approved → Assigned.</h2><p class="section-copy">APSG admins can assign volunteers to events and mark check-in/completion from the command center.</p></div></div></section>
+<section class="section"><div class="container form-card" style="padding:1rem"><div class="section-head"><div><p class="section-kicker">Volunteer Form</p><h2 class="display-font section-title">Submit volunteer application</h2></div><span class="badge pending">Submitted</span></div><div id="volunteerNoWhatsappNotice" class="transfer-note"><i class="fa-solid fa-circle-check"></i> Volunteer applications submit directly to APSG records. No WhatsApp message is triggered from this form.</div><form id="volunteerForm" class="form-grid"><div class="field"><label>Full Name</label><input name="full_name" required></div><div class="field"><label>Phone / WhatsApp</label><input id="volunteerPhone" name="phone" required></div><div id="volunteerMemberMatch" class="span-2"></div><div class="field"><label>Email</label><input name="email" type="email"></div><div class="field"><label>Member Status</label><select name="member_status"><option>APSG member</option><option>Public supporter</option></select></div><div class="field"><label>Membership ID if available</label><input name="membership_id"></div><div class="field"><label>State</label><input name="state_chapter"></div><div class="field"><label>Local Government</label><input name="lga"></div><div class="field"><label>Ward</label><input name="ward"></div><div class="field"><label>Preferred Volunteer Category</label><select id="volunteerCategory" name="category" required></select></div><div class="field"><label>Preferred Event</label><select id="volunteerEvent" name="event_id"></select></div><div class="field"><label>Availability</label><input name="availability" placeholder="Weekends, weekdays, event days..."></div><div class="field"><label>Skills</label><input name="skills" placeholder="Media, logistics, data, protocol..."></div><div class="field span-2"><label>Experience</label><textarea name="experience"></textarea></div><div class="field span-2"><label>Notes</label><textarea name="notes"></textarea></div><div class="field"><label>Emergency Contact Name</label><input name="emergency_contact_name"></div><div class="field"><label>Emergency Contact Phone</label><input name="emergency_contact_phone"></div><div class="span-2 button-row"><button class="premium-btn green" type="submit"><i class="fa-solid fa-paper-plane"></i>Submit Volunteer Application</button></div></form></div></section>
+</main>
+  <div id="footer"></div>
+  <script src="/components/navbar.js" defer></script>
+  <script src="/components/footer.js" defer></script>
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#05351f" />
+  <meta name="description" content="Single APSG login portal for members and administrators." />
+  <title>Login | APSG Nigeria</title>
+
+
+     <!-- Favicon -->
+    <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any" />
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png" />
+    <link rel="icon" href="/assets/images/logo/apsg.png" sizes="any">
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg.png">
+
+
+  <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any" />
+  <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png" />
+
+  <script>
+    if (localStorage.getItem('daynight-theme') === 'carbon') {
+      document.documentElement.classList.add('carbon');
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="/assets/css/tailwind-static.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/apsg-analytics-tracker.js"></script>
+
+   <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="stylesheet" href="/components/navbar.css">
+  <link rel="stylesheet" href="/components/footer.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Playfair Display', 'Georgia', 'serif']
+          },
+          colors: {
+            apsgDeep: '#05351f',
+            apsgGreen: '#0f7a3d',
+            apsgEmerald: '#0f766e',
+            apsgGold: '#d8ad34',
+            apsgCream: '#fffaf0',
+            apsgInk: '#07140e'
+          },
+          boxShadow: {
+            luxury: '0 28px 90px rgba(5, 53, 31, 0.20)',
+            gold: '0 16px 40px rgba(216, 173, 52, 0.24)',
+            card: '0 18px 50px rgba(5, 53, 31, 0.12)'
+          }
+        }
+      }
+    }
+  </script>
+    <style>
+    :root {
+      --apsg-deep: #05351f;
+      --apsg-green: #0f7a3d;
+      --apsg-emerald: #0f766e;
+      --apsg-gold: #d8ad34;
+      --apsg-cream: #fffaf0;
+      --apsg-ink: #07140e;
+    }
+
+    body {
+      background: radial-gradient(circle at 12% 10%, rgba(216,173,52,.20), transparent 32%),
+        radial-gradient(circle at 88% 18%, rgba(15,122,61,.16), transparent 34%),
+        linear-gradient(135deg, #fffaf0 0%, #f7fbf7 48%, #edf7ef 100%);
+    }
+
+    .login-hero {
+      position: relative;
+      min-height: 100vh;
+      justify-content: center;
+    }
+
+    .luxury-orb {
+      position: fixed;
+      width: 18rem;
+      height: 18rem;
+      border-radius: 999px;
+      background: rgba(216,173,52,.20);
+      filter: blur(46px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .premium-panel {
+      position: relative;
+      z-index: 2;
+      width: min(100%, 44rem);
+      margin-inline: auto;
+      border: 1px solid rgba(216,173,52,.28);
+      border-radius: 2rem;
+      background: rgba(255,255,255,.91);
+      box-shadow: 0 30px 100px rgba(5,53,31,.16);
+      backdrop-filter: blur(22px);
+    }
+
+    .form-input {
+      border: 1px solid rgba(5,53,31,.16);
+      background: rgba(255,255,255,.94);
+      color: var(--apsg-ink);
+      font-weight: 800;
+      outline: none;
+      transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    .form-input:focus {
+      border-color: rgba(216,173,52,.78);
+      box-shadow: 0 0 0 4px rgba(216,173,52,.14);
+      background: #fff;
+    }
+
+    .portal-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .45rem;
+      border-radius: 999px;
+      font-weight: 900;
+      transition: transform .18s ease, filter .18s ease, opacity .18s ease;
+    }
+
+    .portal-btn:hover { transform: translateY(-1px); filter: brightness(1.04); }
+    .portal-btn:disabled { opacity: .68; cursor: not-allowed; transform: none; }
+
+    .notice-card {
+      border-radius: 1.25rem;
+      border: 1px solid rgba(216,173,52,.20);
+      background: linear-gradient(135deg, rgba(255,250,240,.84), rgba(255,255,255,.88));
+    }
+
+    .forgot-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      border: 0;
+      background: transparent;
+      color: var(--apsg-deep);
+      font-size: .78rem;
+      font-weight: 900;
+      text-decoration: underline;
+      text-decoration-color: rgba(216,173,52,.65);
+      text-underline-offset: 4px;
+    }
+
+    .forgot-link:hover { color: var(--apsg-green); }
+
+    .recovery-panel {
+      margin-top: 1.5rem;
+      border: 1px solid rgba(216,173,52,.30);
+      border-radius: 1.6rem;
+      background: linear-gradient(145deg, rgba(255,250,240,.92), rgba(255,255,255,.96));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.72), 0 16px 50px rgba(5,53,31,.08);
+      overflow: hidden;
+    }
+
+    .recovery-head {
+      padding: 1.1rem 1.15rem;
+      background: linear-gradient(135deg, #05351f, #0f7a3d 62%, #0f766e);
+      color: #fff;
+    }
+
+    .recovery-step { padding: 1.15rem; }
+
+    .recovery-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      border-radius: 999px;
+      border: 1px solid rgba(216,173,52,.30);
+      background: rgba(216,173,52,.13);
+      color: #fff3c7;
+      padding: .35rem .7rem;
+      font-size: .68rem;
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .recovery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .72rem;
+    }
+
+    .identity-card {
+      border: 1px solid rgba(5,53,31,.12);
+      border-radius: 1.25rem;
+      background: rgba(255,255,255,.82);
+      padding: .88rem;
+    }
+
+    .identity-card p {
+      margin: 0 0 .25rem;
+      color: #647067;
+      font-size: .66rem;
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      font-weight: 900;
+    }
+
+    .identity-card strong {
+      display: block;
+      color: var(--apsg-deep);
+      font-size: .95rem;
+      font-weight: 900;
+      overflow-wrap: anywhere;
+    }
+
+    .id-reveal {
+      border: 1px solid rgba(216,173,52,.42);
+      border-radius: 1.45rem;
+      background: radial-gradient(circle at top right, rgba(216,173,52,.22), transparent 34%), linear-gradient(135deg, #fffaf0, #ffffff);
+      padding: 1rem;
+      box-shadow: 0 14px 38px rgba(5,53,31,.08);
+    }
+
+    .apsg-id-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(216,173,52,.52);
+      background: #fff;
+      color: var(--apsg-deep);
+      padding: .55rem .85rem;
+      font-weight: 950;
+      overflow-wrap: anywhere;
+      max-width: 100%;
+    }
+
+    .recovery-error {
+      border-radius: 1.1rem;
+      border: 1px solid rgba(239,68,68,.22);
+      background: rgba(254,242,242,.94);
+      padding: .82rem;
+      color: #b91c1c;
+      font-size: .84rem;
+      font-weight: 800;
+    }
+
+    .recovery-success {
+      border-radius: 1.1rem;
+      border: 1px solid rgba(15,122,61,.18);
+      background: rgba(240,253,244,.94);
+      padding: .82rem;
+      color: #065f46;
+      font-size: .84rem;
+      font-weight: 800;
+    }
+
+    .secondary-btn {
+      border: 1px solid rgba(5,53,31,.14);
+      background: #fff;
+      color: var(--apsg-deep);
+      padding: .82rem 1rem;
+      border-radius: 999px;
+      font-weight: 900;
+      transition: background .18s ease, transform .18s ease;
+    }
+
+    .secondary-btn:hover { background: #fffaf0; transform: translateY(-1px); }
+
+    @media (max-width: 640px) {
+      .recovery-grid { grid-template-columns: 1fr; }
+      .premium-panel { border-radius: 1.35rem; }
+    }
+  
+  </style>
+  <link rel="canonical" href="https://apsgnigeria.org/pages/member-login.html">
+  <meta property="og:url" content="https://apsgnigeria.org/pages/member-login.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="https://apsgnigeria.org/assets/images/logo/apsg1.png">
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+  <meta name="keywords" content="APSG Nigeria, APC Progressive Support Group, APC support group, grassroots mobilisation, CWDI, Nigeria politics, APSG membership">
+  <meta property="og:site_name" content="APSG Nigeria">
+  <meta property="og:title" content="Login | APSG Nigeria">
+  <meta property="og:description" content="Single APSG login portal for members and administrators.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:title" content="Login | APSG Nigeria">
+  <meta name="twitter:description" content="Single APSG login portal for members and administrators.">
+  <meta name="twitter:image" content="https://apsgnigeria.org/assets/images/og-image.jpg">
+  <script type="application/ld+json" data-apsg-static-schema>[{"@context":"https://schema.org","@type":"Organization","name":"APC Progressive Support Group (APSG)","alternateName":"APSG Nigeria","url":"https://apsgnigeria.org/","logo":"https://apsgnigeria.org/assets/images/logo/apsg1.png","sameAs":[]},{"@context":"https://schema.org","@type":"WebPage","name":"Login | APSG Nigeria","description":"Single APSG login portal for members and administrators.","url":"https://apsgnigeria.org/pages/member-login.html","isPartOf":{"@type":"WebSite","name":"APSG Nigeria","url":"https://apsgnigeria.org/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://apsgnigeria.org/"},{"@type":"ListItem","position":2,"name":"Pages","item":"https://apsgnigeria.org/pages"},{"@type":"ListItem","position":3,"name":"Member Login","item":"https://apsgnigeria.org/pages/member-login.html"}]}]</script>
+</head>
+
+<body class="min-h-screen overflow-x-hidden">
+ 
+
+  <main class="login-hero px-3 md:px-6 py-10 md:py-14 flex items-center">
+    <div class="luxury-orb -top-28 -left-24"></div>
+    <div class="luxury-orb bottom-0 -right-20"></div>
+
+
+
+    <section class="relative z-10 w-full max-w-2xl mx-auto">
+      <div class="premium-panel p-4 md:p-6 lg:p-7">
+        <div class="text-center">
+          <div class="mx-auto grid h-20 w-20 place-items-center rounded-3xl bg-white shadow-gold border border-apsgGold/35">
+            <img src="/assets/images/logo/apsg.png" alt="APSG Logo" class="h-14 w-14 object-contain" onerror="this.onerror=null;this.src='/assets/images/logo/apsg1.png';" width="96" height="96" decoding="async">
+          </div>
+          <p class="mt-4 text-xs uppercase tracking-[0.28em] text-apsgGold font-black">Official APC Progressive Support Group (APSG) Access</p>
+          <h1 class="display-font mt-1 text-3xl md:text-4xl font-black text-apsgDeep">Member Login</h1>
+          <p class="mt-2 text-sm text-gray-600 max-w-lg mx-auto">
+          
+          </p>
+        </div>
+
+        <form id="singleLoginForm" class="mt-6 space-y-4" novalidate>
+          <div>
+            <label for="identityInput" class="block text-xs font-black uppercase tracking-[0.16em] text-gray-600 mb-2">Registration Number</label>
+            <div class="relative">
+              <i class="fas fa-hashtag absolute left-4 top-1/2 -translate-y-1/2 text-apsgGreen"></i>
+              <input
+                type="text"
+                id="identityInput"
+                placeholder="e.g. APSG/LG/IDO/2026/000000"
+                autocomplete="username"
+                class="form-input w-full rounded-2xl py-3 pl-11 pr-4 text-sm md:text-base"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label for="secretInput" class="block text-xs font-black uppercase tracking-[0.16em] text-gray-600 mb-2">Phone Number</label>
+            <div class="relative">
+              <i class="fas fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-apsgGreen"></i>
+              <input
+                type="password"
+                id="secretInput"
+                placeholder="e.g. 07012345678"
+                autocomplete="current-password"
+                class="form-input w-full rounded-2xl py-3 pl-11 pr-12 text-sm md:text-base"
+                required
+              />
+              <button type="button" id="toggleSecretBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-apsgGreen" aria-label="Show or hide input">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between gap-3 -mt-1">
+            <span class="text-xs font-bold text-gray-500">Forgotten your registration number?</span>
+            <button type="button" id="forgotApsgIdBtn" class="forgot-link">
+              <i class="fas fa-circle-question text-apsgGold"></i> Forgot your APSG ID
+            </button>
+          </div>
+
+          <button id="loginBtn" type="submit" class="portal-btn w-full bg-gradient-to-r from-apsgGreen to-apsgEmerald text-white py-4 shadow-luxury text-base md:text-lg">
+            <i class="fas fa-shield-halved mr-2"></i>
+            Login
+          </button>
+
+          <p id="loginError" class="hidden rounded-2xl border border-red-200 bg-red-50 p-3 text-center text-sm font-bold text-red-700"></p>
+
+          <div id="successNotice" class="hidden notice-card p-4 text-sm text-gray-700">
+            <p class="font-black text-apsgDeep"><i class="fas fa-circle-check text-apsgGreen mr-1"></i> Login successful</p>
+            <p id="successText" class="mt-1">Opening your portal...</p>
+          </div>
+
+          <div class="notice-card p-4 text-sm text-gray-700">
+            <p class="font-black text-apsgDeep"><i class="fas fa-circle-info text-apsgGold mr-1"></i> Access note</p>
+            <p class="mt-1 leading-relaxed">
+              Enter Registration Number and Phone Number.
+            </p>
+          </div>
+        </form>
+
+        <div id="recoveryPanel" class="recovery-panel hidden" aria-live="polite">
+          <div class="recovery-head">
+            <span class="recovery-chip"><i class="fas fa-fingerprint"></i> APSG ID Recovery</span>
+            <h3 class="display-font mt-2 text-2xl font-black">Forgot your APSG ID?</h3>
+            <p class="mt-1 text-sm text-white/72">Use the phone number and local area used during registration to identify your APSG record.</p>
+          </div>
+
+          <div id="recoveryLookupStep" class="recovery-step space-y-4">
+            <div>
+              <label for="recoveryPhoneInput" class="block text-xs font-black uppercase tracking-[0.16em] text-gray-600 mb-2">Registered Phone Number</label>
+              <div class="relative">
+                <i class="fas fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-apsgGreen"></i>
+                <input type="tel" id="recoveryPhoneInput" placeholder="e.g. 07012345678" class="form-input w-full rounded-2xl py-3 pl-11 pr-4 text-sm md:text-base" />
+              </div>
+            </div>
+            <div>
+              <label for="recoveryLocalInput" class="block text-xs font-black uppercase tracking-[0.16em] text-gray-600 mb-2">Local Area / LGA / Ward</label>
+              <div class="relative">
+                <i class="fas fa-location-dot absolute left-4 top-1/2 -translate-y-1/2 text-apsgGreen"></i>
+                <input type="text" id="recoveryLocalInput" placeholder="Enter your LGA, LCDA or Ward" class="form-input w-full rounded-2xl py-3 pl-11 pr-4 text-sm md:text-base" />
+              </div>
+            </div>
+            <p id="recoveryLookupError" class="recovery-error hidden"></p>
+            <div class="flex flex-col sm:flex-row gap-2">
+              <button type="button" id="findApsgIdBtn" class="portal-btn flex-1 bg-gradient-to-r from-apsgGreen to-apsgEmerald text-white py-3 shadow-luxury">
+                <i class="fas fa-magnifying-glass"></i> Find My APSG ID
+              </button>
+              <button type="button" id="recoveryBackBtn" class="secondary-btn flex-1">
+                <i class="fas fa-arrow-left"></i> Back to Login
+              </button>
+            </div>
+          </div>
+
+          <div id="recoveryConfirmStep" class="recovery-step hidden space-y-4">
+            <div class="recovery-success">
+              <i class="fas fa-user-check mr-1"></i> We found a possible APSG record. Please confirm if this is you.
+            </div>
+            <h4 class="text-xl font-black text-apsgDeep">Are you?</h4>
+            <div class="recovery-grid">
+              <div class="identity-card"><p>Name</p><strong id="candidateName">—</strong></div>
+              <div class="identity-card"><p>State</p><strong id="candidateState">—</strong></div>
+              <div class="identity-card"><p>LGA</p><strong id="candidateLga">—</strong></div>
+              <div class="identity-card"><p>Ward</p><strong id="candidateWard">—</strong></div>
+            </div>
+            <p id="recoveryAttemptText" class="text-xs font-black uppercase tracking-[0.14em] text-gray-500"></p>
+            <div class="flex flex-col sm:flex-row gap-2">
+              <button type="button" id="confirmYesBtn" class="portal-btn flex-1 bg-apsgGold text-apsgDeep py-3 shadow-gold">
+                <i class="fas fa-circle-check"></i> Yes, this is me
+              </button>
+              <button type="button" id="confirmNoBtn" class="secondary-btn flex-1">
+                <i class="fas fa-circle-xmark"></i> No
+              </button>
+            </div>
+          </div>
+
+          <div id="recoveryRevealStep" class="recovery-step hidden space-y-4">
+            <div class="id-reveal">
+              <p class="text-xs uppercase tracking-[0.22em] text-apsgGold font-black mb-2">Your APSG ID is</p>
+              <span id="recoveredApsgId" class="apsg-id-pill"><i class="fas fa-fingerprint text-apsgGold"></i>—</span>
+            </div>
+            <div class="recovery-grid">
+              <div class="identity-card"><p>Full Name</p><strong id="recoveredFullName">—</strong></div>
+              <div class="identity-card"><p>State</p><strong id="recoveredState">—</strong></div>
+              <div class="identity-card"><p>LGA</p><strong id="recoveredLga">—</strong></div>
+              <div class="identity-card"><p>Ward</p><strong id="recoveredWard">—</strong></div>
+            </div>
+            <div>
+              <label for="recoveredPhoneVerifyInput" class="block text-xs font-black uppercase tracking-[0.16em] text-gray-600 mb-2">Enter Your Phone Number To Login</label>
+              <div class="relative">
+                <i class="fas fa-phone-volume absolute left-4 top-1/2 -translate-y-1/2 text-apsgGreen"></i>
+                <input type="tel" id="recoveredPhoneVerifyInput" placeholder="Re-enter your registered phone number" class="form-input w-full rounded-2xl py-3 pl-11 pr-4 text-sm md:text-base" />
+              </div>
+            </div>
+            <p id="recoveryVerifyError" class="recovery-error hidden"></p>
+            <div class="flex flex-col sm:flex-row gap-2">
+              <button type="button" id="recoveredLoginBtn" class="portal-btn flex-1 bg-gradient-to-r from-apsgGreen to-apsgEmerald text-white py-3 shadow-luxury">
+                <i class="fas fa-right-to-bracket"></i> Login With APSG ID
+              </button>
+              <button type="button" id="recoveryRestartBtn" class="secondary-btn flex-1">
+                <i class="fas fa-rotate-left"></i> Start Over
+              </button>
+            </div>
+          </div>
+
+          <div id="recoveryContactStep" class="recovery-step hidden space-y-4">
+            <div class="recovery-error">
+              <i class="fas fa-user-group mr-1"></i> We could not confirm your identity after multiple attempts. Please contact your coordinator for help.
+            </div>
+            <div class="notice-card p-4 text-sm text-gray-700">
+              <p class="font-black text-apsgDeep"><i class="fas fa-circle-info text-apsgGold mr-1"></i> Next step</p>
+              <p class="mt-1 leading-relaxed">Ask your APSG coordinator to confirm your registration number, phone number, state, LGA and ward.</p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-2">
+              <button type="button" id="contactBackLoginBtn" class="portal-btn flex-1 bg-apsgGold text-apsgDeep py-3 shadow-gold">
+                <i class="fas fa-arrow-left"></i> Back to Login
+              </button>
+              <a href="/pages/register.html" class="secondary-btn flex-1 text-center no-underline">
+                <i class="fas fa-user-plus"></i> New Registration
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <p class="mt-5 text-center text-xs font-bold text-gray-600">APSG Nigeria © 2026</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="/assets/js/supabase-clients.js"></script>
+  <script src="/assets/js/apsg-settings.js"></script>
+  <script>
+    const MEMBER_DETAILS_URL = '/admin/member-details.html?mode=member';
+    const ADMIN_DASHBOARD_URL = '/admin/dashboard.html';
+    const REGISTER_URL = '/pages/register.html';
+
+    const $ = id => document.getElementById(id);
+    const els = {
+      form: $('singleLoginForm'),
+      identityInput: $('identityInput'),
+      secretInput: $('secretInput'),
+      toggleSecretBtn: $('toggleSecretBtn'),
+      loginBtn: $('loginBtn'),
+      loginError: $('loginError'),
+      successNotice: $('successNotice'),
+      successText: $('successText'),
+      snowThemeBtn: $('snowThemeBtn'),
+      carbonThemeBtn: $('carbonThemeBtn'),
+      forgotApsgIdBtn: $('forgotApsgIdBtn'),
+      recoveryPanel: $('recoveryPanel'),
+      recoveryLookupStep: $('recoveryLookupStep'),
+      recoveryConfirmStep: $('recoveryConfirmStep'),
+      recoveryRevealStep: $('recoveryRevealStep'),
+      recoveryContactStep: $('recoveryContactStep'),
+      recoveryPhoneInput: $('recoveryPhoneInput'),
+      recoveryLocalInput: $('recoveryLocalInput'),
+      findApsgIdBtn: $('findApsgIdBtn'),
+      recoveryBackBtn: $('recoveryBackBtn'),
+      recoveryLookupError: $('recoveryLookupError'),
+      candidateName: $('candidateName'),
+      candidateState: $('candidateState'),
+      candidateLga: $('candidateLga'),
+      candidateWard: $('candidateWard'),
+      recoveryAttemptText: $('recoveryAttemptText'),
+      confirmYesBtn: $('confirmYesBtn'),
+      confirmNoBtn: $('confirmNoBtn'),
+      recoveredApsgId: $('recoveredApsgId'),
+      recoveredFullName: $('recoveredFullName'),
+      recoveredState: $('recoveredState'),
+      recoveredLga: $('recoveredLga'),
+      recoveredWard: $('recoveredWard'),
+      recoveredPhoneVerifyInput: $('recoveredPhoneVerifyInput'),
+      recoveredLoginBtn: $('recoveredLoginBtn'),
+      recoveryRestartBtn: $('recoveryRestartBtn'),
+      recoveryVerifyError: $('recoveryVerifyError'),
+      contactBackLoginBtn: $('contactBackLoginBtn')
+    };
+
+    let recoveryMatches = [];
+    let recoveryIndex = 0;
+    let recoveryNoCount = 0;
+    let selectedRecoveryMember = null;
+
+    function setTheme(theme) {
+      const isCarbon = theme === 'carbon';
+      document.documentElement.classList.toggle('carbon', isCarbon);
+      localStorage.setItem('daynight-theme', isCarbon ? 'carbon' : 'snow');
+      els.snowThemeBtn?.classList.toggle('active', !isCarbon);
+      els.carbonThemeBtn?.classList.toggle('active', isCarbon);
+    }
+    window.setTheme = setTheme;
+
+    function normalizePhone(value) {
+      return String(value || '').replace(/[\s\-()]/g, '').trim();
+    }
+
+    function phoneCandidates(value) {
+      const raw = normalizePhone(value);
+      const digits = raw.replace(/\D/g, '');
+      const list = [raw, digits];
+      if (digits.startsWith('234')) list.push('0' + digits.slice(3), '+234' + digits.slice(3));
+      if (digits.startsWith('0')) list.push('234' + digits.slice(1), '+234' + digits.slice(1));
+      return [...new Set(list.filter(Boolean))];
+    }
+
+    function textKey(value) {
+      return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+    }
+
+    function safeText(value, fallback = '—') {
+      const text = String(value || '').trim();
+      return text || fallback;
+    }
+
+    function fullName(member) {
+      return `${member?.first_name || ''} ${member?.last_name || ''}`.trim() || 'Unnamed Member';
+    }
+
+    function isAdminCredential(identity) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(identity || '').trim());
+    }
+
+    function showError(message) {
+      els.loginError.textContent = message;
+      els.loginError.classList.remove('hidden');
+      els.successNotice.classList.add('hidden');
+    }
+
+    function showSuccess(message) {
+      els.successText.textContent = message;
+      els.successNotice.classList.remove('hidden');
+      els.loginError.classList.add('hidden');
+    }
+
+    function setLoading(isLoading, label = 'Verifying...') {
+      els.loginBtn.disabled = isLoading;
+      els.loginBtn.innerHTML = isLoading
+        ? `<i class="fas fa-spinner fa-spin mr-2"></i>${label}`
+        : '<i class="fas fa-shield-halved mr-2"></i>Login';
+    }
+
+    function showRecoveryError(target, message) {
+      if (!target) return;
+      target.textContent = message;
+      target.classList.remove('hidden');
+    }
+
+    function clearRecoveryErrors() {
+      els.recoveryLookupError?.classList.add('hidden');
+      els.recoveryVerifyError?.classList.add('hidden');
+    }
+
+    function setButtonLoading(button, isLoading, loadingText, defaultHtml) {
+      if (!button) return;
+      button.disabled = isLoading;
+      button.innerHTML = isLoading
+        ? `<i class="fas fa-spinner fa-spin"></i> ${loadingText}`
+        : defaultHtml;
+    }
+
+    function saveMemberSession(member) {
+      sessionStorage.setItem('apsg_member_portal_verified', '1');
+      sessionStorage.setItem('apsg_member_portal_member_id', member.id || '');
+      sessionStorage.setItem('apsg_member_portal_member', JSON.stringify(member));
+      sessionStorage.setItem('apsg_member_portal_access_at', new Date().toISOString());
+    }
+
+    async function findMemberByRegAndPhone(regNumber, phone) {
+      const candidates = phoneCandidates(phone);
+      let member = null;
+      let lastError = null;
+
+      for (const candidate of candidates) {
+        const response = await supabaseClient
+          .from('members')
+          .select('*')
+          .eq('reg_number', regNumber)
+          .eq('phone', candidate)
+          .maybeSingle();
+
+        if (response.data) {
+          member = response.data;
+          break;
+        }
+        lastError = response.error;
+      }
+
+      if (!member) throw lastError || new Error('Member record not found');
+      return member;
+    }
+
+    async function memberLogin(regNumber, phone) {
+      const member = await findMemberByRegAndPhone(regNumber, phone);
+      saveMemberSession(member);
+      showSuccess('Member verified. Opening member details...');
+      window.location.href = MEMBER_DETAILS_URL;
+    }
+
+    async function adminLogin(email, password) {
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if (error || !data?.session) throw error || new Error('Admin login failed');
+
+      showSuccess('Admin verified. Opening dashboard...');
+      window.location.href = ADMIN_DASHBOARD_URL;
+    }
+
+    async function handleLogin(event) {
+      event.preventDefault();
+      const identity = els.identityInput.value.trim();
+      const secret = els.secretInput.value.trim();
+
+      if (!identity || !secret) {
+        showError('Please enter your Registration Number and Phone Number.');
+        return;
+      }
+
+      setLoading(true, 'Checking access...');
+
+      try {
+        if (isAdminCredential(identity)) {
+          await adminLogin(identity, secret);
+        } else {
+          await memberLogin(identity, secret);
+        }
+      } catch (error) {
+        showError('Login failed. Members should use Registration Number + Phone Number. Admins should use Email + Password.');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function toggleSecretVisibility() {
+      const isPassword = els.secretInput.type === 'password';
+      els.secretInput.type = isPassword ? 'text' : 'password';
+      els.toggleSecretBtn.innerHTML = isPassword ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+    }
+
+    function showLoginPanel() {
+      els.form.classList.remove('hidden');
+      els.recoveryPanel.classList.add('hidden');
+      clearRecoveryErrors();
+      els.identityInput.focus();
+    }
+
+    function showRecoveryPanel() {
+      els.form.classList.add('hidden');
+      els.recoveryPanel.classList.remove('hidden');
+      showRecoveryStep('lookup');
+      clearRecoveryErrors();
+      els.recoveryPhoneInput.focus();
+    }
+
+    function showRecoveryStep(step) {
+      els.recoveryLookupStep.classList.toggle('hidden', step !== 'lookup');
+      els.recoveryConfirmStep.classList.toggle('hidden', step !== 'confirm');
+      els.recoveryRevealStep.classList.toggle('hidden', step !== 'reveal');
+      els.recoveryContactStep.classList.toggle('hidden', step !== 'contact');
+    }
+
+    async function fetchMembersByPhone(phone) {
+      const candidates = phoneCandidates(phone);
+      if (!candidates.length) return [];
+
+      const { data, error } = await supabaseClient
+        .from('members')
+        .select('*')
+        .in('phone', candidates)
+        .order('created_at', { ascending: false })
+        .limit(20);
+
+      if (error) throw error;
+
+      const seen = new Set();
+      return (data || []).filter(member => {
+        const key = String(member.id || member.reg_number || JSON.stringify(member));
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+
+    function memberMatchesLocal(member, localValue) {
+      const local = textKey(localValue);
+      if (!local) return true;
+      const fields = [
+        member.state,
+        member.lga,
+        member.lcda,
+        member.local,
+        member.local_government,
+        member.ward
+      ].map(textKey).filter(Boolean);
+      const joined = fields.join(' ');
+      return fields.some(field => field.includes(local) || local.includes(field)) || joined.includes(local);
+    }
+
+    async function findForgottenApsgId() {
+      clearRecoveryErrors();
+      const phone = els.recoveryPhoneInput.value.trim();
+      const local = els.recoveryLocalInput.value.trim();
+
+      if (!phone || !local) {
+        showRecoveryError(els.recoveryLookupError, 'Please enter your registered phone number and local area/LGA/Ward.');
+        return;
+      }
+
+      setButtonLoading(
+        els.findApsgIdBtn,
+        true,
+        'Searching...',
+        '<i class="fas fa-magnifying-glass"></i> Find My APSG ID'
+      );
+
+      try {
+        const phoneMatches = await fetchMembersByPhone(phone);
+
+        if (!phoneMatches.length) {
+          showRecoveryError(els.recoveryLookupError, 'This phone number was not found. Redirecting you to registration...');
+          setTimeout(() => {
+            window.location.href = REGISTER_URL;
+          }, 1800);
+          return;
+        }
+
+        const localMatches = phoneMatches.filter(member => memberMatchesLocal(member, local));
+        if (!localMatches.length) {
+          showRecoveryError(els.recoveryLookupError, 'Phone number found, but the local area/LGA/Ward did not match. Please check your details or contact your coordinator.');
+          return;
+        }
+
+        recoveryMatches = localMatches.slice(0, 3);
+        recoveryIndex = 0;
+        recoveryNoCount = 0;
+        selectedRecoveryMember = null;
+        renderRecoveryCandidate();
+        showRecoveryStep('confirm');
+      } catch (error) {
+        showRecoveryError(els.recoveryLookupError, 'Unable to check Supabase right now. Please try again.');
+      } finally {
+        setButtonLoading(
+          els.findApsgIdBtn,
+          false,
+          'Searching...',
+          '<i class="fas fa-magnifying-glass"></i> Find My APSG ID'
+        );
+      }
+    }
+
+    function renderRecoveryCandidate() {
+      const member = recoveryMatches[recoveryIndex];
+      if (!member) {
+        showRecoveryStep('contact');
+        return;
+      }
+      els.candidateName.textContent = fullName(member);
+      els.candidateState.textContent = safeText(member.state);
+      els.candidateLga.textContent = safeText(member.lga || member.lcda);
+      els.candidateWard.textContent = safeText(member.ward);
+      els.recoveryAttemptText.textContent = `Confirmation ${recoveryIndex + 1} of ${Math.min(recoveryMatches.length, 3)}`;
+    }
+
+    function confirmRecoveryYes() {
+      selectedRecoveryMember = recoveryMatches[recoveryIndex];
+      if (!selectedRecoveryMember) return;
+
+      els.recoveredApsgId.innerHTML = `<i class="fas fa-fingerprint text-apsgGold"></i>${safeText(selectedRecoveryMember.reg_number)}`;
+      els.recoveredFullName.textContent = fullName(selectedRecoveryMember);
+      els.recoveredState.textContent = safeText(selectedRecoveryMember.state);
+      els.recoveredLga.textContent = safeText(selectedRecoveryMember.lga || selectedRecoveryMember.lcda);
+      els.recoveredWard.textContent = safeText(selectedRecoveryMember.ward);
+      els.recoveredPhoneVerifyInput.value = '';
+      clearRecoveryErrors();
+      showRecoveryStep('reveal');
+      setTimeout(() => els.recoveredPhoneVerifyInput.focus(), 50);
+    }
+
+    function confirmRecoveryNo() {
+      recoveryNoCount += 1;
+      recoveryIndex += 1;
+      if (recoveryNoCount >= 3 || recoveryIndex >= recoveryMatches.length) {
+        showRecoveryStep('contact');
+        return;
+      }
+      renderRecoveryCandidate();
+    }
+
+    async function verifyRecoveredLogin() {
+      clearRecoveryErrors();
+      if (!selectedRecoveryMember) {
+        showRecoveryStep('lookup');
+        return;
+      }
+      const phone = els.recoveredPhoneVerifyInput.value.trim();
+      if (!phone) {
+        showRecoveryError(els.recoveryVerifyError, 'Please enter your phone number to continue.');
+        return;
+      }
+
+      setButtonLoading(
+        els.recoveredLoginBtn,
+        true,
+        'Checking...',
+        '<i class="fas fa-right-to-bracket"></i> Login With APSG ID'
+      );
+
+      try {
+        const member = await findMemberByRegAndPhone(selectedRecoveryMember.reg_number, phone);
+        saveMemberSession(member);
+        els.recoveryVerifyError.classList.add('hidden');
+        showSuccess('Member verified. Opening member details...');
+        window.location.href = MEMBER_DETAILS_URL;
+      } catch (error) {
+        showRecoveryError(els.recoveryVerifyError, 'The phone number does not match this APSG record. Please try again or contact your coordinator.');
+      } finally {
+        setButtonLoading(
+          els.recoveredLoginBtn,
+          false,
+          'Checking...',
+          '<i class="fas fa-right-to-bracket"></i> Login With APSG ID'
+        );
+      }
+    }
+
+    function resetRecovery() {
+      recoveryMatches = [];
+      recoveryIndex = 0;
+      recoveryNoCount = 0;
+      selectedRecoveryMember = null;
+      clearRecoveryErrors();
+      showRecoveryStep('lookup');
+      els.recoveryPhoneInput.focus();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const theme = localStorage.getItem('daynight-theme') === 'carbon' ? 'carbon' : 'snow';
+      setTheme(theme);
+      els.identityInput.focus();
+    });
+
+    els.form.addEventListener('submit', handleLogin);
+    els.toggleSecretBtn.addEventListener('click', toggleSecretVisibility);
+    els.forgotApsgIdBtn?.addEventListener('click', showRecoveryPanel);
+    els.recoveryBackBtn?.addEventListener('click', showLoginPanel);
+    els.findApsgIdBtn?.addEventListener('click', findForgottenApsgId);
+    els.confirmYesBtn?.addEventListener('click', confirmRecoveryYes);
+    els.confirmNoBtn?.addEventListener('click', confirmRecoveryNo);
+    els.recoveredLoginBtn?.addEventListener('click', verifyRecoveredLogin);
+    els.recoveryRestartBtn?.addEventListener('click', resetRecovery);
+    els.contactBackLoginBtn?.addEventListener('click', showLoginPanel);
+    els.recoveryPhoneInput?.addEventListener('keydown', event => {
+      if (event.key === 'Enter') findForgottenApsgId();
+    });
+    els.recoveryLocalInput?.addEventListener('keydown', event => {
+      if (event.key === 'Enter') findForgottenApsgId();
+    });
+    els.recoveredPhoneVerifyInput?.addEventListener('keydown', event => {
+      if (event.key === 'Enter') verifyRecoveredLogin();
+    });
+  </script>
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

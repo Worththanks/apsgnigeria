@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /assets/files/
+Disallow: /config.js
+Disallow: /*?preview=
+Disallow: /*?draft=
+
+Sitemap: https://apsgnigeria.org/sitemap.xml
+Disallow: /sql/
+Disallow: /components/
+Disallow: /config.example.js
+Disallow: /supabase-clients.js

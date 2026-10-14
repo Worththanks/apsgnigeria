@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#05351f" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any" />
+  <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <link rel="stylesheet" href="/components/navbar.css" />
+  <link rel="stylesheet" href="/components/footer.css" />
+  <link rel="stylesheet" href="/assets/css/apsg-involvement.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase-clients.js"></script>
+  <script src="/assets/js/apsg-settings.js"></script>
+  <script src="/assets/js/apsg-analytics-tracker.js" defer></script>
+  <script src="/assets/js/apsg-involvement-system.js" defer></script>
+  <meta name="description" content="Confirm attendance for published upcoming APSG events and programmes." />
+  <meta property="og:title" content="RSVP for APSG Events | APSG Nigeria" />
+  <meta property="og:description" content="Confirm attendance for published upcoming APSG events and programmes." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://apsgnigeria.org/assets/images/logo/apsg1.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href="https://apsgnigeria.org/pages/rsvp.html" />
+  <title>RSVP for APSG Events | APSG Nigeria</title>
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+  <meta name="keywords" content="APSG Nigeria, APC Progressive Support Group, APC support group, grassroots mobilisation, CWDI, Nigeria politics, APSG membership">
+  <meta property="og:site_name" content="APSG Nigeria">
+  <meta property="og:url" content="https://apsgnigeria.org/pages/rsvp.html">
+  <meta name="twitter:title" content="RSVP for APSG Events | APSG Nigeria">
+  <meta name="twitter:description" content="Confirm attendance for published upcoming APSG events and programmes.">
+  <meta name="twitter:image" content="https://apsgnigeria.org/assets/images/og-image.jpg">
+  <script type="application/ld+json" data-apsg-static-schema>[{"@context":"https://schema.org","@type":"Organization","name":"APC Progressive Support Group (APSG)","alternateName":"APSG Nigeria","url":"https://apsgnigeria.org/","logo":"https://apsgnigeria.org/assets/images/logo/apsg1.png","sameAs":[]},{"@context":"https://schema.org","@type":"WebPage","name":"RSVP for APSG Events | APSG Nigeria","description":"Confirm attendance for published upcoming APSG events and programmes.","url":"https://apsgnigeria.org/pages/rsvp.html","isPartOf":{"@type":"WebSite","name":"APSG Nigeria","url":"https://apsgnigeria.org/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://apsgnigeria.org/"},{"@type":"ListItem","position":2,"name":"Pages","item":"https://apsgnigeria.org/pages"},{"@type":"ListItem","position":3,"name":"Rsvp","item":"https://apsgnigeria.org/pages/rsvp.html"}]}]</script>
+</head>
+<body class="page-shell soft-bg">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div id="navbar" role="navigation" aria-label="Main Navigation"></div>
+  <main id="main">
+<section class="premium-hero"><div class="container hero-grid"><div><span class="status-chip"><i class="fa-solid fa-calendar-check"></i> RSVP Attendance Desk</span><h1 class="display-font hero-title">RSVP for APSG Events</h1><p class="hero-copy">Select a published APSG event, confirm your attendance, guest count and chapter information. Admins can confirm and check-in attendees.</p><div class="hero-actions"><a class="premium-btn gold" href="#rsvpForm">Confirm Attendance</a><a class="premium-btn white" href="/pages/sponsor.html">Sponsor an Event</a></div></div><div class="glass-card" style="padding:1.1rem"><p class="section-kicker">Attendance Management</p><h2 class="display-font section-title" style="font-size:2rem">Submitted → Confirmed → Checked-in.</h2><p class="section-copy">Only published upcoming events from the admin command center are loaded publicly.</p></div></div></section>
+<section class="section"><div class="container form-card" style="padding:1rem"><div class="section-head"><div><p class="section-kicker">RSVP Form</p><h2 class="display-font section-title">Confirm your attendance</h2></div><span class="badge published">Published events only</span></div><form id="rsvpForm" class="form-grid"><div class="field"><label>Full Name</label><input name="full_name" required></div><div class="field"><label>Phone Number</label><input name="phone" required></div><div class="field"><label>Email Address</label><input name="email" type="email"></div><div class="field"><label>Member Status</label><select name="member_status"><option>APSG member</option><option>Public attendee</option><option>Representing organisation</option></select></div><div class="field"><label>State Chapter</label><input name="state_chapter"></div><div class="field"><label>Event Selected</label><select id="rsvpEvent" name="event_id" required></select></div><div class="field"><label>Guest Count</label><input name="guest_count" type="number" min="1" value="1"></div><div class="field span-2"><label>Attendance Note</label><textarea name="attendance_note" placeholder="Protocol, delegation, accessibility or media note."></textarea></div><div class="span-2 button-row"><button class="premium-btn green" type="submit"><i class="fa-solid fa-ticket"></i>Submit RSVP</button></div></form></div></section>
+</main>
+  <div id="footer"></div>
+  <script src="/components/navbar.js" defer></script>
+  <script src="/components/footer.js" defer></script>
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

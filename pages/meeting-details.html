@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="theme-color" content="#05351f" />
+  <meta name="description" content="View full APSG meeting details, agenda, venue, timing and official meeting information." />
+  <meta name="keywords" content="APSG meeting details, APC Progressive Support Group meeting, APSG agenda, APSG venue, APSG briefing" />
+  <meta property="og:site_name" content="APSG Nigeria" />
+  <meta property="og:title" content="Meeting Details | APSG Nigeria" />
+  <meta property="og:description" content="Full APSG meeting details published from the admin dashboard." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://apsgnigeria.org/pages/meeting-details.html" />
+  <meta property="og:image" content="https://apsgnigeria.org/assets/images/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Meeting Details | APSG Nigeria" />
+  <meta name="twitter:description" content="View full APSG meeting details, agenda, venue, timing and official meeting information." />
+  <meta name="twitter:image" content="https://apsgnigeria.org/assets/images/og-image.jpg" />
+  <link rel="canonical" href="https://apsgnigeria.org/pages/meeting-details.html" />
+  <title>Meeting Details | APSG Nigeria</title>
+
+  <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any" />
+  <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <link rel="stylesheet" href="/components/navbar.css" />
+  <link rel="stylesheet" href="/components/footer.css" />
+  <link rel="stylesheet" href="/assets/css/tailwind-static.css" />
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css" />
+
+  <style id="apsg-meeting-detail-premium-styles">
+    :root {
+      --deep: #05351f;
+      --forest: #042515;
+      --green: #0f7a3d;
+      --emerald: #0f766e;
+      --gold: #d8ad34;
+      --cream: #fffaf0;
+      --ink: #07140e;
+      --muted: #63746b;
+      --shadow: 0 28px 90px rgba(5, 53, 31, 0.16);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #102018;
+      background:
+        radial-gradient(circle at 0 0, rgba(216, 173, 52, 0.18), transparent 31rem),
+        radial-gradient(circle at 100% 4%, rgba(15, 122, 61, 0.13), transparent 32rem),
+        linear-gradient(180deg, #f8fbf7 0%, #eef8f2 55%, #fbfff9 100%);
+      overflow-x: hidden;
+    }
+    .display-font { font-family: "Playfair Display", Georgia, serif; }
+    .skip-link {
+      position: fixed;
+      left: 1rem;
+      top: -5rem;
+      z-index: 9999;
+      border-radius: 999px;
+      background: var(--gold);
+      color: var(--deep);
+      padding: 0.75rem 1rem;
+      font-weight: 950;
+      transition: top 0.2s ease;
+    }
+    .skip-link:focus { top: 1rem; outline: 3px solid #fff; }
+    .detail-hero {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      background:
+        linear-gradient(115deg, rgba(5, 53, 31, 0.97), rgba(5, 36, 20, 0.95) 52%, rgba(15, 118, 110, 0.86)),
+        url("/assets/images/hero/hero3.jpg") center/cover no-repeat;
+    }
+    .detail-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      opacity: 0.15;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.14) 1px, transparent 1px);
+      background-size: 42px 42px;
+    }
+    .detail-hero::after {
+      content: "";
+      position: absolute;
+      width: 30rem;
+      height: 30rem;
+      border-radius: 999px;
+      right: -10rem;
+      top: -12rem;
+      background: radial-gradient(circle, rgba(216, 173, 52, 0.32), rgba(216, 173, 52, 0.04) 64%, transparent 72%);
+      pointer-events: none;
+    }
+    .status-chip,
+    .section-kicker,
+    .detail-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.48rem;
+      border-radius: 999px;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+    }
+    .status-chip {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 0.48rem 0.78rem;
+      backdrop-filter: blur(12px);
+      text-decoration: none;
+    }
+    .section-kicker { color: var(--gold); }
+    .detail-chip {
+      color: var(--deep);
+      background: linear-gradient(135deg, #fffaf0, rgba(216, 173, 52, 0.32));
+      border: 1px solid rgba(216, 173, 52, 0.36);
+      padding: 0.44rem 0.74rem;
+    }
+    .premium-btn,
+    .apsg-content-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      border-radius: 999px;
+      font-weight: 950;
+      padding: 0.86rem 1.12rem;
+      text-decoration: none;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+      border: 0;
+      box-shadow: 0 14px 32px rgba(5, 53, 31, 0.12);
+      cursor: pointer;
+    }
+    .premium-btn:hover,
+    .apsg-content-btn:hover { transform: translateY(-2px); filter: brightness(1.03); box-shadow: 0 20px 44px rgba(5, 53, 31, 0.17); }
+    .premium-btn:focus-visible,
+    .apsg-content-btn:focus-visible,
+    a:focus-visible,
+    button:focus-visible { outline: 3px solid rgba(216, 173, 52, 0.5); outline-offset: 3px; }
+    .btn-green { color: #fff; background: linear-gradient(135deg, var(--green), var(--emerald)); }
+    .btn-gold { color: var(--deep); background: linear-gradient(135deg, #efc95b, var(--gold)); }
+    .btn-white { color: var(--deep); background: rgba(255, 255, 255, 0.92); border: 1px solid rgba(216, 173, 52, 0.22); }
+    .meeting-detail-shell { margin-top: -4.2rem; position: relative; z-index: 5; }
+    .detail-layout { display: grid; grid-template-columns: minmax(0, 1fr) 20rem; gap: 1.15rem; align-items: start; }
+    .detail-article,
+    [data-public-content-detail="meeting"] .content-detail-card,
+    [data-public-content-detail="meeting"] .detail-article,
+    [data-public-content-detail="meeting"] article {
+      border-radius: 2rem;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(216, 173, 52, 0.22);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    [data-public-content-detail="meeting"] .content-detail-hero,
+    [data-public-content-detail="meeting"] .detail-cover,
+    [data-public-content-detail="meeting"] figure,
+    [data-public-content-detail="meeting"] .apsg-content-image {
+      min-height: 27rem;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(216, 173, 52, 0.22), transparent 16rem),
+        linear-gradient(135deg, var(--deep), var(--emerald));
+    }
+    [data-public-content-detail="meeting"] .content-detail-hero::before,
+    [data-public-content-detail="meeting"] .detail-cover::before,
+    [data-public-content-detail="meeting"] figure::before,
+    [data-public-content-detail="meeting"] .apsg-content-image::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(0deg, rgba(5, 53, 31, 0.88), rgba(5, 53, 31, 0.18) 58%, rgba(5, 53, 31, 0.04));
+      pointer-events: none;
+    }
+    [data-public-content-detail="meeting"] img {
+      max-width: 100%;
+    }
+    [data-public-content-detail="meeting"] .content-detail-hero img,
+    [data-public-content-detail="meeting"] .detail-cover img,
+    [data-public-content-detail="meeting"] figure img,
+    [data-public-content-detail="meeting"] .apsg-content-image img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    [data-public-content-detail="meeting"] .no-image::after {
+      content: "APSG MEETING";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: rgba(255, 255, 255, 0.14);
+      font-size: clamp(2rem, 7vw, 5.5rem);
+      font-weight: 950;
+      letter-spacing: 0.04em;
+      text-align: center;
+      padding: 1rem;
+    }
+    [data-public-content-detail="meeting"] .content-detail-overlay,
+    [data-public-content-detail="meeting"] .detail-cover-overlay {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2;
+      padding: 2rem;
+      color: #fff;
+    }
+    [data-public-content-detail="meeting"] h1,
+    [data-public-content-detail="meeting"] h2 {
+      font-family: "Playfair Display", Georgia, serif;
+      color: var(--deep);
+      font-weight: 950;
+      line-height: 1.02;
+      letter-spacing: -0.025em;
+      font-size: clamp(2.2rem, 5vw, 4.5rem);
+    }
+    [data-public-content-detail="meeting"] .content-detail-overlay h1,
+    [data-public-content-detail="meeting"] .content-detail-overlay h2 {
+      color: #fff;
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      line-height: 0.95;
+    }
+    [data-public-content-detail="meeting"] .content-detail-body,
+    [data-public-content-detail="meeting"] .detail-body,
+    [data-public-content-detail="meeting"] article > div:not(.content-detail-hero):not(.detail-cover) {
+      padding: clamp(1.35rem, 4vw, 2.6rem);
+    }
+    [data-public-content-detail="meeting"] .content-detail-text,
+    [data-public-content-detail="meeting"] .detail-copy,
+    [data-public-content-detail="meeting"] p {
+      color: #435448;
+      line-height: 1.85;
+      font-size: 1.03rem;
+    }
+    [data-public-content-detail="meeting"] .apsg-content-meta,
+    [data-public-content-detail="meeting"] .event-meta-grid,
+    [data-public-content-detail="meeting"] .content-detail-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0 0 1.2rem;
+    }
+    [data-public-content-detail="meeting"] .apsg-content-meta span,
+    [data-public-content-detail="meeting"] .event-meta-grid span,
+    [data-public-content-detail="meeting"] .content-detail-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.38rem;
+      border-radius: 999px;
+      background: #eef8f2;
+      color: #315041;
+      padding: 0.45rem 0.72rem;
+      font-size: 0.75rem;
+      font-weight: 850;
+    }
+    .meeting-side-panel {
+      position: sticky;
+      top: 6.8rem;
+      border-radius: 1.75rem;
+      background: radial-gradient(circle at top right, rgba(216, 173, 52, 0.22), transparent 18rem), linear-gradient(145deg, #06351f, #031d10 75%);
+      border: 1px solid rgba(216, 173, 52, 0.26);
+      color: #fff;
+      box-shadow: 0 22px 70px rgba(5, 53, 31, 0.18);
+      overflow: hidden;
+    }
+    .meeting-side-panel .panel-inner { padding: 1.25rem; }
+    .meeting-side-panel .panel-card {
+      border-radius: 1.2rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 1rem;
+    }
+    .meeting-side-panel .action-list { display: grid; gap: 0.7rem; margin-top: 1rem; }
+    .meeting-side-panel .action-list .premium-btn { width: 100%; box-shadow: none; }
+    .apsg-content-state {
+      text-align: center;
+      border-radius: 1.45rem;
+      border: 1px dashed rgba(5, 53, 31, 0.18);
+      background: rgba(255, 255, 255, 0.9);
+      padding: 3rem 1.5rem;
+      box-shadow: 0 18px 50px rgba(5, 53, 31, 0.08);
+    }
+    .apsg-loader {
+      display: inline-block;
+      width: 2rem;
+      height: 2rem;
+      border: 3px solid rgba(214, 169, 43, 0.25);
+      border-top-color: var(--gold);
+      border-radius: 999px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .toast-copy {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 9999;
+      transform: translateY(1rem);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.22s ease;
+      border-radius: 1rem;
+      background: var(--deep);
+      color: #fff;
+      padding: 0.85rem 1rem;
+      box-shadow: 0 20px 55px rgba(5, 53, 31, 0.24);
+      border: 1px solid rgba(216, 173, 52, 0.28);
+      font-weight: 850;
+    }
+    .toast-copy.show { transform: translateY(0); opacity: 1; }
+    @media (max-width: 1000px) {
+      .detail-layout { grid-template-columns: 1fr; }
+      .meeting-side-panel { position: static; }
+    }
+    @media (max-width: 640px) {
+      .meeting-detail-shell { margin-top: -2.2rem; }
+      [data-public-content-detail="meeting"] .content-detail-hero,
+      [data-public-content-detail="meeting"] .detail-cover,
+      [data-public-content-detail="meeting"] figure,
+      [data-public-content-detail="meeting"] .apsg-content-image { min-height: 20rem; }
+      [data-public-content-detail="meeting"] .content-detail-overlay { padding: 1.2rem; }
+      .premium-btn { width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    @media print {
+      #navbar, #footer, .no-print, .toast-copy, .meeting-side-panel, .status-chip { display: none !important; }
+      body { background: #fff !important; color: #000 !important; }
+      .detail-article,
+      [data-public-content-detail="meeting"] .content-detail-card,
+      [data-public-content-detail="meeting"] article { box-shadow: none !important; border: 1px solid #ddd !important; }
+      .meeting-detail-shell { margin-top: 0 !important; }
+    }
+
+
+    /* APSG meeting-detail activity intelligence upgrade */
+    .detail-activity-hidden { display: none !important; }
+    .detail-status-mini {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-radius: 999px;
+      background: rgba(216, 173, 52, 0.14);
+      border: 1px solid rgba(216, 173, 52, 0.26);
+      color: #fff7d6;
+      padding: 0.45rem 0.68rem;
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .meeting-snapshot-list {
+      display: grid;
+      gap: 0.55rem;
+      margin-top: 1rem;
+    }
+    .meeting-snapshot-list span {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      padding: 0.72rem;
+      color: rgba(255, 255, 255, 0.74);
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+    .meeting-snapshot-list i { color: var(--gold); margin-top: 0.12rem; }
+    .detail-empty-guard {
+      display: none;
+      border-radius: 2rem;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px dashed rgba(216, 173, 52, 0.45);
+      box-shadow: var(--shadow);
+      padding: 3rem 1.5rem;
+      text-align: center;
+    }
+    .detail-empty-guard.show { display: block; }
+    .detail-empty-guard i { color: var(--gold); font-size: 2.4rem; }
+    .detail-empty-guard h2 { color: var(--deep); margin-top: 1rem; font-weight: 950; font-size: 1.6rem; }
+    .detail-empty-guard p { color: var(--muted); margin-top: 0.35rem; }
+
+    /* APSG v3 meeting detail cleanup: hide actions when no selected activity and improve fallback image presentation */
+    body.no-detail-activity .meeting-side-panel { display: none !important; }
+    body.no-detail-activity .meeting-detail-shell { margin-top: -2.4rem; }
+    .detail-empty-guard.show { display: block; }
+    .detail-empty-guard {
+      display: none;
+      border-radius: 2rem;
+      border: 1px dashed rgba(216, 173, 52, 0.45);
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 24px 70px rgba(5, 53, 31, 0.1);
+      padding: 3rem 1.25rem;
+      text-align: center;
+    }
+    .detail-empty-guard i { color: var(--gold); font-size: 2.4rem; }
+    [data-public-content-detail="meeting"] .is-fallback-image { object-fit: contain !important; padding: 2.6rem; background: linear-gradient(135deg, var(--deep), var(--emerald)); }
+    .meeting-snapshot-list { display: grid; gap: .65rem; margin-top: 1rem; }
+    .meeting-snapshot-list span { display:flex; align-items:flex-start; gap:.55rem; border-radius:1rem; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.12); padding:.8rem; color:rgba(255,255,255,.8); font-size:.86rem; }
+    .detail-status-badge { position:absolute; left:1rem; top:1rem; z-index:3; display:inline-flex; align-items:center; gap:.45rem; border-radius:999px; padding:.55rem .8rem; background:linear-gradient(135deg,#f7d66b,var(--gold)); color:var(--deep); font-weight:950; font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; }
+
+  </style>
+
+  <script type="application/ld+json" data-apsg-static-schema>
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "APC Progressive Support Group (APSG)",
+        "alternateName": "APSG Nigeria",
+        "url": "https://apsgnigeria.org/",
+        "logo": "https://apsgnigeria.org/assets/images/logo/apsg1.png",
+        "sameAs": []
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Meeting Details | APSG Nigeria",
+        "description": "View full APSG meeting details, agenda, venue, timing and official meeting information.",
+        "url": "https://apsgnigeria.org/pages/meeting-details.html",
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "APSG Nigeria",
+          "url": "https://apsgnigeria.org/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://apsgnigeria.org/" },
+          { "@type": "ListItem", "position": 2, "name": "Meetings", "item": "https://apsgnigeria.org/pages/meetings.html" },
+          { "@type": "ListItem", "position": 3, "name": "Meeting Details", "item": "https://apsgnigeria.org/pages/meeting-details.html" }
+        ]
+      }
+    ]
+  </script>
+</head>
+<body class="min-h-screen flex flex-col" data-content-type="meeting">
+  <a href="#meeting-detail" class="skip-link">Skip to meeting details</a>
+  <div id="navbar" role="navigation" aria-label="Main Navigation"></div>
+
+  <main class="flex-grow">
+    <section class="detail-hero px-4 pt-32 pb-24 md:pt-40 md:pb-28 text-white">
+      <div class="relative z-10 max-w-7xl mx-auto grid lg:grid-cols-[1fr_.38fr] gap-8 items-end">
+        <div>
+          <a href="/pages/meetings.html" class="status-chip no-print"><i class="fas fa-arrow-left text-[#d8ad34]"></i> Back to Meetings</a>
+          <p class="section-kicker mt-6"><i class="fas fa-users-line"></i> Official APSG Meeting Notice</p>
+          <h1 class="display-font mt-3 text-4xl md:text-7xl font-black leading-[.95] tracking-tight">Meeting Details</h1>
+          <p class="mt-6 max-w-2xl text-white/82 text-lg md:text-xl leading-relaxed">View the full details of an official APSG meeting notice published from the dashboard, including agenda, timing, venue and attendance instructions.</p>
+        </div>
+        <div class="hidden lg:block no-print">
+          <div class="rounded-[1.75rem] border border-white/12 bg-white/10 p-5 backdrop-blur-md">
+            <p class="text-[10px] uppercase tracking-[.28em] text-[#d8ad34] font-black">Public Notice</p>
+            <h2 class="mt-2 text-2xl font-black">Meeting Desk</h2>
+            <p class="mt-2 text-sm text-white/68">Official notices update automatically from the admin content system.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="meeting-detail" class="px-4 pb-16 meeting-detail-shell">
+      <div class="max-w-7xl mx-auto detail-layout">
+        <div data-public-content-detail="meeting" data-back-url="/pages/meetings.html" aria-live="polite">
+          <div class="apsg-content-state">
+            <span class="apsg-loader" aria-hidden="true"></span>
+            <h3 class="mt-4 text-xl font-black text-[#05351f]">Loading meeting details...</h3>
+            <p class="mt-1 text-sm text-[#63746b]">Please wait while the official meeting notice is being prepared.</p>
+          </div>
+        </div>
+
+        <aside class="meeting-side-panel no-print" aria-label="Meeting actions">
+          <div class="panel-inner">
+            <div class="panel-card">
+              <span class="detail-chip"><i class="fas fa-shield-halved"></i> APSG</span>
+              <h2 class="mt-3 text-2xl font-black">Meeting Actions</h2>
+              <p class="mt-2 text-sm text-white/68">Use these tools to share, print or confirm attendance for the published meeting notice.</p>
+            </div>
+            <div class="action-list">
+              <a href="/pages/meetings.html" class="premium-btn btn-white"><i class="fas fa-arrow-left"></i> Back to Meetings</a>
+              <a href="/pages/rsvp.html" class="premium-btn btn-gold"><i class="fas fa-clipboard-check"></i> RSVP / Confirm</a>
+              <button type="button" id="copyMeetingLink" class="premium-btn btn-green"><i class="fas fa-link"></i> Copy Link</button>
+              <button type="button" id="printMeeting" class="premium-btn btn-white"><i class="fas fa-print"></i> Print Details</button>
+            </div>
+            <div class="mt-4 rounded-[1.2rem] border border-[#d8ad34]/25 bg-[#d8ad34]/10 p-4 text-sm text-white/72">
+              <i class="fas fa-circle-info text-[#d8ad34]"></i>
+              <p class="mt-2">Meeting attendance, venue and timing should be confirmed from the latest published notice before travelling.</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+  <div id="copyToast" class="toast-copy" role="status" aria-live="polite">Copied</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/apsg-analytics-tracker.js"></script>
+  <script src="/assets/js/supabase-clients.js"></script>
+  <script src="/assets/js/apsg-settings.js"></script>
+  <script src="/assets/js/public-content.js"></script>
+  <script type="module" src="/components/navbar.js" defer></script>
+  <script type="module" src="/components/footer.js" defer></script>
+  <script src="/assets/js/deployment-polish.js" defer></script>
+  <script id="apsg-meeting-detail-controller-v3">
+    (function () {
+      const root = document.querySelector('[data-public-content-detail="meeting"]');
+      const sidePanel = document.querySelector(".meeting-side-panel");
+      const fallbackImage = "/assets/images/logo/apsg1.png";
+      let timer = null;
+
+      function clean(value) { return String(value || "").replace(/\s+/g, " ").trim(); }
+      function text(el) { return clean(el && el.textContent); }
+      function lower(el) { return text(el).toLowerCase(); }
+      function qsa(selector, base = document) { return Array.from(base.querySelectorAll(selector)); }
+      function setMeta(selector, attr, value) { const el = document.querySelector(selector); if (el && value) el.setAttribute(attr, value); }
+      function isLoading() {
+        if (!root) return false;
+        return !!root.querySelector(".apsg-loader,.meeting-loader") || /loading meeting|please wait/.test(lower(root));
+      }
+      function isEmptyState() {
+        if (!root) return true;
+        const t = lower(root);
+        if (isLoading()) return false;
+        if (!text(root)) return true;
+        return /no meeting|not found|unavailable|not available|unpublished|link is incomplete/.test(t) && !root.querySelector("img,time,a[href*='meeting-details']");
+      }
+      function getArticle() { return root && root.querySelector(".content-detail-card,.detail-article,article"); }
+      function hasMeaningfulDetail() {
+        const article = getArticle();
+        if (!root || isLoading()) return false;
+        if (isEmptyState()) return false;
+        return !!article || text(root).length > 30 || !!root.querySelector("img,time");
+      }
+      function showToast(message) {
+        const toast = document.getElementById("copyToast");
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 1600);
+      }
+      function ensureGuard() {
+        let guard = document.getElementById("meetingDetailEmptyGuard");
+        if (!guard && root && root.parentElement) {
+          guard = document.createElement("div");
+          guard.id = "meetingDetailEmptyGuard";
+          guard.className = "detail-empty-guard";
+          guard.innerHTML = '<i class="fas fa-calendar-xmark"></i><h2 class="display-font mt-4 text-3xl md:text-5xl font-black text-[#05351f]">No meeting activity selected</h2><p class="mt-3 max-w-2xl mx-auto text-[#63746b]">The requested meeting notice is not available yet, has been unpublished, or the link is incomplete.</p><div class="mt-6"><a class="premium-btn btn-green" href="/pages/meetings.html"><i class="fas fa-arrow-left"></i> Back to Meetings</a></div>';
+          root.parentElement.insertBefore(guard, root.nextSibling);
+        }
+        return guard;
+      }
+      function parseDate() {
+        const time = root && root.querySelector("time[datetime]");
+        if (time && time.getAttribute("datetime")) {
+          const d = new Date(time.getAttribute("datetime"));
+          if (!Number.isNaN(d.getTime())) return d;
+        }
+        return null;
+      }
+      function detectStatus() {
+        const hay = lower(root);
+        if (/\blive\b|ongoing|happening now|in progress|active/.test(hay)) return "Live";
+        if (/upcoming|scheduled|future|coming soon|notice/.test(hay)) return "Upcoming";
+        if (/recent|latest|newly published|new notice/.test(hay)) return "Recent";
+        if (/past|completed|closed|archive|ended|concluded/.test(hay)) return "Past";
+        const d = parseDate();
+        if (d) return d.getTime() >= Date.now() - 86400000 ? "Upcoming" : "Past";
+        return "Official Notice";
+      }
+      function enhanceHeroImage() {
+        if (!root) return;
+        const hero = root.querySelector(".content-detail-hero,.detail-cover,figure,.apsg-content-image");
+        if (!hero) return;
+        const img = hero.querySelector("img");
+        hero.classList.toggle("no-image", !img || !img.getAttribute("src"));
+        if (!hero.querySelector(".detail-status-badge")) {
+          const badge = document.createElement("span");
+          badge.className = "detail-status-badge";
+          badge.innerHTML = `<i class="fas fa-users-line"></i> ${detectStatus()}`;
+          hero.prepend(badge);
+        }
+        if (img) {
+          img.loading = "eager";
+          img.decoding = "async";
+          if (!img.getAttribute("width")) img.setAttribute("width", "1200");
+          if (!img.getAttribute("height")) img.setAttribute("height", "760");
+          setMeta('meta[property="og:image"]', "content", img.currentSrc || img.src);
+          setMeta('meta[name="twitter:image"]', "content", img.currentSrc || img.src);
+          if (!img.dataset.apsgDetailError) {
+            img.dataset.apsgDetailError = "true";
+            img.addEventListener("error", function () {
+              if (this.src.endsWith("/assets/images/logo/apsg1.png")) return;
+              this.src = fallbackImage;
+              this.classList.add("is-fallback-image");
+            }, { once: true });
+          }
+        }
+      }
+      function normalizeLinks() {
+        if (!root) return;
+        qsa('a[href]', root).forEach((link) => {
+          let href = link.getAttribute("href") || "";
+          href = href.replace("event-details.html", "meeting-details.html").replace("content_type=event", "content_type=meeting");
+          link.setAttribute("href", href);
+        });
+      }
+      function updateMeta() {
+        if (!root) return;
+        const title = text(root.querySelector("h1,h2"));
+        const p = text(root.querySelector("p"));
+        if (title && !/loading meeting/i.test(title)) {
+          document.title = `${title} | APSG Meeting`;
+          setMeta('meta[property="og:title"]', "content", `${title} | APSG Meeting`);
+          setMeta('meta[name="twitter:title"]', "content", `${title} | APSG Meeting`);
+        }
+        if (p && !/please wait/i.test(p)) {
+          const desc = p.slice(0, 180);
+          setMeta('meta[name="description"]', "content", desc);
+          setMeta('meta[property="og:description"]', "content", desc);
+          setMeta('meta[name="twitter:description"]', "content", desc);
+        }
+        setMeta('meta[property="og:url"]', "content", window.location.href);
+        const canonical = document.querySelector('link[rel="canonical"]');
+        if (canonical) canonical.setAttribute("href", window.location.href.split("#")[0]);
+      }
+      function updateSidePanel(hasActivity) {
+        if (!sidePanel) return;
+        sidePanel.classList.toggle("detail-activity-hidden", !hasActivity);
+        let list = sidePanel.querySelector(".meeting-snapshot-list");
+        if (hasActivity && !list) {
+          list = document.createElement("div");
+          list.className = "meeting-snapshot-list";
+          const panelCard = sidePanel.querySelector(".panel-card");
+          if (panelCard) panelCard.appendChild(list);
+        }
+        if (hasActivity && list) {
+          const title = text(root.querySelector("h1,h2")) || "Official meeting notice";
+          const date = parseDate();
+          const dateLabel = date ? date.toLocaleString(undefined, { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "Date from notice";
+          list.innerHTML = `<span><i class="fas fa-heading text-[#d8ad34]"></i>${title}</span><span><i class="fas fa-circle-dot text-[#d8ad34]"></i>${detectStatus()}</span><span><i class="fas fa-calendar text-[#d8ad34]"></i>${dateLabel}</span>`;
+        }
+      }
+      function apply() {
+        const loading = isLoading();
+        const hasActivity = hasMeaningfulDetail();
+        const guard = ensureGuard();
+        document.body.classList.toggle("is-detail-loading", loading);
+        document.body.classList.toggle("no-detail-activity", !loading && !hasActivity);
+        if (root) root.classList.toggle("detail-activity-hidden", !loading && !hasActivity);
+        if (guard) guard.classList.toggle("show", !loading && !hasActivity);
+        if (hasActivity) {
+          const article = getArticle();
+          if (article) article.classList.add("detail-article");
+          enhanceHeroImage();
+          normalizeLinks();
+          updateMeta();
+        }
+        updateSidePanel(hasActivity);
+      }
+      function schedule() { clearTimeout(timer); timer = setTimeout(apply, 80); }
+      const copyBtn = document.getElementById("copyMeetingLink");
+      if (copyBtn) copyBtn.addEventListener("click", () => { const done = () => showToast("Meeting link copied"); if (navigator.clipboard) navigator.clipboard.writeText(window.location.href).then(done).catch(done); else done(); });
+      const printBtn = document.getElementById("printMeeting");
+      if (printBtn) printBtn.addEventListener("click", () => window.print());
+      if (root) new MutationObserver(schedule).observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ["class", "style", "src", "href", "datetime"] });
+      schedule();
+    })();
+  </script>
+
+</body>
+</html>

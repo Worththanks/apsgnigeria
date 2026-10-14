@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta content="noindex,nofollow,noarchive" name="robots"/>
+<meta content="#05351f" name="theme-color"/><meta content="strict-origin-when-cross-origin" name="referrer"/><meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Account Details Command Center | APSG Admin</title>
+<link href="/assets/images/logo/apsg1.png" rel="icon" sizes="any"/>
+<link href="/assets/images/logo/apsg1.png" rel="apple-touch-icon"/>
+<link href="/assets/images/logo/apsg.png" rel="icon" sizes="any"/>
+<link href="/assets/images/logo/apsg.png" rel="apple-touch-icon"/>
+<link rel="stylesheet" href="/assets/css/tailwind-static.css">
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0f8a4b',
+            'primary-dark': '#05351f',
+            success: '#10b981',
+            warning: '#d6a92b',
+            danger: '#ef4444',
+            ink: '#07140e',
+            cream: '#fffaf0',
+            bronze: '#8a6616'
+          },
+          boxShadow: {
+            royal: '0 16px 48px rgba(5, 53, 31, 0.16)',
+            gold: '0 12px 30px rgba(214, 169, 43, 0.20)',
+            command: '0 22px 70px rgba(5, 53, 31, 0.14)'
+          }
+        }
+      }
+    };
+  </script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Playfair+Display:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
+<link href="/assets/css/dashboard.css" rel="stylesheet"/>
+<script>
+    if (localStorage.getItem('daynight-theme') === 'carbon') document.documentElement.classList.add('dark');
+  </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+    :root { --green:#0f8a4b; --deep:#05351f; --gold:#d6a92b; --soft:#fffaf0; }
+    * { font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif; }
+    .display-font { font-family: 'Playfair Display', serif; }
+    .sidebar-link { display:flex; align-items:center; gap:.7rem; width:100%; border-radius:1rem; padding:.7rem .75rem; color:rgba(255,255,255,.78); font-size:.78rem; font-weight:900; text-decoration:none; transition:.2s ease; }
+    .sidebar-link:hover, .sidebar-link.active { background:rgba(214,169,43,.14); color:white; }
+    .danger-link:hover { background:rgba(239,68,68,.14); color:#fecaca; }
+    .role-chip { margin-left:auto; border-radius:999px; border:1px solid rgba(214,169,43,.32); padding:.12rem .42rem; font-size:.55rem; letter-spacing:.09em; color:#d6a92b; text-transform:uppercase; }
+    .role-chip.editor { color:#bbf7d0; border-color:rgba(187,247,208,.24); }
+    .role-level { display:grid; place-items:center; border-radius:.75rem; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); padding:.35rem .25rem; color:rgba(255,255,255,.48); font-weight:900; text-transform:uppercase; letter-spacing:.08em; }
+    .role-level.active { background:rgba(214,169,43,.18); color:#d6a92b; border-color:rgba(214,169,43,.35); }
+    .locked-by-role { opacity:.45; pointer-events:none; filter:grayscale(.35); }
+    .pulse-dot { width:.5rem; height:.5rem; border-radius:999px; background:#d6a92b; box-shadow:0 0 0 0 rgba(214,169,43,.65); animation:pulse 1.7s infinite; display:inline-block; }
+    @keyframes pulse { 70% { box-shadow:0 0 0 .55rem rgba(214,169,43,0); } 100% { box-shadow:0 0 0 0 rgba(214,169,43,0); } }
+    .command-shell, .lux-card, .metric-card, .chart-card, .mini-tile { position:relative; border:1px solid rgba(5,53,31,.10); background:linear-gradient(145deg, rgba(255,255,255,.92), rgba(255,250,240,.82)); box-shadow:0 18px 55px rgba(5,53,31,.09); }
+    .dark .command-shell, .dark .lux-card, .dark .metric-card, .dark .chart-card, .dark .mini-tile { border-color:rgba(255,255,255,.10); background:linear-gradient(145deg, rgba(7,31,19,.94), rgba(4,24,13,.90)); box-shadow:0 18px 55px rgba(0,0,0,.25); }
+    .metric-card { overflow:hidden; border-radius:1.15rem; padding:1rem; }
+    .metric-card:after { content:''; position:absolute; right:-1.8rem; top:-1.8rem; width:5rem; height:5rem; border-radius:999px; background:rgba(214,169,43,.12); filter:blur(.1rem); }
+    .metric-icon { display:grid; place-items:center; width:2.65rem; height:2.65rem; border-radius:1rem; background:linear-gradient(135deg, #05351f, #0f8a4b); color:#d6a92b; box-shadow:0 12px 30px rgba(5,53,31,.16); flex:none; }
+    .toolbar-btn, .filter-chip, .action-btn { display:inline-flex; align-items:center; gap:.48rem; border-radius:999px; border:1px solid rgba(5,53,31,.10); background:rgba(255,255,255,.78); padding:.57rem .82rem; font-size:.72rem; font-weight:900; color:#05351f; box-shadow:0 8px 20px rgba(5,53,31,.06); transition:.18s ease; text-decoration:none; }
+    .dark .toolbar-btn, .dark .filter-chip, .dark .action-btn { background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.10); color:#f8fafc; }
+    .toolbar-btn:hover, .filter-chip:hover, .action-btn:hover { transform:translateY(-1px); box-shadow:0 12px 28px rgba(5,53,31,.10); }
+    .toolbar-btn.gold, .filter-chip.active { background:linear-gradient(135deg, #d6a92b, #f6d76f); color:#05351f; border-color:rgba(214,169,43,.55); }
+    .premium-input, .premium-select { min-height:2.75rem; border:1px solid rgba(5,53,31,.12); background:rgba(255,255,255,.84); border-radius:1rem; font-weight:800; color:#05351f; outline:none; }
+    .dark .premium-input, .dark .premium-select { background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.12); color:#fff; }
+    .premium-input:focus, .premium-select:focus { box-shadow:0 0 0 4px rgba(214,169,43,.17); border-color:rgba(214,169,43,.60); }
+    .status-pill { display:inline-flex; align-items:center; gap:.45rem; border-radius:999px; padding:.45rem .75rem; border:1px solid rgba(214,169,43,.26); background:rgba(214,169,43,.10); color:#8a6616; font-size:.68rem; font-weight:900; text-transform:uppercase; letter-spacing:.12em; }
+    .dark .status-pill { color:#d6a92b; }
+    .table-shell { overflow:auto; border-radius:1.2rem; border:1px solid rgba(5,53,31,.10); background:rgba(255,255,255,.62); }
+    .dark .table-shell { border-color:rgba(255,255,255,.10); background:rgba(255,255,255,.04); }
+    table { min-width:980px; width:100%; border-collapse:separate; border-spacing:0; }
+    th { position:sticky; top:0; z-index:1; background:#05351f; color:#f8fafc; font-size:.68rem; text-transform:uppercase; letter-spacing:.14em; padding:.82rem .75rem; text-align:left; white-space:nowrap; }
+    td { padding:.8rem .75rem; border-bottom:1px solid rgba(5,53,31,.08); vertical-align:top; color:#1f2937; font-size:.8rem; }
+    .dark td { color:#e5e7eb; border-bottom-color:rgba(255,255,255,.08); }
+    tr:hover td { background:rgba(214,169,43,.08); }
+    .badge-ok, .badge-warn, .badge-danger, .badge-soft { display:inline-flex; align-items:center; gap:.35rem; border-radius:999px; padding:.32rem .55rem; font-size:.68rem; font-weight:900; white-space:nowrap; }
+    .badge-ok { background:rgba(16,185,129,.12); color:#047857; }
+    .badge-warn { background:rgba(245,158,11,.14); color:#92400e; }
+    .badge-danger { background:rgba(239,68,68,.12); color:#b91c1c; }
+    .badge-soft { background:rgba(15,138,75,.10); color:#05351f; }
+    .dark .badge-soft { color:#bbf7d0; }
+    .progress-track { height:.58rem; border-radius:999px; background:rgba(148,163,184,.22); overflow:hidden; }
+    .progress-fill { height:100%; border-radius:999px; background:linear-gradient(90deg, #0f8a4b, #d6a92b); }
+    .list-card { border-radius:1rem; border:1px solid rgba(5,53,31,.10); background:rgba(255,255,255,.66); padding:.8rem; }
+    .dark .list-card { border-color:rgba(255,255,255,.10); background:rgba(255,255,255,.05); }
+    .toast-copy { position:fixed; right:1rem; bottom:1rem; z-index:100; transform:translateY(1rem); opacity:0; pointer-events:none; transition:.2s ease; }
+    .toast-copy.show { transform:translateY(0); opacity:1; }
+    @media print { .no-print, aside, header { display:none!important; } .md\:ml-64 { margin-left:0!important; } body { background:white!important; } .metric-card,.lux-card,.command-shell,.chart-card { box-shadow:none!important; break-inside:avoid; } }
+  
+
+    /* APSG Account Details Premium Enhancement Layer */
+    body { background:
+      radial-gradient(circle at 96% 0, rgba(214,169,43,.16), transparent 30rem),
+      radial-gradient(circle at 0 12%, rgba(15,138,75,.12), transparent 34rem),
+      linear-gradient(180deg,#f8fbf7 0%,#eef6ef 100%) !important;
+      overflow-x:hidden;
+    }
+    #sidebar { background:linear-gradient(180deg,#031b0f 0%,#052414 58%,#03140b 100%) !important; }
+    #sidebar .sidebar-link { min-height:2.38rem; padding:.58rem .72rem; border-radius:1rem; }
+    #sidebar .sidebar-link:hover, #sidebar .sidebar-link.active { color:#ffe7a3; transform:translateX(2px); }
+    .access-gate{position:fixed;left:50%;top:.85rem;z-index:900;width:min(92vw,46rem);transform:translateX(-50%);border:1px solid rgba(214,169,43,.34);border-radius:1.15rem;background:rgba(255,255,255,.97);color:var(--deep);padding:.9rem 1rem;box-shadow:0 34px 110px rgba(5,53,31,.20);font-weight:850}.access-gate.danger{border-color:#fecaca;background:#fff1f2;color:#991b1b}.access-gate.success{border-color:rgba(16,185,129,.24);background:#f0fdf4;color:#065f46}.access-gate strong{display:block;font-weight:950;margin-bottom:.12rem}.dark .access-gate{background:rgba(7,23,14,.96);color:#fff;border-color:rgba(214,169,43,.22)}.dark .access-gate.danger{background:#2a1010;color:#fecaca}.dark .access-gate.success{background:#062f1c;color:#bbf7d0}
+    .top-role-badge{display:inline-flex;align-items:center;gap:.38rem;min-height:2.15rem;border:1px solid rgba(214,169,43,.22);border-radius:999px;background:rgba(214,169,43,.11);color:#73540c;padding:.45rem .72rem;font-size:.68rem;font-weight:950;text-transform:uppercase;letter-spacing:.05em}.dark .top-role-badge{background:rgba(214,169,43,.13);color:#f8dc7a}
+    .account-hero-title{margin:.55rem 0 0;color:#05351f;font-size:clamp(1.85rem,3.2vw,3.6rem);font-weight:950;line-height:.98;letter-spacing:-.04em}.dark .account-hero-title{color:#fff}.account-hero-copy{margin:.65rem 0 0;max-width:62rem;color:#64746a;font-size:.86rem;font-weight:700;line-height:1.55}.dark .account-hero-copy{color:rgba(255,255,255,.68)}
+    .metric-card,.lux-card,.chart-card,.command-shell{backdrop-filter:blur(14px)}
+    .metric-card:hover,.mini-tile:hover,.list-card:hover{transform:translateY(-1px);box-shadow:0 18px 44px rgba(5,53,31,.12)}
+    .table-shell tbody tr{transition:background .16s ease, transform .16s ease}.table-shell tbody tr:hover{transform:translateY(-1px)}
+    .action-btn{min-height:2.05rem;padding:.46rem .7rem;border-radius:999px;font-size:.68rem;background:linear-gradient(135deg,#fff,rgba(255,250,240,.92));white-space:nowrap}.dark .action-btn{background:rgba(255,255,255,.07)}
+    .action-btn[href*="edit-member"]{background:rgba(214,169,43,.13);border-color:rgba(214,169,43,.25);color:#73540c}.dark .action-btn[href*="edit-member"]{color:#f8dc7a}
+    .badge-soft{border:1px solid rgba(5,53,31,.08)}
+    .toolbar-btn:disabled,.filter-chip:disabled{opacity:.52;cursor:not-allowed;transform:none!important}
+    body[data-account-access="blocked"] main{opacity:.38;filter:grayscale(.3);pointer-events:none}
+    .list-card p{max-height:calc(1.35em * 2);line-height:1.35;overflow:hidden;position:relative}.list-card p::after{content:"";position:absolute;right:0;bottom:0;width:32%;height:1.35em;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.94) 72%);pointer-events:none}.dark .list-card p::after{background:linear-gradient(90deg,rgba(7,23,14,0),rgba(7,23,14,.94) 72%)}
+    @media(max-width:767px){#sidebar{transform:translateX(-100%)}#sidebar:not(.-translate-x-full){transform:translateX(0)}.account-hero-title{font-size:1.75rem}.toolbar-btn,.filter-chip{font-size:.68rem;padding:.5rem .7rem}.table-shell{border-radius:1rem}}
+</style>
+  <link rel="stylesheet" href="/assets/css/admin-unified.css">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+</head>
+<body class="min-h-screen bg-slate-50 text-sm text-gray-900 antialiased dark:bg-[#06150d] dark:text-gray-100">
+<div aria-hidden="true" class="fixed inset-0 z-40 hidden bg-black/45 backdrop-blur-sm md:hidden" id="mobile-overlay" onclick="closeSidebar()"></div><div aria-live="polite" class="access-gate hidden no-print" id="accessGate" role="status"></div>
+<div class="flex min-h-screen">
+
+<aside aria-label="APSG Admin Sidebar" class="fixed inset-y-0 left-0 z-50 flex w-64 -translate-x-full flex-col overflow-hidden border-r border-white/10 bg-[#041f12] text-white shadow-2xl transition-transform duration-300 ease-in-out md:translate-x-0" id="sidebar">
+<div class="relative shrink-0 overflow-hidden border-b border-white/10 p-3.5">
+<div class="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-warning/20 blur-xl"></div>
+<a aria-label="APSG Admin Dashboard" class="relative z-10 flex items-center gap-2.5" href="/admin/dashboard.html">
+<span class="grid h-9 w-9 place-items-center rounded-2xl border border-warning/30 bg-white/10 shadow-gold">
+<img alt="APSG Logo" class="h-6 w-auto" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" src="/assets/images/logo/apsg.png" width="96" height="96" decoding="async">
+<i class="fas fa-shield-halved hidden text-warning"></i>
+</span>
+<span class="min-w-0"><span class="block text-sm font-black leading-none">APSG Admin</span><span class="mt-1 block text-[9px] font-black uppercase tracking-[0.22em] text-warning">Account Control</span></span>
+</a>
+</div>
+<nav aria-label="Admin navigation" class="apsg-role-sidebar flex-1 space-y-1.5 overflow-y-auto p-2.5 pb-4">
+<p class="px-2 py-1.5 text-[9px] font-black uppercase tracking-[0.28em] text-white/40">Command Center</p>
+<a class="sidebar-link" data-access="viewer,editor,admin,superadmin" href="/admin/dashboard.html"><i class="fas fa-chart-pie w-4 text-center"></i><span>Dashboard</span><span class="role-chip">Admin</span></a>
+<a class="sidebar-link" data-access="admin,superadmin" href="/admin/members.html"><i class="fas fa-users w-4 text-center"></i><span>Members</span><span class="role-chip">Admin</span></a>
+<a aria-current="page" class="sidebar-link active" data-access="admin,superadmin" href="/admin/account-details.html"><i class="fas fa-building-columns w-4 text-center"></i><span>Account Details</span><span class="role-chip">Admin</span></a>
+<a class="sidebar-link" data-access="admin,superadmin" href="/admin/admin-leadership.html"><i class="fa-solid fa-users-viewfinder w-4 text-center"></i><span>Leadership Desk</span><span class="role-chip">Admin</span></a>
+<a class="sidebar-link" data-access="admin,superadmin" href="/admin/admin-official-create.html"><i class="fa-solid fa-user-pen w-4 text-center"></i><span>Create / Update</span><span class="role-chip">Admin</span></a>
+<a class="sidebar-link" data-access="admin,superadmin" href="/admin/admin-officials-manager.html"><i class="fa-solid fa-table-list w-4 text-center"></i><span>Officials Manager</span><span class="role-chip">Admin</span></a>
+<a class="sidebar-link" data-access="admin,superadmin" href="/admin/member-details.html"><i class="fas fa-id-card-clip w-4 text-center"></i><span>Member Dossier</span><span class="role-chip">Admin</span></a>
+<a class="sidebar-link" data-access="admin,superadmin" href="/admin/edit-member.html"><i class="fas fa-user-pen w-4 text-center"></i><span>Edit Member</span><span class="role-chip">Admin</span></a>
+<p class="px-2 pt-4 pb-1.5 text-[9px] font-black uppercase tracking-[0.28em] text-warning/80">Publishing Desk</p>
+<a class="sidebar-link" data-access="editor,admin,superadmin" href="/admin/admin-blog.html"><i class="fas fa-newspaper w-4 text-center"></i><span>News &amp; Updates</span><span class="role-chip editor">Editor</span></a>
+<a class="sidebar-link" data-access="editor,admin,superadmin" href="/admin/admin-meeting.html"><i class="fas fa-users-line w-4 text-center"></i><span>Meetings</span><span class="role-chip editor">Editor</span></a>
+<a class="sidebar-link" data-access="editor,admin,superadmin" href="/admin/admin-event.html"><i class="fas fa-calendar-check w-4 text-center"></i><span>Events</span><span class="role-chip editor">Editor</span></a>
+<a class="sidebar-link" data-access="editor,admin,superadmin" href="/admin/admin-gallery.html"><i class="fa-solid fa-images w-4 text-center"></i><span>Gallery Albums</span><span class="role-chip editor">Editor</span></a>
+<p class="px-2 pt-4 pb-1.5 text-[9px] font-black uppercase tracking-[0.28em] text-white/40">Public Review</p>
+<a class="sidebar-link" data-access="viewer,editor,admin,superadmin" href="/pages/blog.html" rel="noopener" target="_blank"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View Blog</span></a>
+<a class="sidebar-link" data-access="viewer,editor,admin,superadmin" href="/pages/meetings.html" rel="noopener" target="_blank"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View Meetings</span></a>
+<a class="sidebar-link" data-access="viewer,editor,admin,superadmin" href="/pages/events.html" rel="noopener" target="_blank"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View Events</span></a>
+<a class="sidebar-link" data-access="viewer,editor,admin,superadmin" href="/pages/gallery.html" rel="noopener" target="_blank"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View Gallery</span></a>
+<a class="sidebar-link" data-access="viewer,editor,admin,superadmin" href="/pages/leadership.html" rel="noopener" target="_blank"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View Leadership</span></a>
+<a class="sidebar-link" data-access="viewer,editor,admin,superadmin" href="/pages/bot.html" rel="noopener" target="_blank"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View BOT</span></a>
+<a class="sidebar-link" data-access="viewer,editor,admin,superadmin" href="/pages/cwdi.html" rel="noopener" target="_blank"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View CWDI</span></a>
+<a class="sidebar-link" data-access="viewer,editor,admin,superadmin" href="/pages/mp.html" rel="noopener" target="_blank"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View Matrons &amp; Patrons</span></a>
+<a class="sidebar-link" data-access="viewer,editor,admin,superadmin" href="/pages/nat-exec.html" rel="noopener" target="_blank"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View NATEXCO</span></a>
+<a class="sidebar-link" data-access="viewer,editor,admin,superadmin" href="/pages/state.html" rel="noopener" target="_blank"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View State Executives</span></a>
+</nav>
+<div class="apsg-role-card mx-2.5 mb-3 rounded-2xl border border-warning/20 bg-white/[0.06] p-3">
+<div class="flex items-center gap-2.5"><div class="grid h-8 w-8 place-items-center rounded-xl bg-warning text-[#062112]"><i class="fas fa-user-shield text-sm"></i></div><div class="min-w-0"><p class="text-[11px] font-black">Role Access</p><p class="text-[10px] text-white/50"><span id="adminRoleLabel">Resolving role</span></p></div></div>
+<div class="mt-3 grid grid-cols-2 gap-1.5 text-[9px]"><span class="role-level" data-role-level="viewer">Viewer</span><span class="role-level" data-role-level="editor">Editor</span><span class="role-level" data-role-level="admin">Admin</span><span class="role-level" data-role-level="superadmin">Superadmin</span></div>
+<div class="mt-3 flex items-center gap-2 rounded-xl bg-black/20 px-2.5 py-2 text-[10px] text-white/60"><span class="pulse-dot"></span><span>Authenticated admin session</span></div>
+</div>
+<div class="shrink-0 border-t border-white/10 bg-[#041f12] p-2.5"><button class="sidebar-link danger-link w-full text-left" onclick="logout()" type="button"><i class="fas fa-right-from-bracket w-4 text-center"></i><span>Logout</span></button></div>
+</aside>
+<div class="flex min-w-0 flex-1 flex-col md:ml-64">
+<header class="sticky top-0 z-30 border-b border-green-900/10 bg-white/80 backdrop-blur-xl dark:border-white/10 dark:bg-[#07170e]/85">
+<div class="flex items-center justify-between gap-3 px-3.5 py-2">
+<div class="flex min-w-0 items-center gap-2.5">
+<button aria-label="Open admin sidebar" class="grid h-9 w-9 place-items-center rounded-2xl border border-green-900/10 bg-white/85 shadow-sm transition hover:bg-white md:hidden dark:border-white/10 dark:bg-white/10" id="mobile-toggle" onclick="toggleSidebar()" type="button"><i class="fas fa-bars"></i></button>
+<div class="min-w-0"><p class="text-[9px] font-black uppercase tracking-[0.26em] text-warning">APSG Nigeria</p><h1 class="truncate text-sm font-black tracking-tight md:text-lg">Account Details Command Center</h1></div>
+</div>
+<div class="no-print flex shrink-0 items-center gap-2"><span class="top-role-badge hidden sm:inline-flex" id="topRoleBadge"><i class="fas fa-user-shield"></i>Checking role</span>
+<button class="toolbar-btn hidden sm:inline-flex" onclick="refreshAccounts()" type="button"><i class="fas fa-rotate-right text-warning"></i><span>Refresh</span></button>
+<div class="flex rounded-2xl border border-green-900/10 bg-white/70 p-1 shadow-sm dark:border-white/10 dark:bg-white/10">
+<button aria-label="Switch to light mode" class="theme-btn-snow h-7 w-7 rounded-xl transition-all" onclick="setTheme('snow')" type="button"><i class="fas fa-sun text-xs"></i></button>
+<button aria-label="Switch to dark mode" class="theme-btn-carbon h-7 w-7 rounded-xl transition-all" onclick="setTheme('carbon')" type="button"><i class="fas fa-moon text-xs"></i></button>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 p-2.5 md:p-4 lg:p-5 overflow-auto">
+<section class="command-shell rounded-[1.45rem] p-3.5 md:p-4 mb-3.5 overflow-hidden">
+<div class="absolute -right-16 -top-20 h-44 w-44 rounded-full bg-warning/20 blur-2xl"></div>
+<div class="absolute -left-12 bottom-0 h-32 w-32 rounded-full bg-primary/10 blur-2xl"></div>
+<div class="relative z-10 grid xl:grid-cols-[1fr_auto] gap-3.5 items-center">
+<div>
+<div class="inline-flex items-center gap-2 rounded-full border border-warning/28 bg-warning/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-bronze dark:text-warning font-black"><span class="pulse-dot"></span>APSG Account Details Control Room</div><h2 class="account-hero-title display-font">Account Details Command Center</h2><p class="account-hero-copy">Audit member bank details, identify missing or duplicate account records, export clean reports, and open each member dossier directly from one premium control room.</p>
+</div>
+<div class="flex flex-wrap xl:justify-end gap-2 no-print">
+<a class="toolbar-btn gold" href="/admin/dashboard.html"><i class="fas fa-chart-pie"></i>Dashboard</a>
+<a class="toolbar-btn" href="/admin/members.html"><i class="fas fa-users text-warning"></i>Members</a>
+<button class="toolbar-btn" onclick="exportAccountCsv()"><i class="fas fa-file-invoice-dollar text-warning"></i>Export Accounts</button>
+<button class="toolbar-btn" onclick="exportMissingAccounts()"><i class="fas fa-file-circle-exclamation text-warning"></i>Missing Accounts</button>
+<button class="toolbar-btn" onclick="window.print()"><i class="fas fa-print text-warning"></i>Print</button>
+</div>
+</div>
+<div class="relative z-10 mt-3.5 grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+<div class="mini-tile rounded-2xl px-3 py-2"><p class="text-[9px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-black">System</p><p class="font-black text-primary-dark dark:text-warning">Live</p></div>
+<div class="mini-tile rounded-2xl px-3 py-2"><p class="text-[9px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-black">Account Coverage</p><p class="font-black text-primary-dark dark:text-warning" id="heroAccountCoverage">0%</p></div>
+<div class="mini-tile rounded-2xl px-3 py-2"><p class="text-[9px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-black">Top Bank</p><p class="font-black text-primary-dark dark:text-warning truncate" id="heroTopBank">No data</p></div>
+<div class="mini-tile rounded-2xl px-3 py-2"><p class="text-[9px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-black">Updated</p><p class="font-black text-primary-dark dark:text-warning truncate" id="lastUpdatedLabel">Waiting</p></div>
+</div>
+</section>
+<section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-8 gap-2.5 mb-3.5">
+<div class="metric-card"><div class="relative z-10 flex items-start justify-between gap-2.5"><div><p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Total Members</p><p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="totalMembers">0</p><p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">All registry records</p></div><div class="metric-icon"><i class="fas fa-users"></i></div></div></div>
+<div class="metric-card"><div class="relative z-10 flex items-start justify-between gap-2.5"><div><p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">With Account</p><p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="withAccount">0</p><p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">Account number supplied</p></div><div class="metric-icon"><i class="fas fa-building-columns"></i></div></div></div>
+<div class="metric-card"><div class="relative z-10 flex items-start justify-between gap-2.5"><div><p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Missing Account</p><p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="missingAccount">0</p><p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">Needs follow-up</p></div><div class="metric-icon"><i class="fas fa-triangle-exclamation"></i></div></div></div>
+<div class="metric-card"><div class="relative z-10 flex items-start justify-between gap-2.5"><div><p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">With Bank</p><p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="withBank">0</p><p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">Bank name supplied</p></div><div class="metric-icon"><i class="fas fa-landmark"></i></div></div></div>
+<div class="metric-card"><div class="relative z-10 flex items-start justify-between gap-2.5"><div><p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Incomplete</p><p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="incompleteAccounts">0</p><p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">Account or bank missing</p></div><div class="metric-icon"><i class="fas fa-file-circle-exclamation"></i></div></div></div>
+<div class="metric-card"><div class="relative z-10 flex items-start justify-between gap-2.5"><div><p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Duplicate Accounts</p><p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="duplicateAccounts">0</p><p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">Same account repeated</p></div><div class="metric-icon"><i class="fas fa-clone"></i></div></div></div>
+<div class="metric-card"><div class="relative z-10 flex items-start justify-between gap-2.5"><div><p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Banks</p><p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="bankCount">0</p><p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">Unique banks</p></div><div class="metric-icon"><i class="fas fa-building-user"></i></div></div></div>
+<div class="metric-card"><div class="relative z-10 flex items-start justify-between gap-2.5"><div><p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Filtered</p><p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="filteredCount">0</p><p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">Current table view</p></div><div class="metric-icon"><i class="fas fa-filter"></i></div></div></div>
+</section>
+<section class="grid grid-cols-1 xl:grid-cols-[1fr_.92fr] gap-2.5 mb-3.5">
+<div class="chart-card rounded-[1.25rem] p-4">
+<div class="flex items-start justify-between gap-3 mb-3"><div><h3 class="text-sm font-black text-primary-dark dark:text-white">Account Completion Score</h3><p class="text-[11px] text-gray-500 dark:text-gray-400">Measures account number plus bank name readiness across the registry.</p></div><span class="status-pill">Audit</span></div>
+<div class="flex items-center gap-4">
+<div class="grid h-28 w-28 place-items-center rounded-full border-[10px] border-warning/30 bg-white/70 dark:bg-white/5 text-center"><div><p class="text-2xl font-black text-primary-dark dark:text-white" id="completionScore">0%</p><p class="text-[10px] font-black uppercase tracking-widest text-gray-500">Ready</p></div></div>
+<div class="flex-1 space-y-3">
+<div><div class="mb-1 flex justify-between text-xs font-black"><span>Account Number</span><span id="accountNumberRate">0%</span></div><div class="progress-track"><div class="progress-fill" id="accountNumberBar" style="width:0%"></div></div></div>
+<div><div class="mb-1 flex justify-between text-xs font-black"><span>Bank Name</span><span id="bankNameRate">0%</span></div><div class="progress-track"><div class="progress-fill" id="bankNameBar" style="width:0%"></div></div></div>
+<div><div class="mb-1 flex justify-between text-xs font-black"><span>Complete Account Record</span><span id="completeAccountRate">0%</span></div><div class="progress-track"><div class="progress-fill" id="completeAccountBar" style="width:0%"></div></div></div>
+</div>
+</div>
+</div>
+<div class="chart-card rounded-[1.25rem] p-4">
+<div class="flex items-start justify-between gap-3 mb-3"><div><h3 class="text-sm font-black text-primary-dark dark:text-white">Priority Action Center</h3><p class="text-[11px] text-gray-500 dark:text-gray-400">Immediate account-data tasks for admin follow-up.</p></div><button class="filter-chip" onclick="copyAccountSummary()"><i class="fas fa-copy"></i>Copy Summary</button></div>
+<div class="space-y-2" id="priorityList"></div>
+</div>
+</section>
+<section class="lux-card rounded-[1.25rem] p-3.5 md:p-4 mb-3.5 no-print">
+<div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3">
+<div class="grid grid-cols-1 md:grid-cols-5 gap-2 flex-1">
+<input class="premium-input px-3" id="searchInput" placeholder="Search name, reg no, phone, state, bank..." type="search"/>
+<select class="premium-select px-3" id="stateFilter"><option value="">All States</option></select>
+<select class="premium-select px-3" id="bankFilter"><option value="">All Banks</option></select>
+<select class="premium-select px-3" id="accountFilter"><option value="">All Account Status</option><option value="complete">Complete account</option><option value="with_account">With account number</option><option value="missing_account">Missing account number</option><option value="missing_bank">Missing bank</option><option value="incomplete">Incomplete account</option><option value="duplicate">Duplicate account</option></select>
+<select class="premium-select px-3" id="dateFilter"><option value="">All Dates</option><option value="today">Today</option><option value="week">Last 7 Days</option><option value="month">Last 30 Days</option></select>
+</div>
+<div class="flex flex-wrap gap-2">
+<button class="filter-chip active" data-quick="all"><i class="fas fa-layer-group"></i>All</button>
+<button class="filter-chip" data-quick="complete"><i class="fas fa-check-circle"></i>Complete</button>
+<button class="filter-chip" data-quick="missing_account"><i class="fas fa-triangle-exclamation"></i>Missing Account</button>
+<button class="filter-chip" data-quick="duplicate"><i class="fas fa-clone"></i>Duplicate</button>
+<button class="filter-chip" onclick="resetFilters()"><i class="fas fa-rotate-left"></i>Reset</button>
+</div>
+</div>
+</section>
+<section class="grid grid-cols-1 xl:grid-cols-[1.15fr_.85fr] gap-2.5 mb-3.5">
+<div class="lux-card rounded-[1.25rem] p-4">
+<div class="mb-3 flex items-start justify-between gap-3"><div><h3 class="text-sm font-black text-primary-dark dark:text-white">Bank Distribution</h3><p class="text-[11px] text-gray-500 dark:text-gray-400">Top banks from members with supplied bank names.</p></div><button class="filter-chip" onclick="exportBankSummary()"><i class="fas fa-file-csv"></i>Export Banks</button></div>
+<div class="space-y-2" id="bankDistribution"></div>
+</div>
+<div class="lux-card rounded-[1.25rem] p-4">
+<div class="mb-3 flex items-start justify-between gap-3"><div><h3 class="text-sm font-black text-primary-dark dark:text-white">Duplicate Account Watch</h3><p class="text-[11px] text-gray-500 dark:text-gray-400">Repeated account numbers that require human review.</p></div><button class="filter-chip" onclick="exportDuplicateAccounts()"><i class="fas fa-file-export"></i>Export</button></div>
+<div class="space-y-2" id="duplicateList"></div>
+</div>
+</section>
+<section class="lux-card rounded-[1.25rem] overflow-hidden mb-3.5">
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 border-b border-green-900/10 px-3.5 py-3 dark:border-white/10">
+<div><p class="text-[10px] uppercase tracking-[0.22em] text-warning font-black">Account Registry Table</p><h3 class="text-base font-black text-primary-dark dark:text-white">Bank Details &amp; Account Readiness</h3></div>
+<div class="flex flex-wrap gap-2 no-print"><button class="filter-chip" onclick="exportFilteredAccounts()"><i class="fas fa-file-export"></i>Export Current View</button><button class="filter-chip" onclick="exportAccountCsv()"><i class="fas fa-building-columns"></i>Export All Accounts</button></div>
+</div>
+<div class="table-shell rounded-none border-0">
+<table>
+<thead><tr><th>Reg No</th><th>Full Name</th><th>Account Number</th><th>Bank</th><th>Phone</th><th>State</th><th>LGA</th><th>Ward</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+<tbody id="accountTableBody"><tr><td class="text-center py-8" colspan="11">Loading account records...</td></tr></tbody>
+</table>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-2 px-3.5 py-3 no-print">
+<div class="text-xs font-bold text-gray-500 dark:text-gray-400" id="pageInfo">Showing 0 records</div>
+<div class="flex gap-2"><button class="filter-chip" id="prevBtn" onclick="changePage(-1)"><i class="fas fa-chevron-left"></i>Prev</button><button class="filter-chip" id="nextBtn" onclick="changePage(1)">Next<i class="fas fa-chevron-right"></i></button></div>
+</div>
+</section>
+<section class="grid grid-cols-1 xl:grid-cols-2 gap-2.5 mb-3.5">
+<div class="lux-card rounded-[1.25rem] p-4"><div class="mb-3"><h3 class="text-sm font-black text-primary-dark dark:text-white">Missing Account Follow-Up</h3><p class="text-[11px] text-gray-500 dark:text-gray-400">First records without account number or bank name.</p></div><div class="space-y-2" id="missingList"></div></div>
+<div class="lux-card rounded-[1.25rem] p-4"><div class="mb-3"><h3 class="text-sm font-black text-primary-dark dark:text-white">Latest Complete Accounts</h3><p class="text-[11px] text-gray-500 dark:text-gray-400">Recent members with account number and bank name supplied.</p></div><div class="space-y-2" id="latestList"></div></div>
+</section>
+</main>
+<footer class="border-t border-green-900/10 dark:border-white/10 bg-white/65 dark:bg-[#07170e]/70 backdrop-blur-xl p-2 text-center text-[10px] text-gray-500 dark:text-gray-400">© 2026 APC Progressive Support Group (APSG Nigeria) Account Details Control Room. All rights reserved.</footer>
+</div>
+</div>
+<div class="toast-copy rounded-2xl bg-[#05351f] text-white shadow-royal border border-warning/30 px-4 py-3 text-sm font-bold" id="copyToast"><i class="fas fa-check-circle text-warning mr-2"></i>Copied</div>
+<script src="/assets/js/supabase-clients.js"></script>
+  <script src="/assets/js/apsg-settings.js"></script>
+<script src="/assets/js/admin-auth.js"></script>
+<script>
+    let allMembers = [];
+    let filteredMembers = [];
+    let currentPage = 1;
+    const pageSize = 25;
+    const els = {};
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      cacheEls();
+      if (typeof checkAuth === 'function') await checkAuth();
+      const hasAccess = await resolveAdminRole();
+      bindFilters();
+      if (!hasAccess) return;
+      await loadAccountDetails();
+      setTheme(document.documentElement.classList.contains('dark') ? 'carbon' : 'snow');
+    });
+
+    function cacheEls() {
+      ['sidebar','mobile-overlay','totalMembers','withAccount','missingAccount','withBank','incompleteAccounts','duplicateAccounts','bankCount','filteredCount','completionScore','accountNumberRate','bankNameRate','completeAccountRate','accountNumberBar','bankNameBar','completeAccountBar','heroAccountCoverage','heroTopBank','lastUpdatedLabel','priorityList','bankDistribution','duplicateList','accountTableBody','pageInfo','prevBtn','nextBtn','stateFilter','bankFilter','accountFilter','dateFilter','searchInput','missingList','latestList'].forEach(id => els[id.replace(/-/g,'_')] = document.getElementById(id));
+    }
+
+    function setTheme(mode) {
+      if (mode === 'carbon') { document.documentElement.classList.add('dark'); localStorage.setItem('daynight-theme','carbon'); }
+      else { document.documentElement.classList.remove('dark'); localStorage.setItem('daynight-theme','snow'); }
+      document.querySelectorAll('.theme-btn-snow, .theme-btn-carbon').forEach(btn => {
+        const active = btn.classList.contains(`theme-btn-${mode}`);
+        btn.classList.toggle('bg-warning', active); btn.classList.toggle('text-primary-dark', active); btn.classList.toggle('shadow-sm', active);
+      });
+    }
+
+    function toggleSidebar(){ els.sidebar?.classList.toggle('-translate-x-full'); els.mobile_overlay?.classList.toggle('hidden'); }
+    function closeSidebar(){ els.sidebar?.classList.add('-translate-x-full'); els.mobile_overlay?.classList.add('hidden'); }
+    async function logout(){ if (typeof supabaseClient !== 'undefined') await supabaseClient.auth.signOut(); window.location.href='/admin/login.html'; }
+
+
+    async function waitForSupabaseClient() {
+      for (let i = 0; i < 35; i += 1) {
+        const client = window.supabaseClient || window.apsgSupabase || window.APSG_SUPABASE || window.supabaseClientPublic;
+        if (client && typeof client.from === 'function') {
+          window.supabaseClient = client;
+          return client;
+        }
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      return null;
+    }
+
+    function showAccessGate(message, type='info', title='Account access') {
+      const gate = document.getElementById('accessGate');
+      if (!gate) return;
+      gate.className = `access-gate ${type === 'danger' ? 'danger' : type === 'success' ? 'success' : ''}`;
+      gate.innerHTML = `<strong>${escapeHtml(title)}</strong><span>${escapeHtml(message)}</span>`;
+      gate.classList.remove('hidden');
+      clearTimeout(showAccessGate.timer);
+      if (type !== 'danger') showAccessGate.timer = setTimeout(() => gate.classList.add('hidden'), 3800);
+    }
+
+    function describeSupabaseError(error) {
+      const message = String(error?.message || error || 'Unknown Supabase error.');
+      const code = String(error?.code || '');
+      if (!navigator.onLine) return 'Network appears offline. Check your internet connection and refresh.';
+      if (code === '42P01' || /relation .* does not exist/i.test(message)) return 'Required Supabase table was not found. Confirm members/admin_profiles tables exist.';
+      if (code === '42501' || /permission denied|row-level security|rls/i.test(message)) return 'Supabase RLS denied this request. Confirm this user has an active admin or superadmin profile.';
+      if (/failed to fetch|network|timeout/i.test(message)) return 'Network or Supabase connection issue. Check Supabase project status and try again.';
+      return message;
+    }
+
+
+    function getMemberRouteIdentifier(member) {
+      return String(member?.id ?? member?.member_id ?? member?.user_id ?? member?.reg_number ?? member?.registration_number ?? '').trim();
+    }
+
+    function getMemberRouteKey(member) {
+      if (member?.id !== undefined && member?.id !== null && String(member.id).trim()) return 'id';
+      if (member?.member_id !== undefined && member?.member_id !== null && String(member.member_id).trim()) return 'member_id';
+      if (member?.user_id !== undefined && member?.user_id !== null && String(member.user_id).trim()) return 'user_id';
+      return 'reg_number';
+    }
+
+    function memberAdminHref(page, member) {
+      const identifier = getMemberRouteIdentifier(member);
+      if (!identifier) return '/admin/members.html';
+      return `/admin/${page}.html?${getMemberRouteKey(member)}=${encodeURIComponent(identifier)}`;
+    }
+
+    function setRoleUi(role) {
+      role = String(role || 'viewer').toLowerCase();
+      window.APSG_ADMIN_ROLE = role;
+      const label = document.getElementById('adminRoleLabel');
+      if (label) label.textContent = titleCase(role);
+      const top = document.getElementById('topRoleBadge');
+      if (top) top.innerHTML = `<i class="fas fa-user-shield"></i>${escapeHtml(titleCase(role))}`;
+      document.querySelectorAll('[data-role-level]').forEach(el => el.classList.toggle('active', el.dataset.roleLevel === role));
+      document.querySelectorAll('[data-access]').forEach(el => {
+        const allowed = String(el.dataset.access || '').split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
+        const locked = allowed.length && !allowed.includes(role);
+        el.classList.toggle('locked-by-role', Boolean(locked));
+        if (locked) el.setAttribute('aria-disabled','true'); else el.removeAttribute('aria-disabled');
+      });
+    }
+
+    function setAccountAccess(allowed, message='') {
+      document.body.dataset.accountAccess = allowed ? 'granted' : 'blocked';
+      document.querySelectorAll('button,a,input,select').forEach(el => {
+        if (el.closest('#sidebar') || el.closest('header') || el.id === 'mobile-toggle') return;
+        if (!allowed) el.setAttribute('tabindex', '-1');
+      });
+      if (!allowed && message) showAccessGate(message, 'danger', 'Account access blocked');
+      if (allowed) showAccessGate('Account Details access verified.', 'success', 'Access verified');
+    }
+
+    async function resolveAdminRole() {
+      const client = await waitForSupabaseClient();
+      if (!client?.auth?.getSession) {
+        setRoleUi('viewer');
+        setAccountAccess(false, 'Supabase Auth is unavailable. Confirm /assets/js/supabase-clients.js is loading.');
+        return false;
+      }
+      try {
+        const { data, error } = await client.auth.getSession();
+        if (error) throw error;
+        const session = data?.session;
+        if (!session?.user) {
+          const redirect = encodeURIComponent(location.pathname + location.search);
+          location.href = `/admin/login.html?redirect=${redirect}`;
+          return false;
+        }
+        const email = String(session.user.email || '').toLowerCase();
+        const fields = 'id,user_id,email,role,is_active,status';
+        let result = await client.from('admin_profiles').select(fields).eq('id', session.user.id).limit(1).maybeSingle();
+        if (!result?.data) result = await client.from('admin_profiles').select(fields).eq('user_id', session.user.id).limit(1).maybeSingle();
+        if (!result?.data && email) result = await client.from('admin_profiles').select(fields).ilike('email', email).limit(1).maybeSingle();
+        if (result?.error) throw result.error;
+        const profile = result?.data;
+        const role = String(profile?.role || 'viewer').toLowerCase();
+        const active = profile && profile.is_active !== false && String(profile.status || 'active').toLowerCase() !== 'inactive';
+        setRoleUi(role);
+        const allowed = active && ['admin','superadmin'].includes(role);
+        setAccountAccess(allowed, allowed ? '' : `This Account Details page requires an active admin or superadmin role. Current role: ${role || 'none'}.`);
+        return allowed;
+      } catch (error) {
+        console.warn('Admin role lookup failed:', error);
+        setRoleUi('viewer');
+        setAccountAccess(false, describeSupabaseError(error));
+        return false;
+      }
+    }
+
+    async function getMembersExactCount() {
+      const { count, error } = await supabaseClient.from('members').select('id', { count:'exact', head:true });
+      if (error) throw error;
+      return Number(count || 0);
+    }
+
+    async function fetchAllMembers({ orderColumn='id', ascending=true, pageSize=1000 } = {}) {
+      const totalCount = await getMembersExactCount();
+      const rows = [];
+      if (!totalCount) return rows;
+      for (let from=0; from<totalCount; from+=pageSize) {
+        const to = Math.min(from + pageSize - 1, totalCount - 1);
+        let query = supabaseClient.from('members').select('*').range(from, to);
+        if (orderColumn) query = query.order(orderColumn, { ascending });
+        const { data, error } = await query;
+        if (error) throw error;
+        rows.push(...(Array.isArray(data) ? data : []));
+      }
+      return rows;
+    }
+
+    async function loadAccountDetails() {
+      try {
+        els.accountTableBody.innerHTML = '<tr><td colspan="11" class="text-center py-8">Loading account records...</td></tr>';
+        allMembers = await fetchAllMembers({ orderColumn:'id', ascending:true });
+        filteredMembers = [...allMembers];
+        populateFilters();
+        updateSummary();
+        applyFilters();
+        showToast(`Loaded ${allMembers.length.toLocaleString()} records`);
+      } catch (error) {
+        console.error('Account details load failed:', error);
+        els.accountTableBody.innerHTML = `<tr><td colspan="11" class="text-center py-8 text-red-700 font-black">Unable to load account details: ${escapeHtml(error.message || error)}</td></tr>`;
+      }
+    }
+
+    async function refreshAccounts(){ await loadAccountDetails(); }
+
+    function populateFilters() {
+      const states = sortedUnique(allMembers.map(m => clean(m.state)).filter(Boolean));
+      const banks = sortedUnique(allMembers.map(m => clean(m.bank_name)).filter(Boolean));
+      els.stateFilter.innerHTML = '<option value="">All States</option>' + states.map(v => `<option value="${escapeAttr(v)}">${escapeHtml(v)}</option>`).join('');
+      els.bankFilter.innerHTML = '<option value="">All Banks</option>' + banks.map(v => `<option value="${escapeAttr(v)}">${escapeHtml(v)}</option>`).join('');
+    }
+
+    function updateSummary() {
+      const total = allMembers.length;
+      const withAccount = allMembers.filter(hasAccount).length;
+      const withBank = allMembers.filter(hasBank).length;
+      const complete = allMembers.filter(isCompleteAccount).length;
+      const incomplete = allMembers.filter(m => !isCompleteAccount(m)).length;
+      const duplicateCount = duplicateAccountRecords(allMembers).length;
+      const banks = sortedUnique(allMembers.map(m => clean(m.bank_name)).filter(Boolean));
+      const accountRate = pct(withAccount, total);
+      const bankRate = pct(withBank, total);
+      const completeRate = pct(complete, total);
+      const bankCounts = countBy(allMembers.filter(hasBank), m => clean(m.bank_name));
+      const topBank = Object.entries(bankCounts).sort((a,b)=>b[1]-a[1])[0];
+
+      setText('totalMembers', fmt(total)); setText('withAccount', fmt(withAccount)); setText('missingAccount', fmt(total - withAccount)); setText('withBank', fmt(withBank)); setText('incompleteAccounts', fmt(incomplete)); setText('duplicateAccounts', fmt(duplicateCount)); setText('bankCount', fmt(banks.length)); setText('completionScore', `${completeRate}%`);
+      setText('accountNumberRate', `${accountRate}%`); setText('bankNameRate', `${bankRate}%`); setText('completeAccountRate', `${completeRate}%`); setText('heroAccountCoverage', `${accountRate}%`); setText('heroTopBank', topBank ? `${topBank[0]} (${topBank[1]})` : 'No data'); setText('lastUpdatedLabel', new Date().toLocaleTimeString(undefined, { hour:'2-digit', minute:'2-digit' }));
+      setWidth('accountNumberBar', accountRate); setWidth('bankNameBar', bankRate); setWidth('completeAccountBar', completeRate);
+      renderPriority(total, withAccount, complete, duplicateCount, banks.length);
+      renderBankDistribution(bankCounts, total);
+      renderDuplicateList();
+      renderSideLists();
+    }
+
+    function renderPriority(total, withAccount, complete, duplicates, bankCount) {
+      const missing = total - withAccount;
+      const incomplete = total - complete;
+      const items = [
+        {icon:'fa-triangle-exclamation', label:'Missing account numbers', value:missing, level:missing ? 'danger' : 'ok'},
+        {icon:'fa-file-circle-exclamation', label:'Incomplete account records', value:incomplete, level:incomplete ? 'warn' : 'ok'},
+        {icon:'fa-clone', label:'Duplicate account-number records', value:duplicates, level:duplicates ? 'danger' : 'ok'},
+        {icon:'fa-building-user', label:'Unique banks captured', value:bankCount, level:'soft'}
+      ];
+      els.priorityList.innerHTML = items.map(item => `<div class="list-card flex items-center justify-between gap-3"><div class="flex items-center gap-2"><span class="badge-${item.level === 'danger' ? 'danger' : item.level === 'warn' ? 'warn' : item.level === 'ok' ? 'ok' : 'soft'}"><i class="fas ${item.icon}"></i>${escapeHtml(item.label)}</span></div><strong class="text-lg text-primary-dark dark:text-white">${fmt(item.value)}</strong></div>`).join('');
+    }
+
+    function renderBankDistribution(bankCounts, total) {
+      const entries = Object.entries(bankCounts).sort((a,b)=>b[1]-a[1]).slice(0,8);
+      if (!entries.length) { els.bankDistribution.innerHTML = '<p class="text-xs text-gray-500 font-bold">No bank names have been supplied yet.</p>'; return; }
+      const bankTotal = entries.reduce((sum, [,count]) => sum + count, 0) || 1;
+      els.bankDistribution.innerHTML = entries.map(([bank,count], idx) => `<div class="list-card"><div class="mb-1 flex items-center justify-between gap-2"><span class="font-black text-primary-dark dark:text-white truncate">${idx+1}. ${escapeHtml(bank)}</span><span class="badge-soft">${fmt(count)}</span></div><div class="progress-track"><div class="progress-fill" style="width:${pct(count, bankTotal)}%"></div></div></div>`).join('');
+    }
+
+    function renderDuplicateList() {
+      const groups = duplicateAccountGroups(allMembers).slice(0,8);
+      if (!groups.length) { els.duplicateList.innerHTML = '<p class="text-xs text-gray-500 font-bold">No duplicate account numbers detected.</p>'; return; }
+      els.duplicateList.innerHTML = groups.map(([acct, rows]) => `<div class="list-card"><div class="flex items-center justify-between gap-2"><strong class="text-primary-dark dark:text-white break-all">${escapeHtml(acct)}</strong><span class="badge-danger">${rows.length} records</span></div><p class="mt-1 text-xs font-bold text-gray-500 dark:text-gray-400">${rows.map(getFullName).join(' • ')}</p></div>`).join('');
+    }
+
+    function renderSideLists() {
+      const missing = allMembers.filter(m => !isCompleteAccount(m)).slice(0,8);
+      const latest = [...allMembers].filter(isCompleteAccount).sort((a,b)=>new Date(b.created_at || 0)-new Date(a.created_at || 0)).slice(0,8);
+      els.missingList.innerHTML = missing.length ? missing.map(m => smallMemberCard(m, accountStatus(m))).join('') : '<p class="text-xs text-gray-500 font-bold">No missing account follow-up found.</p>';
+      els.latestList.innerHTML = latest.length ? latest.map(m => smallMemberCard(m, 'Complete')).join('') : '<p class="text-xs text-gray-500 font-bold">No complete account records found yet.</p>';
+    }
+
+    function smallMemberCard(m, status) {
+      return `<div class="list-card flex items-start justify-between gap-3"><div class="min-w-0"><p class="font-black text-primary-dark dark:text-white truncate">${escapeHtml(getFullName(m))}</p><p class="text-xs font-bold text-gray-500 dark:text-gray-400 truncate">${escapeHtml(m.reg_number || 'No reg no')} • ${escapeHtml(clean(m.state) || 'No state')} • ${escapeHtml(clean(m.bank_name) || 'No bank')}</p></div><span class="${status === 'Complete' ? 'badge-ok' : 'badge-warn'}">${escapeHtml(status)}</span></div>`;
+    }
+
+    function bindFilters() {
+      ['searchInput','stateFilter','bankFilter','accountFilter','dateFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', applyFilters));
+      document.querySelectorAll('[data-quick]').forEach(btn => btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-quick]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const val = btn.dataset.quick;
+        els.accountFilter.value = val === 'all' ? '' : val;
+        applyFilters();
+      }));
+    }
+
+    function applyFilters() {
+      const q = clean(els.searchInput.value).toLowerCase();
+      const state = clean(els.stateFilter.value);
+      const bank = clean(els.bankFilter.value);
+      const account = clean(els.accountFilter.value);
+      const date = clean(els.dateFilter.value);
+      const duplicateIds = new Set(duplicateAccountRecords(allMembers).map(m => String(m.id)));
+      const now = new Date();
+      filteredMembers = allMembers.filter(m => {
+        const searchHay = [m.reg_number, getFullName(m), m.phone, m.email, m.account_number, m.bank_name, m.state, m.lga, m.ward].map(x => clean(x).toLowerCase()).join(' ');
+        if (q && !searchHay.includes(q)) return false;
+        if (state && clean(m.state) !== state) return false;
+        if (bank && clean(m.bank_name) !== bank) return false;
+        if (account === 'complete' && !isCompleteAccount(m)) return false;
+        if (account === 'with_account' && !hasAccount(m)) return false;
+        if (account === 'missing_account' && hasAccount(m)) return false;
+        if (account === 'missing_bank' && hasBank(m)) return false;
+        if (account === 'incomplete' && isCompleteAccount(m)) return false;
+        if (account === 'duplicate' && !duplicateIds.has(String(m.id))) return false;
+        if (date && !passesDate(m.created_at, date, now)) return false;
+        return true;
+      });
+      currentPage = 1;
+      renderTable();
+    }
+
+    function renderTable() {
+      const total = filteredMembers.length;
+      setText('filteredCount', fmt(total));
+      const pages = Math.max(1, Math.ceil(total / pageSize));
+      if (currentPage > pages) currentPage = pages;
+      const start = (currentPage - 1) * pageSize;
+      const rows = filteredMembers.slice(start, start + pageSize);
+      if (!rows.length) {
+        els.accountTableBody.innerHTML = '<tr><td colspan="11" class="text-center py-8 font-black text-gray-500">No matching account records.</td></tr>';
+      } else {
+        els.accountTableBody.innerHTML = rows.map(m => tableRow(m)).join('');
+      }
+      els.pageInfo.textContent = `Showing ${total ? start+1 : 0}-${Math.min(start+pageSize,total)} of ${fmt(total)} records`;
+      els.prevBtn.disabled = currentPage <= 1;
+      els.nextBtn.disabled = currentPage >= pages;
+    }
+
+    function tableRow(m) {
+      const status = accountStatus(m);
+      const badge = status === 'Complete' ? 'badge-ok' : status.includes('Missing') ? 'badge-warn' : 'badge-danger';
+      return `<tr><td><button class="badge-soft" data-copy="${escapeAttr(m.reg_number || '')}" onclick="copyText(this.dataset.copy,'Registration copied')"><i class="fas fa-fingerprint"></i>${escapeHtml(m.reg_number || '—')}</button></td><td><strong class="text-primary-dark dark:text-white">${escapeHtml(getFullName(m))}</strong><div class="text-[11px] font-bold text-gray-500">${escapeHtml(m.designation || 'Member')}</div></td><td><strong>${escapeHtml(clean(m.account_number) || '—')}</strong></td><td>${escapeHtml(clean(m.bank_name) || '—')}</td><td>${escapeHtml(clean(m.phone) || '—')}</td><td>${escapeHtml(clean(m.state) || '—')}</td><td>${escapeHtml(clean(m.lga) || '—')}</td><td>${escapeHtml(clean(m.ward) || '—')}</td><td><span class="${badge}"><i class="fas ${status === 'Complete' ? 'fa-check-circle' : 'fa-triangle-exclamation'}"></i>${escapeHtml(status)}</span></td><td>${escapeHtml(formatDate(m.created_at))}</td><td><div class="flex flex-wrap gap-1"><a href="${memberAdminHref('member-details', m)}" class="action-btn"><i class="fas fa-eye"></i>View</a><a href="${memberAdminHref('edit-member', m)}" class="action-btn"><i class="fas fa-pen"></i>Edit</a></div></td></tr>`;
+    }
+
+    function changePage(delta){ currentPage += delta; renderTable(); }
+    function resetFilters(){ els.searchInput.value=''; els.stateFilter.value=''; els.bankFilter.value=''; els.accountFilter.value=''; els.dateFilter.value=''; document.querySelectorAll('[data-quick]').forEach(b => b.classList.toggle('active', b.dataset.quick === 'all')); applyFilters(); showToast('Filters reset'); }
+
+    function accountStatus(m) {
+      if (isDuplicateAccount(m)) return 'Duplicate Review';
+      if (isCompleteAccount(m)) return 'Complete';
+      if (!hasAccount(m) && !hasBank(m)) return 'Missing Account + Bank';
+      if (!hasAccount(m)) return 'Missing Account';
+      if (!hasBank(m)) return 'Missing Bank';
+      return 'Incomplete';
+    }
+    function hasAccount(m){ return Boolean(clean(m?.account_number)); }
+    function hasBank(m){ return Boolean(clean(m?.bank_name)); }
+    function isCompleteAccount(m){ return hasAccount(m) && hasBank(m); }
+    function isDuplicateAccount(member){ if (!hasAccount(member)) return false; const acct = normalAccount(member.account_number); return allMembers.filter(m => normalAccount(m.account_number) === acct).length > 1; }
+    function duplicateAccountGroups(rows){ const groups = {}; rows.filter(hasAccount).forEach(m => { const key = normalAccount(m.account_number); groups[key] = groups[key] || []; groups[key].push(m); }); return Object.entries(groups).filter(([,list]) => list.length > 1).sort((a,b)=>b[1].length-a[1].length); }
+    function duplicateAccountRecords(rows){ return duplicateAccountGroups(rows).flatMap(([,list]) => list); }
+
+    function exportAccountCsv(){ exportRows(allMembers.filter(isCompleteAccount), 'apsg_complete_account_details'); }
+    function exportFilteredAccounts(){ exportRows(filteredMembers, 'apsg_filtered_account_details'); }
+    function exportMissingAccounts(){ exportRows(allMembers.filter(m => !isCompleteAccount(m)), 'apsg_missing_account_details'); }
+    function exportDuplicateAccounts(){ exportRows(duplicateAccountRecords(allMembers), 'apsg_duplicate_account_records'); }
+    function exportBankSummary(){ const rows = Object.entries(countBy(allMembers.filter(hasBank), m => clean(m.bank_name))).sort((a,b)=>b[1]-a[1]).map(([bank,count]) => ({bank_name:bank, count})); exportGenericRows(rows, ['bank_name','count'], 'apsg_bank_summary'); }
+
+    function exportRows(rows, filename) {
+      if (!rows.length) { showToast('No records available for this export'); return; }
+      const columns = ['reg_number','first_name','last_name','account_number','bank_name','phone','email','state','lga','ward','designation','created_at'];
+      const data = [columns.join(',')];
+      rows.forEach(m => data.push(columns.map(col => escapeCsv(m[col])).join(',')));
+      downloadCsv(data.join('\n'), `${filename}_${dateKey(new Date())}.csv`);
+      showToast('CSV report generated');
+    }
+    function exportGenericRows(rows, columns, filename) { if (!rows.length) { showToast('No data available for export'); return; } const data = [columns.join(',')]; rows.forEach(r => data.push(columns.map(c => escapeCsv(r[c])).join(','))); downloadCsv(data.join('\n'), `${filename}_${dateKey(new Date())}.csv`); showToast('CSV report generated'); }
+    function downloadCsv(content, filename){ const blob = new Blob([content], { type:'text/csv;charset=utf-8;' }); const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = filename; document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(url); }
+
+    function copyAccountSummary(){
+      const total = allMembers.length, complete = allMembers.filter(isCompleteAccount).length, missing = allMembers.filter(m => !isCompleteAccount(m)).length, duplicates = duplicateAccountRecords(allMembers).length;
+      const text = `APSG Account Details Summary\nTotal Members: ${fmt(total)}\nComplete Account Records: ${fmt(complete)}\nMissing/Incomplete Accounts: ${fmt(missing)}\nDuplicate Account Records: ${fmt(duplicates)}\nAccount Completion: ${pct(complete,total)}%`;
+      copyText(text, 'Account summary copied');
+    }
+    function copyText(text, msg='Copied'){ navigator.clipboard?.writeText(text || '').then(() => showToast(msg)).catch(() => showToast('Copy not available')); }
+    function showToast(message){ const toast = document.getElementById('copyToast'); toast.innerHTML = `<i class="fas fa-check-circle text-warning mr-2"></i>${escapeHtml(message)}`; toast.classList.add('show'); clearTimeout(showToast.timer); showToast.timer = setTimeout(() => toast.classList.remove('show'), 1800); }
+
+    function passesDate(value, mode, now){ if (!value) return false; const d = new Date(value); if (Number.isNaN(d.getTime())) return false; const days = Math.floor((now - d) / 86400000); if (mode === 'today') return dateKey(d) === dateKey(now); if (mode === 'week') return days <= 7; if (mode === 'month') return days <= 30; return true; }
+    function getFullName(m){ return `${m?.first_name || ''} ${m?.last_name || ''}`.trim() || 'Unnamed Member'; }
+    function countBy(rows, fn){ return rows.reduce((acc,row) => { const key = fn(row); if (key) acc[key] = (acc[key] || 0) + 1; return acc; }, {}); }
+    function sortedUnique(values){ return [...new Set(values)].sort((a,b)=>a.localeCompare(b)); }
+    function pct(part,total){ return total ? Math.round((part/total)*100) : 0; }
+    function fmt(n){ return Number(n || 0).toLocaleString(); }
+    function setText(id, text){ const el = document.getElementById(id); if (el) el.textContent = text; }
+    function setWidth(id, percent){ const el = document.getElementById(id); if (el) el.style.width = `${Math.max(0, Math.min(100, Number(percent) || 0))}%`; }
+    function clean(v){ return String(v ?? '').trim(); }
+    function normalAccount(v){ return clean(v).replace(/\D/g,''); }
+    function titleCase(v){ return String(v || '').replace(/\b\w/g, c => c.toUpperCase()); }
+    function escapeHtml(value){ return String(value ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+    function escapeAttr(value){ return escapeHtml(value).replace(/'/g, '&#39;'); }
+    function escapeCsv(value){ const text = value == null ? '' : String(value); return `"${text.replace(/"/g, '""')}"`; }
+    function dateKey(date){ const d = new Date(date); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+    function formatDate(value){ if (!value) return '—'; const d = new Date(value); if (Number.isNaN(d.getTime())) return '—'; return d.toLocaleDateString('en-NG', { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }); }
+
+    window.toggleSidebar = toggleSidebar; window.closeSidebar = closeSidebar; window.logout = logout; window.setTheme = setTheme; window.refreshAccounts = refreshAccounts; window.changePage = changePage; window.resetFilters = resetFilters; window.exportAccountCsv = exportAccountCsv; window.exportFilteredAccounts = exportFilteredAccounts; window.exportMissingAccounts = exportMissingAccounts; window.exportDuplicateAccounts = exportDuplicateAccounts; window.exportBankSummary = exportBankSummary; window.copyAccountSummary = copyAccountSummary; window.copyText = copyText;
+  </script>
+  <script src="/assets/js/admin-unified.js" defer></script>
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

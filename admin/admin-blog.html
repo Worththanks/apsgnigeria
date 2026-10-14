@@ -1,0 +1,3543 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#05351f" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>World-Class News & Updates Desk | APSG Admin</title>
+    <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any" />
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <script>
+      if (localStorage.getItem("daynight-theme") === "carbon") {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+      :root {
+        --deep: #05351f;
+        --deep-2: #031b0f;
+        --green: #0f8a4b;
+        --emerald: #0f766e;
+        --gold: #d6a92b;
+        --gold-soft: #ffe7a3;
+        --cream: #fffaf0;
+        --paper: #ffffff;
+        --ink: #07140e;
+        --muted: #64746a;
+        --danger: #991b1b;
+        --border: rgba(5, 53, 31, 0.1);
+        --gold-border: rgba(214, 169, 43, 0.25);
+        --shadow-card: 0 18px 52px rgba(5, 53, 31, 0.1);
+        --shadow-premium: 0 34px 110px rgba(5, 53, 31, 0.2);
+        --radius: 1.25rem;
+        --sidebar: 16rem;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background:
+          radial-gradient(
+            circle at 96% 0,
+            rgba(214, 169, 43, 0.14),
+            transparent 29rem
+          ),
+          radial-gradient(
+            circle at 0 10%,
+            rgba(15, 138, 75, 0.12),
+            transparent 32rem
+          ),
+          linear-gradient(180deg, #f8fbf7 0%, #eef6ef 100%);
+        overflow-x: hidden;
+      }
+      .dark body,
+      html.dark body {
+        background: #06150d;
+        color: #f8fbf7;
+      }
+      a {
+        text-decoration: none;
+      }
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      .display-font {
+        font-family: "Playfair Display", Georgia, serif;
+      }
+      .hidden {
+        display: none !important;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      .skip-link {
+        position: fixed;
+        left: 1rem;
+        top: 0.8rem;
+        z-index: 1000;
+        transform: translateY(-160%);
+        border-radius: 999px;
+        background: var(--gold);
+        color: var(--deep);
+        padding: 0.65rem 1rem;
+        font-weight: 950;
+        box-shadow: var(--shadow-card);
+        transition: transform 0.18s ease;
+      }
+      .skip-link:focus {
+        transform: translateY(0);
+        outline: 3px solid rgba(214, 169, 43, 0.35);
+        outline-offset: 2px;
+      }
+      .admin-sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        z-index: 50;
+        width: var(--sidebar);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        background: linear-gradient(
+          180deg,
+          #031b0f 0%,
+          #052414 58%,
+          #03140b 100%
+        );
+        color: #fff;
+        box-shadow: 0 22px 70px rgba(0, 0, 0, 0.22);
+        transition: transform 0.28s ease;
+      }
+      .sidebar-brand {
+        position: relative;
+        overflow: hidden;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1rem;
+      }
+      .sidebar-brand:after {
+        content: "";
+        position: absolute;
+        right: -2.4rem;
+        top: -2.6rem;
+        width: 8rem;
+        height: 8rem;
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.18);
+        filter: blur(22px);
+      }
+      .brand-link {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: #fff;
+      }
+      .brand-logo {
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        width: 2.65rem;
+        height: 2.65rem;
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(214, 169, 43, 0.3);
+        box-shadow: 0 12px 34px rgba(0, 0, 0, 0.16);
+      }
+      .brand-logo img {
+        width: auto;
+        height: 1.85rem;
+        object-fit: contain;
+      }
+      .brand-title {
+        display: block;
+        font-weight: 950;
+        font-size: 0.96rem;
+        line-height: 1;
+      }
+      .brand-kicker {
+        display: block;
+        margin-top: 0.22rem;
+        color: var(--gold);
+        font-size: 0.56rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+      }
+      .sidebar-nav {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0.68rem 0.62rem 1rem;
+      }
+      .sidebar-section {
+        padding: 0.55rem 0.5rem 0.32rem;
+        color: rgba(255, 255, 255, 0.38);
+        font-size: 0.54rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.28em;
+      }
+      .sidebar-section.gold {
+        color: rgba(214, 169, 43, 0.82);
+      }
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 0.58rem;
+        min-height: 2.42rem;
+        padding: 0.58rem 0.72rem;
+        border-radius: 1rem;
+        color: rgba(255, 255, 255, 0.84);
+        font-size: 0.74rem;
+        font-weight: 850;
+        line-height: 1;
+        text-decoration: none;
+        transition:
+          background 0.18s ease,
+          color 0.18s ease,
+          transform 0.18s ease;
+      }
+      .sidebar-link i {
+        width: 1rem;
+        text-align: center;
+      }
+      .sidebar-link:hover,
+      .sidebar-link.active,
+      .sidebar-link:focus-visible {
+        background: rgba(214, 169, 43, 0.14);
+        color: #ffe7a3;
+        transform: translateX(2px);
+        outline: 0;
+      }
+      .role-chip {
+        margin-left: auto;
+        padding: 0.16rem 0.38rem;
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.14);
+        color: #f8dc7a;
+        font-size: 0.5rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+      .role-chip.editor {
+        background: rgba(20, 168, 97, 0.13);
+        color: #abf5ce;
+      }
+      .sidebar-footer {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        background: #041f12;
+        padding: 0.65rem;
+      }
+      .danger-link {
+        color: #fecaca !important;
+        background: rgba(239, 68, 68, 0.08);
+      }
+      .apsg-role-card {
+        margin: 0.65rem;
+        border: 1px solid rgba(214, 169, 43, 0.2);
+        border-radius: 1.1rem;
+        background: rgba(255, 255, 255, 0.06);
+        padding: 0.78rem;
+      }
+      .role-level {
+        display: grid;
+        place-items: center;
+        min-height: 1.45rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 0.54rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .role-level.active {
+        border-color: rgba(214, 169, 43, 0.38);
+        background: rgba(214, 169, 43, 0.18);
+        color: #f8dc7a;
+      }
+      .pulse-dot {
+        width: 0.45rem;
+        height: 0.45rem;
+        border-radius: 999px;
+        background: #10b981;
+        box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.15);
+      }
+      .admin-main {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        margin-left: var(--sidebar);
+      }
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 35;
+        border-bottom: 1px solid rgba(5, 53, 31, 0.08);
+        background: rgba(255, 255, 255, 0.86);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 10px 28px rgba(5, 53, 31, 0.055);
+      }
+      .topbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.85rem;
+        padding: 0.62rem 1rem;
+      }
+      .mobile-toggle {
+        display: none;
+        place-items: center;
+        width: 2.35rem;
+        height: 2.35rem;
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        border-radius: 0.9rem;
+        background: #fff;
+        color: var(--deep);
+        box-shadow: 0 8px 18px rgba(5, 53, 31, 0.05);
+      }
+      .mobile-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 45;
+        background: rgba(0, 0, 0, 0.46);
+        backdrop-filter: blur(4px);
+      }
+      .main-content {
+        width: min(100%, 1660px);
+        margin: 0 auto;
+        padding: 1rem;
+      }
+      .premium-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.46rem;
+        min-height: 2.32rem;
+        border: 0;
+        border-radius: 999px;
+        padding: 0.55rem 0.9rem;
+        font-size: 0.75rem;
+        font-weight: 950;
+        line-height: 1;
+        text-decoration: none;
+        box-shadow: 0 10px 26px rgba(5, 53, 31, 0.08);
+        transition:
+          transform 0.18s ease,
+          filter 0.18s ease;
+      }
+      .premium-btn:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.03);
+      }
+      .premium-btn.green {
+        background: linear-gradient(135deg, var(--deep), var(--green));
+        color: #fff;
+      }
+      .premium-btn.gold {
+        background: linear-gradient(135deg, var(--gold), #ffe08a);
+        color: var(--deep);
+      }
+      .premium-btn.ghost {
+        background: #fff;
+        color: var(--deep);
+        border: 1px solid rgba(5, 53, 31, 0.1);
+      }
+      .premium-btn.red {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+      }
+      .premium-btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        transform: none !important;
+      }
+      .admin-shell,
+      .form-card,
+      .list-card,
+      .stat-card,
+      .preview-panel {
+        border: 1px solid rgba(214, 169, 43, 0.18);
+        background: rgba(255, 255, 255, 0.93);
+        box-shadow: var(--shadow-card);
+        border-radius: 1.35rem;
+      }
+      .admin-shell {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.98),
+          rgba(255, 250, 240, 0.78)
+        );
+        padding: 1.05rem;
+      }
+      .admin-shell:after {
+        content: "";
+        position: absolute;
+        right: -4rem;
+        top: -5rem;
+        width: 15rem;
+        height: 15rem;
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.2);
+        filter: blur(34px);
+        pointer-events: none;
+      }
+      .hero-grid {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 1rem;
+        align-items: center;
+      }
+      .admin-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        min-height: 1.6rem;
+        border: 1px solid rgba(214, 169, 43, 0.25);
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.1);
+        color: #73540c;
+        padding: 0.32rem 0.68rem;
+        font-size: 0.58rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+      .hero-title {
+        margin: 0.55rem 0 0;
+        color: var(--deep);
+        font-size: clamp(1.75rem, 3vw, 3rem);
+        font-weight: 950;
+        line-height: 0.98;
+        letter-spacing: -0.035em;
+      }
+      .hero-copy {
+        margin: 0.6rem 0 0;
+        max-width: 58rem;
+        color: var(--muted);
+        font-size: 0.88rem;
+        font-weight: 650;
+        line-height: 1.55;
+      }
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.55rem;
+        min-width: 20rem;
+      }
+      .stat-card {
+        padding: 0.85rem;
+        text-align: center;
+      }
+      .stat-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.56rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+      .stat-card strong,
+      .stat-card span.value {
+        display: block;
+        margin-top: 0.18rem;
+        color: var(--deep);
+        font-size: 1.65rem;
+        font-weight: 950;
+        line-height: 1;
+      }
+      .desk-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+        gap: 1rem;
+      }
+      .form-card,
+      .list-card {
+        padding: 1rem;
+      }
+      .section-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+      }
+      .section-kicker {
+        margin: 0;
+        color: #8a6616;
+        font-size: 0.6rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+      }
+      .section-title {
+        margin: 0.2rem 0 0;
+        color: var(--deep);
+        font-size: 1.35rem;
+        font-weight: 950;
+        line-height: 1.05;
+      }
+      .slug-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        border: 1px solid rgba(214, 169, 43, 0.24);
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.12);
+        color: #73540c;
+        padding: 0.38rem 0.62rem;
+        font-size: 0.62rem;
+        font-weight: 950;
+        white-space: nowrap;
+      }
+      .field label {
+        display: block;
+        margin: 0 0 0.32rem;
+        color: var(--deep);
+        font-size: 0.63rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+      .field input,
+      .field select,
+      .field textarea,
+      .filter-select {
+        width: 100%;
+        min-height: 2.68rem;
+        border: 1px solid rgba(5, 53, 31, 0.12);
+        border-radius: 0.95rem;
+        background: #fff;
+        color: #102017;
+        padding: 0.68rem 0.78rem;
+        font-size: 0.82rem;
+        font-weight: 750;
+        outline: 0;
+      }
+      .field textarea {
+        min-height: 6rem;
+        line-height: 1.5;
+        resize: vertical;
+      }
+      .field input:focus,
+      .field select:focus,
+      .field textarea:focus,
+      .filter-select:focus {
+        border-color: rgba(214, 169, 43, 0.62);
+        box-shadow: 0 0 0 4px rgba(214, 169, 43, 0.14);
+      }
+      .content-message {
+        border-radius: 1rem;
+        border: 1px solid rgba(214, 169, 43, 0.22);
+        background: rgba(214, 169, 43, 0.1);
+        color: var(--deep);
+        padding: 0.78rem;
+        font-size: 0.82rem;
+        font-weight: 800;
+      }
+      .editor-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.78rem;
+      }
+      .col-span-2 {
+        grid-column: 1 / -1;
+      }
+      .image-tools {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 10rem;
+        gap: 0.75rem;
+        align-items: stretch;
+      }
+      .image-preview {
+        display: grid;
+        place-items: center;
+        border: 1px dashed rgba(214, 169, 43, 0.35);
+        border-radius: 1rem;
+        background: linear-gradient(135deg, #f8fbf7, #fffaf0);
+        min-height: 8rem;
+        overflow: hidden;
+      }
+      .image-preview img {
+        width: 100%;
+        height: 100%;
+        max-height: 11rem;
+        object-fit: contain;
+        object-position: center;
+        border-radius: 0.8rem;
+        padding: 0.35rem;
+      }
+      .image-upload-panel {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 8.25rem;
+        border: 1px dashed rgba(214, 169, 43, 0.48);
+        border-radius: 1rem;
+        background: linear-gradient(135deg, rgba(15, 138, 75, 0.055), rgba(255, 250, 240, 0.92));
+        padding: 0.78rem;
+        transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+      }
+      .image-upload-panel.is-dragging {
+        border-color: var(--green);
+        background: rgba(15, 138, 75, 0.1);
+        transform: translateY(-1px);
+      }
+      .image-upload-panel input[type="file"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+      .image-upload-head {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.65rem;
+      }
+      .image-upload-icon {
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        width: 2.45rem;
+        height: 2.45rem;
+        border-radius: 0.85rem;
+        background: rgba(214, 169, 43, 0.18);
+        color: #73540c;
+        font-size: 1rem;
+      }
+      .image-upload-copy strong {
+        display: block;
+        color: var(--deep);
+        font-size: 0.78rem;
+        font-weight: 950;
+      }
+      .image-upload-copy span {
+        display: block;
+        margin-top: 0.2rem;
+        color: var(--muted);
+        font-size: 0.67rem;
+        font-weight: 750;
+        line-height: 1.4;
+      }
+      .image-upload-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.42rem;
+        margin-top: 0.68rem;
+      }
+      .image-upload-status {
+        min-height: 1rem;
+        margin: 0.48rem 0 0;
+        color: var(--muted);
+        font-size: 0.66rem;
+        font-weight: 800;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+      }
+      .image-upload-status.success { color: #047857; }
+      .image-upload-status.error { color: #b91c1c; }
+      .image-upload-progress {
+        height: 0.38rem;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(5, 53, 31, 0.09);
+        margin-top: 0.5rem;
+      }
+      .image-upload-progress span {
+        display: block;
+        width: 0%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--gold), var(--green));
+        transition: width 0.22s ease;
+      }
+      .dark .image-upload-panel {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(214, 169, 43, 0.24);
+      }
+      .dark .image-upload-copy strong { color: #fff; }
+      .dark .image-upload-status.success { color: #bbf7d0; }
+      .dark .image-upload-status.error { color: #fecaca; }
+      .featured-card {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        border-radius: 1rem;
+        background: rgba(15, 138, 75, 0.07);
+        color: var(--deep);
+        padding: 0.75rem;
+        font-weight: 950;
+      }
+      .featured-card input {
+        width: 1.1rem;
+        height: 1.1rem;
+        accent-color: var(--gold);
+      }
+      .sticky-actions {
+        position: sticky;
+        bottom: 0.75rem;
+        z-index: 10;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
+        justify-content: flex-end;
+        border: 1px solid rgba(214, 169, 43, 0.22);
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(14px);
+        padding: 0.65rem;
+        box-shadow: 0 18px 48px rgba(5, 53, 31, 0.12);
+      }
+      .tools-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.55rem;
+      }
+      .search-box {
+        position: relative;
+        flex: 1 1 14rem;
+      }
+      .search-box i {
+        position: absolute;
+        left: 0.85rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--green);
+      }
+      .search-box input {
+        width: 100%;
+        min-height: 2.55rem;
+        border: 1px solid rgba(5, 53, 31, 0.12);
+        border-radius: 999px;
+        background: #fff;
+        padding: 0.6rem 0.8rem 0.6rem 2.25rem;
+        font-weight: 800;
+        outline: 0;
+      }
+      .content-list-wrap {
+        max-height: calc(100vh - 17rem);
+        overflow: auto;
+        padding-right: 0.25rem;
+      }
+      .content-list-wrap:empty:before {
+        content: "No content loaded yet. Use Reload List or create a new item.";
+        display: block;
+        border: 1px dashed rgba(5, 53, 31, 0.16);
+        border-radius: 1rem;
+        background: #fff;
+        padding: 1rem;
+        color: var(--muted);
+        font-weight: 800;
+      }
+      .content-list-wrap > * {
+        margin-bottom: 0.65rem;
+      }
+      .status-note {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.6rem;
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        border-radius: 1rem;
+        background: #fff;
+        padding: 0.72rem;
+        color: var(--muted);
+        font-size: 0.76rem;
+        font-weight: 750;
+        line-height: 1.4;
+      }
+      .preview-panel {
+        margin-top: 1rem;
+        padding: 1rem;
+      }
+      .public-preview-card {
+        overflow: hidden;
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        border-radius: 1.1rem;
+        background: #fff;
+      }
+      .public-preview-media {
+        display: grid;
+        place-items: center;
+        height: 13rem;
+        background: linear-gradient(135deg, #f8fbf7, #fffaf0);
+      }
+      .public-preview-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 0.45rem;
+      }
+      .public-preview-body {
+        padding: 1rem;
+      }
+      .public-preview-title {
+        margin: 0.3rem 0 0;
+        color: var(--deep);
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 1.35rem;
+        font-weight: 950;
+        line-height: 1.05;
+      }
+      .public-preview-excerpt {
+        margin: 0.45rem 0 0;
+        color: var(--muted);
+        font-size: 0.84rem;
+        font-weight: 650;
+        line-height: 1.45;
+      }
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      .dark .topbar,
+      .dark .admin-shell,
+      .dark .form-card,
+      .dark .list-card,
+      .dark .stat-card,
+      .dark .preview-panel {
+        background: rgba(7, 23, 14, 0.88);
+        border-color: rgba(214, 169, 43, 0.16);
+      }
+      .dark .section-title,
+      .dark .hero-title,
+      .dark .stat-card strong,
+      .dark .stat-card span.value {
+        color: #fff;
+      }
+      .dark .hero-copy,
+      .dark .content-list-wrap:empty:before,
+      .dark .status-note {
+        color: rgba(255, 255, 255, 0.65);
+      }
+      .dark .field input,
+      .dark .field select,
+      .dark .field textarea,
+      .dark .filter-select,
+      .dark .search-box input {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.12);
+        color: #fff;
+      }
+      .dark .premium-btn.ghost,
+      .dark .content-list-wrap:empty:before,
+      .dark .status-note,
+      .dark .public-preview-card {
+        background: rgba(255, 255, 255, 0.07);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.12);
+      }
+
+      /* Premium Content Manager Display Layer */
+      .content-message {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.6rem;
+        border-radius: 1rem;
+        border: 1px solid rgba(214, 169, 43, 0.22);
+        background: rgba(214, 169, 43, 0.1);
+        color: var(--deep);
+        padding: 0.78rem 0.86rem;
+        font-size: 0.82rem;
+        font-weight: 850;
+        line-height: 1.45;
+      }
+      .content-message i {
+        margin-top: 0.12rem;
+        color: var(--gold);
+      }
+      .content-message.success {
+        border-color: rgba(16, 185, 129, 0.24);
+        background: #f0fdf4;
+        color: #065f46;
+      }
+      .content-message.success i {
+        color: #059669;
+      }
+      .content-message.error {
+        border-color: #fecaca;
+        background: #fff1f2;
+        color: #991b1b;
+      }
+      .content-message.error i {
+        color: #dc2626;
+      }
+      .content-message.loading {
+        border-color: rgba(214, 169, 43, 0.3);
+        background: #fffbeb;
+        color: #73540c;
+      }
+      .content-spinner {
+        width: 1rem;
+        height: 1rem;
+        margin-top: 0.12rem;
+        border-radius: 999px;
+        border: 2px solid rgba(214, 169, 43, 0.25);
+        border-top-color: var(--gold);
+        animation: contentSpin 0.75s linear infinite;
+      }
+      @keyframes contentSpin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .content-row {
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.75rem;
+        align-items: stretch;
+        border: 1px solid rgba(5, 53, 31, 0.09);
+        border-radius: 1.18rem;
+        background: linear-gradient(135deg, #fff, rgba(255, 250, 240, 0.7));
+        box-shadow: 0 14px 36px rgba(5, 53, 31, 0.075);
+        padding: 0.72rem;
+        transition:
+          transform 0.18s ease,
+          box-shadow 0.18s ease,
+          border-color 0.18s ease;
+      }
+      .content-row:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.9rem;
+        bottom: 0.9rem;
+        width: 0.28rem;
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.55);
+      }
+      .content-row.published:before {
+        background: linear-gradient(180deg, #10b981, #0f8a4b);
+      }
+      .content-row.draft:before {
+        background: linear-gradient(180deg, #f59e0b, #d6a92b);
+      }
+      .content-row:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 22px 56px rgba(5, 53, 31, 0.12);
+        border-color: rgba(214, 169, 43, 0.3);
+      }
+      .content-row-main {
+        display: grid;
+        grid-template-columns: 5.65rem minmax(0, 1fr);
+        gap: 0.8rem;
+        min-width: 0;
+        align-items: start;
+      }
+      .content-row-thumb,
+      .content-row-icon {
+        display: grid;
+        place-items: center;
+        width: 5.65rem;
+        height: 5.65rem;
+        border-radius: 1rem;
+        border: 1px solid rgba(214, 169, 43, 0.18);
+        background:
+          radial-gradient(
+            circle at top right,
+            rgba(214, 169, 43, 0.16),
+            transparent 55%
+          ),
+          linear-gradient(135deg, #f8fbf7, #fffaf0);
+        color: var(--deep);
+        font-size: 1.35rem;
+        overflow: hidden;
+        box-shadow: 0 12px 30px rgba(5, 53, 31, 0.07);
+      }
+      .content-row-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+        padding: 0.2rem;
+      }
+      .content-row-thumb.is-empty {
+        background: linear-gradient(
+          135deg,
+          rgba(5, 53, 31, 0.08),
+          rgba(214, 169, 43, 0.14)
+        );
+        color: #856312;
+      }
+      .content-row-body {
+        min-width: 0;
+        padding-right: 0.15rem;
+      }
+      .content-row-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        margin-bottom: 0.42rem;
+      }
+      .content-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        min-height: 1.45rem;
+        border-radius: 999px;
+        border: 1px solid rgba(5, 53, 31, 0.09);
+        padding: 0.24rem 0.5rem;
+        font-size: 0.56rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        white-space: nowrap;
+      }
+      .content-pill.type {
+        background: rgba(5, 53, 31, 0.06);
+        color: var(--deep);
+      }
+      .content-pill.published {
+        background: rgba(16, 185, 129, 0.12);
+        border-color: rgba(16, 185, 129, 0.18);
+        color: #047857;
+      }
+      .content-pill.draft {
+        background: #fff7ed;
+        border-color: #fed7aa;
+        color: #b45309;
+      }
+      .content-pill.featured {
+        background: rgba(214, 169, 43, 0.16);
+        border-color: rgba(214, 169, 43, 0.25);
+        color: #73540c;
+      }
+      .content-row h4 {
+        margin: 0;
+        color: var(--deep);
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 1.15rem;
+        font-weight: 950;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        overflow-wrap: anywhere;
+      }
+      .content-row p {
+        margin: 0.38rem 0 0;
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 650;
+        line-height: 1.45;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        overflow: hidden;
+      }
+      .content-row-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.48rem 0.68rem;
+        margin-top: 0.58rem;
+        color: #6b7a70;
+        font-size: 0.66rem;
+        font-weight: 850;
+      }
+      .content-row-meta span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        min-width: 0;
+      }
+      .content-row-meta i {
+        color: var(--gold);
+      }
+      .content-row-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.42rem;
+        align-items: stretch;
+        min-width: 5.9rem;
+      }
+      .content-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.34rem;
+        min-height: 2.05rem;
+        border-radius: 999px;
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        padding: 0.45rem 0.62rem;
+        font-size: 0.66rem;
+        font-weight: 950;
+        line-height: 1;
+        background: #fff;
+        color: var(--deep);
+        box-shadow: 0 8px 18px rgba(5, 53, 31, 0.055);
+        transition:
+          transform 0.16s ease,
+          filter 0.16s ease;
+      }
+      .content-action:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.02);
+      }
+      .content-action.edit {
+        background: #ecfdf5;
+        color: #047857;
+        border-color: #bbf7d0;
+      }
+      .content-action.delete {
+        background: #fff1f2;
+        color: #991b1b;
+        border-color: #fecaca;
+      }
+      .content-action.publish {
+        background: #fffbeb;
+        color: #73540c;
+        border-color: rgba(214, 169, 43, 0.3);
+      }
+      .content-empty-state {
+        display: grid;
+        place-items: center;
+        text-align: center;
+        border: 1px dashed rgba(5, 53, 31, 0.18);
+        border-radius: 1.15rem;
+        background: linear-gradient(135deg, #fff, rgba(255, 250, 240, 0.72));
+        padding: 1.4rem;
+        color: var(--muted);
+      }
+      .content-empty-icon,
+      .content-empty-state > div:first-child {
+        display: grid;
+        place-items: center;
+        width: 3.8rem;
+        height: 3.8rem;
+        border-radius: 1.25rem;
+        background: rgba(214, 169, 43, 0.15);
+        color: #856312;
+        font-size: 1.35rem;
+        margin-bottom: 0.7rem;
+      }
+      .content-empty-state h4 {
+        margin: 0;
+        color: var(--deep);
+        font-size: 1rem;
+        font-weight: 950;
+      }
+      .content-empty-state p {
+        max-width: 28rem;
+        margin: 0.4rem 0 0;
+        font-size: 0.8rem;
+        font-weight: 650;
+        line-height: 1.5;
+      }
+      .list-card {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.96),
+          rgba(255, 250, 240, 0.55)
+        );
+      }
+      .content-list-wrap {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(214, 169, 43, 0.55) transparent;
+      }
+      .content-list-wrap::-webkit-scrollbar {
+        width: 0.45rem;
+      }
+      .content-list-wrap::-webkit-scrollbar-thumb {
+        background: rgba(214, 169, 43, 0.55);
+        border-radius: 999px;
+      }
+      .public-preview-card {
+        box-shadow: 0 18px 44px rgba(5, 53, 31, 0.09);
+      }
+      .public-preview-media {
+        position: relative;
+        overflow: hidden;
+      }
+      .public-preview-media:after {
+        content: "";
+        position: absolute;
+        inset: auto 0 0;
+        height: 42%;
+        background: linear-gradient(0deg, rgba(5, 53, 31, 0.08), transparent);
+        pointer-events: none;
+      }
+      .public-preview-body {
+        background: linear-gradient(180deg, #fff, rgba(255, 250, 240, 0.74));
+      }
+      .dark .content-message {
+        background: rgba(214, 169, 43, 0.1);
+        color: #fff;
+        border-color: rgba(214, 169, 43, 0.18);
+      }
+      .dark .content-message.success {
+        background: rgba(16, 185, 129, 0.1);
+        color: #bbf7d0;
+        border-color: rgba(16, 185, 129, 0.18);
+      }
+      .dark .content-message.error {
+        background: rgba(153, 27, 27, 0.18);
+        color: #fecaca;
+        border-color: rgba(254, 202, 202, 0.18);
+      }
+      .dark .content-row,
+      .dark .content-empty-state,
+      .dark .list-card,
+      .dark .public-preview-body {
+        background: rgba(255, 255, 255, 0.07);
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+      .dark .content-row h4,
+      .dark .content-empty-state h4 {
+        color: #fff;
+      }
+      .dark .content-row p,
+      .dark .content-row-meta,
+      .dark .content-empty-state p {
+        color: rgba(255, 255, 255, 0.66);
+      }
+      .dark .content-row-thumb,
+      .dark .content-row-icon {
+        background: rgba(255, 255, 255, 0.07);
+        border-color: rgba(214, 169, 43, 0.18);
+      }
+      .dark .content-action {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.12);
+        color: #fff;
+      }
+      .dark .content-action.edit {
+        background: rgba(16, 185, 129, 0.12);
+        color: #bbf7d0;
+      }
+      .dark .content-action.delete {
+        background: rgba(153, 27, 27, 0.2);
+        color: #fecaca;
+      }
+      .dark .content-action.publish {
+        background: rgba(214, 169, 43, 0.14);
+        color: #f8dc7a;
+      }
+      .dark .content-pill.type {
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+      }
+      .dark .public-preview-media {
+        background: rgba(255, 255, 255, 0.06);
+      }
+      @media (max-width: 767px) {
+        .content-row {
+          grid-template-columns: 1fr;
+        }
+        .content-row-main {
+          grid-template-columns: 4.6rem minmax(0, 1fr);
+        }
+        .content-row-thumb,
+        .content-row-icon {
+          width: 4.6rem;
+          height: 4.6rem;
+          border-radius: 0.95rem;
+        }
+        .content-row-actions {
+          flex-direction: row;
+          flex-wrap: wrap;
+          min-width: 0;
+        }
+        .content-action {
+          flex: 1 1 5rem;
+        }
+        .content-row h4 {
+          font-size: 1rem;
+        }
+      }
+
+      .access-gate {
+        position: fixed;
+        left: 50%;
+        top: 0.85rem;
+        z-index: 900;
+        width: min(92vw, 44rem);
+        transform: translateX(-50%);
+        border: 1px solid rgba(214, 169, 43, 0.34);
+        border-radius: 1.15rem;
+        background: rgba(255, 255, 255, 0.97);
+        color: var(--deep);
+        padding: 0.9rem 1rem;
+        box-shadow: var(--shadow-premium);
+        font-weight: 850;
+      }
+      .access-gate.danger {
+        border-color: #fecaca;
+        background: #fff1f2;
+        color: #991b1b;
+      }
+      .access-gate.success {
+        border-color: rgba(16, 185, 129, 0.24);
+        background: #f0fdf4;
+        color: #065f46;
+      }
+      .access-gate strong {
+        display: block;
+        font-weight: 950;
+        margin-bottom: 0.12rem;
+      }
+      .top-role-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.38rem;
+        min-height: 2.15rem;
+        border: 1px solid rgba(214, 169, 43, 0.22);
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.11);
+        color: #73540c;
+        padding: 0.45rem 0.72rem;
+        font-size: 0.68rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .publish-quick-card {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.7rem;
+        align-items: center;
+        margin: 0.8rem 0;
+        border: 1px solid rgba(214, 169, 43, 0.18);
+        border-radius: 1rem;
+        background: linear-gradient(
+          135deg,
+          rgba(214, 169, 43, 0.1),
+          rgba(255, 255, 255, 0.72)
+        );
+        padding: 0.75rem;
+      }
+      .publish-quick-card h4 {
+        margin: 0;
+        color: var(--deep);
+        font-size: 0.86rem;
+        font-weight: 950;
+      }
+      .publish-quick-card p {
+        margin: 0.18rem 0 0;
+        color: var(--muted);
+        font-size: 0.72rem;
+        font-weight: 750;
+        line-height: 1.35;
+      }
+      .publish-quick-actions {
+        display: flex;
+        gap: 0.45rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      .required-mark {
+        color: #991b1b;
+      }
+      .field-helper {
+        margin: 0.24rem 0 0;
+        color: var(--muted);
+        font-size: 0.68rem;
+        font-weight: 750;
+        line-height: 1.35;
+      }
+      .content-list-wrap .hidden-by-search {
+        display: none !important;
+      }
+      body[data-publishing-access="blocked"] #apsgContentForm {
+        opacity: 0.72;
+      }
+      body[data-publishing-access="blocked"] #apsgContentForm input,
+      body[data-publishing-access="blocked"] #apsgContentForm select,
+      body[data-publishing-access="blocked"] #apsgContentForm textarea {
+        cursor: not-allowed;
+      }
+      .dark .access-gate {
+        background: rgba(7, 23, 14, 0.96);
+        color: #fff;
+        border-color: rgba(214, 169, 43, 0.22);
+      }
+      .dark .access-gate.danger {
+        background: #2a1010;
+        color: #fecaca;
+      }
+      .dark .access-gate.success {
+        background: #062f1c;
+        color: #bbf7d0;
+      }
+      .dark .publish-quick-card {
+        background: rgba(255, 255, 255, 0.07);
+        border-color: rgba(214, 169, 43, 0.16);
+      }
+      .dark .top-role-badge {
+        background: rgba(214, 169, 43, 0.13);
+        color: #f8dc7a;
+      }
+      @media (max-width: 1180px) {
+        .desk-grid {
+          grid-template-columns: 1fr;
+        }
+        .content-list-wrap {
+          max-height: none;
+        }
+        .hero-grid {
+          grid-template-columns: 1fr;
+        }
+        .stats-grid {
+          min-width: 0;
+          width: 100%;
+        }
+      }
+      @media (max-width: 767px) {
+        .admin-sidebar {
+          transform: translateX(-100%);
+        }
+        .admin-sidebar.open {
+          transform: translateX(0);
+        }
+        .admin-main {
+          margin-left: 0;
+        }
+        .mobile-toggle {
+          display: grid;
+        }
+        .main-content {
+          padding: 0.75rem;
+        }
+        .topbar-inner {
+          padding: 0.55rem 0.75rem;
+        }
+        .top-actions .hide-sm {
+          display: none !important;
+        }
+        .stats-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .editor-grid {
+          grid-template-columns: 1fr;
+        }
+        .image-tools {
+          grid-template-columns: 1fr;
+        }
+        .sticky-actions {
+          justify-content: stretch;
+        }
+        .sticky-actions .premium-btn {
+          flex: 1;
+        }
+        .hero-title {
+          font-size: 1.7rem;
+        }
+        .admin-shell,
+        .form-card,
+        .list-card {
+          border-radius: 1rem;
+        }
+        .content-list-wrap {
+          padding-right: 0;
+        }
+      }
+      @media (print) {
+        .admin-sidebar,
+        .topbar,
+        .mobile-overlay,
+        .sticky-actions,
+        .premium-btn,
+        .no-print {
+          display: none !important;
+        }
+        .admin-main {
+          margin-left: 0;
+        }
+        .main-content {
+          padding: 0;
+        }
+        .admin-shell,
+        .form-card,
+        .list-card,
+        .preview-panel {
+          box-shadow: none !important;
+          border: 1px solid #ddd !important;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition-duration: 0.001ms !important;
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+        }
+      }
+
+      /* World-class Blog Desk Enhancement Layer */
+      .blog-intelligence-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.65rem;
+        margin: 0.82rem 0 1rem;
+      }
+      .quality-tile {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(214, 169, 43, 0.18);
+        border-radius: 1rem;
+        background: linear-gradient(145deg, #fff, rgba(255, 250, 240, 0.72));
+        padding: 0.78rem;
+        box-shadow: 0 12px 30px rgba(5, 53, 31, 0.06);
+      }
+      .quality-tile:after {
+        content: "";
+        position: absolute;
+        right: -1.8rem;
+        top: -2rem;
+        width: 5rem;
+        height: 5rem;
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.16);
+        filter: blur(12px);
+      }
+      .quality-label {
+        position: relative;
+        z-index: 1;
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.55rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+      .quality-value {
+        position: relative;
+        z-index: 1;
+        display: block;
+        margin: 0.25rem 0 0;
+        color: var(--deep);
+        font-size: 1.25rem;
+        font-weight: 950;
+        line-height: 1;
+      }
+      .quality-meter {
+        position: relative;
+        z-index: 1;
+        height: 0.45rem;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(5, 53, 31, 0.08);
+        margin-top: 0.55rem;
+      }
+      .quality-meter span {
+        display: block;
+        height: 100%;
+        width: 0%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--gold), var(--green));
+        transition: width 0.24s ease;
+      }
+      .quality-hint {
+        position: relative;
+        z-index: 1;
+        margin: 0.45rem 0 0;
+        color: var(--muted);
+        font-size: 0.66rem;
+        font-weight: 750;
+        line-height: 1.35;
+      }
+      .editor-tools-row {
+        grid-column: 1/-1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.35rem;
+      }
+      .mini-tool-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        min-height: 2.15rem;
+        border-radius: 999px;
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        background: #fff;
+        color: var(--deep);
+        padding: 0.52rem 0.72rem;
+        font-size: 0.7rem;
+        font-weight: 950;
+        box-shadow: 0 8px 18px rgba(5, 53, 31, 0.05);
+      }
+      .mini-tool-btn:hover {
+        transform: translateY(-1px);
+      }
+      .public-preview-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin: 0.65rem 0 0;
+      }
+      .preview-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        border-radius: 999px;
+        background: #f2faf5;
+        border: 1px solid rgba(15, 138, 75, 0.1);
+        color: #315041;
+        padding: 0.38rem 0.58rem;
+        font-size: 0.68rem;
+        font-weight: 900;
+      }
+      .content-row {
+        isolation: isolate;
+      }
+      .content-row::after {
+        content: "";
+        position: absolute;
+        right: -3rem;
+        bottom: -4rem;
+        width: 8rem;
+        height: 8rem;
+        border-radius: 999px;
+        background: rgba(214, 169, 43, 0.12);
+        filter: blur(22px);
+        z-index: -1;
+      }
+      .content-row-thumb img,
+      .public-preview-media img,
+      .image-preview img {
+        background: #fff;
+      }
+      .field input[aria-invalid="true"],
+      .field textarea[aria-invalid="true"] {
+        border-color: #f87171 !important;
+        box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.12) !important;
+      }
+      .dark .quality-tile {
+        background: rgba(255, 255, 255, 0.07);
+        border-color: rgba(214, 169, 43, 0.16);
+      }
+      .dark .quality-value {
+        color: #fff;
+      }
+      .dark .mini-tool-btn {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.12);
+        color: #fff;
+      }
+      .dark .preview-pill {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.12);
+        color: #fff;
+      }
+
+      .detail-workflow-card {
+        grid-column: 1/-1;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.8rem;
+        align-items: center;
+        border: 1px solid rgba(214, 169, 43, 0.22);
+        border-radius: 1.1rem;
+        background: linear-gradient(
+          135deg,
+          rgba(5, 53, 31, 0.05),
+          rgba(214, 169, 43, 0.12)
+        );
+        padding: 0.85rem;
+        margin: 0.2rem 0 0.15rem;
+      }
+      .detail-workflow-card h4 {
+        margin: 0;
+        color: var(--deep);
+        font-size: 0.9rem;
+        font-weight: 950;
+      }
+      .detail-workflow-card p {
+        margin: 0.22rem 0 0;
+        color: var(--muted);
+        font-size: 0.74rem;
+        font-weight: 750;
+        line-height: 1.45;
+      }
+      .detail-workflow-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      .detail-url-display {
+        grid-column: 1/-1;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: 1px dashed rgba(5, 53, 31, 0.16);
+        border-radius: 0.95rem;
+        background: rgba(255, 255, 255, 0.72);
+        padding: 0.6rem 0.7rem;
+        color: var(--muted);
+        font-size: 0.72rem;
+        font-weight: 800;
+        overflow-wrap: anywhere;
+      }
+      .detail-url-display code {
+        color: var(--deep);
+        font-weight: 950;
+      }
+      .content-action.view {
+        background: #eff6ff;
+        color: #1d4ed8;
+        border-color: #bfdbfe;
+      }
+      .content-action.copy {
+        background: #f8fafc;
+        color: var(--deep);
+        border-color: rgba(5, 53, 31, 0.1);
+      }
+      .dark .detail-workflow-card,
+      .dark .detail-url-display {
+        background: rgba(255, 255, 255, 0.07);
+        border-color: rgba(214, 169, 43, 0.16);
+      }
+      .dark .detail-workflow-card h4,
+      .dark .detail-url-display code {
+        color: #fff;
+      }
+      .dark .content-action.view {
+        background: rgba(29, 78, 216, 0.18);
+        color: #bfdbfe;
+      }
+      .dark .content-action.copy {
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+      }
+
+      @media (max-width: 980px) {
+        .blog-intelligence-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 560px) {
+        .detail-workflow-card {
+          grid-template-columns: 1fr;
+        }
+        .detail-workflow-actions {
+          justify-content: stretch;
+        }
+        .detail-workflow-actions .mini-tool-btn {
+          flex: 1 1 100%;
+        }
+        .blog-intelligence-grid {
+          grid-template-columns: 1fr;
+        }
+        .editor-tools-row .mini-tool-btn {
+          flex: 1 1 100%;
+        }
+        .publish-quick-card {
+          grid-template-columns: 1fr !important;
+        }
+        .publish-quick-actions {
+          justify-content: stretch;
+        }
+        .publish-quick-actions .premium-btn {
+          flex: 1;
+        }
+        .stats-grid {
+          grid-template-columns: 1fr !important;
+        }
+        .section-head {
+          flex-direction: column;
+        }
+        .slug-pill {
+          max-width: 100%;
+          white-space: normal;
+        }
+        .tools-row {
+          display: grid !important;
+          grid-template-columns: 1fr;
+        }
+        .filter-select {
+          max-width: none !important;
+        }
+        .content-row-main {
+          grid-template-columns: 1fr !important;
+        }
+        .content-row-thumb,
+        .content-row-icon {
+          width: 100% !important;
+          height: 12rem !important;
+        }
+        .content-row-actions {
+          display: grid !important;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .content-action {
+          min-width: 0;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="/assets/css/admin-unified.css" />
+    <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+</head>
+  <body>
+    <a href="#contentDesk" class="skip-link">Skip to publishing desk</a>
+    <div
+      id="accessGate"
+      class="access-gate hidden"
+      role="status"
+      aria-live="polite"
+    ></div>
+    <div
+      id="mobile-overlay"
+      class="mobile-overlay hidden"
+      onclick="closeSidebar()"
+      aria-hidden="true"
+    ></div>
+    <aside id="sidebar" class="admin-sidebar" aria-label="APSG Admin Sidebar">
+      <div class="sidebar-brand">
+        <a
+          href="/admin/dashboard.html"
+          class="brand-link"
+          aria-label="APSG Admin Dashboard"
+        >
+          <span class="brand-logo"
+            ><img
+              src="/assets/images/logo/apsg.png"
+              alt="APSG"
+              onerror="this.src = '/assets/images/logo/apsg1.png'"
+          width="96" height="96" decoding="async"></span>
+          <span
+            ><span class="brand-title">APSG Admin</span
+            ><span class="brand-kicker">Publishing Desk</span></span
+          >
+        </a>
+      </div>
+      <nav class="sidebar-nav apsg-role-sidebar" aria-label="Admin navigation">
+        <p class="sidebar-section">Command Center</p>
+        <a
+          href="/admin/dashboard.html"
+          class="sidebar-link"
+          data-access="viewer,editor,admin,superadmin"
+          ><i class="fas fa-chart-pie"></i><span>Dashboard</span
+          ><span class="role-chip">Admin</span></a
+        >
+        <a
+          href="/admin/members.html"
+          class="sidebar-link"
+          data-access="admin,superadmin"
+          ><i class="fas fa-users"></i><span>Members</span
+          ><span class="role-chip">Admin</span></a
+        >
+        <a
+          href="/admin/account-details.html"
+          class="sidebar-link"
+          data-access="admin,superadmin"
+          ><i class="fas fa-building-columns"></i><span>Account Details</span
+          ><span class="role-chip">Admin</span></a
+        >
+        <a
+          href="/admin/admin-leadership.html"
+          class="sidebar-link"
+          data-access="admin,superadmin"
+          ><i class="fa-solid fa-users-viewfinder"></i
+          ><span>Leadership Desk</span><span class="role-chip">Admin</span></a
+        >
+        <a
+          href="/admin/admin-official-create.html"
+          class="sidebar-link"
+          data-access="admin,superadmin"
+          ><i class="fa-solid fa-user-pen"></i><span>Create / Update</span
+          ><span class="role-chip">Admin</span></a
+        >
+        <a
+          href="/admin/admin-officials-manager.html"
+          class="sidebar-link"
+          data-access="admin,superadmin"
+          ><i class="fa-solid fa-table-list"></i><span>Officials Manager</span
+          ><span class="role-chip">Admin</span></a
+        >
+        <a
+          href="/admin/member-details.html"
+          class="sidebar-link"
+          data-access="admin,superadmin"
+          ><i class="fas fa-id-card-clip"></i><span>Member Dossier</span
+          ><span class="role-chip">Admin</span></a
+        >
+        <a
+          href="/admin/edit-member.html"
+          class="sidebar-link"
+          data-access="admin,superadmin"
+          ><i class="fas fa-user-pen"></i><span>Edit Member</span
+          ><span class="role-chip">Admin</span></a
+        >
+        <p class="sidebar-section gold">Publishing Desk</p>
+        <a
+          href="/admin/admin-blog.html"
+          class="sidebar-link active"
+          data-access="editor,admin,superadmin"
+          aria-current="page"
+          ><i class="fas fa-newspaper"></i><span>News & Updates</span
+          ><span class="role-chip editor">Editor</span></a
+        >
+        <a
+          href="/admin/admin-meeting.html"
+          class="sidebar-link"
+          data-access="editor,admin,superadmin"
+          ><i class="fas fa-users-line"></i><span>Meetings</span
+          ><span class="role-chip editor">Editor</span></a
+        >
+        <a
+          href="/admin/admin-event.html"
+          class="sidebar-link"
+          data-access="editor,admin,superadmin"
+          ><i class="fas fa-calendar-check"></i><span>Events</span
+          ><span class="role-chip editor">Editor</span></a
+        >
+        <a
+          href="/admin/admin-gallery.html"
+          class="sidebar-link"
+          data-access="editor,admin,superadmin"
+          ><i class="fa-solid fa-images"></i><span>Gallery Albums</span
+          ><span class="role-chip editor">Editor</span></a
+        >
+        <p class="sidebar-section">Public Review</p>
+        <a
+          href="/pages/blog.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View Blog</span></a
+        >
+        <a
+          href="/pages/blog-detail.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-book-open-reader"></i><span>Detail Reader</span></a
+        >
+        <a
+          href="/pages/meetings.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View Meetings</span></a
+        >
+        <a
+          href="/pages/events.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View Events</span></a
+        >
+        <a
+          href="/pages/gallery.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View Gallery</span></a
+        >
+        <a
+          href="/pages/leadership.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View Leadership</span></a
+        >
+        <a
+          href="/pages/bot.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View BOT</span></a
+        >
+        <a
+          href="/pages/cwdi.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View CWDI</span></a
+        >
+        <a
+          href="/pages/mp.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View Matrons & Patrons</span></a
+        >
+        <a
+          href="/pages/nat-exec.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View NATEXCO</span></a
+        >
+        <a
+          href="/pages/state.html"
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener"
+          ><i class="fas fa-arrow-up-right-from-square"></i
+          ><span>View State Executives</span></a
+        >
+      </nav>
+      <div class="apsg-role-card">
+        <div style="display: flex; align-items: center; gap: 0.65rem">
+          <div
+            style="
+              display: grid;
+              place-items: center;
+              width: 2rem;
+              height: 2rem;
+              border-radius: 0.8rem;
+              background: var(--gold);
+              color: var(--deep);
+            "
+          >
+            <i class="fas fa-user-shield"></i>
+          </div>
+          <div style="min-width: 0">
+            <p style="margin: 0; font-size: 0.68rem; font-weight: 950">
+              Role Access
+            </p>
+            <p
+              style="
+                margin: 0.12rem 0 0;
+                color: rgba(255, 255, 255, 0.56);
+                font-size: 0.62rem;
+                font-weight: 700;
+              "
+            >
+              <span id="adminRoleLabel">Resolving role</span>
+            </p>
+          </div>
+        </div>
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.38rem;
+            margin-top: 0.65rem;
+          "
+        >
+          <span class="role-level" data-role-level="viewer">Viewer</span
+          ><span class="role-level" data-role-level="editor">Editor</span
+          ><span class="role-level" data-role-level="admin">Admin</span
+          ><span class="role-level" data-role-level="superadmin"
+            >Superadmin</span
+          >
+        </div>
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.65rem;
+            border-radius: 0.85rem;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.55rem 0.65rem;
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 0.62rem;
+            font-weight: 750;
+          "
+        >
+          <span class="pulse-dot"></span
+          ><span>Authenticated admin session</span>
+        </div>
+      </div>
+      <div class="sidebar-footer">
+        <button
+          onclick="logout()"
+          class="sidebar-link danger-link"
+          type="button"
+          style="width: 100%; border: 0"
+        >
+          <i class="fas fa-right-from-bracket"></i><span>Logout</span>
+        </button>
+      </div>
+    </aside>
+    <div class="admin-main">
+      <header class="topbar">
+        <div class="topbar-inner">
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              gap: 0.75rem;
+              min-width: 0;
+            "
+          >
+            <button
+              type="button"
+              class="mobile-toggle"
+              onclick="toggleSidebar()"
+              aria-label="Open sidebar"
+            >
+              <i class="fas fa-bars"></i>
+            </button>
+            <div style="min-width: 0">
+              <p
+                style="
+                  margin: 0;
+                  color: #8a6616;
+                  font-size: 0.6rem;
+                  font-weight: 950;
+                  text-transform: uppercase;
+                  letter-spacing: 0.24em;
+                "
+              >
+                APSG Content Desk
+              </p>
+              <h1
+                style="
+                  margin: 0.12rem 0 0;
+                  color: var(--deep);
+                  font-size: 1.05rem;
+                  font-weight: 950;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
+                News & Updates Desk
+              </h1>
+            </div>
+          </div>
+          <div class="top-actions">
+            <span id="topRoleBadge" class="top-role-badge hide-sm"
+              ><i class="fas fa-user-shield"></i>Checking role</span
+            ><button
+              type="button"
+              class="premium-btn ghost"
+              onclick="setTheme('snow')"
+              aria-label="Light mode"
+            >
+              <i class="fas fa-sun text-warning"></i></button
+            ><button
+              type="button"
+              class="premium-btn ghost"
+              onclick="setTheme('carbon')"
+              aria-label="Dark mode"
+            >
+              <i class="fas fa-moon"></i></button
+            ><a
+              href="/pages/blog.html"
+              target="_blank"
+              rel="noopener"
+              class="premium-btn ghost hide-sm"
+              ><i class="fas fa-eye"></i>Public Page</a
+            ><button
+              type="button"
+              onclick="reloadContentList()"
+              class="premium-btn gold"
+            >
+              <i class="fas fa-rotate-right"></i
+              ><span class="hide-sm">Reload</span>
+            </button>
+          </div>
+        </div>
+      </header>
+      <main class="main-content" data-content-admin-type="blog">
+        <section class="admin-shell">
+          <div class="hero-grid">
+            <div>
+              <span class="admin-chip"
+                ><i class="fas fa-newspaper"></i>News / Blog Publishing</span
+              >
+              <h3 class="display-font hero-title">News & Updates Desk</h3>
+              <p class="hero-copy">
+                Create, edit and publish APSG news, announcements and official
+                updates.
+              </p>
+            </div>
+            <div class="stats-grid">
+              <div class="stat-card">
+                <p>Total</p>
+                <strong id="contentTotalCount">0</strong>
+              </div>
+              <div class="stat-card">
+                <p>Published</p>
+                <strong id="contentPublishedCount">0</strong>
+              </div>
+              <div class="stat-card">
+                <p>Featured</p>
+                <strong id="contentFeaturedCount">0</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section id="contentDesk" class="desk-grid" style="margin-top: 1rem">
+          <div>
+            <section class="form-card">
+              <div class="section-head">
+                <div>
+                  <p class="section-kicker">Editor Studio</p>
+                  <h3 class="section-title">Create or update content</h3>
+                </div>
+                <span class="slug-pill"
+                  ><i class="fas fa-link"></i>Slug:
+                  <span id="contentSlugPreview">auto-generated</span></span
+                >
+              </div>
+              <div
+                id="contentDeskMessage"
+                class="content-message hidden"
+                style="margin-bottom: 0.9rem"
+              ></div>
+              <div class="publish-quick-card no-print">
+                <div>
+                  <h4>
+                    <i class="fas fa-bolt" style="color: var(--gold)"></i> Quick
+                    publishing controls
+                  </h4>
+                  <p>
+                    Use Draft for internal review, or Publish Now to set status
+                    to Published before saving.
+                  </p>
+                </div>
+                <div class="publish-quick-actions">
+                  <button
+                    type="button"
+                    id="saveDraftQuickBtn"
+                    class="premium-btn ghost"
+                  >
+                    <i class="fas fa-file-pen"></i>Save Draft</button
+                  ><button
+                    type="button"
+                    id="publishNowQuickBtn"
+                    class="premium-btn gold"
+                  >
+                    <i class="fas fa-bullhorn"></i>Publish Now
+                  </button>
+                </div>
+              </div>
+              <div
+                class="blog-intelligence-grid no-print"
+                aria-label="Publishing intelligence"
+              >
+                <div class="quality-tile">
+                  <p class="quality-label">Headline Strength</p>
+                  <strong id="headlineScore" class="quality-value">0%</strong>
+                  <div class="quality-meter">
+                    <span id="headlineScoreBar"></span>
+                  </div>
+                  <p id="headlineHint" class="quality-hint">
+                    Enter a clear headline between 45 and 90 characters.
+                  </p>
+                </div>
+                <div class="quality-tile">
+                  <p class="quality-label">SEO Summary</p>
+                  <strong id="seoScore" class="quality-value">0%</strong>
+                  <div class="quality-meter">
+                    <span id="seoScoreBar"></span>
+                  </div>
+                  <p id="seoHint" class="quality-hint">
+                    Excerpt and category improve preview quality.
+                  </p>
+                </div>
+                <div class="quality-tile">
+                  <p class="quality-label">Read Time</p>
+                  <strong id="readingTimeValue" class="quality-value"
+                    >0 min</strong
+                  >
+                  <div class="quality-meter">
+                    <span id="readingTimeBar"></span>
+                  </div>
+                  <p class="quality-hint">
+                    <span id="bodyWordCount">0</span> body words tracked live.
+                  </p>
+                </div>
+                <div class="quality-tile">
+                  <p class="quality-label">Publishing URL</p>
+                  <strong id="publicSlugState" class="quality-value"
+                    >Draft</strong
+                  >
+                  <div class="quality-meter">
+                    <span id="publicSlugBar"></span>
+                  </div>
+                  <p class="quality-hint">
+                    Full reader URL updates live from the title slug.
+                  </p>
+                </div>
+              </div>
+              <div class="detail-workflow-card no-print">
+                <div>
+                  <h4>
+                    <i
+                      class="fas fa-book-open-reader"
+                      style="color: var(--gold)"
+                    ></i>
+                    Premium article detail workflow enabled
+                  </h4>
+                  <p>
+                    Published blog posts should now open on
+                    <strong>blog-detail.html</strong> for full reading, SEO,
+                    sharing, WhatsApp link distribution and official article
+                    presentation.
+                  </p>
+                </div>
+                <div class="detail-workflow-actions">
+                  <button
+                    type="button"
+                    id="previewDetailBtn"
+                    class="mini-tool-btn"
+                  >
+                    <i class="fas fa-arrow-up-right-from-square"></i>Open detail
+                    preview
+                  </button>
+                  <button
+                    type="button"
+                    id="copyDetailUrlBtn"
+                    class="mini-tool-btn"
+                  >
+                    <i class="fas fa-copy"></i>Copy detail URL
+                  </button>
+                </div>
+                <div class="detail-url-display">
+                  <i class="fas fa-link"></i><span>Detail URL:</span>
+                  <code id="detailUrlPreview"
+                    >/pages/blog-detail.html?slug=auto-generated</code
+                  >
+                </div>
+              </div>
+              <form id="apsgContentForm" class="editor-grid" autocomplete="off">
+                <input type="hidden" id="contentId" />
+                <div class="field">
+                  <label for="contentType">Content Type</label
+                  ><select id="contentType">
+                    <option value="blog" selected>News / Blog</option>
+                    <option value="meeting">Meeting</option>
+                    <option value="event">Event</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="contentStatus">Status</label
+                  ><select id="contentStatus">
+                    <option value="draft">Draft</option>
+                    <option value="published">Published</option>
+                  </select>
+                </div>
+                <div class="field col-span-2">
+                  <label for="contentTitle"
+                    >Title <span class="required-mark">*</span></label
+                  ><input
+                    id="contentTitle"
+                    required
+                    placeholder="Enter headline/title"
+                  />
+                  <p class="field-helper">
+                    A clean headline automatically creates the slug preview and
+                    improves the public card display.
+                  </p>
+                </div>
+                <div class="field">
+                  <label for="contentCategory">Category</label
+                  ><input
+                    id="contentCategory"
+                    placeholder="National Update, Lagos, Mobilisation"
+                  />
+                </div>
+                <div class="field">
+                  <label for="contentImageUrl">Image URL</label
+                  ><input
+                    id="contentImageUrl"
+                    placeholder="https://... or /assets/images/..."
+                  />
+                  <p class="field-helper">
+                    Paste an existing image URL, or upload an image beside this field. Uploaded images automatically populate this URL.
+                  </p>
+                </div>
+                <div class="field no-print">
+                  <label for="contentImageFile">Upload Image</label>
+                  <div id="contentImageDropZone" class="image-upload-panel">
+                    <input
+                      id="contentImageFile"
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/gif"
+                    />
+                    <div class="image-upload-head">
+                      <span class="image-upload-icon"><i class="fas fa-cloud-arrow-up"></i></span>
+                      <div class="image-upload-copy">
+                        <strong id="contentImageFileName">Choose or drop an image</strong>
+                        <span>JPG, PNG, WEBP or GIF. Maximum file size: 8 MB.</span>
+                      </div>
+                    </div>
+                    <div class="image-upload-actions">
+                      <button type="button" id="chooseContentImageBtn" class="mini-tool-btn">
+                        <i class="fas fa-image"></i>Choose Image
+                      </button>
+                      <button type="button" id="uploadContentImageBtn" class="mini-tool-btn" disabled>
+                        <i class="fas fa-cloud-arrow-up"></i>Upload
+                      </button>
+                      <button type="button" id="removeContentImageBtn" class="mini-tool-btn">
+                        <i class="fas fa-xmark"></i>Clear
+                      </button>
+                    </div>
+                    <div class="image-upload-progress" aria-hidden="true">
+                      <span id="contentImageUploadProgress"></span>
+                    </div>
+                    <p id="contentImageUploadStatus" class="image-upload-status" role="status" aria-live="polite"></p>
+                  </div>
+                </div>
+                <div class="col-span-2 image-tools no-print">
+                  <div class="status-note">
+                    <i
+                      class="fas fa-circle-info"
+                      style="color: var(--gold); margin-top: 0.15rem"
+                    ></i>
+                    <div>
+                      <strong style="color: var(--deep)"
+                        >Image guidance:</strong
+                      >
+                      paste a Supabase public URL or project image path. The
+                      preview below uses full-image containment so graphics do
+                      not crop unexpectedly.
+                    </div>
+                  </div>
+                  <div class="image-preview">
+                    <img
+                      id="contentImagePreview"
+                      src="/assets/images/placeholders/pdf-placeholder.svg"
+                      alt="Content image preview"
+                      onerror="this.src = '/assets/images/logo/apsg.png'"
+                    />
+                  </div>
+                </div>
+                <div class="field col-span-2">
+                  <label for="contentExcerpt">Excerpt</label
+                  ><textarea
+                    id="contentExcerpt"
+                    rows="3"
+                    maxlength="450"
+                    placeholder="Short summary for card display"
+                  ></textarea>
+                  <p
+                    id="excerptCounter"
+                    style="
+                      margin: 0.28rem 0 0;
+                      color: var(--muted);
+                      font-size: 0.68rem;
+                      font-weight: 750;
+                    "
+                  >
+                    0/450 characters
+                  </p>
+                  <div class="editor-tools-row no-print">
+                    <button
+                      type="button"
+                      id="generateExcerptBtn"
+                      class="mini-tool-btn"
+                    >
+                      <i class="fas fa-wand-magic-sparkles"></i>Generate excerpt
+                      from body</button
+                    ><button
+                      type="button"
+                      id="copyPublicUrlBtn"
+                      class="mini-tool-btn"
+                    >
+                      <i class="fas fa-link"></i>Copy public URL</button
+                    ><button
+                      type="button"
+                      id="openBlogListBtn"
+                      class="mini-tool-btn"
+                    >
+                      <i class="fas fa-newspaper"></i>Open newsroom</button
+                    ><button
+                      type="button"
+                      id="formatBodyBtn"
+                      class="mini-tool-btn"
+                    >
+                      <i class="fas fa-align-left"></i>Clean spacing
+                    </button>
+                  </div>
+                </div>
+                <div class="field col-span-2">
+                  <label for="contentBody">Full Body / Details</label
+                  ><textarea
+                    id="contentBody"
+                    rows="8"
+                    placeholder="Full public details"
+                  ></textarea>
+                  <p class="field-helper">
+                    Use short paragraphs for better public-page readability.
+                    Avoid pasting private admin notes here.
+                  </p>
+                </div>
+                <div class="field">
+                  <label for="contentVenue">Venue</label
+                  ><input
+                    id="contentVenue"
+                    placeholder="Venue/location if applicable"
+                  />
+                </div>
+                <div class="field">
+                  <label for="contentEventDate">Date</label
+                  ><input id="contentEventDate" type="date" />
+                </div>
+                <div class="field">
+                  <label for="contentStartTime">Start Time</label
+                  ><input id="contentStartTime" type="time" />
+                </div>
+                <div class="field">
+                  <label for="contentEndTime">End Time</label
+                  ><input id="contentEndTime" type="time" />
+                </div>
+                <div class="field">
+                  <label for="contentCtaLabel">CTA Label</label
+                  ><input
+                    id="contentCtaLabel"
+                    placeholder="Read More, RSVP, Watch Live"
+                  />
+                </div>
+                <div class="field">
+                  <label for="contentCtaUrl">CTA URL</label
+                  ><input
+                    id="contentCtaUrl"
+                    placeholder="/rsvp.html or https://..."
+                  />
+                  <p class="field-helper">
+                    Optional secondary CTA. The primary public reader link is
+                    generated automatically through blog-detail.html.
+                  </p>
+                </div>
+                <label class="featured-card col-span-2"
+                  ><input id="contentFeatured" type="checkbox" />
+                  <span
+                    ><i class="fas fa-star" style="color: var(--gold)"></i> Mark
+                    as featured public update</span
+                  ></label
+                >
+                <div class="col-span-2 sticky-actions">
+                  <button
+                    id="contentSaveBtn"
+                    class="premium-btn green"
+                    type="submit"
+                  >
+                    <i class="fas fa-cloud-arrow-up"></i>Save Content</button
+                  ><button
+                    id="contentCancelEditBtn"
+                    type="button"
+                    class="premium-btn ghost hidden"
+                  >
+                    <i class="fas fa-xmark"></i>Cancel Edit</button
+                  ><button
+                    id="contentReloadBtn"
+                    type="button"
+                    class="premium-btn gold"
+                  >
+                    <i class="fas fa-rotate"></i>Reload List</button
+                  ><button
+                    type="button"
+                    id="clearContentFormBtn"
+                    class="premium-btn ghost"
+                  >
+                    <i class="fas fa-broom"></i>Clear Form
+                  </button>
+                </div>
+              </form>
+            </section>
+            <section class="preview-panel no-print">
+              <div class="section-head">
+                <div>
+                  <p class="section-kicker">Public Preview</p>
+                  <h3 class="section-title">Card appearance</h3>
+                </div>
+                <span id="previewStatus" class="slug-pill">Draft Preview</span>
+              </div>
+              <article class="public-preview-card">
+                <div class="public-preview-media">
+                  <img
+                    id="publicPreviewImage"
+                    src="/assets/images/logo/apsg.png"
+                    alt="Preview image"
+                  width="96" height="96" decoding="async">
+                </div>
+                <div class="public-preview-body">
+                  <span class="admin-chip" id="publicPreviewCategory"
+                    ><i class="fas fa-tag"></i>Category</span
+                  >
+                  <h4 id="publicPreviewTitle" class="public-preview-title">
+                    Your headline will appear here
+                  </h4>
+                  <p id="publicPreviewExcerpt" class="public-preview-excerpt">
+                    Your excerpt will preview here while you type.
+                  </p>
+                  <div class="public-preview-meta">
+                    <span class="preview-pill" id="previewReadTime"
+                      ><i class="fas fa-clock"></i>0 min read</span
+                    ><span class="preview-pill" id="previewQuality"
+                      ><i class="fas fa-chart-line"></i>Quality 0%</span
+                    ><span class="preview-pill" id="previewSlug"
+                      ><i class="fas fa-hashtag"></i>auto-generated</span
+                    >
+                  </div>
+                </div>
+              </article>
+            </section>
+          </div>
+          <aside class="list-card">
+            <div class="section-head">
+              <div>
+                <p class="section-kicker">Recent Content</p>
+                <h3 class="section-title">Manage existing items</h3>
+              </div>
+              <a
+                class="premium-btn ghost no-print"
+                href="/pages/blog.html"
+                target="_blank"
+                rel="noopener"
+                ><i class="fas fa-arrow-up-right-from-square"></i>Public</a
+              >
+            </div>
+            <div class="tools-row" style="margin-bottom: 0.75rem">
+              <div class="search-box">
+                <i class="fas fa-search"></i
+                ><input
+                  id="contentSearchInput"
+                  placeholder="Search loaded content..."
+                />
+              </div>
+              <select
+                id="contentTypeFilter"
+                class="filter-select"
+                style="max-width: 14rem"
+              >
+                <option value="blog">News/Blog</option>
+                <option value="all">All Content</option>
+                <option value="meeting">Meetings</option>
+                <option value="event">Events</option>
+              </select>
+            </div>
+            <div class="status-note" style="margin-bottom: 0.75rem">
+              <i
+                class="fas fa-shield-halved"
+                style="color: var(--gold); margin-top: 0.15rem"
+              ></i>
+              <div>
+                Only users with active <strong>editor</strong>,
+                <strong>admin</strong> or <strong>superadmin</strong> roles
+                should publish content. Sidebar links are role-aware when
+                <code>admin_profiles</code> is available.
+              </div>
+            </div>
+            <div id="contentItems" class="content-list-wrap"></div>
+          </aside>
+        </section>
+      </main>
+      <footer
+        style="
+          border-top: 1px solid rgba(5, 53, 31, 0.08);
+          background: rgba(255, 255, 255, 0.65);
+          backdrop-filter: blur(16px);
+          padding: 0.6rem;
+          text-align: center;
+          color: var(--muted);
+          font-size: 0.68rem;
+          font-weight: 750;
+        "
+      >
+        &copy; 2026 APSG Admin Publishing Desk.
+      </footer>
+    </div>
+    <script src="/assets/js/supabase-clients.js"></script>
+  <script src="/assets/js/apsg-settings.js"></script>
+    <script src="/assets/js/admin-auth.js"></script>
+    <script src="/assets/js/content-manager.js"></script>
+    <script>
+      (function () {
+        const $ = (id) => document.getElementById(id);
+        let canPublishContent = false;
+        let selectedContentImageFile = null;
+        let imageUploadBusy = false;
+        const CONTENT_IMAGE_BUCKET =
+          window.APSG_CONTENT_IMAGE_BUCKET || "content-images";
+        const MAX_CONTENT_IMAGE_BYTES = 8 * 1024 * 1024;
+        const ALLOWED_CONTENT_IMAGE_TYPES = new Set([
+          "image/jpeg",
+          "image/png",
+          "image/webp",
+          "image/gif",
+        ]);
+        function slugify(v) {
+          return (
+            String(v || "")
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/^-|-$/g, "") || "auto-generated"
+          );
+        }
+        function setTheme(mode) {
+          if (mode === "carbon") {
+            document.documentElement.classList.add("dark");
+            localStorage.setItem("daynight-theme", "carbon");
+          } else {
+            document.documentElement.classList.remove("dark");
+            localStorage.setItem("daynight-theme", "snow");
+          }
+        }
+        function toggleSidebar() {
+          const sidebar = $("sidebar"),
+            overlay = $("mobile-overlay");
+          sidebar && sidebar.classList.toggle("open");
+          sidebar && sidebar.classList.toggle("-translate-x-full");
+          overlay && overlay.classList.toggle("hidden");
+        }
+        function closeSidebar() {
+          const sidebar = $("sidebar"),
+            overlay = $("mobile-overlay");
+          sidebar && sidebar.classList.remove("open");
+          sidebar && sidebar.classList.add("-translate-x-full");
+          overlay && overlay.classList.add("hidden");
+        }
+        async function logout() {
+          const client =
+            window.supabaseClient ||
+            window.apsgSupabase ||
+            window.APSG_SUPABASE;
+          if (client?.auth) await client.auth.signOut();
+          location.href = "/admin/login.html";
+        }
+        function showAccessGate(
+          message,
+          type = "info",
+          title = "Publishing access",
+        ) {
+          const gate = $("accessGate");
+          if (!gate) return;
+          gate.className =
+            "access-gate " +
+            (type === "danger"
+              ? "danger"
+              : type === "success"
+                ? "success"
+                : "");
+          gate.innerHTML =
+            "<strong>" + title + "</strong><span>" + message + "</span>";
+          gate.classList.remove("hidden");
+          clearTimeout(showAccessGate.timer);
+          if (type !== "danger")
+            showAccessGate.timer = setTimeout(
+              () => gate.classList.add("hidden"),
+              3600,
+            );
+        }
+        function setImageUploadStatus(message = "", type = "") {
+          const status = $("contentImageUploadStatus");
+          if (!status) return;
+          status.textContent = message;
+          status.className = "image-upload-status" + (type ? " " + type : "");
+        }
+        function setImageUploadProgress(value) {
+          const bar = $("contentImageUploadProgress");
+          if (bar) bar.style.width = Math.max(0, Math.min(100, value)) + "%";
+        }
+        function setImageUploadBusy(busy) {
+          imageUploadBusy = Boolean(busy);
+          const uploadBtn = $("uploadContentImageBtn");
+          const chooseBtn = $("chooseContentImageBtn");
+          const fileInput = $("contentImageFile");
+          if (uploadBtn) {
+            uploadBtn.disabled = imageUploadBusy || !selectedContentImageFile || !canPublishContent;
+            uploadBtn.innerHTML = imageUploadBusy
+              ? '<span class="content-spinner" aria-hidden="true"></span>Uploading'
+              : '<i class="fas fa-cloud-arrow-up"></i>Upload';
+          }
+          if (chooseBtn) chooseBtn.disabled = imageUploadBusy || !canPublishContent;
+          if (fileInput) fileInput.disabled = imageUploadBusy || !canPublishContent;
+          const saveBtn = $("contentSaveBtn");
+          if (saveBtn) saveBtn.disabled = imageUploadBusy || !canPublishContent;
+        }
+        function validateContentImage(file) {
+          if (!file) return "Select an image first.";
+          if (!ALLOWED_CONTENT_IMAGE_TYPES.has(file.type))
+            return "Unsupported image format. Use JPG, PNG, WEBP or GIF.";
+          if (file.size > MAX_CONTENT_IMAGE_BYTES)
+            return "Image is larger than 8 MB. Compress it and try again.";
+          return "";
+        }
+        function safeStorageFileName(name) {
+          const original = String(name || "image");
+          const dot = original.lastIndexOf(".");
+          const extension = dot >= 0 ? original.slice(dot + 1).toLowerCase() : "jpg";
+          const base = dot >= 0 ? original.slice(0, dot) : original;
+          const safeBase = slugify(base).replace(/auto-generated/g, "image").slice(0, 70);
+          return safeBase + "." + extension.replace(/[^a-z0-9]/g, "");
+        }
+        function selectContentImage(file) {
+          const error = validateContentImage(file);
+          if (error) {
+            selectedContentImageFile = null;
+            if ($("contentImageFile")) $("contentImageFile").value = "";
+            if ($("contentImageFileName")) $("contentImageFileName").textContent = "Choose or drop an image";
+            setImageUploadStatus(error, "error");
+            setImageUploadProgress(0);
+            setImageUploadBusy(false);
+            return;
+          }
+          selectedContentImageFile = file;
+          if ($("contentImageFileName")) {
+            const sizeMb = (file.size / (1024 * 1024)).toFixed(2);
+            $("contentImageFileName").textContent = file.name + " (" + sizeMb + " MB)";
+          }
+          setImageUploadStatus("Image selected. Click Upload to store it in Supabase.");
+          setImageUploadProgress(8);
+          setImageUploadBusy(false);
+          const localUrl = URL.createObjectURL(file);
+          ["contentImagePreview", "publicPreviewImage"].forEach((id) => {
+            const img = $(id);
+            if (img) img.src = localUrl;
+          });
+        }
+        async function uploadSelectedContentImage() {
+          if (!canPublishContent) {
+            showAccessGate(
+              "You need an active editor, admin or superadmin role to upload images.",
+              "danger",
+              "Upload blocked",
+            );
+            return;
+          }
+          const error = validateContentImage(selectedContentImageFile);
+          if (error) {
+            setImageUploadStatus(error, "error");
+            return;
+          }
+          const client = await waitForClient();
+          if (!client?.storage) {
+            setImageUploadStatus("Supabase Storage is unavailable. Check the Supabase client script.", "error");
+            return;
+          }
+          setImageUploadBusy(true);
+          setImageUploadProgress(24);
+          setImageUploadStatus("Uploading image to Supabase Storage...");
+          try {
+            const { data: sessionData, error: sessionError } = await client.auth.getSession();
+            if (sessionError) throw sessionError;
+            const user = sessionData?.session?.user;
+            if (!user) throw new Error("Your admin session has expired. Sign in again.");
+            const now = new Date();
+            const folder = [
+              "blog",
+              user.id,
+              String(now.getUTCFullYear()),
+              String(now.getUTCMonth() + 1).padStart(2, "0"),
+            ].join("/");
+            const unique = now.getTime().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+            const path = folder + "/" + unique + "-" + safeStorageFileName(selectedContentImageFile.name);
+            setImageUploadProgress(48);
+            const { data: uploadData, error: uploadError } = await client.storage
+              .from(CONTENT_IMAGE_BUCKET)
+              .upload(path, selectedContentImageFile, {
+                cacheControl: "3600",
+                contentType: selectedContentImageFile.type,
+                upsert: false,
+              });
+            if (uploadError) throw uploadError;
+            setImageUploadProgress(82);
+            const { data: publicData } = client.storage
+              .from(CONTENT_IMAGE_BUCKET)
+              .getPublicUrl(uploadData?.path || path);
+            const publicUrl = publicData?.publicUrl;
+            if (!publicUrl) throw new Error("The image uploaded, but its public URL could not be generated.");
+            if ($("contentImageUrl")) {
+              $("contentImageUrl").value = publicUrl;
+              $("contentImageUrl").dispatchEvent(new Event("input", { bubbles: true }));
+            }
+            setImageUploadProgress(100);
+            setImageUploadStatus("Upload complete. The public image URL has been added automatically.", "success");
+            showAccessGate(
+              "Image uploaded and connected to this blog post.",
+              "success",
+              "Image ready",
+            );
+            selectedContentImageFile = null;
+            if ($("contentImageFile")) $("contentImageFile").value = "";
+            if ($("contentImageFileName")) $("contentImageFileName").textContent = "Image uploaded successfully";
+          } catch (error) {
+            console.error("Content image upload failed", error);
+            const message = String(error?.message || error || "Upload failed");
+            const helpful = /bucket.*not found|not found.*bucket/i.test(message)
+              ? 'Storage bucket "' + CONTENT_IMAGE_BUCKET + '" was not found. Run the supplied Supabase storage setup SQL first.'
+              : /row-level security|permission denied|unauthorized|42501/i.test(message)
+                ? "Supabase Storage denied the upload. Deploy the storage policies supplied with this update."
+                : describeError(error);
+            setImageUploadProgress(0);
+            setImageUploadStatus(helpful, "error");
+            showAccessGate(helpful, "danger", "Image upload failed");
+          } finally {
+            setImageUploadBusy(false);
+          }
+        }
+        function clearContentImage() {
+          selectedContentImageFile = null;
+          if ($("contentImageFile")) $("contentImageFile").value = "";
+          if ($("contentImageUrl")) {
+            $("contentImageUrl").value = "";
+            $("contentImageUrl").dispatchEvent(new Event("input", { bubbles: true }));
+          }
+          if ($("contentImageFileName")) $("contentImageFileName").textContent = "Choose or drop an image";
+          setImageUploadStatus("Image selection and URL cleared.");
+          setImageUploadProgress(0);
+        }
+        function setupContentImageDropZone() {
+          const zone = $("contentImageDropZone");
+          if (!zone) return;
+          ["dragenter", "dragover"].forEach((eventName) => {
+            zone.addEventListener(eventName, (event) => {
+              event.preventDefault();
+              if (!imageUploadBusy && canPublishContent) zone.classList.add("is-dragging");
+            });
+          });
+          ["dragleave", "drop"].forEach((eventName) => {
+            zone.addEventListener(eventName, (event) => {
+              event.preventDefault();
+              zone.classList.remove("is-dragging");
+            });
+          });
+          zone.addEventListener("drop", (event) => {
+            if (imageUploadBusy || !canPublishContent) return;
+            const file = event.dataTransfer?.files?.[0];
+            if (file) selectContentImage(file);
+          });
+        }
+        function updatePreview() {
+          const title =
+            $("contentTitle")?.value?.trim() ||
+            "Your headline will appear here";
+          const category = $("contentCategory")?.value?.trim() || "Category";
+          const excerpt =
+            $("contentExcerpt")?.value?.trim() ||
+            "Your excerpt will preview here while you type.";
+          const status = $("contentStatus")?.value || "draft";
+          const image =
+            $("contentImageUrl")?.value?.trim() ||
+            "/assets/images/logo/apsg.png";
+          if ($("contentSlugPreview"))
+            $("contentSlugPreview").textContent = slugify(title);
+          if ($("publicPreviewTitle"))
+            $("publicPreviewTitle").textContent = title;
+          if ($("publicPreviewCategory"))
+            $("publicPreviewCategory").innerHTML =
+              '<i class="fas fa-tag"></i>' + category;
+          if ($("publicPreviewExcerpt"))
+            $("publicPreviewExcerpt").textContent = excerpt;
+          if ($("previewStatus"))
+            $("previewStatus").textContent =
+              status === "published" ? "Published Preview" : "Draft Preview";
+          ["contentImagePreview", "publicPreviewImage"].forEach((id) => {
+            const img = $(id);
+            if (img) img.src = image;
+          });
+          const counter = $("excerptCounter");
+          if (counter)
+            counter.textContent =
+              ($("contentExcerpt")?.value || "").length + "/450 characters";
+          if (typeof updatePublishingIntelligence === "function")
+            updatePublishingIntelligence();
+        }
+        function clearForm() {
+          const form = $("apsgContentForm");
+          if (!form) return;
+          form.reset();
+          if ($("contentId")) $("contentId").value = "";
+          if ($("contentSlugPreview"))
+            $("contentSlugPreview").textContent = "auto-generated";
+          selectedContentImageFile = null;
+          if ($("contentImageFile")) $("contentImageFile").value = "";
+          if ($("contentImageFileName")) $("contentImageFileName").textContent = "Choose or drop an image";
+          setImageUploadStatus("");
+          setImageUploadProgress(0);
+          updatePreview();
+          $("contentTitle")?.focus();
+        }
+        function filterRenderedItems() {
+          const q = ($("contentSearchInput")?.value || "").toLowerCase().trim();
+          const wrap = $("contentItems");
+          if (!wrap) return;
+          Array.from(wrap.children || []).forEach((child) => {
+            const hidden = Boolean(
+              q && !(child.textContent || "").toLowerCase().includes(q),
+            );
+            child.hidden = hidden;
+            child.classList.toggle("hidden-by-search", hidden);
+          });
+        }
+        async function waitForClient() {
+          for (let i = 0; i < 35; i++) {
+            const client =
+              window.supabaseClient ||
+              window.apsgSupabase ||
+              window.APSG_SUPABASE ||
+              (window.APSG && window.APSG.supabase);
+            if (client && typeof client.from === "function") {
+              window.supabaseClient = client;
+              return client;
+            }
+            await new Promise((resolve) => setTimeout(resolve, 100));
+          }
+          return null;
+        }
+        function describeError(error) {
+          const msg = String(error?.message || error || "Unknown error");
+          const code = String(error?.code || "");
+          if (!navigator.onLine)
+            return "Network appears offline. Check your internet connection and refresh.";
+          if (code === "42P01" || /relation .* does not exist/i.test(msg))
+            return "The admin_profiles/content table was not found. Confirm the Supabase schema is deployed.";
+          if (
+            code === "42501" ||
+            /permission denied|row-level security|rls/i.test(msg)
+          )
+            return "Supabase RLS denied this request. Confirm this admin has an active editor/admin/superadmin role and content policies.";
+          if (/failed to fetch|network|timeout/i.test(msg))
+            return "Network or Supabase connection issue. Check Supabase project status and try again.";
+          return msg;
+        }
+        function setRoleUi(role) {
+          role = String(role || "viewer").toLowerCase();
+          const label = $("adminRoleLabel");
+          if (label) label.textContent = role;
+          const top = $("topRoleBadge");
+          if (top) top.innerHTML = '<i class="fas fa-user-shield"></i>' + role;
+          document
+            .querySelectorAll("[data-role-level]")
+            .forEach((el) =>
+              el.classList.toggle("active", el.dataset.roleLevel === role),
+            );
+          document.querySelectorAll("[data-access]").forEach((link) => {
+            const allowed = String(link.dataset.access || "")
+              .split(",")
+              .map((x) => x.trim().toLowerCase())
+              .filter(Boolean);
+            link.hidden = Boolean(allowed.length && !allowed.includes(role));
+          });
+        }
+        function setPublishingAccess(allowed, message = "") {
+          canPublishContent = allowed;
+          document.body.dataset.publishingAccess = allowed
+            ? "granted"
+            : "blocked";
+          ["contentSaveBtn", "saveDraftQuickBtn", "publishNowQuickBtn"].forEach(
+            (id) => {
+              const btn = $(id);
+              if (btn) btn.disabled = !allowed || imageUploadBusy;
+            },
+          );
+          setImageUploadBusy(imageUploadBusy);
+          document
+            .querySelectorAll(
+              "#apsgContentForm input,#apsgContentForm select,#apsgContentForm textarea",
+            )
+            .forEach((el) => {
+              if (
+                el.id === "contentTypeFilter" ||
+                el.id === "contentSearchInput"
+              )
+                return;
+              el.disabled = !allowed;
+            });
+          if (!allowed && message)
+            showAccessGate(message, "danger", "Publishing blocked");
+        }
+        async function requirePublishingAccess() {
+          const client = await waitForClient();
+          if (!client?.auth?.getSession) {
+            setRoleUi("viewer");
+            setPublishingAccess(
+              false,
+              "Supabase Auth is unavailable. Confirm /assets/js/supabase-clients.js is loading.",
+            );
+            return false;
+          }
+          try {
+            const { data, error } = await client.auth.getSession();
+            if (error) throw error;
+            const session = data?.session;
+            if (!session?.user) {
+              const redirect = encodeURIComponent(
+                location.pathname + location.search,
+              );
+              location.href = "/admin/login.html?redirect=" + redirect;
+              return false;
+            }
+            const email = String(session.user.email || "").toLowerCase();
+            const fields = "id,user_id,email,role,is_active,status";
+            let res = await client
+              .from("admin_profiles")
+              .select(fields)
+              .eq("id", session.user.id)
+              .limit(1)
+              .maybeSingle();
+            if (!res?.data)
+              res = await client
+                .from("admin_profiles")
+                .select(fields)
+                .eq("user_id", session.user.id)
+                .limit(1)
+                .maybeSingle();
+            if (!res?.data && email)
+              res = await client
+                .from("admin_profiles")
+                .select(fields)
+                .ilike("email", email)
+                .limit(1)
+                .maybeSingle();
+            if (res?.error) throw res.error;
+            const profile = res?.data;
+            const role = String(profile?.role || "viewer").toLowerCase();
+            const active =
+              profile &&
+              profile.is_active !== false &&
+              String(profile.status || "active").toLowerCase() !== "inactive";
+            setRoleUi(role);
+            const allowed =
+              active && ["editor", "admin", "superadmin"].includes(role);
+            setPublishingAccess(
+              allowed,
+              allowed
+                ? ""
+                : `This page requires an active editor, admin, or superadmin role. Current role: ${role || "none"}.`,
+            );
+            if (allowed)
+              showAccessGate(
+                "News & Updates publishing access verified as " + role + ".",
+                "success",
+                "Access verified",
+              );
+            return allowed;
+          } catch (error) {
+            console.warn("Publishing access check failed", error);
+            setRoleUi("viewer");
+            setPublishingAccess(false, describeError(error));
+            return false;
+          }
+        }
+        function reloadContentList() {
+          const btn = $("contentReloadBtn");
+          if (btn) btn.click();
+          else location.reload();
+        }
+        function guardedSubmit(event) {
+          if (!canPublishContent) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            showAccessGate(
+              "You do not have publishing permission for this page. Ask a superadmin to enable editor/admin access in admin_profiles.",
+              "danger",
+              "Publishing blocked",
+            );
+            return false;
+          }
+          return true;
+        }
+        function quickSave(status) {
+          if (!canPublishContent) {
+            showAccessGate(
+              "You do not have permission to save or publish content.",
+              "danger",
+              "Publishing blocked",
+            );
+            return;
+          }
+          if ($("contentStatus")) $("contentStatus").value = status;
+          updatePreview();
+          $("contentSaveBtn")?.click();
+        }
+        function plainText(value) {
+          return String(value || "")
+            .replace(/<[^>]*>/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+        }
+        function wordCount(value) {
+          const text = plainText(value);
+          return text ? text.split(/\s+/).filter(Boolean).length : 0;
+        }
+        function setMeter(id, value) {
+          const el = $(id);
+          if (el) el.style.width = Math.max(0, Math.min(100, value)) + "%";
+        }
+        function scoreHeadline(title) {
+          const len = String(title || "").trim().length;
+          let score = 0;
+          if (len >= 35) score += 25;
+          if (len >= 45 && len <= 95) score += 35;
+          if (/[A-Z]/.test(title) && /[a-z]/.test(title)) score += 10;
+          if (
+            /APSG|CWDI|Nigeria|Update|Official|Announces|Mobilisation/i.test(
+              title,
+            )
+          )
+            score += 15;
+          if (!/[!]{2,}/.test(title)) score += 15;
+          return Math.min(100, score);
+        }
+        function scoreSeo() {
+          let score = 0;
+          const title = $("contentTitle")?.value || "";
+          const excerpt = $("contentExcerpt")?.value || "";
+          const category = $("contentCategory")?.value || "";
+          const image = $("contentImageUrl")?.value || "";
+          const body = $("contentBody")?.value || "";
+          if (title.trim().length >= 45 && title.trim().length <= 95)
+            score += 25;
+          if (excerpt.trim().length >= 90 && excerpt.trim().length <= 220)
+            score += 25;
+          if (category.trim().length >= 3) score += 15;
+          if (image.trim()) score += 15;
+          if (wordCount(body) >= 120) score += 20;
+          return Math.min(100, score);
+        }
+        function updatePublishingIntelligence() {
+          const title = $("contentTitle")?.value || "";
+          const excerpt = $("contentExcerpt")?.value || "";
+          const body = $("contentBody")?.value || "";
+          const slug = slugify(title);
+          const headline = scoreHeadline(title);
+          const seo = scoreSeo();
+          const words = wordCount(body);
+          const minutes = Math.max(0, Math.ceil(words / 220));
+          if ($("headlineScore"))
+            $("headlineScore").textContent = headline + "%";
+          if ($("seoScore")) $("seoScore").textContent = seo + "%";
+          if ($("readingTimeValue"))
+            $("readingTimeValue").textContent = minutes + " min";
+          if ($("bodyWordCount"))
+            $("bodyWordCount").textContent = words.toLocaleString();
+          if ($("publicSlugState"))
+            $("publicSlugState").textContent =
+              slug === "auto-generated" ? "Draft" : "Ready";
+          if ($("headlineHint"))
+            $("headlineHint").textContent =
+              headline >= 80
+                ? "Strong, official headline."
+                : title.length < 35
+                  ? "Headline is too short for a premium news card."
+                  : "Improve clarity, length and official keywords.";
+          if ($("seoHint"))
+            $("seoHint").textContent =
+              seo >= 80
+                ? "SEO preview is strong."
+                : "Add category, excerpt, image and enough body detail.";
+          if ($("previewReadTime"))
+            $("previewReadTime").innerHTML =
+              '<i class="fas fa-clock"></i>' + minutes + " min read";
+          if ($("previewQuality"))
+            $("previewQuality").innerHTML =
+              '<i class="fas fa-chart-line"></i>Quality ' +
+              Math.round((headline + seo) / 2) +
+              "%";
+          if ($("previewSlug"))
+            $("previewSlug").innerHTML =
+              '<i class="fas fa-hashtag"></i>' + slug;
+          if ($("detailUrlPreview"))
+            $("detailUrlPreview").textContent =
+              "/pages/blog-detail.html?slug=" + encodeURIComponent(slug);
+          setMeter("headlineScoreBar", headline);
+          setMeter("seoScoreBar", seo);
+          setMeter("readingTimeBar", Math.min(100, words / 8));
+          setMeter("publicSlugBar", slug === "auto-generated" ? 0 : 100);
+          ["contentTitle", "contentExcerpt", "contentBody"].forEach((id) => {
+            const el = $(id);
+            if (!el) return;
+            const invalid =
+              (id === "contentTitle" && !title.trim()) ||
+              (id === "contentExcerpt" &&
+                excerpt.length > 0 &&
+                excerpt.length < 45) ||
+              (id === "contentBody" && body.length > 0 && words < 30);
+            el.setAttribute("aria-invalid", String(invalid));
+          });
+        }
+        function generateExcerptFromBody() {
+          const body = plainText($("contentBody")?.value || "");
+          if (!body) {
+            showAccessGate(
+              "Write or paste the full body first, then generate an excerpt.",
+              "danger",
+              "No body content",
+            );
+            return;
+          }
+          const excerpt = body
+            .slice(0, 210)
+            .replace(/\s+\S*$/, "")
+            .trim();
+          if ($("contentExcerpt"))
+            $("contentExcerpt").value =
+              excerpt + (body.length > excerpt.length ? "..." : "");
+          updatePreview();
+          showAccessGate(
+            "A clean excerpt was generated from the body.",
+            "success",
+            "Excerpt ready",
+          );
+        }
+        function cleanBodySpacing() {
+          const body = $("contentBody");
+          if (!body) return;
+          body.value = String(body.value || "")
+            .replace(/[ \t]+$/gm, "")
+            .replace(/\n{3,}/g, "\n\n")
+            .trim();
+          updatePreview();
+          showAccessGate(
+            "Body spacing cleaned for a better public reading experience.",
+            "success",
+            "Body cleaned",
+          );
+        }
+        async function copyPublicUrl() {
+          const title = $("contentTitle")?.value || "";
+          const slug = slugify(title);
+          if (slug === "auto-generated") {
+            showAccessGate(
+              "Enter a title first so a public URL can be generated.",
+              "danger",
+              "Missing title",
+            );
+            return;
+          }
+          const url =
+            location.origin +
+            "/pages/blog-detail.html?slug=" +
+            encodeURIComponent(slug);
+          try {
+            await navigator.clipboard.writeText(url);
+            showAccessGate(
+              "Public article detail URL copied: " + url,
+              "success",
+              "Copied",
+            );
+          } catch (error) {
+            prompt("Copy public URL", url);
+          }
+        }
+        function currentDetailUrl() {
+          const title = $("contentTitle")?.value || "";
+          const slug = slugify(title);
+          if (slug === "auto-generated") return "";
+          return (
+            location.origin +
+            "/pages/blog-detail.html?slug=" +
+            encodeURIComponent(slug)
+          );
+        }
+        function openDetailPreview() {
+          const url = currentDetailUrl();
+          if (!url) {
+            showAccessGate(
+              "Enter a title first so a detail preview URL can be opened.",
+              "danger",
+              "Missing title",
+            );
+            return;
+          }
+          window.open(url, "_blank", "noopener");
+        }
+        async function copyDetailUrl() {
+          const url = currentDetailUrl();
+          if (!url) {
+            showAccessGate(
+              "Enter a title first so a detail URL can be copied.",
+              "danger",
+              "Missing title",
+            );
+            return;
+          }
+          try {
+            await navigator.clipboard.writeText(url);
+            showAccessGate(
+              "Premium article detail URL copied.",
+              "success",
+              "Copied",
+            );
+          } catch (error) {
+            prompt("Copy detail URL", url);
+          }
+        }
+        function openBlogList() {
+          window.open("/pages/blog.html", "_blank", "noopener");
+        }
+
+        function enhanceContentRows() {
+          document
+            .querySelectorAll(".content-row:not([data-premium-enhanced])")
+            .forEach((row) => {
+              row.dataset.premiumEnhanced = "true";
+              const title = row.querySelector("h4")?.textContent || "";
+              const text =
+                title + " " + (row.querySelector("p")?.textContent || "");
+              const mins = Math.max(1, Math.ceil(wordCount(text) / 120));
+              const meta = row.querySelector(".content-row-meta");
+              if (meta) {
+                const span = document.createElement("span");
+                span.innerHTML =
+                  '<i class="fas fa-clock"></i>' + mins + " min preview";
+                meta.appendChild(span);
+              }
+              const actions = row.querySelector(".content-row-actions");
+              const editBtn = row.querySelector("[data-edit-content]");
+              const id = editBtn?.dataset?.editContent;
+              const slug = slugify(title);
+              const url = id
+                ? "/pages/blog-detail.html?id=" + encodeURIComponent(id)
+                : "/pages/blog-detail.html?slug=" + encodeURIComponent(slug);
+              if (actions && !actions.querySelector("[data-view-detail]")) {
+                const view = document.createElement("a");
+                view.className = "content-action view";
+                view.href = url;
+                view.target = "_blank";
+                view.rel = "noopener";
+                view.dataset.viewDetail = "true";
+                view.innerHTML = '<i class="fas fa-book-open-reader"></i>View';
+                const copy = document.createElement("button");
+                copy.type = "button";
+                copy.className = "content-action copy";
+                copy.dataset.copyDetail = url;
+                copy.innerHTML = '<i class="fas fa-link"></i>Copy';
+                copy.addEventListener("click", async () => {
+                  try {
+                    await navigator.clipboard.writeText(
+                      new URL(url, location.origin).href,
+                    );
+                    copy.innerHTML = '<i class="fas fa-check"></i>Copied';
+                    setTimeout(
+                      () =>
+                        (copy.innerHTML = '<i class="fas fa-link"></i>Copy'),
+                      1400,
+                    );
+                  } catch (error) {
+                    prompt(
+                      "Copy detail URL",
+                      new URL(url, location.origin).href,
+                    );
+                  }
+                });
+                actions.prepend(copy);
+                actions.prepend(view);
+              }
+            });
+        }
+        document.addEventListener("DOMContentLoaded", async () => {
+          [
+            "contentTitle",
+            "contentCategory",
+            "contentExcerpt",
+            "contentImageUrl",
+            "contentStatus",
+            "contentBody",
+            "contentCtaLabel",
+            "contentCtaUrl",
+          ].forEach((id) => $(id)?.addEventListener("input", updatePreview));
+          $("contentStatus")?.addEventListener("change", updatePreview);
+          $("clearContentFormBtn")?.addEventListener("click", clearForm);
+          $("chooseContentImageBtn")?.addEventListener("click", () => $("contentImageFile")?.click());
+          $("contentImageFile")?.addEventListener("change", (event) => selectContentImage(event.target.files?.[0]));
+          $("uploadContentImageBtn")?.addEventListener("click", uploadSelectedContentImage);
+          $("removeContentImageBtn")?.addEventListener("click", clearContentImage);
+          setupContentImageDropZone();
+          $("generateExcerptBtn")?.addEventListener(
+            "click",
+            generateExcerptFromBody,
+          );
+          $("copyPublicUrlBtn")?.addEventListener("click", copyPublicUrl);
+          $("copyDetailUrlBtn")?.addEventListener("click", copyDetailUrl);
+          $("previewDetailBtn")?.addEventListener("click", openDetailPreview);
+          $("openBlogListBtn")?.addEventListener("click", openBlogList);
+          $("formatBodyBtn")?.addEventListener("click", cleanBodySpacing);
+          $("contentSearchInput")?.addEventListener(
+            "input",
+            filterRenderedItems,
+          );
+          $("contentItems") &&
+            new MutationObserver(() => {
+              filterRenderedItems();
+              enhanceContentRows();
+            }).observe($("contentItems"), { childList: true, subtree: true });
+          $("apsgContentForm")?.addEventListener("submit", guardedSubmit, true);
+          $("saveDraftQuickBtn")?.addEventListener("click", () =>
+            quickSave("draft"),
+          );
+          $("publishNowQuickBtn")?.addEventListener("click", () =>
+            quickSave("published"),
+          );
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") closeSidebar();
+          });
+          updatePreview();
+          enhanceContentRows();
+          const allowed = await requirePublishingAccess();
+          if (allowed && typeof checkAuth === "function") await checkAuth();
+        });
+        window.toggleSidebar = toggleSidebar;
+        window.closeSidebar = closeSidebar;
+        window.logout = logout;
+        window.setTheme = setTheme;
+        window.reloadContentList = reloadContentList;
+      })();
+    </script>
+    <script src="/assets/js/admin-unified.js" defer></script>
+    <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,1960 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#05351f">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <base href="/">
+  <title>Create / Update Official | APSG Admin</title>
+  <link rel="icon" href="/assets/images/logo/apsg.png" sizes="any">
+  <link rel="apple-touch-icon" href="/assets/images/logo/apsg.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="/assets/js/supabase-clients.js" defer></script>
+  <script src="/assets/js/apsg-settings.js" defer></script>
+  <script src="/assets/js/admin-auth.js" defer></script>
+  <style>
+    :root {
+      --deep: #05351f;
+      --deep-2: #031b0f;
+      --green: #0f8a4b;
+      --emerald: #14a861;
+      --gold: #d6a92b;
+      --gold-soft: #ffe6a3;
+      --cream: #fffaf0;
+      --paper: #ffffff;
+      --soft: #f6fbf7;
+      --ink: #07140e;
+      --muted: #64746a;
+      --danger: #991b1b;
+      --danger-bg: #fee2e2;
+      --border: rgba(5, 53, 31, .10);
+      --gold-border: rgba(214, 169, 43, .25);
+      --shadow-card: 0 18px 52px rgba(5, 53, 31, .10);
+      --shadow-premium: 0 34px 110px rgba(5, 53, 31, .20);
+      --radius-xl: 1.35rem;
+      --radius-2xl: 1.75rem;
+    }
+
+    * { box-sizing: border-box; }
+    html { min-height: 100%; scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 14px;
+      background:
+        radial-gradient(circle at 96% 0, rgba(214, 169, 43, .14), transparent 28rem),
+        radial-gradient(circle at 0 8%, rgba(15, 138, 75, .11), transparent 31rem),
+        linear-gradient(180deg, #f8fbf7 0%, #eef6ef 100%);
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    img { display: block; max-width: 100%; }
+    strong { font-weight: 950; }
+
+    .display-font { font-family: "Playfair Display", Georgia, serif; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .skip-link {
+      position: fixed;
+      left: 1rem;
+      top: .75rem;
+      z-index: 500;
+      transform: translateY(-140%);
+      border-radius: 999px;
+      background: var(--gold);
+      color: var(--deep);
+      padding: .65rem .95rem;
+      font-weight: 950;
+      box-shadow: var(--shadow-card);
+      transition: transform .18s ease;
+    }
+    .skip-link:focus { transform: translateY(0); }
+
+    .mobile-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: none;
+      border: 0;
+      background: rgba(0, 0, 0, .42);
+    }
+    .mobile-overlay.is-open { display: block; }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 50;
+      width: 16rem;
+      overflow-y: auto;
+      color: #fff;
+      background: linear-gradient(180deg, #031b0f, #052414 60%, #03140b);
+      border-right: 1px solid rgba(255,255,255,.10);
+      transform: translateX(-100%);
+      transition: transform .28s ease;
+    }
+    .sidebar.is-open { transform: translateX(0); }
+    .sidebar-brand {
+      position: relative;
+      overflow: hidden;
+      padding: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .sidebar-brand::after {
+      content: "";
+      position: absolute;
+      right: -3rem;
+      top: -3rem;
+      width: 8rem;
+      height: 8rem;
+      border-radius: 999px;
+      background: rgba(214,169,43,.22);
+      filter: blur(28px);
+    }
+    .brand-link {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 2.85rem;
+      height: 2.85rem;
+      border: 1px solid rgba(214,169,43,.32);
+      border-radius: 1rem;
+      background: rgba(255,255,255,.10);
+      box-shadow: 0 14px 34px rgba(0,0,0,.18);
+    }
+    .brand-mark img { width: 2rem; height: 2rem; object-fit: contain; }
+    .brand-title {
+      display: block;
+      font-size: 1rem;
+      font-weight: 950;
+      line-height: 1;
+    }
+    .brand-kicker {
+      display: block;
+      margin-top: .28rem;
+      color: var(--gold-soft);
+      font-size: .58rem;
+      font-weight: 950;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+    .sidebar-nav { padding: .72rem; }
+    .sidebar-heading {
+      margin: .85rem .4rem .35rem;
+      color: rgba(255,255,255,.42);
+      font-size: .56rem;
+      font-weight: 950;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+    }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: .58rem;
+      min-height: 2.42rem;
+      margin-bottom: .25rem;
+      padding: .58rem .72rem;
+      border-radius: 1rem;
+      color: rgba(255,255,255,.82);
+      font-size: .76rem;
+      font-weight: 850;
+      transition: background .18s ease, color .18s ease, transform .18s ease;
+    }
+    .sidebar-link:hover,
+    .sidebar-link.active,
+    .sidebar-link:focus-visible {
+      background: rgba(214,169,43,.14);
+      color: #f8dc7a;
+      transform: translateX(2px);
+      outline: 0;
+    }
+    .sidebar-link i { width: 1rem; text-align: center; color: inherit; }
+    .role-chip {
+      margin-left: auto;
+      padding: .16rem .38rem;
+      border-radius: 999px;
+      background: rgba(214,169,43,.14);
+      color: #f8dc7a;
+      font-size: .5rem;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .main-wrap {
+      min-height: 100vh;
+      transition: margin-left .28s ease;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      min-height: 3.8rem;
+      padding: .62rem .8rem;
+      border-bottom: 1px solid rgba(5,53,31,.08);
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(18px);
+    }
+    .topbar-inner,
+    .hero-inner,
+    .flex-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .8rem;
+    }
+    .topbar-title { min-width: 0; }
+    .topbar-title p,
+    .eyebrow {
+      margin: 0;
+      color: #8a6616;
+      font-size: .62rem;
+      font-weight: 950;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+    }
+    .topbar-title h1 {
+      margin: .14rem 0 0;
+      color: var(--deep);
+      font-size: 1.04rem;
+      font-weight: 950;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mobile-menu-btn {
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      width: 2.4rem;
+      height: 2.4rem;
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      background: #fff;
+      color: var(--deep);
+    }
+    .top-actions { display: none; align-items: center; gap: .5rem; }
+
+    main { padding: .75rem; }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      margin-bottom: .85rem;
+      padding: 1rem;
+      border: 1px solid rgba(214,169,43,.20);
+      border-radius: var(--radius-2xl);
+      background: linear-gradient(135deg, rgba(255,255,255,.98), rgba(255,250,240,.84));
+      box-shadow: var(--shadow-card);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -4rem;
+      top: -5rem;
+      width: 14rem;
+      height: 14rem;
+      border-radius: 999px;
+      background: rgba(214,169,43,.20);
+      filter: blur(30px);
+    }
+    .hero-inner { position: relative; z-index: 1; align-items: flex-end; flex-wrap: wrap; }
+    .hero-copy { max-width: 60rem; }
+    .hero h2 {
+      margin: .6rem 0 0;
+      color: var(--deep);
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 950;
+      line-height: .92;
+      letter-spacing: -.035em;
+    }
+    .hero p {
+      max-width: 55rem;
+      margin: .78rem 0 0;
+      color: #58675e;
+      font-weight: 650;
+      line-height: 1.65;
+    }
+    .hero-actions,
+    .actions,
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+
+    .chip,
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .36rem;
+      border-radius: 999px;
+      font-weight: 950;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .chip {
+      min-height: 1.62rem;
+      padding: .34rem .66rem;
+      border: 1px solid rgba(214,169,43,.26);
+      background: rgba(214,169,43,.12);
+      color: #73540c;
+      font-size: .58rem;
+      letter-spacing: .14em;
+    }
+    .chip.success {
+      border-color: rgba(15,138,75,.20);
+      background: rgba(15,138,75,.10);
+      color: var(--deep);
+    }
+    .chip.danger {
+      border-color: #fecaca;
+      background: #fee2e2;
+      color: var(--danger);
+    }
+    .pill {
+      padding: .35rem .58rem;
+      border: 1px solid rgba(5,53,31,.10);
+      background: #fff;
+      color: var(--deep);
+      font-size: .62rem;
+      letter-spacing: .04em;
+    }
+    .pill.gold { border-color: rgba(214,169,43,.28); background: rgba(214,169,43,.13); color: #73540c; }
+    .pill.green { border-color: rgba(15,138,75,.18); background: rgba(15,138,75,.11); color: var(--deep); }
+    .pill.red { border-color: #fecaca; background: #fee2e2; color: var(--danger); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .45rem;
+      min-height: 2.35rem;
+      padding: .58rem .9rem;
+      border: 0;
+      border-radius: 999px;
+      font-size: .75rem;
+      font-weight: 950;
+      line-height: 1;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, opacity .18s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:focus-visible,
+    .input:focus,
+    .select:focus,
+    .textarea:focus {
+      outline: 3px solid rgba(214,169,43,.28);
+      outline-offset: 2px;
+    }
+    .btn.green { background: linear-gradient(135deg, var(--deep), var(--green)); color: #fff; box-shadow: 0 14px 34px rgba(5,53,31,.18); }
+    .btn.gold { background: linear-gradient(135deg, var(--gold), #ffe08a); color: var(--deep); box-shadow: 0 12px 28px rgba(214,169,43,.20); }
+    .btn.white { border: 1px solid rgba(5,53,31,.10); background: #fff; color: var(--deep); }
+    .btn.red { border: 1px solid #fecaca; background: #fee2e2; color: var(--danger); }
+    .btn[disabled], .btn.is-disabled { cursor: not-allowed; opacity: .55; transform: none; box-shadow: none; }
+
+    .notice {
+      display: grid;
+      gap: .55rem;
+      margin-bottom: .85rem;
+      padding: .85rem;
+      border: 1px solid rgba(214,169,43,.22);
+      border-radius: 1rem;
+      background: linear-gradient(135deg, rgba(255,250,240,.96), rgba(255,255,255,.96));
+      color: #4c3b13;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+    .notice strong { color: var(--deep); }
+
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: .9rem;
+      align-items: start;
+    }
+    .card {
+      border: 1px solid rgba(214,169,43,.18);
+      border-radius: var(--radius-xl);
+      background: rgba(255,255,255,.92);
+      box-shadow: 0 18px 48px rgba(5,53,31,.075);
+    }
+    .card-pad { padding: .9rem; }
+    .panel-title {
+      border: 1px solid rgba(214,169,43,.18);
+      border-radius: 1rem;
+      background: linear-gradient(135deg, rgba(255,255,255,.96), rgba(255,250,240,.80));
+      padding: .9rem;
+    }
+    .panel-title h3 {
+      margin: .6rem 0 0;
+      color: var(--deep);
+      font-size: clamp(1.55rem, 4vw, 2.35rem);
+      line-height: .98;
+      font-weight: 950;
+      letter-spacing: -.025em;
+    }
+    .help {
+      margin: .35rem 0 0;
+      color: var(--muted);
+      font-size: .72rem;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+    .help strong { color: var(--deep); }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: .85rem;
+      margin-top: .9rem;
+    }
+    .field { min-width: 0; }
+    .field.span-2 { grid-column: 1 / -1; }
+    .label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .5rem;
+      margin-bottom: .36rem;
+      color: var(--deep);
+      font-size: .64rem;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .label span { color: var(--danger); }
+    .input,
+    .select,
+    .textarea {
+      width: 100%;
+      min-height: 2.75rem;
+      border: 1px solid rgba(5,53,31,.12);
+      border-radius: .95rem;
+      background: #fff;
+      color: #102017;
+      padding: .68rem .78rem;
+      font-size: .84rem;
+      font-weight: 750;
+    }
+    .textarea { min-height: 6.2rem; line-height: 1.55; resize: vertical; }
+    .textarea.short { min-height: 4.7rem; }
+    .textarea.tall { min-height: 10rem; }
+    .input.is-invalid, .select.is-invalid, .textarea.is-invalid {
+      border-color: rgba(153, 27, 27, .55);
+      box-shadow: 0 0 0 4px rgba(153, 27, 27, .10);
+    }
+    .field-error {
+      display: none;
+      margin-top: .3rem;
+      color: var(--danger);
+      font-size: .7rem;
+      font-weight: 850;
+    }
+    .field-error.is-visible { display: block; }
+
+    .section-card,
+    .route-card,
+    .upload-card,
+    .targets-card,
+    .identity-card,
+    .preview-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(214,169,43,.18);
+      border-radius: 1.08rem;
+      background: linear-gradient(135deg, rgba(255,255,255,.96), rgba(250,246,235,.82));
+      box-shadow: 0 12px 28px rgba(5,53,31,.055);
+      padding: .9rem;
+    }
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: .75rem;
+      margin-bottom: .85rem;
+    }
+    .section-header h4 {
+      margin: .55rem 0 0;
+      color: var(--deep);
+      font-size: 1.18rem;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -.02em;
+    }
+    .route-grid,
+    .upload-grid,
+    .location-grid,
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: .75rem;
+    }
+    .target-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+      gap: .6rem;
+    }
+    .target-option,
+    .check-card {
+      display: flex;
+      align-items: center;
+      gap: .62rem;
+      min-height: 3rem;
+      padding: .72rem .78rem;
+      border: 1px solid rgba(5,53,31,.10);
+      border-radius: .98rem;
+      background: rgba(255,255,255,.86);
+      color: var(--deep);
+      font-size: .75rem;
+      font-weight: 850;
+    }
+    .target-option input,
+    .check-card input { width: 1.15rem; height: 1.15rem; accent-color: var(--green); flex: 0 0 auto; }
+    .target-option small { display: block; margin-top: .16rem; color: var(--muted); font-size: .62rem; font-weight: 750; }
+
+    .identity-matches {
+      display: grid;
+      gap: .6rem;
+      margin-top: .75rem;
+    }
+    .identity-hit {
+      display: grid;
+      grid-template-columns: 3.6rem 1fr;
+      gap: .75rem;
+      align-items: center;
+      padding: .68rem;
+      border: 1px solid rgba(5,53,31,.08);
+      border-radius: 1rem;
+      background: #fff;
+    }
+    .identity-hit img {
+      width: 3.6rem;
+      height: 3.6rem;
+      border-radius: .9rem;
+      object-fit: contain;
+      object-position: top center;
+      background: var(--soft);
+      border: 1px solid rgba(5,53,31,.08);
+    }
+    .identity-hit strong { display: block; color: var(--deep); font-size: .85rem; }
+    .identity-hit small { display: block; margin-top: .14rem; color: var(--muted); font-size: .68rem; font-weight: 750; line-height: 1.4; }
+
+    .image-workbench {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: .85rem;
+      margin-top: .75rem;
+    }
+    .image-preview-wrap {
+      overflow: hidden;
+      border: 1px solid rgba(214,169,43,.24);
+      border-radius: 1.15rem;
+      background:
+        linear-gradient(135deg, rgba(5,53,31,.04), rgba(214,169,43,.08)),
+        #fff;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.55);
+    }
+    .image-preview {
+      width: 100%;
+      height: 18rem;
+      padding: .25rem;
+      object-fit: contain;
+      object-position: top center;
+      background: radial-gradient(circle at 50% 0, rgba(214,169,43,.08), transparent 18rem);
+    }
+    body[data-image-mode="cover"] .image-preview { object-fit: cover; padding: 0; }
+    body[data-image-mode="compact"] .image-preview { height: 12rem; object-fit: contain; }
+    .image-mode-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: .45rem;
+      margin-top: .65rem;
+    }
+    .mode-option {
+      min-height: 2.35rem;
+      border: 1px solid rgba(5,53,31,.10);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--deep);
+      font-size: .68rem;
+      font-weight: 950;
+    }
+    .mode-option.is-active {
+      border-color: rgba(214,169,43,.52);
+      background: rgba(214,169,43,.14);
+      color: #73540c;
+    }
+    .upload-controls { display: grid; grid-template-columns: 1fr; gap: .6rem; }
+
+    .preview-card { position: sticky; top: 4.6rem; }
+    .public-card-preview {
+      overflow: hidden;
+      border: 1px solid rgba(214,169,43,.20);
+      border-radius: 1.25rem;
+      background: linear-gradient(145deg, #fff, var(--cream));
+      box-shadow: var(--shadow-card);
+    }
+    .public-card-media {
+      height: 20rem;
+      background: linear-gradient(135deg, var(--deep), #0b5d34);
+    }
+    .public-card-media img {
+      width: 100%;
+      height: 100%;
+      padding: .28rem;
+      object-fit: contain;
+      object-position: top center;
+      background: #fff;
+    }
+    body[data-image-mode="cover"] .public-card-media img { padding: 0; object-fit: cover; }
+    body[data-image-mode="compact"] .public-card-media { height: 14rem; }
+    .public-card-body { padding: 1rem; text-align: center; }
+    .public-card-body h3 {
+      margin: 0;
+      color: var(--deep);
+      font-size: clamp(1.55rem, 4vw, 2.1rem);
+      line-height: .98;
+      font-weight: 950;
+      letter-spacing: -.025em;
+    }
+    .public-card-position { margin: .55rem 0 0; color: #435148; font-size: .9rem; font-weight: 850; }
+    .public-card-summary {
+      margin: .55rem 0 0;
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 650;
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      overflow: hidden;
+    }
+    .public-card-actions { justify-content: center; margin-top: .9rem; }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .6rem;
+      margin-top: .85rem;
+    }
+    .stat-card {
+      min-height: 5.2rem;
+      padding: .82rem;
+      border: 1px solid rgba(5,53,31,.08);
+      border-radius: 1rem;
+      background: #fff;
+    }
+    .stat-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .58rem;
+      font-weight: 950;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .stat-card strong {
+      display: block;
+      margin-top: .18rem;
+      color: var(--deep);
+      font-size: 1.1rem;
+      font-weight: 950;
+      word-break: break-word;
+    }
+    .tips { display: grid; gap: .65rem; margin-top: .85rem; }
+    .tip-card {
+      padding: .78rem;
+      border: 1px solid rgba(5,53,31,.08);
+      border-radius: .98rem;
+      background: #fff;
+      color: #4d5e54;
+      font-size: .78rem;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+    .template-grid { display: grid; gap: .55rem; margin-top: .85rem; }
+    .template-grid .btn { justify-content: flex-start; }
+
+    .actions-sticky {
+      position: sticky;
+      bottom: .7rem;
+      z-index: 20;
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: .5rem;
+      grid-column: 1 / -1;
+      border: 1px solid rgba(214,169,43,.22);
+      border-radius: 1rem;
+      background: rgba(255,255,255,.94);
+      backdrop-filter: blur(15px);
+      box-shadow: 0 18px 48px rgba(5,53,31,.12);
+      padding: .68rem;
+    }
+
+    .access-state,
+    .loading-state {
+      padding: 2rem 1rem;
+      border: 1px solid rgba(214,169,43,.20);
+      border-radius: var(--radius-xl);
+      background: rgba(255,255,255,.94);
+      box-shadow: var(--shadow-card);
+      text-align: center;
+    }
+    .access-state i,
+    .loading-state i {
+      display: grid;
+      place-items: center;
+      width: 3.4rem;
+      height: 3.4rem;
+      margin: 0 auto .8rem;
+      border-radius: 1.1rem;
+      background: rgba(214,169,43,.14);
+      color: #8a6616;
+      font-size: 1.35rem;
+    }
+    .access-state h3,
+    .loading-state h3 { margin: 0; color: var(--deep); font-size: 1.45rem; font-weight: 950; }
+    .access-state p,
+    .loading-state p { max-width: 44rem; margin: .5rem auto 0; color: var(--muted); font-weight: 700; line-height: 1.55; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 1.2rem;
+      z-index: 200;
+      display: none;
+      width: min(92vw, 36rem);
+      transform: translateX(-50%);
+      border: 1px solid rgba(214,169,43,.30);
+      border-radius: 1rem;
+      background: var(--deep);
+      color: #fff;
+      padding: .78rem 1rem;
+      font-size: .84rem;
+      font-weight: 850;
+      line-height: 1.45;
+      box-shadow: 0 18px 52px rgba(5,53,31,.22);
+    }
+    .toast.show { display: block; }
+    .toast[data-type="error"] { background: #7f1d1d; }
+    .toast[data-type="success"] { background: var(--deep); }
+    .hidden-view { display: none !important; }
+
+    @media (min-width: 640px) {
+      .top-actions { display: flex; }
+      .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .route-grid, .location-grid, .meta-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (min-width: 768px) {
+      .sidebar { transform: translateX(0); }
+      .mobile-overlay { display: none !important; }
+      .main-wrap { margin-left: 16rem; }
+      .mobile-menu-btn { display: none; }
+      main { padding: 1rem; }
+      .hero { padding: 1.25rem; }
+      .image-workbench { grid-template-columns: .42fr .58fr; }
+      .upload-controls { grid-template-columns: 1fr auto; }
+      .identity-hit { grid-template-columns: 3.6rem 1fr auto; }
+    }
+    @media (min-width: 1180px) {
+      .layout-grid { grid-template-columns: minmax(0, 1.08fr) minmax(22rem, .92fr); }
+      .route-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .hero-actions .btn,
+      .action-row .btn,
+      .actions-sticky .btn,
+      .top-actions .btn { width: 100%; }
+      .hero-inner,
+      .topbar-inner,
+      .flex-row { align-items: stretch; }
+      .hero-actions,
+      .actions-sticky { width: 100%; }
+      .image-preview { height: 20rem; }
+      .hide-mobile { display: none !important; }
+      .image-mode-grid { grid-template-columns: 1fr; }
+      .stat-grid { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="/assets/css/admin-unified.css">
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+</head>
+<body data-image-mode="contain">
+  <a class="skip-link" href="#mainContent">Skip to official form</a>
+  <button id="mobileOverlay" class="mobile-overlay" type="button" aria-label="Close admin navigation"></button>
+
+  <aside id="sidebar" class="sidebar" aria-label="APSG admin navigation">
+    <div class="sidebar-brand">
+      <a href="/admin/dashboard.html" class="brand-link" aria-label="Open APSG admin dashboard">
+        <span class="brand-mark"><img src="/assets/images/logo/apsg.png" alt="APSG logo" onerror="this.style.display='none'" width="96" height="96" decoding="async"></span>
+        <span><strong class="brand-title">APSG Admin</strong><small class="brand-kicker">Leadership Control</small></span>
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <p class="sidebar-heading">Command Center</p>
+      <a href="/admin/dashboard.html" class="sidebar-link"><i class="fas fa-chart-pie" aria-hidden="true"></i>Dashboard<span class="role-chip">Admin</span></a>
+      <a href="/admin/admin-leadership.html" class="sidebar-link"><i class="fa-solid fa-users-viewfinder" aria-hidden="true"></i>Leadership Desk<span class="role-chip">Admin</span></a>
+      <a href="/admin/admin-official-create.html" class="sidebar-link active" aria-current="page"><i class="fa-solid fa-user-pen" aria-hidden="true"></i>Create / Update<span class="role-chip">New</span></a>
+      <a href="/admin/admin-officials-manager.html" class="sidebar-link"><i class="fa-solid fa-table-list" aria-hidden="true"></i>Officials Manager<span class="role-chip">Admin</span></a>
+      <p class="sidebar-heading">Public Review</p>
+      <a href="/pages/leadership.html" class="sidebar-link" target="_blank" rel="noopener"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>Leadership</a>
+      <a href="/pages/bot.html" class="sidebar-link" target="_blank" rel="noopener"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>BOT</a>
+      <a href="/pages/cwdi.html" class="sidebar-link" target="_blank" rel="noopener"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>CWDI</a>
+      <a href="/pages/mp.html" class="sidebar-link" target="_blank" rel="noopener"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>Matrons & Patrons</a>
+      <a href="/pages/nat-exec.html" class="sidebar-link" target="_blank" rel="noopener"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>NATEXCO</a>
+    </nav>
+  </aside>
+
+  <div class="main-wrap">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="flex-row" style="justify-content:flex-start; min-width:0;">
+          <button id="mobileMenuBtn" class="mobile-menu-btn" type="button" aria-label="Open admin navigation" aria-controls="sidebar" aria-expanded="false"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+          <div class="topbar-title"><p>APSG / CWDI Leadership Records</p><h1>Create / Update Official Studio</h1></div>
+        </div>
+        <div class="top-actions" aria-label="Quick actions">
+          <span id="adminRoleChip" class="chip success"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i>Checking access</span>
+          <a href="/admin/admin-officials-manager.html" class="btn white"><i class="fa-solid fa-table-list" aria-hidden="true"></i>Manager</a>
+          <button id="refreshIdentityBtnTop" class="btn gold" type="button"><i class="fa-solid fa-rotate" aria-hidden="true"></i>Refresh</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="mainContent" tabindex="-1">
+      <section id="accessNotice" class="notice hidden-view" aria-live="polite"></section>
+
+      <section class="hero" aria-labelledby="pageTitle">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <span class="chip"><i class="fa-solid fa-id-card" aria-hidden="true"></i> Create/update an official</span>
+             </div>
+          <div class="hero-actions">
+            <button id="refreshIdentityBtn" type="button" class="btn white"><i class="fa-solid fa-rotate" aria-hidden="true"></i>Refresh Records</button>
+            <a id="openDossierTop" href="/pages/official-details.html" target="_blank" rel="noopener" class="btn white"><i class="fa-solid fa-file-lines" aria-hidden="true"></i>Dossier</a>
+            <button id="newCleanBtn" type="button" class="btn green" data-requires-write><i class="fa-solid fa-plus" aria-hidden="true"></i>New Clean Record</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="layout-grid">
+        <section id="formPanel" class="card card-pad">
+          <div class="panel-title">
+            <div class="section-header" style="margin-bottom:0;">
+              <div>
+                <span class="chip"><i class="fa-solid fa-user-pen" aria-hidden="true"></i> Create / update leadership record</span>
+                <h3 class="display-font">Official Record Form</h3>
+                <p class="help">Changing organization or leadership section automatically maps level, category, seat and recommended public targets.</p>
+              </div>
+              <div class="action-row"><span id="modeBadge" class="chip"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i>Create Mode</span><span id="tableBadge" class="chip"><i class="fa-solid fa-database" aria-hidden="true"></i>Connecting</span></div>
+            </div>
+          </div>
+
+          <form id="officialForm" class="form-grid" autocomplete="off" novalidate>
+            <input id="id" type="hidden">
+
+            <div class="field">
+              <label class="label" for="full_name">Full Name <span>*</span></label>
+              <input id="full_name" class="input" required placeholder="Official full name" autocomplete="name">
+              <p id="full_name_error" class="field-error">Full name is required.</p>
+            </div>
+
+            <div class="field">
+              <label class="label" for="slug">Shared Profile Slug</label>
+              <input id="slug" class="input" placeholder="auto-generated; keep same for same person">
+              <p class="help">Same person = same slug. New position can still use the same slug.</p>
+            </div>
+
+            <section class="identity-card field span-2" aria-labelledby="identityTitle">
+              <div class="section-header">
+                <div>
+                  <span class="chip"><i class="fa-solid fa-fingerprint" aria-hidden="true"></i> Duplicate control</span>
+                  <h4 id="identityTitle">Linked identity check</h4>
+                  <p class="help">Checks existing records with the same profile slug, image URL or normalized name so repeated people are grouped properly.</p>
+                </div>
+                <span id="identityBadge" class="chip"><i class="fa-solid fa-layer-group" aria-hidden="true"></i>0 linked records</span>
+              </div>
+              <div id="identityMatches" class="identity-matches"><p class="help">Enter a name, slug or image URL to see linked records.</p></div>
+            </section>
+
+            <section class="route-card field span-2" aria-labelledby="routingTitle">
+              <div class="section-header">
+                <div>
+                  <span class="chip"><i class="fa-solid fa-sitemap" aria-hidden="true"></i> Organization routing</span>
+                  <h4 id="routingTitle">Route this official to the correct public section</h4>
+                  <p class="help">Routing controls section grouping, default targets, display category and future placement logic.</p>
+                </div>
+                <span id="orgRouteBadge" class="chip"><i class="fa-solid fa-building-user" aria-hidden="true"></i>APSG</span>
+              </div>
+              <div class="route-grid">
+                <div class="field">
+                  <label class="label" for="organization">Organization / Group</label>
+                  <select id="organization" class="select">
+                    <option value="apsg">APSG — APC Progressive Support Group</option>
+                    <option value="cwdi">CWDI — Confident Women Development Initiative</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label class="label" for="leadership_group">Leadership Section</label>
+                  <select id="leadership_group" class="select"></select>
+                </div>
+              </div>
+              <input id="organization_key" type="hidden" value="apsg">
+              <input id="section_key" type="hidden" value="board_bot">
+              <input id="group_route_key" type="hidden" value="apsg_board_bot">
+              <p id="orgRoutingSummary" class="help">This record will be grouped under APSG → Board Members / BOT.</p>
+            </section>
+
+            <div class="field">
+              <label class="label" for="level">Level</label>
+              <select id="level" class="select">
+                <option value="bot">BOT / Board of Trustees</option>
+                <option value="patronage">Matron / Patron / Adviser</option>
+                <option value="national">National</option>
+                <option value="state">State</option>
+                <option value="lga">LGA</option>
+                <option value="ward">Ward</option>
+                <option value="pu">Polling Unit</option>
+                <option value="volunteer">Volunteer</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label class="label" for="position">Position / Designation <span>*</span></label>
+              <input id="position" class="input" list="positionSuggestions" required placeholder="Type any new position, e.g. National General Secretary">
+              <datalist id="positionSuggestions">
+                <option value="Director General"><option value="National Convener"><option value="Director General and National Convener"><option value="Deputy Director General"><option value="National General Secretary"><option value="Personal Assistant to the Director-General"><option value="ICT and Media Director"><option value="Special Adviser, Youth Affairs"><option value="Board Member"><option value="Patron"><option value="Grand Patron"><option value="National Patron"><option value="Matron"><option value="Grand Matron"><option value="National Matron"><option value="Executive Director"><option value="State Coordinator"><option value="State Chairman"><option value="Women Leader">
+              </datalist>
+              <p id="position_error" class="field-error">Position/designation is required.</p>
+            </div>
+
+            <div class="field">
+              <label class="label" for="category">Display Category</label>
+              <select id="category" class="select">
+                <option value="national_executive">National Executive</option>
+                <option value="bot">BOT / Board Secretariat</option>
+                <option value="matron">Matron</option>
+                <option value="patron">Patron</option>
+                <option value="state_executive">State Executive</option>
+                <option value="adviser">Adviser</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="label" for="seat">Seat / Council</label>
+              <input id="seat" class="input" placeholder="e.g. APSG Patron Council">
+            </div>
+
+            <section class="section-card field span-2" aria-labelledby="locationTitle">
+              <div class="section-header">
+                <div><span class="chip"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i> Location mapping</span><h4 id="locationTitle">National, state, LGA and ward placement</h4></div>
+              </div>
+              <div class="location-grid">
+                <div class="field"><label class="label" for="state">State</label><input id="state" class="input" placeholder="National / Not state specific"></div>
+                <div class="field"><label class="label" for="zone">Zone</label><input id="zone" class="input" placeholder="National / South West"></div>
+                <div class="field"><label class="label" for="lga">LGA / LCDA</label><input id="lga" class="input" placeholder="LGA / LCDA"></div>
+                <div class="field"><label class="label" for="ward">Ward</label><input id="ward" class="input" placeholder="Ward"></div>
+              </div>
+            </section>
+
+            <section class="upload-card field span-2" aria-labelledby="imageTitle">
+              <div class="section-header">
+                <div>
+                  <span class="chip"><i class="fa-solid fa-image" aria-hidden="true"></i> Shared profile image</span>
+                  <h4 id="imageTitle">Portrait upload and full-image preview</h4>
+                  <p class="help">Use the same image URL for the same person across different positions. Full-image mode helps prevent cropped heads/faces.</p>
+                </div>
+                <span class="chip success"><i class="fa-solid fa-crop-simple" aria-hidden="true"></i><span id="imageModeLabel">Full image</span></span>
+              </div>
+              <div class="image-workbench">
+                <div>
+                  <div class="image-preview-wrap"><img id="officialImagePreview" src="/assets/images/logo/apsg.png" alt="Official image preview" class="image-preview" loading="lazy" decoding="async" width="96" height="96"></div>
+                  <div class="image-mode-grid" role="group" aria-label="Image display mode">
+                    <button class="mode-option is-active" type="button" data-image-mode="contain">Full Image</button>
+                    <button class="mode-option" type="button" data-image-mode="cover">Fill / Crop</button>
+                    <button class="mode-option" type="button" data-image-mode="compact">Compact Full</button>
+                  </div>
+                </div>
+                <div class="upload-controls">
+                  <div class="field" style="grid-column:1/-1;">
+                    <label class="label" for="image_url">Image URL</label>
+                    <input id="image_url" class="input" placeholder="Supabase public URL or image path">
+                  </div>
+                  <div class="field"><label class="label" for="official_image_file">Upload image</label><input id="official_image_file" type="file" accept="image/*" class="input"></div>
+                  <div class="field" style="display:flex;align-items:end;"><button id="uploadImageBtn" type="button" class="btn green" data-requires-write><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>Upload</button></div>
+                  <p class="help" style="grid-column:1/-1;">Default bucket: <strong>officials</strong>. Default folder: <strong>officials</strong>. You may also paste an existing image URL.</p>
+                </div>
+              </div>
+            </section>
+
+            <div class="field span-2">
+              <label class="label" for="short_info">Card Excerpt <span>*</span><small id="shortInfoCount">0/400</small></label>
+              <textarea id="short_info" class="textarea short" maxlength="400" required placeholder="Short excerpt shown on public cards."></textarea>
+              <p id="short_info_error" class="field-error">Card excerpt is required.</p>
+            </div>
+            <div class="field span-2"><label class="label" for="credentials">Credentials</label><textarea id="credentials" class="textarea" placeholder="One credential/appointment per line for proper official-details display."></textarea></div>
+            <div class="field span-2"><label class="label" for="biography">Biography / Dossier</label><textarea id="biography" class="textarea tall" placeholder="Full paragraph biography shown on the official details page."></textarea></div>
+
+            <section class="section-card field span-2" aria-labelledby="metaTitle">
+              <div class="section-header">
+                <div><span class="chip"><i class="fa-solid fa-sliders" aria-hidden="true"></i> Publication settings</span><h4 id="metaTitle">Order, status and profile flags</h4></div>
+              </div>
+              <div class="meta-grid">
+                <div class="field"><label class="label" for="display_order">Display Order</label><input id="display_order" type="number" class="input" value="999" min="1"></div>
+                <div class="field"><label class="label" for="status">Status</label><select id="status" class="select"><option value="published">Published</option><option value="draft">Draft</option></select></div>
+                <label class="check-card"><input id="is_featured" type="checkbox">Featured hero profile</label>
+                <label class="check-card"><input id="canonical_profile" type="checkbox">Set as canonical profile</label>
+                <label class="check-card"><input id="open_details_after_save" type="checkbox">Open dossier after save</label>
+                <label class="check-card"><input id="return_manager_after_save" type="checkbox">Return to manager</label>
+              </div>
+            </section>
+
+            <section class="targets-card field span-2" aria-labelledby="targetsTitle">
+              <div class="section-header">
+                <div>
+                  <span class="chip"><i class="fa-solid fa-bullhorn" aria-hidden="true"></i> Publish location</span>
+                  <h4 id="targetsTitle">Where this position appears publicly</h4>
+                  <p class="help">Controls leadership, BOT, CWDI, Matrons/Patrons, NATEXCO, and state-executive placement.</p>
+                </div>
+                <span id="publishTargetSummary" class="chip"><i class="fa-solid fa-location-dot" aria-hidden="true"></i>Leadership</span>
+              </div>
+              <div id="publishTargetGrid" class="target-grid"></div>
+              <div class="action-row" style="margin-top:.75rem;"><button id="selectAllTargets" type="button" class="btn white"><i class="fa-solid fa-check-double" aria-hidden="true"></i>Select All</button><button id="clearTargets" type="button" class="btn white"><i class="fa-solid fa-eraser" aria-hidden="true"></i>Clear</button></div>
+            </section>
+
+            <div class="actions-sticky">
+              <button id="saveOfficialBtn" class="btn green" type="submit" data-requires-write><i class="fa-solid fa-floppy-disk" aria-hidden="true"></i><span id="saveOfficialBtnText">Save Official</span></button>
+              <button id="saveDraftBtn" class="btn white" type="button" data-requires-write><i class="fa-solid fa-eye-slash" aria-hidden="true"></i>Save Draft</button>
+              <button id="duplicatePositionBtn" class="btn gold" type="button" data-requires-write><i class="fa-solid fa-clone" aria-hidden="true"></i>New Position Same Person</button>
+              <button id="resetOfficialBtn" class="btn white" type="button"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i>Reset</button>
+              <a href="/admin/admin-officials-manager.html" class="btn white"><i class="fa-solid fa-table-list" aria-hidden="true"></i>Manager</a>
+            </div>
+          </form>
+        </section>
+
+        <aside class="side-stack" aria-label="Live preview and tools">
+          <section class="preview-card">
+            <div class="panel-title" style="margin-bottom:.85rem;">
+              <span class="chip"><i class="fa-solid fa-eye" aria-hidden="true"></i> Live public card preview</span>
+              <h3 class="display-font">Card Display Check</h3>
+              <p class="help">Preview how the profile image and card excerpt will appear on public leadership pages.</p>
+            </div>
+            <article class="public-card-preview">
+              <div class="public-card-media"><img id="livePreviewImage" src="/assets/images/logo/apsg.png" alt="Live official card preview" width="96" height="96" decoding="async"></div>
+              <div class="public-card-body">
+                <div class="person-badges" style="justify-content:center; display:flex; gap:.35rem; flex-wrap:wrap; margin-bottom:.7rem;"><span id="previewOrgPill" class="pill green">APSG</span><span id="previewStatusPill" class="pill gold">published</span></div>
+                <h3 id="livePreviewName" class="display-font">Official Full Name</h3>
+                <p id="livePreviewPosition" class="public-card-position">Position / Designation</p>
+                <p id="livePreviewSummary" class="public-card-summary">Short card excerpt will appear here.</p>
+                <div class="public-card-actions action-row"><span class="btn white" aria-hidden="true">Quick View</span><span class="btn green" aria-hidden="true">View Dossier</span></div>
+              </div>
+            </article>
+          </section>
+
+          <section class="card card-pad" style="margin-top:.9rem;">
+            <div class="panel-title"><span class="chip"><i class="fa-solid fa-chart-simple" aria-hidden="true"></i> Live identity summary</span><h3 class="display-font">Record Mapping</h3><p class="help">Slug + image URL groups the same official. Positions remain separate records.</p></div>
+            <div class="stat-grid">
+              <div class="stat-card"><p>Linked records</p><strong id="linkedCount">0</strong></div>
+              <div class="stat-card"><p>Exact duplicates</p><strong id="exactDuplicateCount">0</strong></div>
+              <div class="stat-card"><p>Active table</p><strong id="activeTableStat">—</strong></div>
+              <div class="stat-card"><p>Mode</p><strong id="modeStat">Create</strong></div>
+            </div>
+          </section>
+
+          <section class="card card-pad" style="margin-top:.9rem;">
+            <div class="panel-title"><span class="chip"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Quick templates</span><h3 class="display-font">Fast Position Presets</h3></div>
+            <div class="template-grid">
+              <button type="button" class="btn white" data-preset="board"><i class="fa-solid fa-landmark" aria-hidden="true"></i>Board / BOT Record</button>
+              <button type="button" class="btn white" data-preset="patron"><i class="fa-solid fa-award" aria-hidden="true"></i>Patron Record</button>
+              <button type="button" class="btn white" data-preset="matron"><i class="fa-solid fa-crown" aria-hidden="true"></i>Matron Record</button>
+              <button type="button" class="btn white" data-preset="exec"><i class="fa-solid fa-sitemap" aria-hidden="true"></i>Executive Record</button>
+              <button type="button" class="btn white" data-preset="cwdi"><i class="fa-solid fa-people-roof" aria-hidden="true"></i>CWDI Leadership Record</button>
+            </div>
+          </section>
+
+          <section class="card card-pad" style="margin-top:.9rem;">
+            <div class="panel-title"><span class="chip"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Duplicate discipline</span><h3 class="display-font">One person, unlimited future positions</h3></div>
+            <div class="tips">
+              <div class="tip-card"><strong>Do not create a new slug</strong> for a person already in the system. Keep the same slug and image URL.</div>
+              <div class="tip-card">Create a new record when the same person receives a new position, organization section, or public placement.</div>
+              <div class="tip-card">The manager page collapses all records with the same identity into one premium profile group.</div>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    window.APSG_OFFICIALS_TABLES = window.APSG_OFFICIALS_TABLES || ["apsg_officials", "officials", "leadership_officials"];
+    window.APSG_STORAGE_BUCKET = window.APSG_STORAGE_BUCKET || "officials";
+    window.APSG_IMAGE_FOLDER = window.APSG_IMAGE_FOLDER || "officials";
+  </script>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const FALLBACK_IMAGE = "/assets/images/logo/apsg.png";
+      const ALLOWED_ROLES = new Set(["superadmin", "admin"]);
+      const qs = new URLSearchParams(location.search);
+
+      const ORG_LABELS = { apsg: "APSG", cwdi: "CWDI" };
+      const SECTION_LABELS = {
+        board_bot: "Board Members / BOT",
+        patrons: "Patrons",
+        matrons: "Matrons",
+        executive_directors: "Executive Directors",
+        executive_leadership: "Executive Leadership"
+      };
+      const SECTION_OPTIONS = {
+        apsg: [
+          ["board_bot", "Board Members / BOT"],
+          ["patrons", "Patrons"],
+          ["matrons", "Matrons"],
+          ["executive_directors", "Executive Directors"]
+        ],
+        cwdi: [
+          ["board_bot", "Board Members / BOT"],
+          ["patrons", "Patrons"],
+          ["matrons", "Matrons"],
+          ["executive_leadership", "Executive Leadership"]
+        ]
+      };
+      const ROUTE_MAP = {
+        board_bot: { level: "bot", category: "bot", seat: "Board / BOT", targets: ["leadership", "bot"] },
+        patrons: { level: "patronage", category: "patron", seat: "Patron Council", targets: ["leadership", "mp"] },
+        matrons: { level: "patronage", category: "matron", seat: "Matron Council", targets: ["leadership", "mp"] },
+        executive_directors: { level: "national", category: "national_executive", seat: "Executive Directors", targets: ["leadership", "national_executive"] },
+        executive_leadership: { level: "national", category: "national_executive", seat: "Executive Leadership", targets: ["leadership", "cwdi"] }
+      };
+      const TARGETS = [
+        ["leadership", "Leadership Overview", "/pages/leadership.html"],
+        ["bot", "BOT / Board", "/pages/bot.html"],
+        ["cwdi", "CWDI Directory", "/pages/cwdi.html"],
+        ["mp", "Matrons & Patrons", "/pages/mp.html"],
+        ["national_executive", "NATEXCO", "/pages/nat-exec.html"],
+        ["state_executive", "State Executive", "/pages/state-details.html"]
+      ];
+
+      const state = {
+        client: null,
+        activeTable: "",
+        allRecords: [],
+        currentRecord: null,
+        adminRole: "",
+        canWrite: false,
+        saving: false,
+        bound: false
+      };
+
+      const $ = (id) => document.getElementById(id);
+
+      function esc(value) {
+        return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          "\"": "&quot;",
+          "'": "&#039;"
+        })[char]);
+      }
+
+      function slugify(value) {
+        return String(value || "")
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "") || "official";
+      }
+
+      function canonicalSlug(value) {
+        return slugify(String(value || "").replace(/^(apsg|cwdi)[-_](board[-_]bot|patrons|matrons|executive[-_]directors|executive[-_]leadership)[-_]/i, ""));
+      }
+
+      function cleanImage(value) {
+        const url = String(value || "").trim();
+        if (!url) return "";
+        if (/^(null|undefined|n\/a)$/i.test(url)) return "";
+        if (/logo\/apsg|assets\/images\/logo/i.test(url)) return "";
+        return url.toLowerCase();
+      }
+
+      function normalizedName(record) {
+        return slugify(record.full_name || record.name || "");
+      }
+
+      function identityKey(record) {
+        return String(record.profile_slug || record.profile_key || "").trim()
+          || canonicalSlug(record.slug)
+          || cleanImage(record.image_url)
+          || normalizedName(record);
+      }
+
+      function orgOf(record) {
+        return String(record.organization_key || record.organization || "apsg").toLowerCase();
+      }
+
+      function groupOf(record) {
+        return record.leadership_group || record.section_key || "board_bot";
+      }
+
+      function normalizeStatus(record) {
+        return String(record.status || "published").toLowerCase();
+      }
+
+      function isCanonical(record) {
+        return record.canonical_profile === true || String(record.canonical_profile).toLowerCase() === "true";
+      }
+
+      function placementKeyOf(record) {
+        const org = orgOf(record);
+        const group = groupOf(record);
+        const category = record.category || "";
+        const position = slugify(record.position || record.designation || record.role || "official");
+        const seat = slugify(record.seat || "");
+        return `${org}:${group}:${category}:${position}:${seat}`;
+      }
+
+      function targetsOf(record) {
+        const raw = record.publish_targets || [];
+        if (Array.isArray(raw)) return raw.filter(Boolean);
+        if (typeof raw === "string") {
+          try {
+            const parsed = JSON.parse(raw);
+            return Array.isArray(parsed) ? parsed.filter(Boolean) : raw.split(",").map((item) => item.trim()).filter(Boolean);
+          } catch {
+            return raw.split(",").map((item) => item.trim()).filter(Boolean);
+          }
+        }
+        return [];
+      }
+
+      function isRealName(record) {
+        const name = String(record.full_name || record.name || "").trim();
+        if (name.length < 3) return false;
+        return !/^(official|unnamed official|unnamed|name|full name|tbd|test|placeholder|null|n\/a)$/i.test(name);
+      }
+
+      function setText(id, value) {
+        const node = $(id);
+        if (node) node.textContent = value;
+      }
+
+      function toast(message, type = "info") {
+        const node = $("toast");
+        if (!node) return;
+        node.textContent = message;
+        node.dataset.type = type;
+        node.classList.add("show");
+        window.clearTimeout(toast._timer);
+        toast._timer = window.setTimeout(() => node.classList.remove("show"), 4200);
+      }
+
+      function showNotice(message, type = "info") {
+        const notice = $("accessNotice");
+        if (!notice) return;
+        notice.className = "notice";
+        notice.innerHTML = `<strong>${type === "error" ? "Attention:" : "Note:"}</strong> ${esc(message)}`;
+      }
+
+      function hideNotice() {
+        const notice = $("accessNotice");
+        if (notice) notice.classList.add("hidden-view");
+      }
+
+      function describeSupabaseError(error) {
+        const message = String(error?.message || error || "Unknown Supabase error.");
+        const code = String(error?.code || "");
+        if (!navigator.onLine) return "Network appears offline. Check your internet connection and refresh.";
+        if (code === "42P01" || /relation .* does not exist/i.test(message)) return "The officials table was not found. Confirm the table name in window.APSG_OFFICIALS_TABLES or create apsg_officials.";
+        if (code === "42501" || /permission denied|row-level security|rls/i.test(message)) return "Supabase RLS denied this request. Confirm the signed-in admin has a valid admin_profiles row and matching RLS policy.";
+        if (/bucket|storage/i.test(message)) return "A Supabase Storage bucket or image path could not be resolved. Confirm the storage bucket and public image URLs.";
+        if (/failed to fetch|network|timeout/i.test(message)) return "Network or Supabase connection issue. Check your internet connection and Supabase project status.";
+        return message;
+      }
+
+      function getClient() {
+        state.client = window.supabaseClient
+          || window.apsgSupabase
+          || window.APSG_SUPABASE
+          || (window.APSG && window.APSG.supabase)
+          || null;
+        if (state.client && typeof state.client.from === "function") return state.client;
+        return null;
+      }
+
+      async function waitForClient() {
+        for (let index = 0; index < 35; index += 1) {
+          const client = getClient();
+          if (client) return client;
+          await new Promise((resolve) => window.setTimeout(resolve, 100));
+        }
+        return null;
+      }
+
+      async function resolveAdminRole(user) {
+        const client = state.client;
+        if (!client || !user) return null;
+        const email = String(user.email || "").toLowerCase();
+
+        let result = await client.from("admin_profiles").select("id,user_id,email,role,is_active,status").eq("id", user.id).limit(1).maybeSingle();
+        if (!result.error && result.data) return result.data;
+
+        result = await client.from("admin_profiles").select("id,user_id,email,role,is_active,status").eq("user_id", user.id).limit(1).maybeSingle();
+        if (!result.error && result.data) return result.data;
+
+        result = await client.from("admin_profiles").select("id,user_id,email,role,is_active,status").ilike("email", email).limit(1).maybeSingle();
+        if (result.error) throw result.error;
+        return result.data || null;
+      }
+
+      function showAccessDenied(title, message) {
+        const panel = $("formPanel");
+        if (panel) {
+          panel.innerHTML = `
+            <div class="access-state">
+              <i class="fa-solid fa-lock" aria-hidden="true"></i>
+              <h3>${esc(title)}</h3>
+              <p>${esc(message)}</p>
+              <div class="action-row" style="justify-content:center; margin-top:1rem;">
+                <a class="btn green" href="/admin/login.html">Go to Login</a>
+                <a class="btn white" href="/admin/dashboard.html">Return to Dashboard</a>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      async function requireAdminAccess() {
+        const client = state.client;
+        if (!client?.auth?.getSession) {
+          showAccessDenied("Supabase Auth is unavailable", "The page could not find a valid Supabase browser client. Confirm assets/js/supabase-clients.js loads before this page script.");
+          return false;
+        }
+
+        const { data, error } = await client.auth.getSession();
+        if (error) {
+          showAccessDenied("Session check failed", describeSupabaseError(error));
+          return false;
+        }
+
+        const session = data?.session;
+        if (!session?.user) {
+          const redirect = encodeURIComponent(`${location.pathname}${location.search}`);
+          location.href = `/admin/login.html?redirect=${redirect}`;
+          return false;
+        }
+
+        try {
+          const profile = await resolveAdminRole(session.user);
+          const role = String(profile?.role || "").toLowerCase();
+          const active = profile && profile.is_active !== false && String(profile.status || "active").toLowerCase() !== "inactive";
+
+          if (!profile || !active || !ALLOWED_ROLES.has(role)) {
+            showAccessDenied("Insufficient admin permission", "This page requires an active superadmin or admin role in public.admin_profiles.");
+            return false;
+          }
+
+          state.adminRole = role;
+          state.canWrite = ALLOWED_ROLES.has(role);
+          const chip = $("adminRoleChip");
+          if (chip) chip.innerHTML = `<i class="fa-solid fa-shield-halved" aria-hidden="true"></i>${esc(role)}`;
+          applyRoleControls();
+          hideNotice();
+          return true;
+        } catch (error) {
+          showAccessDenied("Role verification failed", describeSupabaseError(error));
+          return false;
+        }
+      }
+
+      function applyRoleControls() {
+        document.querySelectorAll("[data-requires-write]").forEach((node) => {
+          if (state.canWrite) {
+            node.removeAttribute("aria-disabled");
+            node.classList.remove("is-disabled");
+            if (node.tagName === "BUTTON") node.disabled = false;
+          } else {
+            node.setAttribute("aria-disabled", "true");
+            node.classList.add("is-disabled");
+            if (node.tagName === "BUTTON") node.disabled = true;
+          }
+        });
+      }
+
+      async function chooseTable() {
+        if (!state.client) await waitForClient();
+        if (!state.client) throw new Error("Supabase client not found.");
+
+        const tables = window.APSG_OFFICIALS_TABLES || ["apsg_officials"];
+        const errors = [];
+        for (const table of tables) {
+          const result = await state.client.from(table).select("id").limit(1);
+          if (!result.error) {
+            state.activeTable = table;
+            setText("activeTableStat", table);
+            $("tableBadge").innerHTML = `<i class="fa-solid fa-database" aria-hidden="true"></i>${esc(table)}`;
+            return table;
+          }
+          errors.push(`${table}: ${describeSupabaseError(result.error)}`);
+        }
+        state.activeTable = tables[0];
+        setText("activeTableStat", state.activeTable);
+        throw new Error(errors.join(" | "));
+      }
+
+      async function loadAll() {
+        if (!state.client || !state.activeTable) return;
+        const result = await state.client.from(state.activeTable).select("*").order("display_order", { ascending: true, nullsFirst: false }).range(0, 1999);
+        if (result.error) throw result.error;
+        state.allRecords = result.data || [];
+        checkIdentity();
+      }
+
+      function selectedTargets() {
+        return Array.from(document.querySelectorAll("input[name='publish_targets']:checked")).map((node) => node.value);
+      }
+
+      function updateTargetSummary() {
+        const selected = selectedTargets();
+        const node = $("publishTargetSummary");
+        if (node) node.innerHTML = `<i class="fa-solid fa-location-dot" aria-hidden="true"></i>${esc(selected.length ? selected.join(", ") : "No target")}`;
+        updateLivePreview();
+      }
+
+      function buildTargets(selected = []) {
+        const set = new Set(selected.filter(Boolean));
+        $("publishTargetGrid").innerHTML = TARGETS.map(([value, label, path]) => `
+          <label class="target-option">
+            <input type="checkbox" name="publish_targets" value="${esc(value)}" ${set.has(value) ? "checked" : ""}>
+            <span><strong>${esc(label)}</strong><small>${esc(path)}</small></span>
+          </label>
+        `).join("");
+        document.querySelectorAll("input[name='publish_targets']").forEach((node) => node.addEventListener("change", updateTargetSummary));
+        updateTargetSummary();
+      }
+
+      function rebuildSections(keep) {
+        const org = $("organization").value || "apsg";
+        const options = SECTION_OPTIONS[org] || SECTION_OPTIONS.apsg;
+        $("leadership_group").innerHTML = options.map(([value, label]) => `<option value="${esc(value)}">${esc(label)}</option>`).join("");
+        if (keep && options.some(([value]) => value === keep)) $("leadership_group").value = keep;
+      }
+
+      function applyRoute(forceSeat = false, keepTargets = false) {
+        const org = $("organization").value || "apsg";
+        const group = $("leadership_group").value || "board_bot";
+        const route = ROUTE_MAP[group] || ROUTE_MAP.board_bot;
+        const orgLabel = ORG_LABELS[org] || org.toUpperCase();
+        $("organization_key").value = org;
+        $("section_key").value = group;
+        $("group_route_key").value = `${org}_${group}`;
+        $("orgRouteBadge").innerHTML = `<i class="fa-solid fa-building-user" aria-hidden="true"></i>${esc(orgLabel)}`;
+        $("orgRoutingSummary").innerHTML = `This record will be grouped under <strong>${esc(orgLabel)}</strong> → <strong>${esc(SECTION_LABELS[group] || group)}</strong>.`;
+        $("level").value = route.level;
+        $("category").value = route.category;
+        const autoSeat = `${orgLabel} ${route.seat}`;
+        if (forceSeat || !$("seat").value) $("seat").value = autoSeat;
+        if (!keepTargets) {
+          buildTargets(Array.from(new Set([...(route.targets || ["leadership"]), ...(org === "cwdi" ? ["cwdi"] : [])])));
+        }
+        updateLivePreview();
+      }
+
+      function updateImagePreview() {
+        const url = $("image_url").value.trim() || FALLBACK_IMAGE;
+        $("officialImagePreview").src = url;
+        $("livePreviewImage").src = url;
+      }
+
+      function setImageMode(mode) {
+        const normalized = ["contain", "cover", "compact"].includes(mode) ? mode : "contain";
+        document.body.dataset.imageMode = normalized;
+        localStorage.setItem("apsg_official_create_image_mode", normalized);
+        document.querySelectorAll("[data-image-mode]").forEach((button) => button.classList.toggle("is-active", button.dataset.imageMode === normalized));
+        const labels = { contain: "Full image", cover: "Fill / Crop", compact: "Compact full" };
+        setText("imageModeLabel", labels[normalized]);
+      }
+
+      function updateOpenDossier() {
+        const id = $("id").value;
+        const slug = $("slug").value;
+        const profile = canonicalSlug(slug || $("full_name").value);
+        $("openDossierTop").href = `/pages/official-details.html?profile=${encodeURIComponent(profile)}&id=${encodeURIComponent(id)}&slug=${encodeURIComponent(slug)}`;
+      }
+
+      function updateLivePreview() {
+        const name = $("full_name")?.value.trim() || "Official Full Name";
+        const position = $("position")?.value.trim() || "Position / Designation";
+        const summary = $("short_info")?.value.trim() || "Short card excerpt will appear here.";
+        setText("livePreviewName", name);
+        setText("livePreviewPosition", position);
+        setText("livePreviewSummary", summary);
+        setText("previewOrgPill", ($("organization")?.value || "apsg").toUpperCase());
+        setText("previewStatusPill", $("status")?.value || "published");
+        updateImagePreview();
+      }
+
+      function fill(record) {
+        state.currentRecord = record || null;
+        $("id").value = record?.id || "";
+        $("full_name").value = record?.full_name || record?.name || "";
+        $("slug").value = record?.slug || slugify(record?.full_name || "");
+        $("organization").value = orgOf(record || {});
+        rebuildSections(record?.leadership_group || record?.section_key || "");
+        $("leadership_group").value = record?.leadership_group || record?.section_key || $("leadership_group").value;
+        applyRoute(false, true);
+        $("level").value = record?.level || $("level").value;
+        $("position").value = record?.position || "";
+        $("category").value = record?.category || $("category").value;
+        $("seat").value = record?.seat || $("seat").value;
+        $("state").value = record?.state || "";
+        $("zone").value = record?.zone || "National";
+        $("lga").value = record?.lga || "";
+        $("ward").value = record?.ward || "";
+        $("image_url").value = record?.image_url || "";
+        $("short_info").value = record?.short_info || "";
+        $("credentials").value = record?.credentials || "";
+        $("biography").value = record?.biography || "";
+        $("display_order").value = record?.display_order || 999;
+        $("status").value = normalizeStatus(record || {});
+        $("is_featured").checked = Boolean(record?.is_featured);
+        $("canonical_profile").checked = Boolean(isCanonical(record || {}));
+        buildTargets(targetsOf(record || {}).length ? targetsOf(record) : selectedTargets());
+        $("modeBadge").innerHTML = record?.id ? '<i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>Update Mode' : '<i class="fa-solid fa-circle-plus" aria-hidden="true"></i>Create Mode';
+        setText("modeStat", record?.id ? "Update" : "Create");
+        setText("saveOfficialBtnText", record?.id ? "Update Official" : "Save Official");
+        updateCounts();
+        updateImagePreview();
+        updateOpenDossier();
+        updateLivePreview();
+        checkIdentity();
+        clearValidation();
+      }
+
+      function formRecord() {
+        const full = $("full_name").value.trim();
+        const org = $("organization").value;
+        const group = $("leadership_group").value;
+        const baseSlug = canonicalSlug($("slug").value.trim() || full);
+        const payload = {
+          id: $("id").value,
+          full_name: full,
+          slug: $("slug").value.trim() || slugify(full),
+          organization: org,
+          organization_key: org,
+          leadership_group: group,
+          section_key: group,
+          group_route_key: `${org}_${group}`,
+          level: $("level").value,
+          position: $("position").value.trim(),
+          category: $("category").value,
+          seat: $("seat").value.trim(),
+          state: $("state").value.trim(),
+          zone: $("zone").value.trim() || "National",
+          lga: $("lga").value.trim(),
+          ward: $("ward").value.trim(),
+          image_url: $("image_url").value.trim(),
+          short_info: $("short_info").value.trim(),
+          credentials: $("credentials").value.trim(),
+          biography: $("biography").value.trim(),
+          display_order: Number($("display_order").value || 999),
+          status: $("status").value,
+          publish_targets: selectedTargets(),
+          is_featured: $("is_featured").checked,
+          profile_slug: baseSlug,
+          profile_key: baseSlug,
+          canonical_profile: $("canonical_profile").checked,
+          updated_at: new Date().toISOString()
+        };
+        payload.placement_key = placementKeyOf(payload);
+
+        if (!payload.canonical_profile) {
+          const existingCanonical = state.allRecords.some((record) => identityKey(record) === baseSlug && isCanonical(record) && String(record.id) !== String(payload.id || ""));
+          payload.canonical_profile = !existingCanonical;
+        }
+
+        return payload;
+      }
+
+      function exactDuplicate(payload) {
+        return state.allRecords.find((record) => String(record.id) !== String(payload.id || "") && (
+          (record.placement_key && record.placement_key === payload.placement_key) ||
+          (identityKey(record) === identityKey(payload)
+            && orgOf(record) === payload.organization_key
+            && groupOf(record) === payload.leadership_group
+            && String(record.position || "").trim().toLowerCase() === payload.position.toLowerCase())
+        ));
+      }
+
+      function checkIdentity() {
+        if (!$("full_name") || !$("identityMatches")) return;
+        const temp = formRecord();
+        const key = identityKey(temp);
+        let linked = state.allRecords.filter((record) => identityKey(record) === key && key && isRealName(record));
+        if (!key) linked = [];
+        const exact = state.allRecords.filter((record) => identityKey(record) === key && String(record.id) !== String(temp.id || "") && (
+          (record.placement_key && record.placement_key === temp.placement_key) ||
+          (orgOf(record) === temp.organization_key && groupOf(record) === temp.leadership_group && String(record.position || "").trim().toLowerCase() === temp.position.toLowerCase())
+        ));
+
+        setText("linkedCount", linked.length);
+        setText("exactDuplicateCount", exact.length);
+        $("identityBadge").innerHTML = `<i class="fa-solid fa-layer-group" aria-hidden="true"></i>${linked.length} linked records`;
+        $("identityBadge").className = `chip ${exact.length ? "danger" : linked.length ? "success" : ""}`.trim();
+
+        if (!linked.length) {
+          $("identityMatches").innerHTML = '<p class="help">No linked profile found yet. This will create a new person identity.</p>';
+          return;
+        }
+
+        $("identityMatches").innerHTML = linked.slice(0, 8).map((record) => `
+          <div class="identity-hit">
+            <img src="${esc(record.image_url || FALLBACK_IMAGE)}" alt="${esc(record.full_name || "Official")} portrait" loading="lazy" decoding="async" onerror="this.src='${FALLBACK_IMAGE}'">
+            <div>
+              <strong>${esc(record.full_name || "Unnamed")}</strong>
+              <small>${esc(record.position || "Official")} • ${esc(orgOf(record).toUpperCase())} • ${esc(SECTION_LABELS[groupOf(record)] || groupOf(record) || "Section")} • ${esc(normalizeStatus(record))}</small>
+            </div>
+            <a class="btn white hide-mobile" href="/admin/admin-official-create.html?id=${encodeURIComponent(record.id || "")}"><i class="fa-solid fa-pen" aria-hidden="true"></i>Edit</a>
+          </div>
+        `).join("");
+      }
+
+      function clearValidation() {
+        ["full_name", "position", "short_info"].forEach((id) => {
+          const input = $(id);
+          const error = $(`${id}_error`);
+          if (input) input.classList.remove("is-invalid");
+          if (error) error.classList.remove("is-visible");
+        });
+      }
+
+      function validate() {
+        clearValidation();
+        const required = ["full_name", "position", "short_info"];
+        const invalid = required.filter((id) => !$(id).value.trim());
+        invalid.forEach((id) => {
+          $(id).classList.add("is-invalid");
+          const error = $(`${id}_error`);
+          if (error) error.classList.add("is-visible");
+        });
+        if (invalid.length) {
+          $(invalid[0]).focus();
+          toast("Full name, position and card excerpt are required.", "error");
+          return false;
+        }
+        return true;
+      }
+
+      function updateCounts() {
+        setText("shortInfoCount", `${$("short_info")?.value.length || 0}/400`);
+      }
+
+      async function loadRequested() {
+        const id = qs.get("id");
+        const slug = qs.get("slug");
+        const profile = qs.get("profile") || qs.get("profile_slug") || qs.get("profile_key");
+        const wantsNewPosition = /^(1|true|yes)$/i.test(qs.get("new_position") || qs.get("newPosition") || "");
+
+        if (id) {
+          const result = await state.client.from(state.activeTable).select("*").eq("id", id).maybeSingle();
+          if (!result.error && result.data) {
+            fill(result.data);
+            if (wantsNewPosition) duplicatePosition();
+            return;
+          }
+        }
+
+        if (profile) {
+          const key = canonicalSlug(profile);
+          const match = state.allRecords.find((record) => identityKey(record) === key || canonicalSlug(record.profile_slug || record.profile_key || record.slug || record.full_name) === key);
+          if (match) {
+            fill(match);
+            if (wantsNewPosition) duplicatePosition();
+            return;
+          }
+        }
+
+        if (slug) {
+          const result = await state.client.from(state.activeTable).select("*").eq("slug", slug).limit(1);
+          if (!result.error && result.data && result.data[0]) {
+            fill(result.data[0]);
+            if (wantsNewPosition) duplicatePosition();
+            return;
+          }
+        }
+
+        fill(null);
+      }
+
+      async function save(event, forcedStatus = null) {
+        if (event) event.preventDefault();
+        if (!state.canWrite) return toast("Only superadmin/admin can save official records.", "error");
+        if (state.saving) return;
+        if (!state.client || !state.activeTable) return toast("Supabase is not connected.", "error");
+        if (!validate()) return;
+
+        const payload = formRecord();
+        if (forcedStatus) payload.status = forcedStatus;
+        let id = payload.id;
+        delete payload.id;
+
+        const duplicate = exactDuplicate(payload);
+        if (duplicate && !id) {
+          const ok = window.confirm("An exact same position already exists for this profile. Update that existing record instead of creating a duplicate?");
+          if (ok) id = duplicate.id;
+          else return toast("Save cancelled to prevent an exact duplicate.", "info");
+        }
+
+        state.saving = true;
+        const saveButton = $("saveOfficialBtn");
+        const saveText = $("saveOfficialBtnText");
+        saveButton.disabled = true;
+        const previousLabel = saveText.textContent;
+        saveText.textContent = id ? "Updating..." : "Saving...";
+
+        try {
+          let result;
+          if (id) {
+            result = await state.client.from(state.activeTable).update(payload).eq("id", id).select().single();
+          } else {
+            payload.created_at = new Date().toISOString();
+            result = await state.client.from(state.activeTable).insert(payload).select().single();
+          }
+
+          if (result.error) throw result.error;
+
+          toast(id ? "Official updated successfully." : "Official created successfully.", "success");
+          await loadAll();
+          fill(result.data);
+
+          if ($("open_details_after_save").checked) {
+            window.open(`/pages/official-details.html?profile=${encodeURIComponent(result.data.profile_slug || result.data.profile_key || canonicalSlug(result.data.slug || result.data.full_name))}&id=${encodeURIComponent(result.data.id)}&slug=${encodeURIComponent(result.data.slug || "")}`, "_blank", "noopener");
+          }
+          if ($("return_manager_after_save").checked) location.href = "/admin/admin-officials-manager.html";
+        } catch (error) {
+          toast(describeSupabaseError(error), "error");
+        } finally {
+          state.saving = false;
+          saveButton.disabled = false;
+          saveText.textContent = previousLabel;
+          applyRoleControls();
+        }
+      }
+
+      async function uploadImage() {
+        if (!state.canWrite) return toast("Only superadmin/admin can upload images.", "error");
+        if (!state.client?.storage) return toast("Supabase storage is unavailable.", "error");
+        const file = $("official_image_file").files[0];
+        if (!file) return toast("Select an image first.", "info");
+        if (!/^image\//i.test(file.type)) return toast("Please select a valid image file.", "error");
+
+        const safe = (file.name || "official.jpg").replace(/[^a-zA-Z0-9._-]/g, "-");
+        const slug = canonicalSlug($("slug").value || $("full_name").value || "official");
+        const path = `${window.APSG_IMAGE_FOLDER}/${slug}-${Date.now()}-${safe}`;
+        const button = $("uploadImageBtn");
+        button.disabled = true;
+        button.innerHTML = '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>Uploading';
+
+        try {
+          const uploaded = await state.client.storage.from(window.APSG_STORAGE_BUCKET).upload(path, file, { upsert: true, cacheControl: "3600" });
+          if (uploaded.error) throw uploaded.error;
+          const publicUrl = state.client.storage.from(window.APSG_STORAGE_BUCKET).getPublicUrl(path).data.publicUrl;
+          $("image_url").value = publicUrl;
+          updateImagePreview();
+          checkIdentity();
+          toast("Image uploaded and attached.", "success");
+        } catch (error) {
+          toast(describeSupabaseError(error), "error");
+        } finally {
+          button.disabled = false;
+          button.innerHTML = '<i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>Upload';
+          applyRoleControls();
+        }
+      }
+
+      function resetForm() {
+        $("officialForm").reset();
+        state.currentRecord = null;
+        $("id").value = "";
+        $("display_order").value = 999;
+        $("zone").value = "National";
+        rebuildSections();
+        applyRoute(true);
+        buildTargets(["leadership"]);
+        $("officialImagePreview").src = FALLBACK_IMAGE;
+        $("livePreviewImage").src = FALLBACK_IMAGE;
+        $("modeBadge").innerHTML = '<i class="fa-solid fa-circle-plus" aria-hidden="true"></i>Create Mode';
+        setText("modeStat", "Create");
+        setText("saveOfficialBtnText", "Save Official");
+        updateCounts();
+        updateOpenDossier();
+        updateLivePreview();
+        checkIdentity();
+        clearValidation();
+      }
+
+      function preset(type) {
+        if (type === "board") { $("organization").value = "apsg"; rebuildSections("board_bot"); $("leadership_group").value = "board_bot"; }
+        if (type === "patron") { $("organization").value = "apsg"; rebuildSections("patrons"); $("leadership_group").value = "patrons"; $("position").value = $("position").value || "Patron"; }
+        if (type === "matron") { $("organization").value = "apsg"; rebuildSections("matrons"); $("leadership_group").value = "matrons"; $("position").value = $("position").value || "Matron"; }
+        if (type === "exec") { $("organization").value = "apsg"; rebuildSections("executive_directors"); $("leadership_group").value = "executive_directors"; }
+        if (type === "cwdi") { $("organization").value = "cwdi"; rebuildSections("executive_leadership"); $("leadership_group").value = "executive_leadership"; }
+        applyRoute(true);
+        checkIdentity();
+        updateLivePreview();
+      }
+
+      function duplicatePosition() {
+        const keep = {
+          full_name: $("full_name").value,
+          slug: $("slug").value,
+          image_url: $("image_url").value,
+          short_info: $("short_info").value,
+          credentials: $("credentials").value,
+          biography: $("biography").value
+        };
+        resetForm();
+        $("id").value = "";
+        state.currentRecord = null;
+        $("full_name").value = keep.full_name;
+        $("slug").value = keep.slug;
+        $("image_url").value = keep.image_url;
+        $("short_info").value = keep.short_info;
+        $("credentials").value = keep.credentials;
+        $("biography").value = keep.biography;
+        $("position").value = "";
+        $("canonical_profile").checked = false;
+        $("modeBadge").innerHTML = '<i class="fa-solid fa-clone" aria-hidden="true"></i>New Position Mode';
+        setText("modeStat", "New Position");
+        setText("saveOfficialBtnText", "Save New Position");
+        updateCounts();
+        updateImagePreview();
+        updateOpenDossier();
+        updateLivePreview();
+        checkIdentity();
+        $("position").focus();
+        toast("Ready to create a new future position for the same profile. Type any office title.", "success");
+      }
+
+      function toggleSidebar(show) {
+        const sidebar = $("sidebar");
+        const overlay = $("mobileOverlay");
+        const button = $("mobileMenuBtn");
+        sidebar.classList.toggle("is-open", show);
+        overlay.classList.toggle("is-open", show);
+        button.setAttribute("aria-expanded", String(show));
+        if (show) {
+          const firstLink = sidebar.querySelector("a, button");
+          if (firstLink) firstLink.focus();
+        } else {
+          button.focus();
+        }
+      }
+
+      function handleInput(event) {
+        const id = event.target.id;
+        if (id === "full_name" && !$("slug").value.trim()) $("slug").value = slugify($("full_name").value);
+        if (id === "image_url") updateImagePreview();
+        updateCounts();
+        updateOpenDossier();
+        updateLivePreview();
+        if (["full_name", "slug", "image_url", "position"].includes(id)) checkIdentity();
+      }
+
+      function bind() {
+        if (state.bound) return;
+        state.bound = true;
+
+        ["full_name", "slug", "image_url", "position", "short_info", "status"].forEach((id) => $(id).addEventListener("input", handleInput));
+        ["level", "category", "seat", "state", "zone", "lga", "ward", "credentials", "biography", "display_order"].forEach((id) => $(id).addEventListener("input", updateLivePreview));
+        $("organization").addEventListener("change", () => { rebuildSections(); applyRoute(true); checkIdentity(); });
+        $("leadership_group").addEventListener("change", () => { applyRoute(true); checkIdentity(); });
+        $("officialForm").addEventListener("submit", (event) => save(event));
+        $("saveDraftBtn").addEventListener("click", () => { $("status").value = "draft"; updateLivePreview(); save(null, "draft"); });
+        $("uploadImageBtn").addEventListener("click", uploadImage);
+        $("resetOfficialBtn").addEventListener("click", resetForm);
+        $("newCleanBtn").addEventListener("click", resetForm);
+        $("duplicatePositionBtn").addEventListener("click", duplicatePosition);
+        $("refreshIdentityBtn").addEventListener("click", async () => { try { await loadAll(); toast("Records refreshed.", "success"); } catch (error) { toast(describeSupabaseError(error), "error"); } });
+        $("refreshIdentityBtnTop").addEventListener("click", async () => { try { await loadAll(); toast("Records refreshed.", "success"); } catch (error) { toast(describeSupabaseError(error), "error"); } });
+        $("selectAllTargets").addEventListener("click", () => { document.querySelectorAll("input[name='publish_targets']").forEach((node) => { node.checked = true; }); updateTargetSummary(); });
+        $("clearTargets").addEventListener("click", () => { document.querySelectorAll("input[name='publish_targets']").forEach((node) => { node.checked = false; }); updateTargetSummary(); });
+        $("mobileMenuBtn").addEventListener("click", () => toggleSidebar(true));
+        $("mobileOverlay").addEventListener("click", () => toggleSidebar(false));
+        document.querySelectorAll("[data-preset]").forEach((button) => button.addEventListener("click", () => preset(button.dataset.preset)));
+        document.querySelectorAll("[data-image-mode]").forEach((button) => button.addEventListener("click", () => setImageMode(button.dataset.imageMode)));
+        document.addEventListener("keydown", (event) => { if (event.key === "Escape" && $("sidebar").classList.contains("is-open")) toggleSidebar(false); });
+      }
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        bind();
+        rebuildSections();
+        buildTargets(["leadership"]);
+        setImageMode(localStorage.getItem("apsg_official_create_image_mode") || "contain");
+        updateCounts();
+        updateLivePreview();
+        showNotice("Connecting to Supabase and verifying admin access...");
+
+        state.client = await waitForClient();
+        if (!state.client) {
+          showAccessDenied("Supabase client not found", "Confirm /assets/js/supabase-clients.js exists and initializes the anon browser client.");
+          return;
+        }
+
+        const access = await requireAdminAccess();
+        if (!access) return;
+
+        try {
+          await chooseTable();
+          await loadAll();
+          await loadRequested();
+          hideNotice();
+          toast("Official studio ready.", "success");
+        } catch (error) {
+          showNotice(describeSupabaseError(error), "error");
+          toast(describeSupabaseError(error), "error");
+        }
+      });
+    })();
+  </script>
+  <script src="/assets/js/admin-unified.js" defer></script>
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

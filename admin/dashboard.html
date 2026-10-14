@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="robots" content="noindex,nofollow,noarchive">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#05351f">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>APSG Admin Dashboard</title>
+    <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any">
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png">
+    <link rel="stylesheet" href="/assets/css/tailwind-static.css">
+
+
+   <!-- Favicon -->
+    <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any" />
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png" />
+    <link rel="icon" href="/assets/images/logo/apsg.png" sizes="any">
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg.png">
+
+
+  
+      
+        <link rel="stylesheet" href="/assets/css/dashboard.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0f8a4b',
+                        'primary-dark': '#05351f',
+                        success: '#10b981',
+                        warning: '#d6a92b',
+                        danger: '#ef4444',
+                        ink: '#07140e',
+                        cream: '#fffaf0',
+                        bronze: '#8a6616'
+                    },
+                    boxShadow: {
+                        royal: '0 16px 48px rgba(5, 53, 31, 0.16)',
+                        gold: '0 12px 30px rgba(214, 169, 43, 0.20)',
+                        command: '0 22px 70px rgba(5, 53, 31, 0.14)'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        if (localStorage.getItem('daynight-theme') === 'carbon') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    <style>
+
+        /* Executive overview enhancements */
+        .overview-card,
+        .quality-card,
+        .action-card,
+        .overview-table-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(5, 53, 31, 0.10);
+            background: rgba(255, 255, 255, 0.82);
+            box-shadow: 0 14px 38px rgba(5, 53, 31, 0.08);
+            backdrop-filter: blur(18px);
+            border-radius: 1.35rem;
+        }
+        .dark .overview-card,
+        .dark .quality-card,
+        .dark .action-card,
+        .dark .overview-table-card {
+            border-color: rgba(255, 255, 255, 0.10);
+            background: rgba(255, 255, 255, 0.055);
+            box-shadow: 0 18px 52px rgba(0, 0, 0, 0.20);
+        }
+        .overview-card::before,
+        .quality-card::before,
+        .action-card::before,
+        .overview-table-card::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 3px;
+            background: linear-gradient(90deg, #d6a92b, #0f8a4b, #f9e7a0);
+            opacity: .88;
+        }
+        .overview-icon {
+            display: grid;
+            width: 2.2rem;
+            height: 2.2rem;
+            place-items: center;
+            border-radius: 1rem;
+            color: #05351f;
+            background: linear-gradient(135deg, rgba(214,169,43,.92), rgba(249,231,160,.86));
+            box-shadow: 0 10px 24px rgba(214, 169, 43, .24);
+        }
+        .quality-row,
+        .action-row,
+        .activity-row {
+            display: flex;
+            align-items: center;
+            gap: .65rem;
+            border: 1px solid rgba(5, 53, 31, .10);
+            background: rgba(255,255,255,.58);
+            border-radius: 1rem;
+            padding: .65rem .75rem;
+        }
+        .dark .quality-row,
+        .dark .action-row,
+        .dark .activity-row {
+            border-color: rgba(255,255,255,.10);
+            background: rgba(255,255,255,.055);
+        }
+        .progress-track {
+            height: .42rem;
+            overflow: hidden;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, .22);
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #d6a92b, #0f8a4b);
+            transition: width .7s ease;
+        }
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            border-radius: 999px;
+            padding: .25rem .55rem;
+            font-size: .58rem;
+            font-weight: 900;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            border: 1px solid rgba(5,53,31,.10);
+            background: rgba(15,138,75,.08);
+            color: #0f8a4b;
+        }
+        .status-pill.warn { background: rgba(214,169,43,.14); color: #8a6616; }
+        .status-pill.danger { background: rgba(239,68,68,.10); color: #dc2626; }
+        .dark .status-pill { border-color: rgba(255,255,255,.10); color: #d6a92b; }
+        .table-scroll { overflow-x: auto; }
+        .overview-table { width: 100%; border-collapse: separate; border-spacing: 0 .45rem; }
+        .overview-table th {
+            white-space: nowrap;
+            padding: .2rem .55rem;
+            font-size: .62rem;
+            font-weight: 900;
+            letter-spacing: .08em;
+            text-align: left;
+            text-transform: uppercase;
+            color: #64748b;
+        }
+        .overview-table td {
+            white-space: nowrap;
+            padding: .62rem .55rem;
+            font-size: .72rem;
+            font-weight: 700;
+            color: #1f2937;
+            background: rgba(255,255,255,.68);
+            border-top: 1px solid rgba(5,53,31,.08);
+            border-bottom: 1px solid rgba(5,53,31,.08);
+        }
+        .overview-table td:first-child { border-left: 1px solid rgba(5,53,31,.08); border-radius: .9rem 0 0 .9rem; }
+        .overview-table td:last-child { border-right: 1px solid rgba(5,53,31,.08); border-radius: 0 .9rem .9rem 0; }
+        .dark .overview-table th { color: #94a3b8; }
+        .dark .overview-table td {
+            color: #e5e7eb;
+            background: rgba(255,255,255,.055);
+            border-color: rgba(255,255,255,.08);
+        }
+        @media print {
+            .overview-card,
+            .quality-card,
+            .action-card,
+            .overview-table-card {
+                box-shadow: none !important;
+                border-color: #d8d8d8 !important;
+                background: #fff !important;
+            }
+        }
+
+
+        /* Premium APSG command center enhancement layer */
+        .sidebar-heading { padding: .5rem .55rem .3rem; color: rgba(255,255,255,.42); font-size: .55rem; font-weight: 950; text-transform: uppercase; letter-spacing: .27em; }
+        .sidebar-heading.gold { color: rgba(214,169,43,.86); }
+        .sidebar-link { display:flex; align-items:center; gap:.62rem; min-height:2.35rem; padding:.58rem .72rem; border-radius:1rem; color:rgba(255,255,255,.82); font-size:.74rem; font-weight:900; line-height:1; text-decoration:none; transition:background .18s ease,color .18s ease,transform .18s ease; }
+        .sidebar-link:hover,.sidebar-link.active,.sidebar-link:focus-visible { background:rgba(214,169,43,.14); color:#ffe7a3; transform:translateX(2px); outline:0; }
+        .danger-link { color:#fecaca!important; background:rgba(239,68,68,.08); border:0; }
+        .danger-link:hover { background:rgba(239,68,68,.16)!important; color:#fff!important; }
+        .role-chip { margin-left:auto; border-radius:999px; border:1px solid rgba(214,169,43,.28); background:rgba(214,169,43,.10); color:#f8dc7a; padding:.14rem .4rem; font-size:.5rem; font-weight:950; text-transform:uppercase; letter-spacing:.1em; }
+        .role-chip.editor { border-color:rgba(187,247,208,.22); background:rgba(16,185,129,.10); color:#bbf7d0; }
+        .role-level { display:grid; place-items:center; min-height:1.45rem; border-radius:999px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.05); color:rgba(255,255,255,.55); font-size:.54rem; font-weight:950; text-transform:uppercase; letter-spacing:.08em; }
+        .role-level.active { border-color:rgba(214,169,43,.38); background:rgba(214,169,43,.18); color:#f8dc7a; }
+        .locked-by-role { opacity:.46; filter:grayscale(.35); }
+        .top-role-badge { display:inline-flex; align-items:center; gap:.4rem; min-height:2rem; border:1px solid rgba(214,169,43,.24); border-radius:999px; background:rgba(214,169,43,.12); color:#8a6616; padding:.42rem .7rem; font-size:.65rem; font-weight:950; text-transform:uppercase; letter-spacing:.05em; }
+        .dark .top-role-badge { color:#f8dc7a; background:rgba(214,169,43,.14); }
+        .hero-title { margin-top:.65rem; color:#05351f; font-family:'Playfair Display',Georgia,serif; font-size:clamp(2rem,4vw,4.2rem); line-height:.96; letter-spacing:-.045em; font-weight:900; }
+        .dark .hero-title { color:#fff; }
+        .hero-copy { margin-top:.65rem; max-width:58rem; color:#64748b; font-size:.9rem; font-weight:650; line-height:1.55; }
+        .dark .hero-copy { color:#cbd5e1; }
+        .content-hub-card { position:relative; overflow:hidden; border:1px solid rgba(214,169,43,.18); border-radius:1.35rem; background:linear-gradient(145deg,rgba(255,255,255,.95),rgba(255,250,240,.78)); box-shadow:0 18px 52px rgba(5,53,31,.09); transition:transform .18s ease, box-shadow .18s ease; }
+        .content-hub-card:hover { transform:translateY(-2px); box-shadow:0 24px 70px rgba(5,53,31,.13); }
+        .dark .content-hub-card { background:linear-gradient(145deg,rgba(7,31,19,.90),rgba(4,24,13,.86)); border-color:rgba(214,169,43,.14); }
+        .content-hub-icon { display:grid; place-items:center; width:2.4rem; height:2.4rem; border-radius:1rem; background:linear-gradient(135deg,#05351f,#0f8a4b); color:#d6a92b; box-shadow:0 12px 30px rgba(5,53,31,.16); }
+        .command-shell,.metric-card,.mini-tile,.chart-card { border:1px solid rgba(5,53,31,.10); background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(255,250,240,.80)); box-shadow:0 18px 55px rgba(5,53,31,.09); }
+        .dark .command-shell,.dark .metric-card,.dark .mini-tile,.dark .chart-card { border-color:rgba(255,255,255,.10); background:linear-gradient(145deg,rgba(7,31,19,.94),rgba(4,24,13,.90)); }
+        .toolbar-btn { display:inline-flex; align-items:center; gap:.48rem; border-radius:999px; border:1px solid rgba(5,53,31,.10); background:rgba(255,255,255,.78); padding:.57rem .82rem; font-size:.72rem; font-weight:900; color:#05351f; box-shadow:0 8px 20px rgba(5,53,31,.06); transition:.18s ease; text-decoration:none; }
+        .toolbar-btn:hover { transform:translateY(-1px); box-shadow:0 12px 28px rgba(5,53,31,.10); }
+        .toolbar-btn.gold { background:linear-gradient(135deg,#d6a92b,#f6d76f); color:#05351f; border-color:rgba(214,169,43,.55); }
+        .dark .toolbar-btn { background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.10); color:#f8fafc; }
+        .dashboard-toast { position:fixed; right:1rem; bottom:1rem; z-index:999; transform:translateY(1rem); opacity:0; pointer-events:none; transition:.2s ease; border:1px solid rgba(214,169,43,.24); border-radius:1rem; background:#05351f; color:#fff; box-shadow:0 20px 56px rgba(5,53,31,.22); padding:.75rem .9rem; font-weight:850; font-size:.8rem; }
+        .dashboard-toast.show { transform:translateY(0); opacity:1; }
+        @media (max-width: 767px) { .top-role-badge{display:none}.hero-title{font-size:2rem}.sidebar-link{min-height:2.55rem} }
+
+
+
+        /* Compact premium command-center layer: denser layout, full sidebar retained */
+        .dashboard-compact-pro { background: radial-gradient(circle at 96% 0, rgba(214,169,43,.12), transparent 26rem), linear-gradient(180deg,#f7fbf6 0%,#edf6ee 100%); }
+        .dashboard-compact-pro #sidebar { width: 15.25rem; }
+        .dashboard-compact-pro .sidebar-heading { padding: .36rem .48rem .2rem; font-size: .48rem; letter-spacing: .25em; }
+        .dashboard-compact-pro .sidebar-link { min-height: 2.05rem; padding: .46rem .6rem; border-radius: .78rem; gap: .5rem; font-size: .68rem; }
+        .dashboard-compact-pro .role-chip { padding: .1rem .32rem; font-size: .45rem; }
+        .dashboard-compact-pro .apsg-role-card { margin: .45rem .55rem .55rem; padding: .58rem; border-radius: .9rem; }
+        .dashboard-compact-pro .role-level { min-height: 1.2rem; font-size: .45rem; }
+        .dashboard-compact-pro .md\:ml-64 { margin-left: 15.25rem; }
+        .dashboard-compact-pro header .px-3\.5 { padding-left: .75rem!important; padding-right: .75rem!important; }
+        .dashboard-compact-pro header .py-2 { padding-top: .42rem!important; padding-bottom: .42rem!important; }
+        .dashboard-compact-pro main { padding: .65rem!important; }
+        .dashboard-compact-pro main > section { margin-bottom: .65rem!important; }
+        .dashboard-compact-pro .command-shell { border-radius: 1rem!important; padding: .75rem!important; box-shadow: 0 12px 36px rgba(5,53,31,.09); }
+        .dashboard-compact-pro .command-shell .gap-3\.5 { gap: .6rem!important; }
+        .dashboard-compact-pro .compact-kicker { min-height: 1.4rem; padding: .24rem .55rem!important; font-size: .52rem!important; letter-spacing: .16em!important; }
+        .dashboard-compact-pro .compact-hero-title { margin: .35rem 0 0; color: #05351f; font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.45rem, 2.2vw, 2.45rem); line-height: .95; letter-spacing: -.035em; font-weight: 950; }
+        .dark .dashboard-compact-pro .compact-hero-title { color: #fff; }
+        .dashboard-compact-pro .compact-hero-copy { margin: .3rem 0 0; max-width: 44rem; color: #64746a; font-size: .72rem; font-weight: 700; line-height: 1.35; }
+        .dark .dashboard-compact-pro .compact-hero-copy { color: rgba(255,255,255,.68); }
+        .dashboard-compact-pro .compact-section-title { margin: .32rem 0 0; color:#05351f; font-size:.95rem; font-weight:950; letter-spacing:-.02em; }
+        .dark .dashboard-compact-pro .compact-section-title { color:#fff; }
+        .dashboard-compact-pro .toolbar-btn { min-height: 1.95rem; padding: .43rem .65rem; font-size: .66rem; gap: .34rem; box-shadow: 0 6px 16px rgba(5,53,31,.06); }
+        .dashboard-compact-pro .mini-tile { border-radius: .82rem!important; padding: .48rem .62rem!important; min-height: 3.1rem; }
+        .dashboard-compact-pro .mini-tile p:first-child { font-size: .48rem!important; letter-spacing: .13em!important; }
+        .dashboard-compact-pro .mini-tile p:last-child { font-size: .82rem!important; }
+        .dashboard-compact-pro .grid { gap: .5rem; }
+        .dashboard-compact-pro .overview-card,
+        .dashboard-compact-pro .metric-card,
+        .dashboard-compact-pro .quality-card,
+        .dashboard-compact-pro .action-card,
+        .dashboard-compact-pro .overview-table-card,
+        .dashboard-compact-pro .chart-card,
+        .dashboard-compact-pro .content-hub-card { border-radius: 1rem; box-shadow: 0 10px 30px rgba(5,53,31,.075); }
+        .dashboard-compact-pro .overview-card.p-3\.5,
+        .dashboard-compact-pro .metric-card,
+        .dashboard-compact-pro .quality-card.p-4,
+        .dashboard-compact-pro .action-card.p-4,
+        .dashboard-compact-pro .overview-table-card.p-4,
+        .dashboard-compact-pro .chart-card,
+        .dashboard-compact-pro .content-hub-card.p-4,
+        .dashboard-compact-pro .content-hub-card.md\:p-5 { padding: .72rem!important; }
+        .dashboard-compact-pro .content-hub-card.p-3 { padding: .62rem!important; }
+        .dashboard-compact-pro .overview-card::before,
+        .dashboard-compact-pro .quality-card::before,
+        .dashboard-compact-pro .action-card::before,
+        .dashboard-compact-pro .overview-table-card::before { height: 2px; }
+        .dashboard-compact-pro .overview-icon,
+        .dashboard-compact-pro .metric-icon,
+        .dashboard-compact-pro .content-hub-icon { width: 1.82rem; height: 1.82rem; border-radius: .72rem; font-size: .75rem; }
+        .dashboard-compact-pro .overview-card .text-2xl,
+        .dashboard-compact-pro .metric-card .text-2xl { font-size: 1.3rem!important; line-height: 1; }
+        .dashboard-compact-pro .overview-card .text-xl { font-size: 1.05rem!important; }
+        .dashboard-compact-pro .overview-card p,
+        .dashboard-compact-pro .metric-card p { margin-top: .15rem!important; }
+        .dashboard-compact-pro .quality-row,
+        .dashboard-compact-pro .action-row,
+        .dashboard-compact-pro .activity-row { padding: .48rem .56rem; border-radius: .82rem; gap: .5rem; }
+        .dashboard-compact-pro .progress-track { height: .34rem; }
+        .dashboard-compact-pro .status-pill { padding: .2rem .45rem; font-size: .5rem; letter-spacing: .06em; }
+        .dashboard-compact-pro .chart-container { min-height: 9.4rem; }
+        .dashboard-compact-pro svg.w-36 { width: 7.3rem!important; height: 7.3rem!important; }
+        .dashboard-compact-pro .bar { border-radius: .55rem .55rem 0 0; min-height: 4px; }
+        .dashboard-compact-pro .overview-table { border-spacing: 0 .28rem; }
+        .dashboard-compact-pro .overview-table th { padding: .12rem .42rem; font-size: .52rem; letter-spacing: .07em; }
+        .dashboard-compact-pro .overview-table td { padding: .43rem .42rem; font-size: .64rem; }
+        .dashboard-compact-pro #recentActivityList,
+        .dashboard-compact-pro #pendingActionsList { max-height: 18rem; overflow: auto; padding-right: .12rem; }
+        .dashboard-compact-pro #dataHealthList { max-height: 18rem; overflow: auto; padding-right: .12rem; }
+        .dashboard-compact-pro #donut-legend > div { padding: .32rem .45rem!important; border-radius: .72rem!important; }
+        .dashboard-compact-pro .top-role-badge { min-height:1.75rem; padding:.32rem .58rem; font-size:.56rem; }
+        .dashboard-compact-pro footer { padding: .42rem!important; font-size: .58rem!important; }
+        .dashboard-compact-pro .dashboard-toast { right:.65rem; bottom:.65rem; padding:.55rem .7rem; border-radius:.82rem; font-size:.72rem; }
+        @media (max-width: 767px) {
+          .dashboard-compact-pro #sidebar { width: 16rem; }
+          .dashboard-compact-pro .md\:ml-64 { margin-left: 0!important; }
+          .dashboard-compact-pro main { padding: .52rem!important; }
+          .dashboard-compact-pro .command-shell { padding: .65rem!important; }
+          .dashboard-compact-pro .compact-hero-title { font-size: 1.42rem; }
+          .dashboard-compact-pro .compact-hero-copy { font-size: .68rem; }
+          .dashboard-compact-pro .toolbar-btn { min-height: 2.12rem; }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="/assets/css/admin-unified.css">
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+</head>
+<body class="dashboard-compact-pro min-h-screen bg-slate-50 text-sm text-gray-900 antialiased dark:bg-[#06150d] dark:text-gray-100">
+  <div
+    id="mobile-overlay"
+    class="fixed inset-0 z-40 hidden bg-black/45 backdrop-blur-sm md:hidden"
+    onclick="closeSidebar()"
+    aria-hidden="true">
+  </div>
+
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside
+      id="sidebar"
+      class="fixed inset-y-0 left-0 z-50 flex w-64 -translate-x-full flex-col overflow-hidden border-r border-white/10 bg-[#041f12] text-white shadow-2xl transition-transform duration-300 ease-in-out md:translate-x-0">
+
+      <div class="relative shrink-0 overflow-hidden border-b border-white/10 p-3.5">
+        <div class="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-warning/20 blur-xl"></div>
+        <a href="/admin/dashboard.html" class="relative z-10 flex items-center gap-2.5" aria-label="APSG Admin Dashboard">
+          <span class="grid h-9 w-9 place-items-center rounded-2xl border border-warning/30 bg-white/10 shadow-gold">
+            <img src="/assets/images/logo/apsg.png" alt="APSG Logo" class="h-6 w-auto" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" width="96" height="96" decoding="async">
+            <i class="fas fa-shield-halved hidden text-warning"></i>
+          </span>
+          <span class="min-w-0">
+            <span class="block text-sm font-black leading-none">APSG Admin</span>
+            <span class="mt-1 block text-[9px] font-black uppercase tracking-[0.22em] text-warning">Command Center</span>
+          </span>
+        </a>
+      </div>
+
+      <nav class="apsg-role-sidebar flex-1 space-y-1.5 overflow-y-auto p-2.5 pb-4" aria-label="Admin navigation">
+        <p class="sidebar-heading">Command Center</p>
+        <a href="/admin/dashboard.html" class="sidebar-link active" data-access="viewer,editor,admin,superadmin" aria-current="page"><i class="fas fa-chart-pie w-4 text-center"></i><span>Dashboard</span><span class="role-chip">Admin</span></a>
+        <a href="/admin/members.html" class="sidebar-link" data-access="admin,superadmin"><i class="fas fa-users w-4 text-center"></i><span>Members</span><span class="role-chip">Admin</span></a>
+        <a href="/admin/account-details.html" class="sidebar-link" data-access="admin,superadmin"><i class="fas fa-building-columns w-4 text-center"></i><span>Account Details</span><span class="role-chip">Admin</span></a>
+        <a href="/admin/admin-leadership.html" class="sidebar-link" data-access="admin,superadmin"><i class="fa-solid fa-users-viewfinder w-4 text-center"></i><span>Leadership Desk</span><span class="role-chip">Admin</span></a>
+        <a href="/admin/admin-official-create.html" class="sidebar-link" data-access="admin,superadmin"><i class="fa-solid fa-user-pen w-4 text-center"></i><span>Create / Update</span><span class="role-chip">Admin</span></a>
+        <a href="/admin/admin-officials-manager.html" class="sidebar-link" data-access="admin,superadmin"><i class="fa-solid fa-table-list w-4 text-center"></i><span>Officials Manager</span><span class="role-chip">Admin</span></a>
+        <a href="/admin/member-details.html" class="sidebar-link" data-access="admin,superadmin"><i class="fas fa-id-card-clip w-4 text-center"></i><span>Member Dossier</span><span class="role-chip">Admin</span></a>
+        <a href="/admin/edit-member.html" class="sidebar-link" data-access="admin,superadmin"><i class="fas fa-user-pen w-4 text-center"></i><span>Edit Member</span><span class="role-chip">Admin</span></a>
+
+        <p class="sidebar-heading gold">Publishing Desk</p>
+        <a href="/admin/admin-blog.html" class="sidebar-link" data-access="editor,admin,superadmin"><i class="fas fa-newspaper w-4 text-center"></i><span>News & Updates</span><span class="role-chip editor">Editor</span></a>
+        <a href="/admin/admin-meeting.html" class="sidebar-link" data-access="editor,admin,superadmin"><i class="fas fa-users-line w-4 text-center"></i><span>Meetings</span><span class="role-chip editor">Editor</span></a>
+        <a href="/admin/admin-event.html" class="sidebar-link" data-access="editor,admin,superadmin"><i class="fas fa-calendar-check w-4 text-center"></i><span>Events</span><span class="role-chip editor">Editor</span></a>
+        <a href="/admin/admin-gallery.html" class="sidebar-link" data-access="editor,admin,superadmin"><i class="fa-solid fa-images w-4 text-center"></i><span>Gallery Albums</span><span class="role-chip editor">Editor</span></a>
+
+        <p class="sidebar-heading">Public Review</p>
+        <a href="/pages/leadership.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View Leadership</span></a>
+        <a href="/pages/bot.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View BOT</span></a>
+        <a href="/pages/cwdi.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View CWDI</span></a>
+        <a href="/pages/mp.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View Matrons & Patrons</span></a>
+        <a href="/pages/nat-exec.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View NATEXCO</span></a>
+        <a href="/pages/state.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View State Executives</span></a>
+        <a href="/pages/blog.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View Blog</span></a>
+        <a href="/pages/meetings.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View Meetings</span></a>
+        <a href="/pages/events.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View Events</span></a>
+        <a href="/pages/gallery.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin"><i class="fas fa-arrow-up-right-from-square w-4 text-center"></i><span>View Gallery</span></a>
+      </nav>
+
+      <div class="apsg-role-card mx-2.5 mb-3 rounded-2xl border border-warning/20 bg-white/[0.06] p-3">
+        <div class="flex items-center gap-2.5"><div class="grid h-8 w-8 place-items-center rounded-xl bg-warning text-[#062112]"><i class="fas fa-user-shield text-sm"></i></div><div class="min-w-0"><p class="text-[11px] font-black">Role Access</p><p class="text-[10px] text-white/50"><span id="adminRoleLabel">Resolving role</span></p></div></div>
+        <div class="mt-3 grid grid-cols-2 gap-1.5 text-[9px]"><span class="role-level" data-role-level="viewer">Viewer</span><span class="role-level" data-role-level="editor">Editor</span><span class="role-level" data-role-level="admin">Admin</span><span class="role-level" data-role-level="superadmin">Superadmin</span></div>
+        <div class="mt-3 flex items-center gap-2 rounded-xl bg-black/20 px-2.5 py-2 text-[10px] text-white/60"><span class="pulse-dot"></span><span>Authenticated admin session</span></div>
+      </div>
+
+      <div class="shrink-0 border-t border-white/10 bg-[#041f12] p-2.5"><button onclick="logout()" class="sidebar-link danger-link w-full text-left" type="button"><i class="fas fa-right-from-bracket w-4 text-center"></i><span>Logout</span></button></div>
+    </aside>
+
+    <!-- Main Area -->
+    <div class="flex min-w-0 flex-1 flex-col md:ml-64">
+      <header class="sticky top-0 z-30 border-b border-green-900/10 bg-white/80 backdrop-blur-xl dark:border-white/10 dark:bg-[#07170e]/85">
+        <div class="flex items-center justify-between gap-3 px-3.5 py-2">
+          <div class="flex min-w-0 items-center gap-2.5">
+            <button
+              id="mobile-toggle"
+              onclick="toggleSidebar()"
+              class="grid h-9 w-9 place-items-center rounded-2xl border border-green-900/10 bg-white/85 shadow-sm transition hover:bg-white md:hidden dark:border-white/10 dark:bg-white/10"
+              type="button"
+              aria-label="Open admin sidebar">
+              <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="min-w-0">
+              <p class="text-[9px] font-black uppercase tracking-[0.26em] text-warning">
+                APSG Nigeria
+              </p>
+              <h1 class="truncate text-sm font-black tracking-tight md:text-lg">
+                Admin Command Center
+              </h1>
+            </div>
+          </div>
+
+          <div class="no-print flex shrink-0 items-center gap-2">
+            <span id="topRoleBadge" class="top-role-badge hidden sm:inline-flex"><i class="fas fa-user-shield"></i>Checking role</span>
+            <button onclick="window.location.reload()" class="toolbar-btn hidden sm:inline-flex" type="button">
+              <i class="fas fa-rotate-right text-warning"></i>
+              <span>Refresh</span>
+            </button>
+
+            <div class="flex rounded-2xl border border-green-900/10 bg-white/70 p-1 shadow-sm dark:border-white/10 dark:bg-white/10">
+              <button
+                onclick="setTheme('snow')"
+                class="theme-btn-snow h-7 w-7 rounded-xl transition-all"
+                type="button"
+                aria-label="Switch to light mode">
+                <i class="fas fa-sun text-xs"></i>
+              </button>
+
+              <button
+                onclick="setTheme('carbon')"
+                class="theme-btn-carbon h-7 w-7 rounded-xl transition-all"
+                type="button"
+                aria-label="Switch to dark mode">
+                <i class="fas fa-moon text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+            <main class="flex-1 p-2.5 md:p-4 lg:p-5 overflow-auto">
+                <!-- @spec DASH-UI-001, DASH-UI-002, DASH-UI-003, DASH-UI-004, DASH-UI-005, DASH-UI-006, DASH-UI-007, DASH-UI-008, DASH-UI-009, DASH-UI-010, DASH-UI-011, DASH-UI-012, DASH-UI-013, DASH-UI-014, DASH-UI-015, DASH-UI-016 -->
+                <section class="command-shell rounded-[1.45rem] p-3.5 md:p-4 mb-3.5 overflow-hidden">
+                    <div class="absolute -right-16 -top-20 h-44 w-44 rounded-full bg-warning/20 blur-2xl"></div>
+                    <div class="absolute -left-12 bottom-0 h-32 w-32 rounded-full bg-primary/10 blur-2xl"></div>
+                    <div class="relative z-10 grid xl:grid-cols-[1fr_auto] gap-3.5 items-center">
+                        <div>
+                            <div class="inline-flex items-center gap-2 rounded-full border border-warning/28 bg-warning/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-bronze dark:text-warning font-black compact-kicker">
+                                <span class="pulse-dot"></span>
+                                Executive Overview of APC Progressive Support Group APSG
+                            </div>
+                            <h2 class="compact-hero-title">APSG Command Center</h2>
+                            <p class="compact-hero-copy">Membership totals, record quality, and the next items for follow-up.</p>
+                            </div>
+                        <div class="flex flex-wrap xl:justify-end gap-2 no-print">
+                            <a class="toolbar-btn gold" href="/admin/members.html"><i class="fas fa-users"></i>Members</a>
+                            <details class="dashboard-actions">
+                                <summary class="toolbar-btn"><i class="fas fa-ellipsis"></i>Actions</summary>
+                                <div class="dashboard-action-panel">
+                                    <a class="toolbar-btn" href="/admin/account-details.html"><i class="fas fa-building-columns text-warning"></i>Account Details</a>
+                                    <button onclick="exportAccountCsv()" class="toolbar-btn" type="button"><i class="fas fa-file-invoice-dollar text-warning"></i>Account Report</button>
+                                    <button onclick="exportCsv()" class="toolbar-btn" type="button"><i class="fas fa-file-arrow-down text-warning"></i>Export CSV</button>
+                                    <button onclick="exportFilteredCsv('missing-docs')" class="toolbar-btn" type="button"><i class="fas fa-triangle-exclamation text-warning"></i>Missing Docs</button>
+                                    <button onclick="window.print()" class="toolbar-btn" type="button"><i class="fas fa-print text-warning"></i>Print</button>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+
+                    
+                </section>
+                <section class="dashboard-primary-section mb-3.5" aria-label="Primary membership indicators">
+    <div class="dashboard-primary-grid">
+        <article class="metric-card dashboard-kpi-card"><div class="relative z-10 flex items-start justify-between gap-3"><div><p class="dashboard-kpi-label">Total Members</p><p class="dashboard-kpi-value" id="totalMembers">0</p><p class="dashboard-kpi-note">All captured records</p></div><span class="metric-icon"><i class="fas fa-users"></i></span></div></article>
+        <article class="metric-card dashboard-kpi-card"><div class="relative z-10 flex items-start justify-between gap-3"><div><p class="dashboard-kpi-label">Last 7 Days</p><p class="dashboard-kpi-value" id="weekRegistrations">0</p><p class="dashboard-kpi-note">New registrations</p></div><span class="metric-icon"><i class="fas fa-calendar-week"></i></span></div></article>
+        <article class="metric-card dashboard-kpi-card"><div class="relative z-10 flex items-start justify-between gap-3"><div><p class="dashboard-kpi-label">Data Quality</p><p class="dashboard-kpi-value" id="dataQualityRate">0%</p><p class="dashboard-kpi-note">Average completeness</p></div><span class="metric-icon"><i class="fas fa-shield-heart"></i></span></div></article>
+        <article class="metric-card dashboard-kpi-card"><div class="relative z-10 flex items-start justify-between gap-3"><div><p class="dashboard-kpi-label">Pending Actions</p><p class="dashboard-kpi-value" id="pendingActionsCount">0</p><p class="dashboard-kpi-note">Items for admin follow-up</p></div><span class="metric-icon"><i class="fas fa-list-check"></i></span></div></article>
+    </div>
+</section>
+                <section class="dashboard-action-center grid grid-cols-1 xl:grid-cols-[1fr_.95fr] gap-2.5 mt-3.5" aria-label="Data quality and pending action center">
+                    <div class="quality-card p-4">
+                        <div class="relative z-10 flex items-start justify-between gap-3 mb-3">
+                            <div>
+                                <h3 class="text-sm font-black text-primary-dark dark:text-white">Data Health Overview</h3>
+                                <p class="text-[11px] text-gray-500 dark:text-gray-400">Completeness of critical membership fields.</p>
+                            </div>
+                            <span class="status-pill"><i class="fas fa-database"></i> Live Data</span>
+                        </div>
+                        <div id="dataHealthList" class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-2.5"></div>
+                    </div>
+
+                    <div class="action-card p-4">
+                        <div class="relative z-10 flex items-start justify-between gap-3 mb-3">
+                            <div>
+                                <h3 class="text-sm font-black text-primary-dark dark:text-white">Pending Action Center</h3>
+                                <p class="text-[11px] text-gray-500 dark:text-gray-400">What admins should correct or complete next.</p>
+                            </div>
+                            <span class="status-pill warn"><i class="fas fa-list-check"></i> Action</span>
+                        </div>
+                        <div id="pendingActionsList" class="relative z-10 space-y-2"></div>
+                    </div>
+                </section>
+                <section class="dashboard-trend-section" aria-label="Recent registration trend"><div class="chart-card">
+                        <div class="flex items-start justify-between gap-3 mb-2.5">
+                            <div>
+                                <h3 class="text-sm font-black text-primary-dark dark:text-white">Recent Registrations</h3>
+                                <p class="text-[11px] text-gray-500 dark:text-gray-400">Last 7 days, auto-scaled by highest daily count.</p>
+                            </div>
+                            <span class="rounded-full bg-primary/10 text-primary dark:text-warning px-2.5 py-1 text-[9px] font-black uppercase tracking-widest">Trend</span>
+                        </div>
+                        <div class="chart-container flex items-end justify-between gap-2 px-1">
+                            <div class="flex-1 flex flex-col items-center gap-1">
+                                <span class="count-label text-[10px] font-black text-primary-dark dark:text-warning">0</span>
+                                <div class="bar w-full rounded-t-xl" style="height:0px;transition:height 0.6s ease;"></div>
+                                <span class="day-label text-[10px] text-gray-500 dark:text-gray-400">6d</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-1">
+                                <span class="count-label text-[10px] font-black text-primary-dark dark:text-warning">0</span>
+                                <div class="bar w-full rounded-t-xl" style="height:0px;transition:height 0.6s ease;"></div>
+                                <span class="day-label text-[10px] text-gray-500 dark:text-gray-400">5d</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-1">
+                                <span class="count-label text-[10px] font-black text-primary-dark dark:text-warning">0</span>
+                                <div class="bar w-full rounded-t-xl" style="height:0px;transition:height 0.6s ease;"></div>
+                                <span class="day-label text-[10px] text-gray-500 dark:text-gray-400">4d</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-1">
+                                <span class="count-label text-[10px] font-black text-primary-dark dark:text-warning">0</span>
+                                <div class="bar w-full rounded-t-xl" style="height:0px;transition:height 0.6s ease;"></div>
+                                <span class="day-label text-[10px] text-gray-500 dark:text-gray-400">3d</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-1">
+                                <span class="count-label text-[10px] font-black text-primary-dark dark:text-warning">0</span>
+                                <div class="bar w-full rounded-t-xl" style="height:0px;transition:height 0.6s ease;"></div>
+                                <span class="day-label text-[10px] text-gray-500 dark:text-gray-400">2d</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-1">
+                                <span class="count-label text-[10px] font-black text-primary-dark dark:text-warning">0</span>
+                                <div class="bar w-full rounded-t-xl" style="height:0px;transition:height 0.6s ease;"></div>
+                                <span class="day-label text-[10px] text-gray-500 dark:text-gray-400">1d</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-1">
+                                <span class="count-label text-[10px] font-black text-primary-dark dark:text-warning">0</span>
+                                <div class="bar w-full rounded-t-xl" style="height:0px;transition:height 0.6s ease;"></div>
+                                <span class="day-label text-[10px] text-gray-500 dark:text-gray-400">Today</span>
+                            </div>
+                        </div>
+                    </div></section>
+                <section class="dashboard-latest-members" aria-label="Latest members">
+    <div class="overview-table-card p-4">
+                        <div class="relative z-10 flex items-start justify-between gap-3 mb-3">
+                            <div>
+                                <h3 class="text-sm font-black text-primary-dark dark:text-white">Latest Members</h3>
+                                <p class="text-[11px] text-gray-500 dark:text-gray-400">Newest registrations with document and account status.</p>
+                            </div>
+                            <a href="/admin/members.html" class="status-pill"><i class="fas fa-arrow-up-right-from-square"></i> Open</a>
+                        </div>
+                        <div class="relative z-10 table-scroll">
+                            <table class="overview-table">
+                                <thead><tr><th>Reg No</th><th>Name</th><th>State</th><th>LGA</th><th>Docs</th><th>Account</th><th>Date</th></tr></thead>
+                                <tbody id="latestMembersTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+</section>
+                <details id="dashboardMoreReports" class="dashboard-more-reports">
+    <summary><span><i class="fas fa-chart-column" aria-hidden="true"></i> More reports</span><span class="dashboard-reports-hint">Publishing, coverage, geography, and website activity</span><i class="fas fa-chevron-down dashboard-reports-chevron" aria-hidden="true"></i></summary>
+    <div class="dashboard-reports-body">
+        <section class="dashboard-report-group" aria-label="Additional membership metrics">
+            <div class="dashboard-report-heading"><h3>Membership and coverage details</h3><p>Additional activity, documentation, account, and geographic summaries.</p></div>
+            <div class="dashboard-report-grid dashboard-report-grid-four"><div class="overview-card p-3.5">
+                        <div class="relative z-10 flex items-start justify-between gap-3">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">This Month</p>
+                                <p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="monthRegistrations">0</p>
+                                <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">Current month</p>
+                            </div>
+                            <span class="overview-icon"><i class="fas fa-calendar-days"></i></span>
+                        </div>
+                    </div><div class="overview-card p-3.5">
+                        <div class="relative z-10 flex items-start justify-between gap-3">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Growth</p>
+                                <p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="growthRate">0%</p>
+                                <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">Vs previous 7 days</p>
+                            </div>
+                            <span class="overview-icon"><i class="fas fa-arrow-trend-up"></i></span>
+                        </div>
+                    </div><div class="overview-card p-3.5">
+                        <div class="relative z-10 flex items-start justify-between gap-3">
+                            <div class="min-w-0">
+                                <p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Top State</p>
+                                <p class="text-xl font-black mt-1 text-primary-dark dark:text-white truncate" id="topStateCard">No data</p>
+                                <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5" id="topStateMeta">Highest coverage</p>
+                            </div>
+                            <span class="overview-icon"><i class="fas fa-map-pin"></i></span>
+                        </div>
+                    </div><div class="metric-card">
+                        <div class="relative z-10 flex items-start justify-between gap-2.5">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Today</p>
+                                <p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="todaysRegistrations">0</p>
+                                <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">New registrations</p>
+                            </div>
+                            <div class="metric-icon"><i class="fas fa-calendar-day"></i></div>
+                        </div>
+                    </div></div>
+            <div class="dashboard-report-grid dashboard-report-grid-five"><div class="metric-card sm:col-span-2 xl:col-span-1">
+                        <div class="relative z-10 flex items-start justify-between gap-2.5">
+                            <div class="min-w-0">
+                                <p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Top States</p>
+                                <p class="text-[12px] font-black mt-1.5 text-primary-dark dark:text-white leading-relaxed" id="topStatesValue">Loading...</p>
+                            </div>
+                            <div class="metric-icon"><i class="fas fa-trophy"></i></div>
+                        </div>
+                    </div><div class="metric-card sm:col-span-2 xl:col-span-1">
+                        <div class="relative z-10 flex items-start justify-between gap-2.5">
+                            <div class="min-w-0">
+                                <p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Top LGAs</p>
+                                <p class="text-[12px] font-black mt-1.5 text-primary-dark dark:text-white leading-relaxed" id="topLgasValue">Loading...</p>
+                            </div>
+                            <div class="metric-icon"><i class="fas fa-city"></i></div>
+                        </div>
+                    </div><div class="metric-card">
+                        <div class="relative z-10 flex items-start justify-between gap-2.5">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Active States</p>
+                                <p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="activeStates">0</p>
+                                <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">States represented</p>
+                            </div>
+                            <div class="metric-icon"><i class="fas fa-map-location-dot"></i></div>
+                        </div>
+                    </div><div class="metric-card account-metric-card">
+                        <div class="relative z-10 flex items-start justify-between gap-2.5">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Bank Accounts</p>
+                                <p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="accountMembers">0</p>
+                                <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">Records with account number</p>
+                            </div>
+                            <div class="metric-icon"><i class="fas fa-building-columns"></i></div>
+                        </div>
+                    </div></div>
+            <div class="dashboard-report-grid dashboard-report-grid-four"><div class="overview-card p-3.5">
+                        <p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">PVC Coverage</p>
+                        <p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="pvcCoverageCard">0%</p>
+                        <div class="progress-track mt-2"><div class="progress-fill" id="pvcCoverageBar"></div></div>
+                    </div><div class="overview-card p-3.5">
+                        <p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">APC Card Coverage</p>
+                        <p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="apcCoverageCard">0%</p>
+                        <div class="progress-track mt-2"><div class="progress-fill" id="apcCoverageBar"></div></div>
+                    </div><div class="overview-card p-3.5">
+                        <p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Phone Coverage</p>
+                        <p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="phoneCoverageCard">0%</p>
+                        <div class="progress-track mt-2"><div class="progress-fill" id="phoneCoverageBar"></div></div>
+                    </div><div class="overview-card p-3.5">
+                        <p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Email Coverage</p>
+                        <p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="emailCoverageCard">0%</p>
+                        <div class="progress-track mt-2"><div class="progress-fill" id="emailCoverageBar"></div></div>
+                    </div>
+                <div class="overview-card p-3.5"><p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Documents</p><p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="documentCoverage">0%</p></div>
+                <div class="overview-card p-3.5 account-mini-tile"><p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Account Coverage</p><p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="accountCoverage">0%</p></div>
+                <div class="overview-card p-3.5"><p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Last Record</p><p class="font-black text-primary-dark dark:text-white truncate" id="lastRegistered">No data</p></div>
+                <div class="overview-card p-3.5"><p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Updated</p><p class="font-black text-primary-dark dark:text-white truncate" id="lastUpdatedLabel">Waiting</p></div>
+            </div>
+        </section>
+        <section class="dashboard-report-group dashboard-chart-report" aria-label="Geographic distribution">
+            <div class="dashboard-report-heading"><h3>Geographic distribution</h3><p>Member coverage by state.</p></div>
+            <div class="chart-card">
+                        <div class="flex items-start justify-between gap-3 mb-2.5">
+                            <div>
+                                <h3 class="text-sm font-black text-primary-dark dark:text-white">Registrations by State</h3>
+                                <p class="text-[11px] text-gray-500 dark:text-gray-400">Top states with remaining records grouped as others.</p>
+                            </div>
+                            <span class="rounded-full bg-warning/12 text-bronze dark:text-warning px-2.5 py-1 text-[9px] font-black uppercase tracking-widest">Donut</span>
+                        </div>
+                        <div class="chart-container grid grid-cols-1 sm:grid-cols-[9.2rem_1fr] gap-3 items-center">
+                            <div class="flex justify-center">
+                                <svg viewBox="0 0 36 36" class="w-36 h-36 drop-shadow-sm">
+                                    <circle cx="18" cy="18" r="15.9" fill="none" stroke="rgba(148,163,184,0.20)" stroke-width="3.2" stroke-dasharray="100 100"/>
+                                    <circle class="donut-segment" cx="18" cy="18" r="15.9" fill="none" stroke="#d6a92b" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="0 100" stroke-dashoffset="0"/>
+                                    <circle class="donut-segment" cx="18" cy="18" r="15.9" fill="none" stroke="#0f8a4b" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="0 100" stroke-dashoffset="0"/>
+                                    <circle class="donut-segment" cx="18" cy="18" r="15.9" fill="none" stroke="#10b981" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="0 100" stroke-dashoffset="0"/>
+                                    <circle class="donut-segment" cx="18" cy="18" r="15.9" fill="none" stroke="#f59e0b" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="0 100" stroke-dashoffset="0"/>
+                                    <circle class="donut-segment" cx="18" cy="18" r="15.9" fill="none" stroke="#94a3b8" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="0 100" stroke-dashoffset="0"/>
+                                    <text x="18" y="17" text-anchor="middle" dy=".3em" class="text-[0.42rem] font-black fill-gray-900 dark:fill-white" id="donut-value">0</text>
+                                    <text x="18" y="21.3" text-anchor="middle" dy=".3em" class="text-[0.16rem] font-bold fill-gray-500 dark:fill-gray-300">members</text>
+                                </svg>
+                            </div>
+                            <div id="donut-legend" class="text-xs space-y-1.5 min-w-0"></div>
+                        </div>
+                    </div>
+        </section>
+        <section class="grid grid-cols-1 lg:grid-cols-[1fr_.92fr] gap-2.5 mb-3.5" aria-label="Content publishing control room">
+                    <div class="content-hub-card p-4 md:p-5">
+                        <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div>
+                                <div class="inline-flex items-center gap-2 rounded-full border border-warning/28 bg-warning/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-bronze dark:text-warning font-black compact-kicker">
+                                    <i class="fas fa-broadcast-tower"></i>
+                                    Content Publishing Desk
+                                   </div>
+                                   <h3 class="compact-section-title">Publish, review and manage APSG updates</h3>
+                                   </div>
+                            <div class="flex flex-wrap gap-2 dashboard-report-controls no-print">
+                                <a href="/admin/admin-blog.html" class="toolbar-btn gold"><i class="fas fa-newspaper"></i>News Desk</a>
+                                <a href="/admin/admin-meeting.html" class="toolbar-btn"><i class="fas fa-users-line text-warning"></i>Meetings</a>
+                                <a href="/admin/admin-event.html" class="toolbar-btn"><i class="fas fa-calendar-check text-warning"></i>Events</a>
+                                <a href="/admin/admin-gallery.html" class="toolbar-btn"><i class="fas fa-images text-warning"></i>Gallery</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2.5 dashboard-report-controls no-print">
+                        <a href="/pages/blog.html" target="_blank" rel="noopener" class="content-hub-card p-3 text-center">
+                            <span class="content-hub-icon mx-auto"><i class="fas fa-newspaper"></i></span>
+                            <p class="mt-2 text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Public</p>
+                            <p class="text-xs font-black text-primary-dark dark:text-white">Blog</p>
+                        </a>
+                        <a href="/pages/meetings.html" target="_blank" rel="noopener" class="content-hub-card p-3 text-center">
+                            <span class="content-hub-icon mx-auto"><i class="fas fa-users-line"></i></span>
+                            <p class="mt-2 text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Public</p>
+                            <p class="text-xs font-black text-primary-dark dark:text-white">Meetings</p>
+                        </a>
+                        <a href="/pages/events.html" target="_blank" rel="noopener" class="content-hub-card p-3 text-center">
+                            <span class="content-hub-icon mx-auto"><i class="fas fa-calendar-check"></i></span>
+                            <p class="mt-2 text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Public</p>
+                            <p class="text-xs font-black text-primary-dark dark:text-white">Events</p>
+                        </a>
+                    </div>
+                </section>
+        <section class="grid grid-cols-1 lg:grid-cols-4 gap-2.5 mt-3.5" aria-label="Publishing status overview">
+                    <div class="overview-card p-3.5">
+                        <div class="relative z-10 flex items-start justify-between gap-3">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">News</p>
+                                <p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="newsPublishedCount">0</p>
+                                <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5"><span id="newsDraftCount">0</span> drafts</p>
+                            </div>
+                            <span class="overview-icon"><i class="fas fa-newspaper"></i></span>
+                        </div>
+                    </div>
+                    <div class="overview-card p-3.5">
+                        <div class="relative z-10 flex items-start justify-between gap-3">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Meetings</p>
+                                <p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="meetingsPublishedCount">0</p>
+                                <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5"><span id="meetingsUpcomingCount">0</span> upcoming</p>
+                            </div>
+                            <span class="overview-icon"><i class="fas fa-users-line"></i></span>
+                        </div>
+                    </div>
+                    <div class="overview-card p-3.5">
+                        <div class="relative z-10 flex items-start justify-between gap-3">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Events</p>
+                                <p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="eventsPublishedCount">0</p>
+                                <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5"><span id="eventsUpcomingCount">0</span> upcoming</p>
+                            </div>
+                            <span class="overview-icon"><i class="fas fa-calendar-check"></i></span>
+                        </div>
+                    </div>
+                    <div class="overview-card p-3.5">
+                        <div class="relative z-10 flex items-start justify-between gap-3">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-black">Gallery</p>
+                                <p class="text-2xl font-black mt-0.5 text-primary-dark dark:text-white" id="galleryAlbumCount">0</p>
+                                <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">published albums/photos</p>
+                            </div>
+                            <span class="overview-icon"><i class="fas fa-images"></i></span>
+                        </div>
+                    </div>
+                </section>
+        <section class="grid grid-cols-1 xl:grid-cols-[1fr_.95fr] gap-2.5 mt-3.5" aria-label="Website performance overview">
+    <div class="overview-table-card p-4">
+        <div class="flex items-start justify-between gap-3 mb-3">
+            <div>
+                <h3 class="text-sm font-black text-primary-dark dark:text-white">Website Intelligence Overview</h3>
+                <p class="text-[11px] text-gray-500 dark:text-gray-400">Live visibility into public website visits, page views, CTA clicks and strongest pages.</p>
+            </div>
+            <span class="rounded-full bg-primary/10 text-primary dark:text-warning px-2.5 py-1 text-[9px] font-black uppercase tracking-widest">Analytics</span>
+        </div>
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-2.5">
+            <div class="overview-card p-3">
+                <p class="text-[9px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-black">Visitors Today</p>
+                <p class="mt-1 text-xl font-black text-primary-dark dark:text-white" id="visitorsTodayCount">0</p>
+                <p class="text-[10px] text-gray-500 dark:text-gray-400">Unique visitor IDs</p>
+            </div>
+            <div class="overview-card p-3">
+                <p class="text-[9px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-black">Views Today</p>
+                <p class="mt-1 text-xl font-black text-primary-dark dark:text-white" id="pageViewsTodayCount">0</p>
+                <p class="text-[10px] text-gray-500 dark:text-gray-400">Public pages opened</p>
+            </div>
+            <div class="overview-card p-3">
+                <p class="text-[9px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-black">7-Day Views</p>
+                <p class="mt-1 text-xl font-black text-primary-dark dark:text-white" id="pageViewsWeekCount">0</p>
+                <p class="text-[10px] text-gray-500 dark:text-gray-400">Recent traffic</p>
+            </div>
+            <div class="overview-card p-3">
+                <p class="text-[9px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-black">CTA Clicks</p>
+                <p class="mt-1 text-xl font-black text-primary-dark dark:text-white" id="ctaClicksWeekCount">0</p>
+                <p class="text-[10px] text-gray-500 dark:text-gray-400">Last 7 days</p>
+            </div>
+            <div class="overview-card p-3 col-span-2 lg:col-span-1">
+                <p class="text-[9px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-black">Top Page</p>
+                <p class="mt-1 text-sm font-black text-primary-dark dark:text-white truncate" id="topPublicPageLabel">No data</p>
+                <p class="text-[10px] text-gray-500 dark:text-gray-400 truncate" id="topPublicPageMeta">Waiting for visits</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="overview-table-card p-4 overflow-hidden">
+        <div class="flex items-start justify-between gap-3 mb-2.5">
+            <div>
+                <h3 class="text-sm font-black text-primary-dark dark:text-white">Top Public Pages</h3>
+                <p class="text-[11px] text-gray-500 dark:text-gray-400">Most viewed APSG website pages in the last 7 days.</p>
+            </div>
+            <button onclick="window.open('/index.html', '_blank')" class="status-pill no-print" type="button"><i class="fas fa-arrow-up-right-from-square"></i> Public Site</button>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="overview-table">
+                <thead><tr><th>Page</th><th>Views</th><th>Visitors</th></tr></thead>
+                <tbody id="topPublicPagesTable"><tr><td colspan="3">No analytics yet</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+        <section class="dashboard-report-group dashboard-activity-report" aria-label="Recent member activity">
+            <div class="overview-table-card p-4">
+                        <div class="relative z-10 flex items-start justify-between gap-3 mb-3">
+                            <div>
+                                <h3 class="text-sm font-black text-primary-dark dark:text-white">Recent Activity</h3>
+                                <p class="text-[11px] text-gray-500 dark:text-gray-400">Latest records and system highlights.</p>
+                            </div>
+                            <span class="status-pill"><i class="fas fa-clock"></i> Timeline</span>
+                        </div>
+                        <div id="recentActivityList" class="relative z-10 space-y-2"></div>
+                    </div>
+        </section>
+        <section class="grid grid-cols-1 xl:grid-cols-2 gap-2.5 mt-3.5" aria-label="Operational overview tables">
+                    <div class="overview-table-card p-4">
+                        <div class="relative z-10 flex items-start justify-between gap-3 mb-3">
+                            <div>
+                                <h3 class="text-sm font-black text-primary-dark dark:text-white">Incomplete Records</h3>
+                                <p class="text-[11px] text-gray-500 dark:text-gray-400">Members with missing critical details.</p>
+                            </div>
+                            <button onclick="exportFilteredCsv('incomplete')" class="status-pill warn no-print" type="button"><i class="fas fa-file-arrow-down"></i> Export</button>
+                        </div>
+                        <div class="relative z-10 table-scroll">
+                            <table class="overview-table">
+                                <thead><tr><th>Name</th><th>Missing Fields</th><th>State</th><th>Phone</th><th>Date</th></tr></thead>
+                                <tbody id="incompleteRecordsTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="overview-table-card p-4">
+                        <div class="relative z-10 flex items-start justify-between gap-3 mb-3">
+                            <div>
+                                <h3 class="text-sm font-black text-primary-dark dark:text-white">Top Performing States</h3>
+                                <p class="text-[11px] text-gray-500 dark:text-gray-400">Highest state contribution by registrations.</p>
+                            </div>
+                            <span class="status-pill"><i class="fas fa-ranking-star"></i> Ranking</span>
+                        </div>
+                        <div class="relative z-10 table-scroll">
+                            <table class="overview-table">
+                                <thead><tr><th>Rank</th><th>State</th><th>Members</th><th>% of Total</th><th>Top LGA</th></tr></thead>
+                                <tbody id="topStatesTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+        <div class="sr-only" aria-hidden="true"><span id="weekMiniLabel">0</span><span id="pendingMiniLabel">0</span></div>
+    </div>
+</details>
+                <div id="noDataMessage" class="hidden text-center mt-3.5 p-5 command-shell rounded-[1.25rem]">
+                    <div class="mx-auto grid h-11 w-11 place-items-center rounded-2xl bg-warning/15 text-warning mb-2">
+                        <i class="fas fa-inbox text-lg"></i>
+                    </div>
+                    <p class="text-base font-black text-primary-dark dark:text-white">No registrations yet.</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Data will appear here once members start registering.</p>
+                </div>
+            </main>
+
+            <footer class="border-t border-green-900/10 dark:border-white/10 bg-white/65 dark:bg-[#07170e]/70 backdrop-blur-xl p-2 text-center text-[10px] text-gray-500 dark:text-gray-400">
+                &copy; 2026 APC Progressive Support Group (APSG Nigeria) Admin Dashboard. All rights reserved.
+            </footer>
+        </div>
+    </div>
+
+    <script src="/assets/js/supabase-clients.js"></script>
+  <script src="/assets/js/apsg-settings.js"></script>
+  <script src="/assets/js/admin-auth.js"></script>
+    <script src="/assets/js/dashboard.js"></script>
+  <script src="/assets/js/admin-unified.js" defer></script>
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

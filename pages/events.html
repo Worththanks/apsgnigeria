@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="theme-color" content="#05351f" />
+    <base href="/" />
+    <title>APSG Events | Civic Mobilisation, Inaugurations & Public Programmes</title>
+    <meta name="description" content="Explore APSG public events, chapter inaugurations, mobilisation schedules, civic engagements and official programmes across Nigeria." />
+    <meta name="keywords" content="APSG events, APSG Nigeria events, APC Progressive Support Group events, chapter inauguration, mobilisation schedules, civic programmes" />
+    <link rel="canonical" href="https://apsgnigeria.org/pages/events.html" />
+    <meta property="og:site_name" content="APSG Nigeria" />
+    <meta property="og:title" content="APSG Events | Public Programmes & Mobilisation Calendar" />
+    <meta property="og:description" content="Explore APSG public events, chapter inaugurations, mobilisation schedules and official programmes." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://apsgnigeria.org/pages/events.html" />
+    <meta property="og:image" content="https://apsgnigeria.org/assets/images/og-image.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="APSG Events | Public Programmes & Mobilisation Calendar" />
+    <meta name="twitter:description" content="Explore APSG public events, chapter inaugurations, mobilisation schedules and official programmes." />
+    <meta name="twitter:image" content="https://apsgnigeria.org/assets/images/og-image.jpg" />
+    <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any" />
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link rel="stylesheet" href="/assets/css/tailwind-static.css" />
+    <link rel="stylesheet" href="/components/navbar.css" />
+    <link rel="stylesheet" href="/components/footer.css" />
+    <link rel="stylesheet" href="/assets/css/deployment-polish.css" />
+    <style id="apsg-events-premium-enhancement">
+
+      :root {
+        --apsg-deep: #05351f;
+        --apsg-forest: #082716;
+        --apsg-green: #0f7a3d;
+        --apsg-emerald: #0f766e;
+        --apsg-gold: #d6a92b;
+        --apsg-gold-2: #f4d36b;
+        --apsg-cream: #fffaf0;
+        --apsg-mist: #f6fbf7;
+        --apsg-ink: #07140e;
+        --apsg-muted: #64746a;
+        --apsg-ring: rgba(214, 169, 43, 0.28);
+        --apsg-shadow: 0 28px 90px rgba(5, 53, 31, 0.14);
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--apsg-ink);
+        background:
+          radial-gradient(circle at 0 0, rgba(214,169,43,.16), transparent 30rem),
+          radial-gradient(circle at 100% 20%, rgba(15,118,110,.11), transparent 28rem),
+          linear-gradient(180deg, #f8fbf7 0%, #fffaf0 44%, #f5fbf7 100%);
+      }
+      .display-font { font-family: "Playfair Display", Georgia, serif; }
+      .skip-link {
+        position: absolute;
+        left: 1rem;
+        top: -5rem;
+        z-index: 9999;
+        border-radius: 999px;
+        background: var(--apsg-gold);
+        color: var(--apsg-deep);
+        padding: .75rem 1rem;
+        font-weight: 950;
+        transition: top .2s ease;
+      }
+      .skip-link:focus { top: 1rem; outline: 3px solid #fff; }
+      .event-hero {
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        background:
+          linear-gradient(115deg, rgba(3,23,13,.97), rgba(5,53,31,.96) 48%, rgba(15,118,110,.88)),
+          url('/assets/images/hero/hero3.jpg') center/cover no-repeat;
+      }
+      .event-hero:before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        opacity: .17;
+        background-image:
+          linear-gradient(rgba(255,255,255,.13) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px);
+        background-size: 46px 46px;
+        mask-image: linear-gradient(180deg, #000, transparent 95%);
+      }
+      .event-hero:after {
+        content: "";
+        position: absolute;
+        width: 34rem;
+        height: 34rem;
+        right: -13rem;
+        top: -13rem;
+        border-radius: 999px;
+        background: radial-gradient(circle, rgba(214,169,43,.32), transparent 68%);
+        filter: blur(2px);
+        z-index: -1;
+      }
+      .luxury-orb {
+        position: absolute;
+        border-radius: 999px;
+        background: rgba(214,169,43,.16);
+        filter: blur(18px);
+        pointer-events: none;
+      }
+      .event-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: .55rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,.18);
+        background: rgba(255,255,255,.11);
+        color: #fff;
+        padding: .55rem .88rem;
+        font-size: .72rem;
+        font-weight: 950;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        box-shadow: 0 15px 45px rgba(0,0,0,.18);
+        backdrop-filter: blur(14px);
+      }
+      .premium-btn, .apsg-content-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .55rem;
+        min-height: 2.85rem;
+        border-radius: 999px;
+        padding: .78rem 1.05rem;
+        font-weight: 950;
+        text-decoration: none;
+        transition: transform .22s ease, box-shadow .22s ease, background .22s ease;
+      }
+      .premium-btn:focus-visible, .apsg-content-btn:focus-visible, button:focus-visible, a:focus-visible, input:focus-visible {
+        outline: 3px solid var(--apsg-ring);
+        outline-offset: 3px;
+      }
+      .premium-btn:hover, .apsg-content-btn:hover { transform: translateY(-2px); box-shadow: 0 18px 42px rgba(5,53,31,.16); }
+      .btn-gold { background: linear-gradient(135deg, var(--apsg-gold-2), var(--apsg-gold)); color: #052514; box-shadow: 0 15px 38px rgba(214,169,43,.26); }
+      .btn-white { background: rgba(255,255,255,.92); color: var(--apsg-deep); border: 1px solid rgba(214,169,43,.26); }
+      .btn-green, .apsg-content-btn { background: linear-gradient(135deg, var(--apsg-green), var(--apsg-emerald)); color: #fff; }
+      .apsg-content-btn.secondary { background: #fff; color: var(--apsg-deep); border: 1px solid rgba(5,53,31,.12); }
+      .apsg-stat {
+        position: relative;
+        overflow: hidden;
+        border-radius: 1.35rem;
+        background: rgba(255,255,255,.13);
+        border: 1px solid rgba(255,255,255,.2);
+        backdrop-filter: blur(16px);
+        box-shadow: 0 18px 54px rgba(0,0,0,.13);
+      }
+      .apsg-stat:before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(214,169,43,.18), transparent 48%);
+        pointer-events: none;
+      }
+      .apsg-stat > * { position: relative; }
+      .premium-panel {
+        border-radius: 2.25rem;
+        background: rgba(255,255,255,.84);
+        border: 1px solid rgba(214,169,43,.24);
+        box-shadow: var(--apsg-shadow);
+        backdrop-filter: blur(18px);
+      }
+      .command-card {
+        border-radius: 1.6rem;
+        border: 1px solid rgba(5,53,31,.09);
+        background: linear-gradient(180deg, #fff 0%, #fffdf7 100%);
+        box-shadow: 0 14px 42px rgba(5,53,31,.08);
+      }
+      .event-search {
+        width: 100%;
+        min-height: 3rem;
+        border-radius: 999px;
+        border: 1px solid rgba(5,53,31,.12);
+        background: #fff;
+        padding: .8rem 1rem .8rem 2.8rem;
+        color: var(--apsg-deep);
+        font-weight: 800;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.9);
+      }
+      .event-filter-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .42rem;
+        border-radius: 999px;
+        border: 1px solid rgba(5,53,31,.11);
+        background: #fff;
+        color: var(--apsg-deep);
+        padding: .68rem .9rem;
+        font-size: .78rem;
+        font-weight: 950;
+        white-space: nowrap;
+        transition: .22s ease;
+      }
+      .event-filter-btn:hover, .event-filter-btn.is-active {
+        background: linear-gradient(135deg, var(--apsg-gold-2), var(--apsg-gold));
+        border-color: rgba(214,169,43,.46);
+        color: #052514;
+        box-shadow: 0 14px 30px rgba(214,169,43,.2);
+      }
+      .apsg-content-state {
+        text-align: center;
+        border-radius: 1.7rem;
+        border: 1px dashed rgba(5,53,31,.18);
+        background: rgba(255,255,255,.9);
+        padding: 3rem 1.5rem;
+        box-shadow: 0 18px 50px rgba(5,53,31,.08);
+      }
+      .apsg-content-state i { font-size: 2.1rem; color: var(--apsg-gold); }
+      .apsg-content-state h3 { margin: .9rem 0 .4rem; color: var(--apsg-deep); font-weight: 950; font-size: 1.4rem; }
+      .apsg-content-state p { color: var(--apsg-muted); }
+      .apsg-loader { display: inline-block; width: 2rem; height: 2rem; border: 3px solid rgba(214,169,43,.26); border-top-color: var(--apsg-gold); border-radius: 999px; animation: apsgSpin .8s linear infinite; }
+      @keyframes apsgSpin { to { transform: rotate(360deg); } }
+      .apsg-spotlight-card {
+        overflow: hidden;
+        border-radius: 2.25rem;
+        background: #fff;
+        border: 1px solid rgba(5,53,31,.1);
+        box-shadow: 0 28px 88px rgba(5,53,31,.13);
+        display: grid;
+        grid-template-columns: .9fr 1.1fr;
+        margin-bottom: 1.35rem;
+      }
+      .apsg-spotlight-image {
+        min-height: 28rem;
+        position: relative;
+        background:
+          radial-gradient(circle at 25% 18%, rgba(214,169,43,.2), transparent 18rem),
+          linear-gradient(135deg, var(--apsg-deep), var(--apsg-emerald));
+        overflow: hidden;
+      }
+      .apsg-spotlight-image img, .apsg-card-image img, .content-detail-hero img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+      }
+      .apsg-spotlight-image.no-image:after, .apsg-card-image.no-image:after, .content-detail-hero.no-image:after {
+        content: "APSG";
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        color: rgba(255,255,255,.15);
+        font-size: clamp(3.4rem, 8vw, 6rem);
+        font-weight: 950;
+        letter-spacing: .08em;
+      }
+      .apsg-spotlight-body { padding: clamp(1.35rem, 4vw, 2.45rem); }
+      .apsg-section-kicker, .section-kicker, .event-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: .48rem;
+        color: var(--apsg-green);
+        font-size: .72rem;
+        text-transform: uppercase;
+        letter-spacing: .18em;
+        font-weight: 950;
+      }
+      .apsg-spotlight-body h2, .event-section-head h2, .apsg-section-head h2 {
+        font-family: "Playfair Display", Georgia, serif;
+        color: var(--apsg-deep);
+        font-weight: 950;
+        line-height: .98;
+      }
+      .apsg-spotlight-body h2 { margin-top: .65rem; font-size: clamp(2.1rem, 4.6vw, 3.9rem); }
+      .apsg-spotlight-body p { color: var(--apsg-muted); line-height: 1.78; margin-top: 1rem; }
+      .apsg-class-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .7rem;
+        margin: 1.2rem 0 2rem;
+      }
+      .apsg-class-tabs a {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        border-radius: 999px;
+        background: #fff;
+        border: 1px solid rgba(15,138,75,.12);
+        box-shadow: 0 10px 25px rgba(5,53,31,.06);
+        padding: .75rem 1rem;
+        font-weight: 950;
+        color: var(--apsg-deep);
+        text-decoration: none;
+      }
+      .apsg-class-tabs a[hidden] { display: none !important; }
+      .apsg-class-tabs span { background: rgba(214,169,43,.22); border-radius: 999px; padding: .12rem .48rem; }
+      .apsg-board-section { scroll-margin-top: 7rem; margin-top: 2.35rem; }
+      .apsg-section-head, .event-section-head { display: flex; justify-content: space-between; align-items: end; gap: 1rem; margin-bottom: 1rem; }
+      .apsg-section-head h2, .event-section-head h2 { font-size: clamp(2rem, 4vw, 3.25rem); }
+      .apsg-section-head p, .event-section-head p { color: #66756c; margin-top: .35rem; }
+      .apsg-count-chip, .event-count-chip { border-radius: 999px; background: #fff7d6; color: #8a6616; padding: .6rem .9rem; font-weight: 950; white-space: nowrap; }
+      .apsg-content-grid.classified, .event-board-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.05rem; }
+      .apsg-content-card.classified, .event-board-card {
+        overflow: hidden;
+        border-radius: 1.65rem;
+        background: linear-gradient(180deg, #fff 0%, #fffdf7 100%);
+        border: 1px solid rgba(5,53,31,.1);
+        box-shadow: 0 18px 52px rgba(5,53,31,.085);
+        transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease;
+      }
+      .apsg-content-card.classified:hover, .event-board-card:hover { transform: translateY(-5px); box-shadow: 0 25px 68px rgba(5,53,31,.14); border-color: rgba(214,169,43,.38); }
+      .apsg-card-image, .event-card-image {
+        height: 15.8rem;
+        position: relative;
+        display: block;
+        background:
+          radial-gradient(circle at 15% 15%, rgba(214,169,43,.2), transparent 14rem),
+          linear-gradient(135deg, var(--apsg-deep), var(--apsg-emerald));
+        overflow: hidden;
+      }
+      .apsg-content-body, .event-card-body { padding: 1.25rem; }
+      .apsg-content-meta, .apsg-meta-grid, .event-meta-grid { display: flex; flex-wrap: wrap; gap: .45rem; margin: .85rem 0; }
+      .apsg-content-meta span, .apsg-meta-grid span, .event-meta-grid span {
+        display: inline-flex;
+        align-items: center;
+        gap: .38rem;
+        border-radius: 999px;
+        background: #eef8f2;
+        color: #315041;
+        padding: .42rem .68rem;
+        font-size: .73rem;
+        font-weight: 850;
+      }
+      .apsg-content-body h3, .event-card-body h3 { font-family: "Playfair Display", Georgia, serif; font-size: 1.58rem; line-height: 1.05; color: var(--apsg-deep); font-weight: 950; }
+      .apsg-content-body h3 a { color: inherit; text-decoration: none; }
+      .apsg-content-body p, .event-card-body p { margin-top: .65rem; color: var(--apsg-muted); line-height: 1.68; }
+      .apsg-content-actions { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; margin-top: 1rem; }
+      .apsg-featured-badge { display: inline-flex; align-items: center; gap: .42rem; border-radius: 999px; background: #fff7d6; color: #8a6616; padding: .68rem .9rem; font-size: .8rem; font-weight: 950; }
+      .apsg-status-pill, .event-status-pill {
+        position: absolute;
+        left: 1rem;
+        top: 1rem;
+        z-index: 2;
+        display: inline-flex;
+        align-items: center;
+        gap: .42rem;
+        border-radius: 999px;
+        padding: .5rem .8rem;
+        font-size: .7rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        color: #052514;
+        background: linear-gradient(135deg, var(--apsg-gold-2), var(--apsg-gold));
+        box-shadow: 0 10px 26px rgba(0,0,0,.13);
+      }
+      .apsg-status-pill.static { position: static; }
+      .apsg-status-pill.live { background: linear-gradient(135deg, #dc2626, #ef4444); color: #fff; box-shadow: 0 0 0 5px rgba(239,68,68,.14); }
+      .apsg-status-pill.upcoming { background: linear-gradient(135deg, var(--apsg-gold-2), var(--apsg-gold)); color: #052514; }
+      .apsg-status-pill.recent { background: linear-gradient(135deg, #bbf7d0, #22c55e); color: #052514; }
+      .apsg-status-pill.past { background: linear-gradient(135deg, #e2e8f0, #94a3b8); color: #102018; }
+      .event-section-hidden { display: none !important; }
+      .event-no-results {
+        display: none;
+        margin-top: 1.3rem;
+        border-radius: 1.6rem;
+        border: 1px dashed rgba(5,53,31,.2);
+        background: rgba(255,255,255,.88);
+        padding: 2.3rem 1.4rem;
+        text-align: center;
+        box-shadow: 0 18px 50px rgba(5,53,31,.075);
+      }
+      .event-no-results.is-visible { display: block; }
+      .event-no-results i { color: var(--apsg-gold); font-size: 2rem; }
+      .content-detail-card {
+        overflow: hidden;
+        border-radius: 2.2rem;
+        background: #fff;
+        border: 1px solid rgba(5,53,31,.1);
+        box-shadow: 0 30px 90px rgba(5,53,31,.14);
+      }
+      .content-detail-hero {
+        position: relative;
+        min-height: 31rem;
+        background:
+          radial-gradient(circle at 18% 12%, rgba(214,169,43,.22), transparent 18rem),
+          linear-gradient(135deg, var(--apsg-deep), var(--apsg-emerald));
+        overflow: hidden;
+      }
+      .content-detail-hero:before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(0deg, rgba(5,53,31,.95), rgba(5,53,31,.18) 62%, rgba(5,53,31,.55));
+      }
+      .content-detail-overlay { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: clamp(1.2rem, 4vw, 2.3rem); color: #fff; }
+      .content-detail-overlay h1 { font-family: "Playfair Display", Georgia, serif; font-size: clamp(2.35rem, 6vw, 5.1rem); font-weight: 950; line-height: .95; margin-top: 1rem; }
+      .content-detail-overlay p { max-width: 54rem; margin-top: 1rem; color: rgba(255,255,255,.82); font-size: 1.08rem; line-height: 1.72; }
+      .content-back-link { display: inline-flex; align-items: center; gap: .5rem; border-radius: 999px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); color: #fff; text-decoration: none; padding: .6rem .85rem; font-weight: 950; backdrop-filter: blur(12px); }
+      .content-detail-body { padding: clamp(1.2rem, 4vw, 2.25rem); }
+      .content-detail-text { color: #34443a; font-size: 1.03rem; line-height: 1.86; }
+      .content-detail-text p { margin: 0 0 1rem; }
+      .detail-command-panel {
+        border-radius: 1.6rem;
+        border: 1px solid rgba(214,169,43,.24);
+        background: linear-gradient(135deg, #fffaf0, #fff);
+        box-shadow: 0 15px 48px rgba(5,53,31,.075);
+      }
+      @media (max-width: 1000px) {
+        .apsg-spotlight-card { grid-template-columns: 1fr; }
+        .apsg-content-grid.classified, .event-board-grid { grid-template-columns: 1fr 1fr; }
+        .apsg-spotlight-image { min-height: 22rem; }
+      }
+      @media (max-width: 720px) {
+        .event-hero { text-align: center; }
+        .event-hero .premium-btn { width: 100%; }
+        .apsg-content-grid.classified, .event-board-grid { grid-template-columns: 1fr; }
+        .apsg-section-head, .event-section-head { align-items: flex-start; flex-direction: column; }
+        .apsg-card-image, .event-card-image { height: 14rem; }
+        .content-detail-hero { min-height: 27rem; }
+        .apsg-class-tabs, .event-filter-scroll { flex-wrap: nowrap; overflow-x: auto; padding-bottom: .35rem; scroll-snap-type: x proximity; }
+        .apsg-class-tabs a, .event-filter-btn { flex: 0 0 auto; scroll-snap-align: start; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+      }
+      @media print {
+        #navbar, #footer, .no-print, .event-utility-bar { display: none !important; }
+        body { background: #fff !important; }
+        .content-detail-card, .apsg-content-card, .premium-panel { box-shadow: none !important; }
+      }
+
+    </style>
+    <script type="application/ld+json" data-apsg-static-schema>
+      [
+        {"@context":"https://schema.org","@type":"Organization","name":"APC Progressive Support Group (APSG)","alternateName":"APSG Nigeria","url":"https://apsgnigeria.org/","logo":"https://apsgnigeria.org/assets/images/logo/apsg1.png","sameAs":[]},
+        {"@context":"https://schema.org","@type":"CollectionPage","name":"APSG Events","description":"Explore APSG public events, chapter inaugurations, mobilisation schedules and official programmes.","url":"https://apsgnigeria.org/pages/events.html","isPartOf":{"@type":"WebSite","name":"APSG Nigeria","url":"https://apsgnigeria.org/"}},
+        {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://apsgnigeria.org/"},{"@type":"ListItem","position":2,"name":"Events","item":"https://apsgnigeria.org/pages/events.html"}]}
+      ]
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/assets/js/apsg-analytics-tracker.js"></script>
+  </head>
+  <body class="min-h-screen flex flex-col overflow-x-hidden">
+    <a class="skip-link" href="#events-board">Skip to events</a>
+    <div id="navbar" role="navigation" aria-label="Main Navigation"></div>
+    <main class="flex-grow">
+      <section class="event-hero px-4 pt-32 pb-18 md:pt-40 md:pb-24 text-white">
+        <span class="luxury-orb" style="left:-10rem;bottom:-12rem;width:28rem;height:28rem"></span>
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-[1.05fr_.95fr] gap-8 items-center relative z-10">
+          <div>
+            <span class="event-chip"><i class="fas fa-calendar-check text-[#d6a92b]"></i> APSG Events Command Centre</span>
+            <h1 class="display-font mt-6 text-4xl md:text-6xl lg:text-7xl font-black leading-[.94] tracking-tight">Public Events & Mobilisation Calendar</h1>
+            <p class="mt-5 max-w-2xl text-white/82 text-base md:text-xl leading-relaxed">Explore APSG public events, chapter inaugurations, mobilisation schedules, civic engagements and official programmes published from the admin dashboard.</p>
+            <div class="mt-7 flex flex-wrap gap-3 no-print">
+              <a href="#events-board" class="premium-btn btn-gold"><i class="fas fa-calendar-days"></i> View Events</a>
+              <a href="/pages/rsvp.html" class="premium-btn btn-white"><i class="fas fa-user-check"></i> RSVP</a>
+              <button type="button" id="copyEventsLink" class="premium-btn btn-green"><i class="fas fa-link"></i> Copy Page Link</button>
+            </div>
+          </div>
+          <aside class="premium-panel p-5 md:p-6 text-[#07140e]">
+            <div class="flex items-center gap-4 rounded-[1.6rem] border border-white/40 bg-white/70 p-4">
+              <div class="grid h-20 w-20 shrink-0 place-items-center rounded-full bg-[#fff7d6] border border-[#d6a92b]/35 shadow-lg">
+                <img src="/assets/images/logo/apsg1.png" alt="APSG Logo" class="h-14 w-14 object-contain" onerror="this.style.display='none'" width="96" height="96" decoding="async">
+              </div>
+              <div>
+                <p class="text-[10px] uppercase tracking-[.25em] text-[#8a6616] font-black">Live Dashboard Sync</p>
+                <h2 class="mt-1 text-2xl font-black text-[#05351f]">Events Board</h2>
+                <p class="mt-1 text-sm text-[#64746a]">Sections without events are hidden automatically.</p>
+              </div>
+            </div>
+            <div class="mt-5 grid grid-cols-3 gap-3">
+              <div class="rounded-3xl bg-[#05351f] text-white p-4 text-center">
+                <p class="text-[10px] uppercase tracking-widest text-white/55 font-black">Total</p>
+                <p class="text-3xl font-black text-[#d6a92b]" data-content-stat="total">0</p>
+              </div>
+              <div class="rounded-3xl bg-[#05351f] text-white p-4 text-center">
+                <p class="text-[10px] uppercase tracking-widest text-white/55 font-black">Live</p>
+                <p class="text-3xl font-black text-[#d6a92b]" data-content-stat="featured">0</p>
+              </div>
+              <div class="rounded-3xl bg-[#05351f] text-white p-4 text-center">
+                <p class="text-[10px] uppercase tracking-widest text-white/55 font-black">Upcoming</p>
+                <p class="text-3xl font-black text-[#d6a92b]" data-content-stat="upcoming">0</p>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="relative z-20 -mt-10 px-4 no-print">
+        <div class="max-w-7xl mx-auto premium-panel p-4 md:p-5 event-utility-bar">
+          <div class="grid lg:grid-cols-[1fr_auto] gap-4 items-center">
+            <div class="relative">
+              <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-[#d6a92b]"></i>
+              <label for="eventSearch" class="sr-only">Search events</label>
+              <input id="eventSearch" class="event-search" type="search" placeholder="Search event title, category, venue, date or description..." autocomplete="off" />
+            </div>
+            <div class="event-filter-scroll flex flex-wrap gap-2" role="group" aria-label="Event filters">
+              <button class="event-filter-btn is-active" type="button" data-event-filter="all"><i class="fas fa-layer-group"></i> All</button>
+              <button class="event-filter-btn" type="button" data-event-filter="live"><i class="fas fa-signal"></i> Live</button>
+              <button class="event-filter-btn" type="button" data-event-filter="upcoming"><i class="fas fa-calendar-plus"></i> Upcoming</button>
+              <button class="event-filter-btn" type="button" data-event-filter="recent"><i class="fas fa-clock-rotate-left"></i> Recent</button>
+              <button class="event-filter-btn" type="button" data-event-filter="past"><i class="fas fa-box-archive"></i> Past</button>
+            </div>
+          </div>
+          <div class="mt-3 flex flex-wrap items-center justify-between gap-3 text-sm text-[#64746a]">
+            <p id="eventResultSummary" class="font-bold">Loading published events...</p>
+            <p class="font-bold text-[#05351f]"><i class="fas fa-shield-halved text-[#d6a92b]"></i> Admin controlled public schedule</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="events-board" class="px-4 py-14 md:py-20">
+        <div class="max-w-7xl mx-auto">
+          <div class="mb-7 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+              <span class="section-kicker"><i class="fas fa-landmark"></i> Official Event Register</span>
+              <h2 class="display-font mt-2 text-3xl md:text-5xl font-black text-[#05351f] tracking-tight">Published APSG Events</h2>
+              <p class="mt-2 max-w-2xl text-[#64746a] leading-relaxed">Only sections with actual published events remain visible. Empty live, upcoming, recent or past sections are hidden automatically for a clean public experience.</p>
+            </div>
+            <a href="/admin/admin-event.html" class="premium-btn btn-white no-print"><i class="fas fa-lock"></i> Admin Publishing Desk</a>
+          </div>
+          <div data-public-content="event" aria-live="polite"></div>
+          <div id="eventNoResults" class="event-no-results" role="status" aria-live="polite">
+            <i class="fas fa-magnifying-glass"></i>
+            <h3 class="mt-3 text-xl font-black text-[#05351f]">No matching event found</h3>
+            <p class="mt-1 text-[#64746a]">Try another search term or reset the filters to view all published events.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div id="footer"></div>
+    <script src="/assets/js/supabase-clients.js"></script>
+    <script src="/assets/js/apsg-settings.js"></script>
+    <script src="/assets/js/public-content.js"></script>
+    <script type="module" src="/components/navbar.js"></script>
+    <script type="module" src="/components/footer.js"></script>
+    <script src="/assets/js/deployment-polish.js" defer></script>
+    <script id="apsg-events-page-enhancer">
+      (function () {
+        const mount = document.querySelector('[data-public-content="event"]');
+        const search = document.getElementById('eventSearch');
+        const filterButtons = Array.from(document.querySelectorAll('[data-event-filter]'));
+        const noResults = document.getElementById('eventNoResults');
+        const resultSummary = document.getElementById('eventResultSummary');
+        let activeFilter = 'all';
+
+        function showToast(message) {
+          const toast = document.createElement('div');
+          toast.textContent = message;
+          toast.style.cssText = 'position:fixed;left:50%;bottom:1.25rem;transform:translateX(-50%);z-index:9999;background:#05351f;color:#fff;border:1px solid rgba(214,169,43,.4);border-radius:999px;padding:.8rem 1rem;font-weight:950;box-shadow:0 20px 50px rgba(5,53,31,.25)';
+          document.body.appendChild(toast);
+          setTimeout(() => toast.remove(), 1700);
+        }
+
+        function groupOf(card) {
+          const section = card.closest('.apsg-board-section');
+          if (!section) return 'all';
+          if (section.classList.contains('live') || section.id.includes('live')) return 'live';
+          if (section.classList.contains('upcoming') || section.id.includes('upcoming')) return 'upcoming';
+          if (section.classList.contains('recent') || section.id.includes('recent')) return 'recent';
+          if (section.classList.contains('past') || section.id.includes('past')) return 'past';
+          return 'all';
+        }
+
+        function enhanceImages() {
+          document.querySelectorAll('.apsg-card-image img,.apsg-spotlight-image img,.content-detail-hero img').forEach((img, index) => {
+            img.loading = index < 2 ? 'eager' : 'lazy';
+            img.decoding = 'async';
+            if (!img.getAttribute('width')) img.setAttribute('width', index < 2 ? '980' : '640');
+            if (!img.getAttribute('height')) img.setAttribute('height', index < 2 ? '720' : '430');
+            img.addEventListener('error', () => {
+              const wrap = img.closest('.apsg-card-image,.apsg-spotlight-image,.content-detail-hero');
+              if (wrap) wrap.classList.add('no-image');
+              img.remove();
+            }, { once: true });
+          });
+        }
+
+        function hideEmptyEventSections() {
+          if (!mount) return;
+          const sections = Array.from(mount.querySelectorAll('.apsg-board-section'));
+          sections.forEach(section => {
+            const totalCards = section.querySelectorAll('.apsg-content-card.classified,.event-board-card').length;
+            const hasActualEvents = totalCards > 0;
+            section.classList.toggle('event-section-hidden', !hasActualEvents);
+            const tab = mount.querySelector(`.apsg-class-tabs a[href="#${section.id}"]`);
+            if (tab) tab.hidden = !hasActualEvents;
+          });
+          const tabs = mount.querySelector('.apsg-class-tabs');
+          if (tabs) {
+            const visibleTabs = Array.from(tabs.querySelectorAll('a')).filter(a => !a.hidden).length;
+            tabs.hidden = visibleTabs === 0;
+          }
+        }
+
+        function applyFilter() {
+          if (!mount) return;
+          const q = (search?.value || '').trim().toLowerCase();
+          const cards = Array.from(mount.querySelectorAll('.apsg-content-card.classified,.event-board-card'));
+          let visible = 0;
+          cards.forEach(card => {
+            const haystack = card.textContent.toLowerCase();
+            const cardGroup = groupOf(card);
+            const okSearch = !q || haystack.includes(q);
+            const okFilter = activeFilter === 'all' || cardGroup === activeFilter;
+            const show = okSearch && okFilter;
+            card.style.display = show ? '' : 'none';
+            if (show) visible += 1;
+          });
+          Array.from(mount.querySelectorAll('.apsg-board-section')).forEach(section => {
+            const hasCards = section.querySelectorAll('.apsg-content-card.classified,.event-board-card').length > 0;
+            const visibleCards = Array.from(section.querySelectorAll('.apsg-content-card.classified,.event-board-card')).some(card => card.style.display !== 'none');
+            section.classList.toggle('event-section-hidden', !hasCards || !visibleCards);
+          });
+          if (noResults) noResults.classList.toggle('is-visible', cards.length > 0 && visible === 0);
+          if (resultSummary) resultSummary.textContent = cards.length ? `Showing ${visible} of ${cards.length} published event${cards.length === 1 ? '' : 's'}` : 'No published events yet.';
+          enhanceImages();
+        }
+
+        filterButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            activeFilter = button.dataset.eventFilter || 'all';
+            filterButtons.forEach(btn => btn.classList.toggle('is-active', btn === button));
+            applyFilter();
+          });
+        });
+        search?.addEventListener('input', applyFilter);
+        document.getElementById('copyEventsLink')?.addEventListener('click', () => {
+          const text = location.href;
+          if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => showToast('Events page link copied'));
+          else showToast('Copy link: ' + text);
+        });
+
+        function refresh() {
+          hideEmptyEventSections();
+          applyFilter();
+        }
+        if (mount) {
+          const observer = new MutationObserver(() => {
+            clearTimeout(window.__apsgEventsRefresh);
+            window.__apsgEventsRefresh = setTimeout(refresh, 80);
+          });
+          observer.observe(mount, { childList: true, subtree: true });
+        }
+        document.addEventListener('DOMContentLoaded', () => setTimeout(refresh, 250));
+        setTimeout(refresh, 900);
+        setTimeout(refresh, 1800);
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,2447 @@
+<!doctype html>
+<html lang="en">
+  <head>
+  <meta name="robots" content="noindex,nofollow,noarchive">
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#05351f" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta
+      name="description"
+      content="Unified APSG member details page for admin dossiers and verified member portal profiles."
+    />
+    <meta property="og:title" content="APSG Member Details" />
+    <meta
+      property="og:description"
+      content="Official APSG member details, verification documents, profile receipt and admin dossier tools."
+    />
+    <meta property="og:type" content="website" />
+    <title>Member Details | APSG Nigeria</title>
+
+    <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any" />
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+<link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+    <link rel="stylesheet" href="/components/footer.css" />
+    <link rel="stylesheet" href="/assets/css/tailwind-static.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "system-ui", "sans-serif"],
+              display: ["Playfair Display", "Georgia", "serif"],
+            },
+            colors: {
+              apsgDeep: "#05351f",
+              apsgGreen: "#0f7a3d",
+              apsgEmerald: "#0f766e",
+              apsgGold: "#d8ad34",
+              apsgCream: "#fffaf0",
+              apsgInk: "#07140e",
+            },
+            boxShadow: {
+              luxury: "0 28px 90px rgba(5,53,31,.18)",
+              gold: "0 16px 40px rgba(216,173,52,.22)",
+              card: "0 18px 50px rgba(5,53,31,.10)",
+              soft: "0 12px 30px rgba(5,53,31,.08)",
+            },
+          },
+        },
+      };
+    </script>
+    <script>
+      (function () {
+        const p = new URLSearchParams(window.location.search);
+        document.documentElement.classList.add(
+          p.get("id") ? "admin-boot" : "member-boot",
+        );
+      })();
+    </script>
+    <style>
+
+      :root{
+        --deep:#05351f;
+        --deep-2:#031b0f;
+        --green:#0f7a3d;
+        --emerald:#0f766e;
+        --gold:#d8ad34;
+        --gold-soft:#ffe7a3;
+        --cream:#fffaf0;
+        --paper:#ffffff;
+        --ink:#07140e;
+        --muted:#64746a;
+        --danger:#991b1b;
+        --border:rgba(5,53,31,.10);
+        --gold-border:rgba(216,173,52,.28);
+        --shadow-card:0 18px 50px rgba(5,53,31,.10);
+        --shadow-luxury:0 28px 90px rgba(5,53,31,.18);
+        --radius-xl:1.25rem;
+        --radius-2xl:1.65rem;
+      }
+      *{box-sizing:border-box}
+      html{min-height:100%;scroll-behavior:smooth}
+      body{
+        margin:0;
+        color:var(--ink);
+        font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        background:
+          radial-gradient(circle at 96% 0,rgba(216,173,52,.15),transparent 29rem),
+          radial-gradient(circle at 0 9%,rgba(15,122,61,.12),transparent 32rem),
+          linear-gradient(180deg,#f8fbf7 0%,#eef6ef 100%);
+        overflow-x:hidden;
+      }
+      a{text-decoration:none}
+      button,input,textarea{font:inherit}
+      button{cursor:pointer}
+      img{display:block;max-width:100%}
+      .display-font{font-family:"Playfair Display",Georgia,serif}
+      .hidden{display:none!important}
+      .portal-offset{max-width:1180px!important}
+      .print-seal{display:none}
+      .admin-sidebar{
+        background:linear-gradient(180deg,#031b0f 0%,#052414 58%,#03140b 100%);
+        color:#fff;
+        border-right:1px solid rgba(255,255,255,.10);
+        box-shadow:0 22px 70px rgba(0,0,0,.20);
+      }
+      .admin-sidebar.open{transform:translateX(0)!important}
+      .sidebar-link{
+        display:flex;align-items:center;gap:.62rem;min-height:2.45rem;
+        padding:.62rem .76rem;border-radius:1rem;color:rgba(255,255,255,.84)!important;
+        font-size:.76rem;font-weight:880;line-height:1;text-decoration:none!important;
+        transition:background .18s ease,color .18s ease,transform .18s ease;
+      }
+      .sidebar-link:hover,.sidebar-link.active,.sidebar-link:focus-visible{
+        background:rgba(216,173,52,.15);color:#ffe7a3!important;transform:translateX(2px);outline:0;
+      }
+      .sidebar-link.danger-link{color:#fecaca!important;background:rgba(239,68,68,.10)}
+      .sidebar-link.danger-link:hover,.sidebar-link.danger-link:focus-visible{background:rgba(239,68,68,.18);color:#fee2e2!important}
+      .sidebar-heading{margin:.85rem .35rem .35rem;color:rgba(255,255,255,.42);font-size:.56rem;font-weight:950;letter-spacing:.28em;text-transform:uppercase}
+      .role-chip{margin-left:auto;padding:.16rem .38rem;border-radius:999px;background:rgba(216,173,52,.14);color:#ffe7a3;font-size:.5rem;font-weight:950;text-transform:uppercase;letter-spacing:.12em;white-space:nowrap}
+      .role-chip.editor{background:rgba(20,168,97,.13);color:#abf5ce}
+      .role-level{display:grid;place-items:center;min-height:1.45rem;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);font-size:.52rem;font-weight:950;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.08em}
+      .role-level.active{border-color:rgba(216,173,52,.38);background:rgba(216,173,52,.18);color:#ffe7a3}
+      .pulse-dot{width:.45rem;height:.45rem;border-radius:999px;background:#10b981;box-shadow:0 0 0 5px rgba(16,185,129,.15)}
+      .sidebar-brand{position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.10);padding:1rem}
+      .sidebar-brand::after{content:"";position:absolute;right:-3rem;top:-3rem;width:8rem;height:8rem;border-radius:999px;background:rgba(216,173,52,.20);filter:blur(28px);pointer-events:none}
+      .brand-link{position:relative;z-index:1;display:flex;align-items:center;gap:.75rem;color:#fff!important;text-decoration:none!important}
+      .brand-mark{display:grid;place-items:center;width:2.8rem;height:2.8rem;border:1px solid rgba(216,173,52,.32);border-radius:1rem;background:rgba(255,255,255,.10);box-shadow:0 14px 34px rgba(0,0,0,.18)}
+      .brand-mark img{width:2rem;height:2rem;object-fit:contain}
+      .brand-title{display:block;font-size:1rem;font-weight:950;line-height:1}
+      .brand-kicker{display:block;margin-top:.28rem;color:#ffe7a3;font-size:.58rem;font-weight:950;letter-spacing:.22em;text-transform:uppercase}
+      .apsg-role-card{border:1px solid rgba(216,173,52,.20);background:rgba(255,255,255,.06);border-radius:1rem;padding:.78rem;margin:.6rem .72rem}
+
+      .topbar{
+        border-bottom:1px solid rgba(5,53,31,.08);
+        background:rgba(255,255,255,.88);
+        backdrop-filter:blur(18px);
+        box-shadow:0 10px 28px rgba(5,53,31,.055);
+      }
+      #mobile-overlay{position:fixed;inset:0;z-index:45;background:rgba(0,0,0,.44);backdrop-filter:blur(5px)}
+      .lux-card,.member-card,.doc-card,.metric-tile{
+        border:1px solid rgba(216,173,52,.18);
+        background:rgba(255,255,255,.93);
+        box-shadow:var(--shadow-card);
+      }
+      .lux-card{border-radius:var(--radius-2xl);overflow:hidden}
+      .member-card,.doc-card,.metric-tile{border-radius:1.18rem}
+      .profile-hero{
+        overflow:hidden;
+        background:
+          radial-gradient(circle at right top,rgba(216,173,52,.30),transparent 18rem),
+          linear-gradient(135deg,#031b0f 0%,#05351f 44%,#0f7a3d 100%);
+        border:1px solid rgba(216,173,52,.20);
+        box-shadow:0 28px 88px rgba(5,53,31,.24);
+      }
+      .profile-hero::after{
+        content:"";position:absolute;right:-5.5rem;top:-7rem;width:18rem;height:18rem;border-radius:999px;
+        background:rgba(216,173,52,.22);filter:blur(38px);pointer-events:none;
+      }
+      .status-pill{
+        display:inline-flex;align-items:center;justify-content:center;gap:.42rem;
+        min-height:2.1rem;padding:.46rem .78rem;border-radius:999px;border:1px solid transparent;
+        font-size:.72rem;font-weight:950;line-height:1;text-transform:uppercase;letter-spacing:.045em;white-space:nowrap;
+      }
+      .status-good{background:rgba(16,185,129,.13);color:#047857;border-color:rgba(16,185,129,.22)}
+      .status-warn{background:#fff7ed;color:#b45309;border-color:#fed7aa}
+      .status-muted{background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);border-color:rgba(255,255,255,.16)}
+      .topbar .status-muted{background:rgba(5,53,31,.07);color:var(--deep);border-color:rgba(5,53,31,.10)}
+      .action-btn,.portal-btn{
+        display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:.45rem!important;
+        min-height:2.28rem!important;border:0;border-radius:999px!important;padding:.55rem .86rem!important;
+        font-size:.76rem!important;font-weight:950!important;line-height:1!important;text-decoration:none!important;
+        box-shadow:0 10px 26px rgba(5,53,31,.08)!important;transition:transform .18s ease,filter .18s ease,opacity .18s ease!important;
+      }
+      .action-btn:hover,.portal-btn:hover{transform:translateY(-1px);filter:brightness(1.03)}
+      .action-btn:disabled,.portal-btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+      .reg-number{
+        display:inline-flex;align-items:center;gap:.4rem;border:1px solid rgba(216,173,52,.32);border-radius:999px;
+        background:rgba(216,173,52,.14);color:#7a5a12;padding:.48rem .72rem;font-size:.76rem;font-weight:950;white-space:nowrap;
+      }
+      .profile-avatar-panel{
+        width:min(100%,14.4rem);display:grid;gap:.55rem;justify-items:center;
+        padding:.78rem;border:1px solid rgba(255,255,255,.14);border-radius:1.35rem;background:rgba(255,255,255,.09);backdrop-filter:blur(14px);
+      }
+      .profile-avatar-shell{
+        position:relative;display:grid;place-items:center;width:12.4rem;height:13.2rem;overflow:hidden;
+        border-radius:1.25rem;border:1px solid rgba(216,173,52,.34);background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,250,240,.06));
+        box-shadow:0 18px 48px rgba(0,0,0,.20);
+      }
+      .profile-avatar-shell img{width:100%;height:100%;object-fit:contain;object-position:center top;background:rgba(255,255,255,.06);z-index:2}
+      .profile-avatar-shell:not(.has-photo) img[src$="avatar-placeholder.png"]{object-fit:contain;padding:1.7rem;opacity:.82}
+      .profile-avatar-shell .avatar-fallback{position:absolute;inset:0;display:grid;place-items:center;color:rgba(255,231,163,.86);font-size:3rem;z-index:1}
+      .avatar-action{width:100%;background:#fff!important;color:var(--deep)!important;border:1px solid rgba(216,173,52,.25)!important}
+      .avatar-status{max-width:100%;margin:0;color:rgba(255,255,255,.70);font-size:.72rem;font-weight:750;text-align:center}
+      .detail-cell,.metric-tile{padding:.8rem;border-radius:1rem;background:linear-gradient(135deg,#fff,rgba(255,250,240,.58));border:1px solid rgba(5,53,31,.08)}
+      .detail-cell dt{margin:0;color:var(--muted);font-size:.62rem;font-weight:950;letter-spacing:.14em;text-transform:uppercase}
+      .detail-cell dd{margin:.18rem 0 0;color:var(--deep);font-size:.9rem;font-weight:900;word-break:break-word}
+      .metric-tile p{margin:0}
+      .progress-track{height:.76rem;border-radius:999px;background:#e8f2ec;overflow:hidden;border:1px solid rgba(5,53,31,.08)}
+      .progress-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#0f7a3d,#0f766e,#d8ad34);transition:width .35s ease}
+      .tier-badge{display:inline-flex;align-items:center;gap:.38rem;border:1px solid rgba(216,173,52,.24);background:rgba(216,173,52,.12);color:#73540c;border-radius:999px;padding:.4rem .65rem;font-size:.7rem;font-weight:950;white-space:nowrap}
+      .check-row{display:flex;align-items:center;justify-content:space-between;gap:.7rem;padding:.65rem;border:1px solid rgba(5,53,31,.08);border-radius:.9rem;background:#fff}
+      .check-row .label{display:block;color:var(--deep);font-weight:950;line-height:1.2}
+      .check-row .hint{display:block;margin-top:.12rem;color:var(--muted);font-size:.72rem;font-weight:700}
+      .audit-row{display:flex;align-items:flex-start;gap:.72rem;padding:.7rem;border:1px solid rgba(5,53,31,.08);border-radius:.95rem;background:#fff}
+      .audit-dot{display:grid;place-items:center;flex:0 0 auto;width:2.2rem;height:2.2rem;border-radius:.85rem;background:rgba(216,173,52,.14);color:#856312}
+      .memo-box{width:100%;min-height:8rem;border:1px solid rgba(5,53,31,.10);border-radius:1rem;background:#fff;padding:.78rem;font-weight:750;color:#102017;outline:0;resize:vertical}
+      .memo-box:focus{border-color:rgba(216,173,52,.65);box-shadow:0 0 0 4px rgba(216,173,52,.14)}
+      .doc-card{background:linear-gradient(135deg,#fff,rgba(255,250,240,.62))}
+      .upload-thumb{width:100%;height:13.5rem;border-radius:1.05rem;border:1px solid rgba(5,53,31,.10);background:#f6fbf7;object-fit:contain;object-position:center;cursor:pointer;padding:.25rem}
+      .upload-area{border:1px dashed rgba(216,173,52,.35);border-radius:1rem;background:rgba(216,173,52,.08);padding:.75rem}
+      .official-chip{display:inline-flex;align-items:center;gap:.42rem;border:1px solid rgba(216,173,52,.26);border-radius:999px;background:rgba(216,173,52,.12);color:#73540c;padding:.42rem .68rem;font-size:.68rem;font-weight:950;text-transform:uppercase;letter-spacing:.12em}
+      .account-vault{position:relative;overflow:hidden;border:1px solid rgba(216,173,52,.25);border-radius:1.35rem;background:linear-gradient(135deg,#031b0f,#05351f 52%,#0f7a3d);color:#fff;padding:1.05rem;box-shadow:0 24px 70px rgba(5,53,31,.22)}
+      .account-vault__shine{position:absolute;right:-4rem;top:-5rem;width:13rem;height:13rem;border-radius:999px;background:rgba(216,173,52,.22);filter:blur(30px)}
+      .account-vault__header{position:relative;z-index:1;display:flex;justify-content:space-between;gap:1rem;align-items:flex-start}
+      .account-vault__eyebrow{margin:0;color:var(--gold-soft);font-size:.66rem;font-weight:950;text-transform:uppercase;letter-spacing:.18em}
+      .account-vault__title{margin:.18rem 0 0;font-family:"Playfair Display",Georgia,serif;font-size:1.8rem;font-weight:950;line-height:1}
+      .account-vault__subtitle{margin:.35rem 0 0;color:rgba(255,255,255,.68);font-size:.82rem;font-weight:700;line-height:1.4}
+      .account-vault__icon{display:grid;place-items:center;width:3.1rem;height:3.1rem;border-radius:1rem;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);color:var(--gold-soft)}
+      .account-vault__grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem;margin-top:1rem}
+      .account-field{display:block;margin:0;border:1px solid rgba(255,255,255,.13);border-radius:1rem;background:rgba(255,255,255,.09);padding:.7rem}
+      .account-field__label{display:block;color:rgba(255,255,255,.58);font-size:.62rem;font-weight:950;text-transform:uppercase;letter-spacing:.14em}
+      .account-field__input{width:100%;margin-top:.2rem;border:0;background:transparent;color:#fff;font-size:1rem;font-weight:950;outline:0;padding:0}
+      .account-field__input[readonly]{color:rgba(255,255,255,.86)}
+      .account-field__input.is-editing{border-bottom:1px solid rgba(216,173,52,.55);padding-bottom:.2rem}
+      .account-vault__footer{position:relative;z-index:1;display:flex;justify-content:space-between;gap:.8rem;align-items:center;flex-wrap:wrap;margin-top:.9rem}
+      .account-vault__status{margin:0;color:rgba(255,255,255,.7);font-size:.76rem;font-weight:800}
+      .account-vault__status--success{color:#bbf7d0}.account-vault__status--error{color:#fecaca}.account-vault__status--saving{color:var(--gold-soft)}
+      .account-vault__actions{display:flex;gap:.5rem;flex-wrap:wrap}
+      .account-edit-btn,.account-save-btn{display:inline-flex;align-items:center;gap:.42rem;min-height:2.25rem;border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:.52rem .82rem;font-size:.74rem;font-weight:950}
+      .account-edit-btn{background:#fff;color:var(--deep)}.account-save-btn{background:var(--gold);color:var(--deep)}
+      .account-edit-btn:disabled,.account-save-btn:disabled{opacity:.5;cursor:not-allowed}
+      #previewFrame{width:100%;height:min(75vh,820px);border:0;background:#fff}
+      #previewImage{display:block;margin:auto;max-width:100%;max-height:75vh;object-fit:contain;transition:transform .18s ease;transform-origin:center center;background:#07140e}
+      .modal-content{border:1px solid rgba(216,173,52,.25)!important;border-radius:1.35rem!important;overflow:hidden;box-shadow:var(--shadow-luxury)!important}
+      .modal-body{min-height:50vh;background:#06150d;display:grid;place-items:center;overflow:auto}
+      .zoom-controls{position:absolute;right:1rem;bottom:1rem;display:flex;gap:.45rem;z-index:5}
+      .zoom-btn{display:grid;place-items:center;width:2.4rem;height:2.4rem;border:1px solid rgba(216,173,52,.28);border-radius:999px;background:#fff;color:var(--deep);box-shadow:0 12px 30px rgba(0,0,0,.18)}
+      .toast-copy{position:fixed;left:50%;bottom:1rem;z-index:2000;display:none;transform:translateX(-50%);font-weight:900}
+      .toast-copy.show{display:block}
+      .member-only,.admin-only{display:none!important}
+      body.member-mode .member-only{display:inline-flex!important}
+      body.member-mode section.member-only{display:block!important}
+      body.admin-mode .admin-only{display:inline-flex!important}
+      body.admin-mode .profile-avatar-panel.admin-only,body.admin-mode div.admin-only,body.admin-mode section.admin-only{display:block!important}
+      body.member-mode #adminShell,body.member-mode .admin-only{display:none!important}
+      body.member-mode .admin-main{margin-left:0!important}
+      body.member-mode #appShell{display:block}
+      @media(max-width:767px){
+        #adminShell{transform:translateX(-100%)}
+        .profile-avatar-panel{width:100%}.profile-avatar-shell{width:100%;height:16rem}
+        .profile-hero .relative.z-10{align-items:stretch}.upload-thumb{height:11.5rem}.account-vault__grid{grid-template-columns:1fr}.check-row{align-items:flex-start;flex-direction:column}.topbar .action-btn{min-width:2.25rem!important;padding:.52rem .62rem!important}.account-vault__footer{align-items:stretch}.account-vault__actions{width:100%}.account-edit-btn,.account-save-btn{flex:1;justify-content:center}
+      }
+      @media print{
+        body{background:#fff!important;color:#111!important}.no-print,.topbar,#adminShell,#mobile-overlay,#publicFooter,.profile-avatar-panel,.zoom-controls{display:none!important}.admin-main{margin-left:0!important}.lux-card,.member-card,.doc-card,.metric-tile,.profile-hero{box-shadow:none!important;border:1px solid #ddd!important}.profile-hero{background:#fff!important;color:#111!important}.profile-hero *{color:#111!important}.print-seal{display:flex!important;align-items:center;gap:1rem;margin-bottom:1rem;border-bottom:2px solid #05351f;padding-bottom:.8rem}.print-seal img{width:64px;height:64px;object-fit:contain}.upload-thumb{height:8rem!important}
+      }
+      @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
+
+    </style>
+    <link rel="stylesheet" href="/assets/css/admin-unified.css">
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+</head>
+  <body class="min-h-screen flex flex-col text-sm">
+    <div
+      id="mobile-overlay"
+      class="hidden no-print"
+      onclick="closeSidebar()"
+    ></div>
+
+    <div id="appShell" class="admin-layout">
+      <aside
+        id="adminShell"
+        class="fixed inset-y-0 left-0 z-50 w-64 admin-sidebar transform transition-transform duration-300 ease-in-out overflow-hidden no-print md:translate-x-0 flex flex-col"
+        aria-label="APSG admin navigation"
+      >
+        <div class="sidebar-brand">
+          <a href="/admin/dashboard.html" class="brand-link" aria-label="Open APSG admin dashboard">
+            <span class="brand-mark">
+              <img
+                src="/assets/images/logo/apsg.png"
+                alt="APSG Logo"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+              width="96" height="96" decoding="async">
+              <i class="fas fa-shield-halved text-apsgGold hidden"></i>
+            </span>
+            <span>
+              <strong class="brand-title">APSG Admin</strong>
+              <small class="brand-kicker">Unified Dossier</small>
+            </span>
+          </a>
+        </div>
+
+        <nav class="apsg-role-sidebar flex-1 overflow-y-auto p-2.5 space-y-1.5" aria-label="Admin navigation">
+          <p class="sidebar-heading">Command Center</p>
+          <a href="/admin/dashboard.html" class="sidebar-link" data-access="viewer,editor,admin,superadmin">
+            <i class="fas fa-chart-pie w-4 text-center"></i>
+            <span>Dashboard</span>
+            <span class="role-chip">Admin</span>
+          </a>
+          <a href="/admin/members.html" class="sidebar-link active" data-access="admin,superadmin">
+            <i class="fas fa-users w-4 text-center"></i>
+            <span>Members</span>
+            <span class="role-chip">Admin</span>
+          </a>
+          <a href="/admin/account-details.html" class="sidebar-link" data-access="admin,superadmin">
+            <i class="fas fa-building-columns w-4 text-center"></i>
+            <span>Account Details</span>
+            <span class="role-chip">Admin</span>
+          </a>
+          <a href="/admin/admin-leadership.html" class="sidebar-link" data-access="admin,superadmin">
+            <i class="fa-solid fa-users-viewfinder w-4 text-center"></i>
+            <span>Leadership Desk</span>
+            <span class="role-chip">Admin</span>
+          </a>
+          <a href="/admin/admin-official-create.html" class="sidebar-link" data-access="admin,superadmin">
+            <i class="fa-solid fa-user-pen w-4 text-center"></i>
+            <span>Create / Update</span>
+            <span class="role-chip">New</span>
+          </a>
+          <a href="/admin/admin-officials-manager.html" class="sidebar-link" data-access="admin,superadmin">
+            <i class="fa-solid fa-table-list w-4 text-center"></i>
+            <span>Officials Manager</span>
+            <span class="role-chip">Admin</span>
+          </a>
+
+          <p class="sidebar-heading">Publishing Desk</p>
+          <a href="/admin/admin-blog.html" class="sidebar-link" data-access="editor,admin,superadmin">
+            <i class="fas fa-newspaper w-4 text-center"></i>
+            <span>News & Updates</span>
+            <span class="role-chip editor">Editor</span>
+          </a>
+          <a href="/admin/admin-meeting.html" class="sidebar-link" data-access="editor,admin,superadmin">
+            <i class="fas fa-users-line w-4 text-center"></i>
+            <span>Meetings</span>
+            <span class="role-chip editor">Editor</span>
+          </a>
+          <a href="/admin/admin-event.html" class="sidebar-link" data-access="editor,admin,superadmin">
+            <i class="fas fa-calendar-check w-4 text-center"></i>
+            <span>Events</span>
+            <span class="role-chip editor">Editor</span>
+          </a>
+          <a href="/admin/admin-gallery.html" class="sidebar-link" data-access="editor,admin,superadmin">
+            <i class="fa-solid fa-images w-4 text-center"></i>
+            <span>Gallery Albums</span>
+            <span class="role-chip editor">Editor</span>
+          </a>
+
+          <p class="sidebar-heading">Public Review</p>
+          <a href="/pages/leadership.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin">
+            <i class="fas fa-arrow-up-right-from-square w-4 text-center"></i>
+            <span>View Leadership</span>
+          </a>
+          <a href="/pages/bot.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin">
+            <i class="fas fa-arrow-up-right-from-square w-4 text-center"></i>
+            <span>View BOT</span>
+          </a>
+          <a href="/pages/cwdi.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin">
+            <i class="fas fa-arrow-up-right-from-square w-4 text-center"></i>
+            <span>View CWDI</span>
+          </a>
+          <a href="/pages/mp.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin">
+            <i class="fas fa-arrow-up-right-from-square w-4 text-center"></i>
+            <span>View Matrons & Patrons</span>
+          </a>
+          <a href="/pages/nat-exec.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin">
+            <i class="fas fa-arrow-up-right-from-square w-4 text-center"></i>
+            <span>View NATEXCO</span>
+          </a>
+          <a href="/pages/state.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin">
+            <i class="fas fa-arrow-up-right-from-square w-4 text-center"></i>
+            <span>View State Executives</span>
+          </a>
+          <a href="/pages/blog.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin">
+            <i class="fas fa-arrow-up-right-from-square w-4 text-center"></i>
+            <span>View Blog</span>
+          </a>
+          <a href="/pages/meetings.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin">
+            <i class="fas fa-arrow-up-right-from-square w-4 text-center"></i>
+            <span>View Meetings</span>
+          </a>
+          <a href="/pages/events.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin">
+            <i class="fas fa-arrow-up-right-from-square w-4 text-center"></i>
+            <span>View Events</span>
+          </a>
+          <a href="/pages/gallery.html" class="sidebar-link" target="_blank" rel="noopener" data-access="viewer,editor,admin,superadmin">
+            <i class="fas fa-arrow-up-right-from-square w-4 text-center"></i>
+            <span>View Gallery</span>
+          </a>
+        </nav>
+
+        <div class="apsg-role-card">
+          <div class="flex items-center gap-2.5">
+            <div class="grid h-8 w-8 place-items-center rounded-xl bg-apsgGold text-[#062112]">
+              <i class="fas fa-user-shield text-sm"></i>
+            </div>
+            <div class="min-w-0">
+              <p class="text-[11px] font-black mb-0">Role Access</p>
+              <p class="text-[10px] text-white/50 mb-0">
+                <span id="adminRoleLabel">Resolving role</span>
+              </p>
+            </div>
+          </div>
+          <div class="mt-3 grid grid-cols-2 gap-1.5 text-[9px]">
+            <span class="role-level" data-role-level="viewer">Viewer</span>
+            <span class="role-level" data-role-level="editor">Editor</span>
+            <span class="role-level" data-role-level="admin">Admin</span>
+            <span class="role-level" data-role-level="superadmin">Superadmin</span>
+          </div>
+          <div class="mt-3 flex items-center gap-2 rounded-xl bg-black/20 px-2.5 py-2 text-[10px] text-white/60">
+            <span class="pulse-dot"></span>
+            <span>Authenticated admin session</span>
+          </div>
+        </div>
+
+        <div class="shrink-0 border-t border-white/10 bg-[#031b0f] p-2.5">
+          <button onclick="logoutAdmin()" class="sidebar-link danger-link w-full text-left" type="button">
+            <i class="fas fa-right-from-bracket w-4 text-center"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      <div class="admin-main flex-1 flex flex-col md:ml-64">
+        <header class="topbar sticky top-0 z-40 no-print">
+          <div class="flex items-center justify-between px-4 py-2.5">
+            <div class="flex items-center gap-3 min-w-0">
+              <button
+                id="mobile-toggle"
+                onclick="toggleSidebar()"
+                class="admin-only md:hidden grid h-9 w-9 place-items-center rounded-xl border border-apsgGold/20 bg-white text-apsgDeep shadow-sm"
+              >
+                <i class="fas fa-bars"></i>
+              </button>
+              <a
+                id="backLink"
+                href="/admin/members.html"
+                class="inline-flex items-center gap-2 text-apsgDeep hover:text-apsgGreen font-black no-underline"
+                ><i class="fas fa-arrow-left"></i
+                ><span class="hidden sm:inline" id="backText"
+                  >Back to Members</span
+                ></a
+              >
+              <span id="modeBadge" class="status-pill status-muted"
+                ><i class="fas fa-spinner fa-spin"></i>Loading</span
+              >
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                onclick="copyMemberSummary()"
+                class="action-btn bg-white text-apsgDeep border border-apsgGold/20"
+              >
+                <i class="fas fa-copy"></i
+                ><span class="hidden sm:inline">Copy</span>
+              </button>
+              <button
+                onclick="copyVerificationMemo()"
+                class="action-btn bg-white text-apsgDeep border border-apsgGold/20 admin-only"
+              >
+                <i class="fas fa-clipboard-check"></i
+                ><span class="hidden lg:inline">Memo</span>
+              </button>
+              <button
+                onclick="downloadMemberJson()"
+                class="action-btn bg-emerald-50 text-emerald-800 border border-emerald-100 admin-only"
+              >
+                <i class="fas fa-file-code"></i
+                ><span class="hidden lg:inline">JSON</span>
+              </button>
+              <button
+                onclick="window.print()"
+                class="action-btn bg-apsgGold text-apsgDeep"
+              >
+                <i class="fas fa-print"></i
+                ><span class="hidden sm:inline">Print</span>
+              </button>
+              <a
+                id="homeMemberBtn"
+                href="/"
+                class="action-btn bg-apsgDeep text-white member-only"
+              >
+                <i class="fas fa-house"></i
+                ><span class="hidden sm:inline">Home</span>
+              </a>
+              <a
+                href="/"
+                class="admin-only grid h-9 w-9 place-items-center rounded-xl bg-amber-50 text-amber-800 hover:bg-amber-100 no-underline"
+                title="Go Home"
+              >
+                <i class="fas fa-house"></i>
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <main
+          class="flex-1 p-3 md:p-5 overflow-auto max-w-screen-2xl mx-auto w-full"
+          id="contentRoot"
+        >
+          <section
+            id="loginRequired"
+            class="hidden max-w-3xl mx-auto portal-offset"
+          >
+            <div class="lux-card p-8 md:p-10 text-center">
+              <img
+                src="/assets/images/logo/apsg.png"
+                alt="APSG Logo"
+                class="h-20 w-20 mx-auto object-contain mb-4"
+              width="96" height="96" decoding="async">
+              <p class="official-chip">
+                <i class="fas fa-lock"></i> Member access required
+              </p>
+              <h1
+                class="display-font mt-4 text-3xl md:text-5xl font-black text-apsgDeep"
+              >
+                Please login first
+              </h1>
+
+              <a
+                href="/pages/member-login.html"
+                class="portal-btn mt-6 bg-apsgGold text-apsgDeep px-6 py-3 shadow-gold"
+                ><i class="fas fa-right-to-bracket"></i> Go to Member Login</a
+              >
+            </div>
+          </section>
+
+          <section id="detailsContent" class="hidden">
+            <div class="print-seal">
+              <img src="/assets/images/logo/apsg1.png" alt="APSG Logo" width="96" height="96" decoding="async">
+              <h1 class="text-2xl font-black text-apsgDeep">
+                APSG Nigeria - Member Details
+              </h1>
+            </div>
+
+            <section
+              class="profile-hero rounded-[1.4rem] text-white p-4 md:p-6 mb-4 relative"
+            >
+              <div
+                class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
+              >
+                <div class="profile-avatar-panel no-print">
+                  <div id="profileAvatarShell" class="profile-avatar-shell">
+                    <img id="profilePhoto" src="/assets/images/avatar-placeholder.png" alt="Member profile photo" onerror="this.onerror=null;this.style.display='none';" />
+                    <span class="avatar-fallback"><i class="fas fa-user"></i></span>
+                  </div>
+                  <input type="file" id="profileFileInput" accept="image/*" class="hidden" />
+                  <button type="button" id="profileSelectBtn" class="action-btn avatar-action">
+                    <i class="fas fa-camera"></i> Upload Avatar
+                  </button>
+                  <button type="button" id="profileUploadBtn" class="action-btn avatar-action hidden" disabled>
+                    <i class="fas fa-cloud-arrow-up"></i> Save Photo
+                  </button>
+                  <p id="profileFileName" class="avatar-status truncate">No photo selected</p>
+                  <p id="profileStatus" class="avatar-status"></p>
+                </div>
+                <div class="min-w-0">
+                  <div class="flex flex-wrap items-center gap-2 mb-3">
+                    <span
+                      class="reg-number"
+                      id="detailRegNumber"
+                      onclick="copyRegNumber()"
+                      ><i class="fas fa-fingerprint"></i>—</span
+                    >
+                    <span id="verifiedBadge" class="status-pill status-warn"
+                      ><i class="fas fa-clock"></i>Pending Review</span
+                    >
+                    <span id="docBadge" class="status-pill status-muted"
+                      ><i class="fas fa-file-shield"></i>Documents Loading</span
+                    >
+                  </div>
+                  <h1
+                    class="display-font text-2xl md:text-5xl font-black tracking-tight mb-1"
+                    id="detailFullName"
+                  >
+                    Loading...
+                  </h1>
+                  <p class="text-white/72 font-bold" id="detailDesignation">
+                    —
+                  </p>
+                </div>
+                <div
+                  class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 gap-2 min-w-0 lg:min-w-[30rem]"
+                >
+                  <div
+                    class="rounded-2xl bg-white/10 border border-white/15 p-3 backdrop-blur-md"
+                  >
+                    <p
+                      class="text-[10px] uppercase tracking-[0.18em] text-white/50 font-black"
+                    >
+                      State
+                    </p>
+                    <p id="heroState" class="font-black truncate text-apsgGold">
+                      —
+                    </p>
+                  </div>
+                  <div
+                    class="rounded-2xl bg-white/10 border border-white/15 p-3 backdrop-blur-md"
+                  >
+                    <p
+                      class="text-[10px] uppercase tracking-[0.18em] text-white/50 font-black"
+                    >
+                      LGA
+                    </p>
+                    <p id="heroLga" class="font-black truncate text-apsgGold">
+                      —
+                    </p>
+                  </div>
+                  <div
+                    class="rounded-2xl bg-white/10 border border-white/15 p-3 backdrop-blur-md"
+                  >
+                    <p
+                      class="text-[10px] uppercase tracking-[0.18em] text-white/50 font-black"
+                    >
+                      Docs
+                    </p>
+                    <p id="docScore" class="font-black truncate text-apsgGold">
+                      0/2
+                    </p>
+                  </div>
+                  <div
+                    class="rounded-2xl bg-white/10 border border-white/15 p-3 backdrop-blur-md"
+                  >
+                    <p
+                      class="text-[10px] uppercase tracking-[0.18em] text-white/50 font-black"
+                    >
+                      Joined
+                    </p>
+                    <p id="heroDate" class="font-black truncate text-apsgGold">
+                      —
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <div
+              id="errorMessage"
+              class="hidden text-center mb-4 p-6 lux-card text-red-700"
+            >
+              <i class="fas fa-triangle-exclamation text-2xl mb-2"></i>
+              <p class="text-lg font-black mb-1">
+                Member not found or error loading data.
+              </p>
+              <p class="text-sm text-gray-600">
+                Please return and open the record again.
+              </p>
+            </div>
+
+            <section
+              class="grid grid-cols-1 xl:grid-cols-[0.95fr_1.05fr] gap-4"
+            >
+              <div class="space-y-4">
+                <div class="lux-card p-4 md:p-5">
+                  <div class="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                      <p
+                        class="text-[11px] uppercase tracking-[0.24em] text-apsgGold font-black"
+                      >
+                        Member Profile
+                      </p>
+                      <h2
+                        class="display-font text-xl md:text-3xl font-black text-apsgDeep"
+                      >
+                        Personal Information
+                      </h2>
+                    </div>
+                    <span
+                      class="grid h-11 w-11 place-items-center rounded-2xl bg-emerald-50 text-apsgGreen border border-emerald-100"
+                      ><i class="fas fa-user-shield"></i
+                    ></span>
+                  </div>
+                  <dl class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="detail-cell">
+                      <dt>First Name</dt>
+                      <dd id="detailFirstName">-</dd>
+                    </div>
+                    <div class="detail-cell">
+                      <dt>Last Name</dt>
+                      <dd id="detailLastName">-</dd>
+                    </div>
+                    <div class="detail-cell">
+                      <dt>Phone</dt>
+                      <dd id="detailPhone">-</dd>
+                    </div>
+                    <div class="detail-cell">
+                      <dt>Email</dt>
+                      <dd id="detailEmail">-</dd>
+                    </div>
+                    <div class="detail-cell">
+                      <dt>State</dt>
+                      <dd id="detailState">-</dd>
+                    </div>
+                    <div class="detail-cell">
+                      <dt>LGA / LCDA</dt>
+                      <dd id="detailLga">-</dd>
+                    </div>
+                    <div class="detail-cell">
+                      <dt>Ward</dt>
+                      <dd id="detailWard">-</dd>
+                    </div>
+                    <div class="detail-cell">
+                      <dt>Registration Date</dt>
+                      <dd id="detailDate">-</dd>
+                    </div>
+                  </dl>
+                </div>
+
+                <div class="lux-card p-4 md:p-5">
+                  <div class="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                      <p
+                        class="text-[11px] uppercase tracking-[0.24em] text-apsgGold font-black"
+                      >
+                        Verification
+                      </p>
+                      <h2
+                        class="display-font text-xl md:text-3xl font-black text-apsgDeep"
+                      >
+                        Record Summary
+                      </h2>
+                    </div>
+                    <button
+                      id="verifyToggleBtn"
+                      type="button"
+                      class="action-btn bg-apsgDeep text-white admin-only"
+                      onclick="toggleVerification()"
+                      disabled
+                    >
+                      <i class="fas fa-circle-check"></i> Mark Verified
+                    </button>
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="metric-tile">
+                      <p
+                        class="text-[10px] uppercase tracking-[0.18em] text-gray-500 font-black"
+                      >
+                        PVC Status
+                      </p>
+                      <p
+                        id="pvcMetric"
+                        class="text-lg font-black text-apsgDeep mt-1"
+                      >
+                        Loading
+                      </p>
+                    </div>
+                    <div class="metric-tile">
+                      <p
+                        class="text-[10px] uppercase tracking-[0.18em] text-gray-500 font-black"
+                      >
+                        APC Status
+                      </p>
+                      <p
+                        id="apcMetric"
+                        class="text-lg font-black text-apsgDeep mt-1"
+                      >
+                        Loading
+                      </p>
+                    </div>
+                    <div class="metric-tile">
+                      <p
+                        class="text-[10px] uppercase tracking-[0.18em] text-gray-500 font-black"
+                      >
+                        Record Health
+                      </p>
+                      <p
+                        id="healthMetric"
+                        class="text-lg font-black text-apsgDeep mt-1"
+                      >
+                        —
+                      </p>
+                    </div>
+                  </div>
+                  <div class="mt-4 member-card p-3">
+                    <div class="flex items-center justify-between gap-3 mb-2">
+                      <div>
+                        <p
+                          class="text-[10px] uppercase tracking-[0.18em] text-gray-500 font-black mb-0"
+                        >
+                          Dossier Readiness
+                        </p>
+                        <p
+                          id="reviewTier"
+                          class="font-black text-apsgDeep mb-0"
+                        >
+                          Calculating...
+                        </p>
+                      </div>
+                      <span id="reviewTierBadge" class="tier-badge"
+                        ><i class="fas fa-gauge-high"></i>Review</span
+                      >
+                    </div>
+                    <div class="progress-track">
+                      <div id="healthProgress" class="progress-fill"></div>
+                    </div>
+                  </div>
+                  <div class="mt-4 flex flex-col sm:flex-row gap-2">
+                    <a
+                      id="callLink"
+                      href="#"
+                      class="action-btn bg-green-50 text-green-800 border border-green-100 flex-1"
+                      ><i class="fas fa-phone"></i> Call</a
+                    ><a
+                      id="whatsappLink"
+                      href="#"
+                      target="_blank"
+                      rel="noopener"
+                      class="action-btn bg-emerald-50 text-emerald-800 border border-emerald-100 flex-1"
+                      ><i class="fab fa-whatsapp"></i> WhatsApp</a
+                    ><a
+                      id="emailLink"
+                      href="#"
+                      class="action-btn bg-amber-50 text-amber-800 border border-amber-100 flex-1"
+                      ><i class="fas fa-envelope"></i> Email</a
+                    >
+                  </div>
+                </div>
+
+                <div class="lux-card p-4 md:p-5">
+                  <div class="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                      <p
+                        class="text-[11px] uppercase tracking-[0.24em] text-apsgGold font-black"
+                      >
+                        Intelligence Review
+                      </p>
+                      <h2
+                        class="display-font text-xl md:text-3xl font-black text-apsgDeep"
+                      >
+                        Checklist & Audit Trail
+                      </h2>
+                    </div>
+                    <span
+                      class="grid h-11 w-11 place-items-center rounded-2xl bg-yellow-50 text-apsgGold border border-yellow-100"
+                      ><i class="fas fa-list-check"></i
+                    ></span>
+                  </div>
+                  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="member-card p-3">
+                      <div class="flex items-center justify-between mb-3">
+                        <p class="font-black text-apsgDeep mb-0">
+                          Review Checklist
+                        </p>
+                        <span id="checklistScore" class="tier-badge"
+                          ><i class="fas fa-check-double"></i>0/8</span
+                        >
+                      </div>
+                      <div id="reviewChecklist" class="space-y-2"></div>
+                    </div>
+                    <div class="member-card p-3">
+                      <div class="flex items-center justify-between mb-3">
+                        <p class="font-black text-apsgDeep mb-0">Audit Trail</p>
+                        <button
+                          onclick="copyDocumentLinks()"
+                          class="action-btn bg-white text-apsgDeep border border-apsgGold/20 !py-2"
+                        >
+                          <i class="fas fa-link"></i>Links
+                        </button>
+                      </div>
+                      <div id="auditTrail" class="space-y-3"></div>
+                    </div>
+                  </div>
+                  <div class="mt-4 member-card p-3 admin-only">
+                    <div class="flex items-center justify-between gap-3 mb-2">
+                      <div>
+                        <p class="font-black text-apsgDeep mb-0">
+                          Officer Review Memo
+                        </p>
+                        <p class="text-xs text-gray-500 mb-0">
+                          Optional internal note. Saved locally in this browser
+                          for this record.
+                        </p>
+                      </div>
+                      <button
+                        onclick="saveReviewNote()"
+                        class="action-btn bg-apsgDeep text-white !py-2"
+                      >
+                        <i class="fas fa-floppy-disk"></i>Save
+                      </button>
+                    </div>
+                    <textarea
+                      id="reviewNote"
+                      class="memo-box"
+                      placeholder="Add internal verification notes, call outcomes, document observations, or follow-up instructions..."
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lux-card p-4 md:p-5">
+                <div class="flex items-center justify-between gap-3 mb-4">
+                  <div>
+                    <p
+                      class="text-[11px] uppercase tracking-[0.24em] text-apsgGold font-black"
+                    >
+                      Verification Vault
+                    </p>
+                    <h2
+                      class="display-font text-xl md:text-3xl font-black text-apsgDeep"
+                    >
+                      Documents & Uploads
+                    </h2>
+                  </div>
+                  <span
+                    class="grid h-11 w-11 place-items-center rounded-2xl bg-amber-50 text-apsgGold border border-yellow-100"
+                    ><i class="fas fa-file-shield"></i
+                  ></span>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <article class="doc-card p-3.5">
+                    <div class="flex items-center justify-between gap-3 mb-3">
+                      <div>
+                        <h3 class="font-black text-apsgDeep mb-0">
+                          PVC Document
+                        </h3>
+                        <p class="text-xs text-gray-500 mb-0">
+                          VIN: <strong id="detailPvc">-</strong>
+                        </p>
+                      </div>
+                      <span id="pvcDocStatus" class="status-pill status-muted"
+                        ><i class="fas fa-hourglass-half"></i>Loading</span
+                      >
+                    </div>
+                    <img
+                      src="/assets/images/pdf-placeholder.png"
+                      alt="PVC Preview"
+                      class="upload-thumb mb-3"
+                      id="pvcPreview"
+                    />
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                      <button
+                        class="action-btn bg-apsgGreen text-white"
+                        id="pvcViewBtn"
+                        disabled
+                      >
+                        <i class="fas fa-eye"></i> View</button
+                      ><button
+                        class="action-btn bg-apsgEmerald text-white hidden"
+                        id="pvcDownloadBtn"
+                      >
+                        <i class="fas fa-download"></i> Download
+                      </button>
+                    </div>
+                    <div class="upload-area admin-only">
+                      <p
+                        class="text-xs uppercase tracking-[0.16em] font-black text-apsgDeep mb-2"
+                      >
+                        Upload / Replace PVC
+                      </p>
+                      <input
+                        type="file"
+                        id="pvcFileInput"
+                        accept="image/*,application/pdf"
+                        class="hidden"
+                      />
+                      <div class="flex flex-col sm:flex-row gap-2">
+                        <button
+                          type="button"
+                          onclick="
+                            document.getElementById('pvcFileInput').click()
+                          "
+                          class="action-btn bg-white text-apsgDeep border border-apsgGold/25 flex-1"
+                        >
+                          <i class="fas fa-folder-open"></i>Select</button
+                        ><button
+                          id="pvcUploadBtn"
+                          class="action-btn bg-apsgGold text-apsgDeep flex-1"
+                          disabled
+                        >
+                          <i class="fas fa-cloud-arrow-up"></i>Upload
+                        </button>
+                      </div>
+                      <p
+                        id="pvcFileName"
+                        class="text-xs text-gray-500 mt-2 mb-0 truncate"
+                      >
+                        No file chosen
+                      </p>
+                      <p
+                        id="pvcStatus"
+                        class="mt-2 text-xs font-black mb-0"
+                      ></p>
+                    </div>
+                  </article>
+                  <article class="doc-card p-3.5">
+                    <div class="flex items-center justify-between gap-3 mb-3">
+                      <div>
+                        <h3 class="font-black text-apsgDeep mb-0">APC Card</h3>
+                        <p class="text-xs text-gray-500 mb-0">
+                          No: <strong id="detailApc">-</strong>
+                        </p>
+                      </div>
+                      <span id="apcDocStatus" class="status-pill status-muted"
+                        ><i class="fas fa-hourglass-half"></i>Loading</span
+                      >
+                    </div>
+                    <img
+                      src="/assets/images/pdf-placeholder.png"
+                      alt="APC Preview"
+                      class="upload-thumb mb-3"
+                      id="apcPreview"
+                    />
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                      <button
+                        class="action-btn bg-apsgGreen text-white"
+                        id="apcViewBtn"
+                        disabled
+                      >
+                        <i class="fas fa-eye"></i> View</button
+                      ><button
+                        class="action-btn bg-apsgEmerald text-white hidden"
+                        id="apcDownloadBtn"
+                      >
+                        <i class="fas fa-download"></i> Download
+                      </button>
+                    </div>
+                    <div class="upload-area admin-only">
+                      <p
+                        class="text-xs uppercase tracking-[0.16em] font-black text-apsgDeep mb-2"
+                      >
+                        Upload / Replace APC Card
+                      </p>
+                      <input
+                        type="file"
+                        id="apcFileInput"
+                        accept="image/*,application/pdf"
+                        class="hidden"
+                      />
+                      <div class="flex flex-col sm:flex-row gap-2">
+                        <button
+                          type="button"
+                          onclick="
+                            document.getElementById('apcFileInput').click()
+                          "
+                          class="action-btn bg-white text-apsgDeep border border-apsgGold/25 flex-1"
+                        >
+                          <i class="fas fa-folder-open"></i>Select</button
+                        ><button
+                          id="apcUploadBtn"
+                          class="action-btn bg-apsgGold text-apsgDeep flex-1"
+                          disabled
+                        >
+                          <i class="fas fa-cloud-arrow-up"></i>Upload
+                        </button>
+                      </div>
+                      <p
+                        id="apcFileName"
+                        class="text-xs text-gray-500 mt-2 mb-0 truncate"
+                      >
+                        No file chosen
+                      </p>
+                      <p
+                        id="apcStatus"
+                        class="mt-2 text-xs font-black mb-0"
+                      ></p>
+                    </div>
+                  </article>
+                </div>
+                <section class="account-vault mt-4" id="accountDetailsPanel">
+                  <div class="account-vault__shine" aria-hidden="true"></div>
+                  <div class="account-vault__header">
+                    <div>
+                      <p class="account-vault__eyebrow">Finance Record</p>
+                      <h3 class="account-vault__title">Account Details</h3>
+                      <p class="account-vault__subtitle">
+                        Securely keep this member's bank information attached to the dossier.
+                      </p>
+                    </div>
+                    <span class="account-vault__icon">
+                      <i class="fas fa-building-columns"></i>
+                    </span>
+                  </div>
+
+                  <div class="account-vault__grid">
+                    <label class="account-field" for="accountNumberInput">
+                      <span class="account-field__label">Account Number</span>
+                      <input
+                        id="accountNumberInput"
+                        type="text"
+                        inputmode="numeric"
+                        autocomplete="off"
+                        maxlength="20"
+                        class="account-field__input"
+                        aria-label="Account Number"
+                      />
+                    </label>
+
+                    <label class="account-field" for="bankNameInput">
+                      <span class="account-field__label">Bank</span>
+                      <input
+                        id="bankNameInput"
+                        type="text"
+                        autocomplete="off"
+                        maxlength="80"
+                        class="account-field__input"
+                        aria-label="Bank"
+                      />
+                    </label>
+                  </div>
+
+                  <div class="account-vault__footer">
+                    <p id="accountStatus" class="account-vault__status" aria-live="polite"></p>
+                    <div class="account-vault__actions">
+                      <button
+                        type="button"
+                        id="accountEditBtn"
+                        class="account-edit-btn"
+                        onclick="enableAccountEditing()"
+                      >
+                        <i class="fas fa-pen-to-square"></i>
+                        <span>Edit Account</span>
+                      </button>
+                      <button
+                        type="button"
+                        id="accountSaveBtn"
+                        class="account-save-btn"
+                        onclick="saveAccountDetails()"
+                        disabled
+                      >
+                        <i class="fas fa-floppy-disk"></i>
+                        <span>Save Account</span>
+                      </button>
+                    </div>
+                  </div>
+                </section>
+                <section class="member-card mt-4 p-4 member-only">
+                  <span class="official-chip"
+                    ><i class="fas fa-certificate"></i> APSG Membership
+                    Receipt</span
+                  >
+                  <h3
+                    class="display-font mt-2 text-2xl font-black text-apsgDeep"
+                  >
+                    Official Record Confirmation
+                  </h3>
+                  <p class="mt-1 text-gray-600 leading-relaxed">
+                    This page confirms your verified APSG registration profile.
+                    Use the print button to save a copy for your personal
+                    record.
+                  </p>
+                  <a
+                    href="/pages/register.html"
+                    class="portal-btn mt-4 bg-apsgGold text-apsgDeep px-5 py-3 shadow-gold no-print"
+                    ><i class="fas fa-user-plus"></i> New Registration</a
+                  >
+                </section>
+              </div>
+            </section>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <div id="publicFooter"><div id="footer"></div></div>
+
+    <div class="modal fade" id="previewModal" tabindex="-1">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div
+            class="modal-header text-white py-3"
+            style="
+              background: linear-gradient(120deg, #05351f, #0f7a3d, #0f766e);
+            "
+          >
+            <div>
+              <p
+                class="text-[10px] uppercase tracking-[0.24em] text-amber-200 font-black mb-0"
+              >
+                Secure Document Viewer
+              </p>
+              <h5 class="modal-title font-black text-lg mb-0">
+                Document Preview
+              </h5>
+            </div>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body p-0 relative">
+            <iframe id="previewFrame" class="d-none"></iframe
+            ><img id="previewImage" class="d-none" alt="Document Preview" />
+            <div class="zoom-controls">
+              <button class="zoom-btn" onclick="zoomIn()" title="Zoom in">
+                <i class="fas fa-search-plus"></i></button
+              ><button class="zoom-btn" onclick="zoomOut()" title="Zoom out">
+                <i class="fas fa-search-minus"></i></button
+              ><button
+                class="zoom-btn"
+                onclick="resetZoom()"
+                title="Reset zoom"
+              >
+                <i class="fas fa-sync-alt"></i></button
+              ><button
+                class="zoom-btn"
+                onclick="openDocumentInNewTab()"
+                title="Open in new tab"
+              >
+                <i class="fas fa-up-right-from-square"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="toastCopy"
+      class="toast-copy rounded-2xl bg-apsgDeep text-white px-4 py-3 shadow-luxury border border-apsgGold/30"
+    >
+      <i class="fas fa-circle-check text-apsgGold mr-2"></i
+      ><span id="toastCopyText">Copied</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/supabase-clients.js"></script>
+  <script src="/assets/js/apsg-settings.js"></script>
+  <script src="/assets/js/admin-auth.js"></script>
+
+    <script src="/components/footer.js" defer></script>
+    <script>
+      let zoomLevel = 1;
+      let currentMember = null;
+      let currentPreviewUrl = "";
+      let pageMode = "member";
+      let canAdminWrite = false;
+
+      const $ = (id) => document.getElementById(id);
+      const params = new URLSearchParams(location.search);
+
+      const els = {
+        detailsContent: $("detailsContent"),
+        loginRequired: $("loginRequired"),
+        errorMessage: $("errorMessage"),
+        modeBadge: $("modeBadge"),
+        profilePhoto: $("profilePhoto"),
+        profileAvatarShell: $("profileAvatarShell"),
+        profileFileInput: $("profileFileInput"),
+        profileSelectBtn: $("profileSelectBtn"),
+        profileUploadBtn: $("profileUploadBtn"),
+        profileFileName: $("profileFileName"),
+        profileStatus: $("profileStatus"),
+        backLink: $("backLink"),
+        backText: $("backText"),
+        detailRegNumber: $("detailRegNumber"),
+        detailFullName: $("detailFullName"),
+        detailDesignation: $("detailDesignation"),
+        detailFirstName: $("detailFirstName"),
+        detailLastName: $("detailLastName"),
+        detailPhone: $("detailPhone"),
+        detailEmail: $("detailEmail"),
+        detailState: $("detailState"),
+        detailLga: $("detailLga"),
+        detailWard: $("detailWard"),
+        detailDate: $("detailDate"),
+        detailPvc: $("detailPvc"),
+        detailApc: $("detailApc"),
+        pvcPreview: $("pvcPreview"),
+        pvcViewBtn: $("pvcViewBtn"),
+        pvcDownloadBtn: $("pvcDownloadBtn"),
+        apcPreview: $("apcPreview"),
+        apcViewBtn: $("apcViewBtn"),
+        apcDownloadBtn: $("apcDownloadBtn"),
+        heroState: $("heroState"),
+        heroLga: $("heroLga"),
+        heroDate: $("heroDate"),
+        docScore: $("docScore"),
+        docBadge: $("docBadge"),
+        verifiedBadge: $("verifiedBadge"),
+        pvcMetric: $("pvcMetric"),
+        apcMetric: $("apcMetric"),
+        healthMetric: $("healthMetric"),
+        verifyToggleBtn: $("verifyToggleBtn"),
+        callLink: $("callLink"),
+        whatsappLink: $("whatsappLink"),
+        emailLink: $("emailLink"),
+        reviewChecklist: $("reviewChecklist"),
+        checklistScore: $("checklistScore"),
+        auditTrail: $("auditTrail"),
+        reviewNote: $("reviewNote"),
+        accountNumberInput: $("accountNumberInput"),
+        bankNameInput: $("bankNameInput"),
+        accountEditBtn: $("accountEditBtn"),
+        accountSaveBtn: $("accountSaveBtn"),
+        accountStatus: $("accountStatus"),
+        healthProgress: $("healthProgress"),
+        reviewTier: $("reviewTier"),
+        reviewTierBadge: $("reviewTierBadge"),
+      };
+
+      function safeText(value, fallback = "—") {
+        return value === null ||
+          value === undefined ||
+          String(value).trim() === ""
+          ? fallback
+          : String(value).trim();
+      }
+      function normalizePhone(phone) {
+        const raw = safeText(phone, "").replace(/\D/g, "");
+        if (!raw) return "";
+        if (raw.startsWith("234")) return raw;
+        if (raw.startsWith("0")) return `234${raw.slice(1)}`;
+        return raw;
+      }
+      function isExternalUrl(path) {
+        return /^https?:\/\//i.test(String(path || ""));
+      }
+      function isPdfFile(path) {
+        return String(path || "")
+          .split("?")[0]
+          .toLowerCase()
+          .endsWith(".pdf");
+      }
+      function isImageFile(path) {
+        return /\.(jpg|jpeg|png|gif|webp|bmp|svg|avif)$/i.test(
+          String(path || "").split("?")[0],
+        );
+      }
+      function resolveUploadUrl(uploadPath) {
+        if (!uploadPath) return "";
+        if (isExternalUrl(uploadPath)) return uploadPath;
+        const cleanedPath = String(uploadPath).replace(/^uploads\//, "");
+        const { data } = supabaseClient.storage
+          .from("uploads")
+          .getPublicUrl(cleanedPath);
+        return data?.publicUrl || "";
+      }
+      function setStatusPill(el, status, text, icon) {
+        if (!el) return;
+        el.className = `status-pill ${status}`;
+        el.innerHTML = `<i class="fas ${icon}"></i>${text}`;
+      }
+      function showToast(message) {
+        const toast = $("toastCopy");
+        $("toastCopyText").textContent = message;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 1700);
+      }
+
+      function applyMode(mode) {
+        pageMode = mode;
+        document.documentElement.classList.toggle(
+          "admin-boot",
+          mode === "admin",
+        );
+        document.documentElement.classList.toggle(
+          "member-boot",
+          mode === "member",
+        );
+        document.body.classList.toggle("admin-mode", mode === "admin");
+        document.body.classList.toggle("member-mode", mode === "member");
+        $("appShell").classList.toggle("admin-layout", mode === "admin");
+        $("contentRoot").classList.toggle("portal-offset", mode === "member");
+
+        if (mode === "admin") {
+          $("publicFooter")?.classList.add("hidden");
+          $("loginRequired")?.classList.add("hidden");
+          $("mobile-overlay")?.classList.add("hidden");
+        } else {
+          $("publicFooter")?.classList.remove("hidden");
+        }
+
+        els.modeBadge.className = `status-pill ${mode === "admin" ? "status-warn" : "status-good"}`;
+        els.modeBadge.innerHTML =
+          mode === "admin"
+            ? '<i class="fas fa-user-shield"></i>Admin Dossier Mode'
+            : '<i class="fas fa-id-card"></i>Member Portal Mode';
+        els.backLink.href = mode === "admin" ? "/admin/members.html" : "/pages/member-login.html";
+        els.backText.textContent = mode === "admin" ? "Back to Members" : "";
+        setAccountEditMode(false);
+      }
+
+      function describeSupabaseError(error) {
+        const message = String(error?.message || error || "Unknown Supabase error.");
+        const code = String(error?.code || "");
+        if (!navigator.onLine) return "Network appears offline. Check your internet connection and refresh.";
+        if (code === "42P01" || /relation .* does not exist/i.test(message)) return "Required Supabase table was not found. Confirm the members/admin_profiles tables exist.";
+        if (code === "42501" || /permission denied|row-level security|rls/i.test(message)) return "Supabase RLS denied this request. Confirm this user has an active admin_profiles role and the required policies.";
+        if (/failed to fetch|network|timeout/i.test(message)) return "Network or Supabase connection issue. Check Supabase project status and try again.";
+        return message;
+      }
+
+      async function resolveAdminProfile(user) {
+        if (!supabaseClient || !user) return null;
+        const fields = "id,user_id,email,role,is_active,status";
+        const email = String(user.email || "").toLowerCase();
+        let result = await supabaseClient.from("admin_profiles").select(fields).eq("id", user.id).limit(1).maybeSingle();
+        if (!result.error && result.data) return result.data;
+        result = await supabaseClient.from("admin_profiles").select(fields).eq("user_id", user.id).limit(1).maybeSingle();
+        if (!result.error && result.data) return result.data;
+        result = await supabaseClient.from("admin_profiles").select(fields).ilike("email", email).limit(1).maybeSingle();
+        if (result.error) throw result.error;
+        return result.data || null;
+      }
+
+      function updateAdminSidebarRole(role) {
+        const normalizedRole = String(role || "none").toLowerCase();
+        const label = $("adminRoleLabel");
+        if (label) label.textContent = normalizedRole === "none" ? "No role" : normalizedRole;
+
+        document.querySelectorAll("[data-role-level]").forEach((node) => {
+          node.classList.toggle("active", node.dataset.roleLevel === normalizedRole);
+        });
+
+        document.querySelectorAll("[data-access]").forEach((node) => {
+          const allowed = String(node.dataset.access || "")
+            .split(",")
+            .map((item) => item.trim().toLowerCase())
+            .filter(Boolean);
+          node.hidden = Boolean(normalizedRole && allowed.length && !allowed.includes(normalizedRole));
+        });
+      }
+
+      async function ensureAdminSession() {
+        try {
+          if (typeof supabaseClient === "undefined" || !supabaseClient.auth) {
+            throw new Error("Supabase Auth is unavailable. Confirm /assets/js/supabase-clients.js is loaded.");
+          }
+          const { data, error } = await supabaseClient.auth.getSession();
+          if (error) throw error;
+          const session = data?.session;
+          if (!session?.user) {
+            const redirect = encodeURIComponent(`${location.pathname}${location.search}`);
+            location.href = `/admin/login.html?redirect=${redirect}`;
+            return false;
+          }
+          const profile = await resolveAdminProfile(session.user);
+          const role = String(profile?.role || "").toLowerCase();
+          const active = profile && profile.is_active !== false && String(profile.status || "active").toLowerCase() !== "inactive";
+          if (!profile || !active || !["admin", "superadmin"].includes(role)) {
+            updateAdminSidebarRole(role || "none");
+            throw new Error("This admin dossier requires an active admin or superadmin role in public.admin_profiles.");
+          }
+          canAdminWrite = true;
+          updateAdminSidebarRole(role);
+          return true;
+        } catch (error) {
+          console.warn("Admin session check failed.", error);
+          updateAdminSidebarRole("none");
+          setStatusPill(els.modeBadge, "status-warn", describeSupabaseError(error), "fa-triangle-exclamation");
+          return false;
+        }
+      }
+
+
+      function htmlEscape(value) { return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c])); }
+
+      function decodeRouteIdentifier(value) {
+        const raw = String(value ?? "").trim();
+        if (!raw) return "";
+        try { return decodeURIComponent(raw); } catch (error) { return raw; }
+      }
+
+      function getMemberRouteIdentifier(member) {
+        if (!member) return "";
+        return String(
+          member.id ??
+          member.member_id ??
+          member.user_id ??
+          member.reg_number ??
+          member.registration_number ??
+          ""
+        ).trim();
+      }
+
+      function getMemberRouteKey(member) {
+        if (!member) return "id";
+        if (member.id !== undefined && member.id !== null && String(member.id).trim()) return "id";
+        if (member.member_id !== undefined && member.member_id !== null && String(member.member_id).trim()) return "id";
+        if (member.user_id !== undefined && member.user_id !== null && String(member.user_id).trim()) return "id";
+        return "reg_number";
+      }
+
+      function buildMemberDetailsHref(member) {
+        const identifier = getMemberRouteIdentifier(member);
+        if (!identifier) return "/admin/members.html";
+        return `/admin/member-details.html?${getMemberRouteKey(member)}=${encodeURIComponent(identifier)}`;
+      }
+
+      function buildMemberEditHref(member) {
+        const identifier = getMemberRouteIdentifier(member);
+        if (!identifier) return "/admin/members.html";
+        return `/admin/edit-member.html?${getMemberRouteKey(member)}=${encodeURIComponent(identifier)}`;
+      }
+
+
+      function selectorCardHtml(title, subtitle, rows, mode) {
+        const empty = `<div class="admin-selector-row"><div><strong>No recent members found</strong><span>Use the main Members page to refresh or confirm Supabase access.</span></div><a class="admin-selector-action" href="/admin/members.html"><i class="fas fa-users"></i>Members</a></div>`;
+        const items = rows.length ? rows.map(member => {
+          const full = `${member.first_name || ''} ${member.last_name || ''}`.trim() || member.name || 'Unnamed member';
+          const href = buildMemberDetailsHref(member);
+          const editHref = buildMemberEditHref(member);
+          const reg = member.reg_number || member.phone || 'No registration number';
+          return `<div class="admin-selector-row"><div><strong>${htmlEscape(safeText(full))}</strong><span>${htmlEscape(safeText(reg))} • ${htmlEscape(safeText(member.state,'No state'))} • ${htmlEscape(safeText(member.lga,'No LGA'))}</span></div><div class="admin-selector-row-actions"><a class="admin-selector-action" href="${href}"><i class="fas fa-id-card-clip"></i>Open Dossier</a><a class="admin-selector-action" href="${editHref}"><i class="fas fa-pen"></i>Edit</a></div></div>`;
+        }).join('') : empty;
+        return `<section class="admin-selector-card"><p class="official-chip"><i class="fas fa-id-card-clip"></i>Member Intelligence</p><h2>${htmlEscape(title)}</h2><p>${htmlEscape(subtitle)}</p><form class="admin-selector-search" id="memberSelectorSearch"><input type="search" name="q" placeholder="Search name, phone or registration number" aria-label="Search members"><button type="submit"><i class="fas fa-search"></i>Search</button><a class="admin-selector-action" href="/admin/members.html"><i class="fas fa-table"></i>Open Registry</a></form><div id="memberSelectorResults" class="admin-selector-results">${items}</div></section>`;
+      }
+      async function showAdminMemberSelector() {
+        const hasAdminAccess = await ensureAdminSession();
+        if (!hasAdminAccess) return;
+        const root = document.getElementById('contentRoot');
+        if (!root) return;
+        let rows = [];
+        try {
+          const { data } = await supabaseClient.from('members').select('id,reg_number,first_name,last_name,name,phone,state,lga,created_at').order('created_at',{ascending:false}).limit(10);
+          rows = Array.isArray(data) ? data : [];
+        } catch (error) { console.info('Recent member selector skipped:', error?.message || error); }
+        root.innerHTML = selectorCardHtml('Select a member to view dossier', 'Open Details now uses a valid member id in the URL. Choose a recent record below or search the registry.', rows, 'details');
+        const form = document.getElementById('memberSelectorSearch');
+        form?.addEventListener('submit', async event => {
+          event.preventDefault();
+          const q = new FormData(form).get('q')?.toString().trim();
+          const box = document.getElementById('memberSelectorResults');
+          if (!q) return;
+          box.innerHTML = '<div class="admin-selector-row"><div><strong>Searching...</strong><span>Please wait.</span></div></div>';
+          try {
+            const safe = q.replace(/[,%]/g,'');
+            const { data, error } = await supabaseClient.from('members').select('id,reg_number,first_name,last_name,name,phone,state,lga,created_at').or(`first_name.ilike.%${safe}%,last_name.ilike.%${safe}%,reg_number.ilike.%${safe}%,phone.ilike.%${safe}%`).limit(20);
+            if (error) throw error;
+            box.innerHTML = selectorCardHtml('','',Array.isArray(data)?data:[], 'details').match(/<div id="memberSelectorResults" class="admin-selector-results">([\s\S]*)<\/div><\/section>$/)?.[1] || '';
+          } catch (error) {
+            box.innerHTML = `<div class="admin-error-panel">${htmlEscape(safeText(describeSupabaseError(error)))}</div>`;
+          }
+        });
+      }
+
+      async function boot() {
+        const requestedMode = String(params.get("mode") || "").toLowerCase();
+        const id = params.get("id") || params.get("member_id") || params.get("member") || params.get("reg") || params.get("reg_number");
+        if (requestedMode === "member") {
+          applyMode("member");
+          await loadMemberPortal();
+        } else if (id) {
+          applyMode("admin");
+          await loadAdminMember(id);
+        } else {
+          applyMode("admin");
+          await showAdminMemberSelector();
+        }
+      }
+
+      async function fetchMemberRecord(identifier) {
+        const raw = decodeRouteIdentifier(safeText(identifier, ""));
+        if (!raw) return null;
+
+        const attempts = [
+          { column: "id", value: raw },
+          { column: "member_id", value: raw },
+          { column: "user_id", value: raw },
+          { column: "reg_number", value: raw },
+          { column: "registration_number", value: raw },
+        ];
+
+        for (const attempt of attempts) {
+          const { data, error } = await supabaseClient
+            .from("members")
+            .select("*")
+            .eq(attempt.column, attempt.value)
+            .maybeSingle();
+          if (data) return data;
+          if (error && !["PGRST116", "42703", "PGRST204"].includes(error.code) && !/column|schema cache/i.test(String(error.message || ""))) {
+            console.warn(`Member lookup by ${attempt.column} failed`, error);
+          }
+        }
+
+        const stored = sessionStorage.getItem("apsg_admin_selected_member") || sessionStorage.getItem("apsg_member_portal_member");
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+            const candidates = [parsed?.id, parsed?.member_id, parsed?.user_id, parsed?.reg_number, parsed?.registration_number].filter(Boolean);
+            if (candidates.some(value => String(value) === raw)) return parsed;
+          } catch (error) {
+            console.warn("Stored member fallback could not be parsed", error);
+          }
+        }
+        return null;
+      }
+
+      async function loadAdminMember(id) {
+        try {
+          els.loginRequired.classList.add("hidden");
+          els.detailsContent.classList.remove("hidden");
+          const hasAdminAccess = await ensureAdminSession();
+          if (!hasAdminAccess) return;
+
+          const member = await fetchMemberRecord(id);
+          if (!member) throw new Error("Member not found");
+          currentMember = member;
+          renderMember(member);
+          await setupDocument(member.pvc_upload_path, "pvc");
+          await setupDocument(member.apc_upload_path, "apc");
+          updateHealthMetrics();
+        } catch (error) {
+          els.detailsContent.classList.remove("hidden");
+          els.errorMessage.classList.remove("hidden");
+          setStatusPill(
+            els.modeBadge,
+            "status-warn",
+            "Admin data error",
+            "fa-triangle-exclamation",
+          );
+          console.error(error);
+        }
+      }
+
+      async function loadMemberPortal() {
+        try {
+          const verified =
+            sessionStorage.getItem("apsg_member_portal_verified") === "1";
+          const stored = sessionStorage.getItem("apsg_member_portal_member");
+          if (!verified || !stored) {
+            els.loginRequired.classList.remove("hidden");
+            return;
+          }
+          let member = JSON.parse(stored);
+          if (member?.id) {
+            const { data } = await supabaseClient
+              .from("members")
+              .select("*")
+              .eq("id", member.id)
+              .maybeSingle();
+            if (data) member = data;
+          }
+          currentMember = member;
+          els.detailsContent.classList.remove("hidden");
+          renderMember(member);
+          await setupDocument(member.pvc_upload_path, "pvc");
+          await setupDocument(member.apc_upload_path, "apc");
+          updateHealthMetrics();
+        } catch (error) {
+          console.error(error);
+          sessionStorage.removeItem("apsg_member_portal_verified");
+          els.loginRequired.classList.remove("hidden");
+        }
+      }
+
+      function renderMember(member) {
+        const fullName =
+          `${member.first_name || ""} ${member.last_name || ""}`.trim() ||
+          "N/A";
+        const regNumber = safeText(member.reg_number);
+        const joinedDate = member.created_at
+          ? new Date(member.created_at).toLocaleDateString("en-NG", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })
+          : "—";
+        renderProfilePhoto(member);
+        els.detailRegNumber.innerHTML = `<i class="fas fa-fingerprint"></i>${regNumber}`;
+        els.detailFullName.textContent = fullName;
+        els.detailDesignation.textContent = safeText(
+          member.designation,
+          "Member",
+        );
+        els.detailFirstName.textContent = safeText(member.first_name);
+        els.detailLastName.textContent = safeText(member.last_name);
+        els.detailPhone.textContent = safeText(member.phone);
+        els.detailEmail.textContent = safeText(member.email);
+        els.detailState.textContent = safeText(member.state);
+        els.detailLga.textContent = safeText(member.lga);
+        els.detailWard.textContent = safeText(member.ward);
+        els.detailDate.textContent = joinedDate;
+        els.detailPvc.textContent = safeText(member.pvc_number);
+        els.detailApc.textContent = safeText(member.apc_card_number);
+        els.heroState.textContent = safeText(member.state);
+        els.heroLga.textContent = safeText(member.lga);
+        els.heroDate.textContent = joinedDate;
+        renderAccountDetails(member);
+        updateVerificationUI(Boolean(member.verified));
+        updateContactLinks(member);
+        renderAuditTrail(member);
+        loadReviewNote(member.id);
+      }
+
+
+      function getAccountNumber(member) {
+        return safeText(
+          member?.account_number || member?.accountNumber || member?.acct_number,
+          "",
+        );
+      }
+
+      function getBankName(member) {
+        return safeText(
+          member?.bank_name || member?.bank || member?.bankName,
+          "",
+        );
+      }
+
+      function setAccountStatus(message = "", tone = "muted") {
+        if (!els.accountStatus) return;
+        els.accountStatus.textContent = message;
+        els.accountStatus.className = `account-vault__status account-vault__status--${tone}`;
+      }
+
+      function setAccountEditMode(isEditing) {
+        [els.accountNumberInput, els.bankNameInput].forEach((input) => {
+          if (!input) return;
+          input.readOnly = !isEditing;
+          input.classList.toggle("is-editing", isEditing);
+        });
+
+        if (els.accountEditBtn) els.accountEditBtn.disabled = isEditing || !currentMember;
+        if (els.accountSaveBtn) els.accountSaveBtn.disabled = !isEditing || !currentMember;
+
+        const panel = $("accountDetailsPanel");
+        if (panel) panel.classList.toggle("is-editing", isEditing);
+      }
+
+      function enableAccountEditing() {
+        if (!currentMember) return;
+        setAccountEditMode(true);
+        setAccountStatus("Editing enabled. Update the account details and click Save Account.", "saving");
+        setTimeout(() => els.accountNumberInput?.focus(), 50);
+      }
+
+      function renderAccountDetails(member) {
+        if (!member) return;
+        if (els.accountNumberInput) els.accountNumberInput.value = getAccountNumber(member);
+        if (els.bankNameInput) els.bankNameInput.value = getBankName(member);
+        setAccountEditMode(false);
+        setAccountStatus("", "muted");
+      }
+
+      async function saveAccountDetails() {
+        if (!currentMember) return;
+        const accountNumber = (els.accountNumberInput?.value || "").trim();
+        const bankName = (els.bankNameInput?.value || "").trim();
+
+        if (els.accountEditBtn) els.accountEditBtn.disabled = true;
+        if (els.accountSaveBtn) els.accountSaveBtn.disabled = true;
+        setAccountStatus("Saving account details...", "saving");
+
+        try {
+          const payload = {
+            account_number: accountNumber || null,
+            bank_name: bankName || null,
+            updated_at: new Date().toISOString(),
+          };
+
+          if (pageMode === "admin") {
+            const { error } = await supabaseClient
+              .from("members")
+              .update(payload)
+              .eq("id", currentMember.id);
+
+            if (error) throw error;
+          } else {
+            const rpcPayload = {
+              p_member_id: String(currentMember.id || ""),
+              p_reg_number: String(currentMember.reg_number || ""),
+              p_phone: String(currentMember.phone || ""),
+              p_account_number: accountNumber || null,
+              p_bank_name: bankName || null,
+            };
+
+            const { error: rpcError } = await supabaseClient.rpc(
+              "update_member_account_details",
+              rpcPayload,
+            );
+
+            if (rpcError) {
+              const missingRpc = ["42883", "PGRST202"].includes(rpcError.code);
+              if (!missingRpc) throw rpcError;
+
+              const { error: fallbackError } = await supabaseClient
+                .from("members")
+                .update(payload)
+                .eq("id", currentMember.id);
+
+              if (fallbackError) {
+                throw new Error(
+                  "Member account save needs the update_member_account_details RPC. Run the supplied Supabase SQL file once.",
+                );
+              }
+            }
+          }
+
+          currentMember.account_number = accountNumber;
+          currentMember.bank_name = bankName;
+
+          if (pageMode === "member") {
+            sessionStorage.setItem("apsg_member_portal_member", JSON.stringify(currentMember));
+          }
+
+          renderAccountDetails(currentMember);
+          setAccountStatus("Account details saved successfully.", "success");
+          showToast("Account details saved");
+        } catch (error) {
+          console.error(error);
+          setAccountStatus(
+            `Account save failed: ${error.message || "Please confirm the account columns and member account RPC exist."}`,
+            "error",
+          );
+          setAccountEditMode(true);
+        }
+      }
+
+      function renderProfilePhoto(member) {
+        const path = member?.profile_photo_path || member?.avatar_url || member?.photo_url || "";
+        const fallback = "/assets/images/avatar-placeholder.png";
+        const photoUrl = path ? resolveUploadUrl(path) : fallback;
+        if (els.profilePhoto) {
+          els.profilePhoto.style.display = "block";
+          els.profilePhoto.onerror = function(){ this.onerror = null; this.src = fallback; els.profileAvatarShell?.classList.remove("has-photo"); };
+          els.profilePhoto.src = photoUrl;
+        }
+        if (els.profileAvatarShell) {
+          els.profileAvatarShell.classList.toggle("has-photo", Boolean(path));
+        }
+        if (els.profileFileName) els.profileFileName.textContent = path ? "Profile photo available" : "No photo selected";
+      }
+
+      function handleProfileFileSelect(input) {
+        if (!input?.files?.[0]) return;
+        const file = input.files[0];
+        const maxSize = 3 * 1024 * 1024;
+        if (els.profileFileName) els.profileFileName.textContent = file.name;
+        if (!file.type.startsWith("image/")) {
+          if (els.profileStatus) {
+            els.profileStatus.textContent = "Please choose an image file.";
+            els.profileStatus.className = "avatar-status text-red-200";
+          }
+          if (els.profileUploadBtn) els.profileUploadBtn.disabled = true;
+          return;
+        }
+        if (file.size > maxSize) {
+          if (els.profileStatus) {
+            els.profileStatus.textContent = "Image must be 3MB or smaller.";
+            els.profileStatus.className = "avatar-status text-red-200";
+          }
+          if (els.profileUploadBtn) els.profileUploadBtn.disabled = true;
+          return;
+        }
+        const localUrl = URL.createObjectURL(file);
+        if (els.profilePhoto) {
+          els.profilePhoto.style.display = "block";
+          els.profilePhoto.src = localUrl;
+        }
+        els.profileAvatarShell?.classList.add("has-photo");
+        els.profileUploadBtn?.classList.remove("hidden");
+        if (els.profileUploadBtn) els.profileUploadBtn.disabled = false;
+        if (els.profileStatus) {
+          els.profileStatus.textContent = "Ready to save.";
+          els.profileStatus.className = "avatar-status text-amber-100";
+        }
+      }
+
+      async function uploadProfilePhoto() {
+        if (!currentMember || !els.profileFileInput?.files?.[0]) return;
+        const file = els.profileFileInput.files[0];
+        if (els.profileUploadBtn) els.profileUploadBtn.disabled = true;
+        if (els.profileStatus) {
+          els.profileStatus.textContent = "Uploading avatar...";
+          els.profileStatus.className = "avatar-status text-white";
+        }
+        try {
+          const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+          const safeExt = ["jpg", "jpeg", "png", "webp", "gif"].includes(ext) ? ext : "jpg";
+          const path = `profile/${currentMember.id}_${Date.now()}.${safeExt}`;
+          const { error: uploadError } = await supabaseClient.storage
+            .from("uploads")
+            .upload(path, file, { cacheControl: "3600", upsert: true });
+          if (uploadError) throw uploadError;
+
+          if (pageMode === "admin") {
+            const { error: updateError } = await supabaseClient
+              .from("members")
+              .update({ profile_photo_path: path, updated_at: new Date().toISOString() })
+              .eq("id", currentMember.id);
+            if (updateError) throw updateError;
+          } else {
+            const { error: rpcError } = await supabaseClient.rpc("update_member_profile_photo", {
+              p_member_id: String(currentMember.id || ""),
+              p_reg_number: String(currentMember.reg_number || ""),
+              p_phone: String(currentMember.phone || ""),
+              p_profile_photo_path: path,
+            });
+            if (rpcError) throw rpcError;
+          }
+
+          currentMember.profile_photo_path = path;
+          renderProfilePhoto(currentMember);
+          els.profileFileInput.value = "";
+          els.profileUploadBtn?.classList.add("hidden");
+          if (els.profileStatus) {
+            els.profileStatus.textContent = "Avatar saved successfully.";
+            els.profileStatus.className = "avatar-status text-green-100";
+          }
+          showToast("Profile avatar updated");
+        } catch (error) {
+          console.error(error);
+          if (els.profileStatus) {
+            els.profileStatus.textContent = `Avatar upload failed: ${error.message || "Please try again."}`;
+            els.profileStatus.className = "avatar-status text-red-200";
+          }
+          if (els.profileUploadBtn) els.profileUploadBtn.disabled = false;
+        }
+      }
+
+      function updateVerificationUI(isVerified) {
+        setStatusPill(
+          els.verifiedBadge,
+          isVerified ? "status-good" : "status-warn",
+          isVerified ? "Verified" : "Pending Review",
+          isVerified ? "fa-circle-check" : "fa-clock",
+        );
+        if (!els.verifyToggleBtn) return;
+        els.verifyToggleBtn.innerHTML = isVerified
+          ? '<i class="fas fa-rotate-left"></i> Mark Pending'
+          : '<i class="fas fa-circle-check"></i> Mark Verified';
+        els.verifyToggleBtn.className = isVerified
+          ? "action-btn bg-amber-100 text-amber-800 border border-amber-200 admin-only"
+          : "action-btn bg-apsgDeep text-white admin-only";
+        els.verifyToggleBtn.disabled = pageMode !== "admin";
+      }
+
+      function updateContactLinks(member) {
+        const phone = normalizePhone(member.phone);
+        const email = safeText(member.email, "");
+        els.callLink.href = phone ? `tel:+${phone}` : "#";
+        els.whatsappLink.href = phone ? `https://wa.me/${phone}` : "#";
+        els.emailLink.href = email ? `mailto:${email}` : "#";
+        [els.callLink, els.whatsappLink].forEach((link) => {
+          link.classList.toggle("opacity-50", !phone);
+          link.classList.toggle("pointer-events-none", !phone);
+        });
+        els.emailLink.classList.toggle("opacity-50", !email);
+        els.emailLink.classList.toggle("pointer-events-none", !email);
+      }
+
+      async function setupDocument(uploadPath, type) {
+        const previewEl = $(`${type}Preview`),
+          viewBtn = $(`${type}ViewBtn`),
+          downloadBtn = $(`${type}DownloadBtn`),
+          fileNameEl = $(`${type}FileName`),
+          uploadBtn = $(`${type}UploadBtn`),
+          statusEl = $(`${type}Status`),
+          docStatus = $(`${type}DocStatus`);
+        const pdfPlaceholder = "/assets/images/pdf-placeholder.png";
+        const noUpload = "/assets/images/no-upload.png";
+        if (fileNameEl) fileNameEl.textContent = "No file chosen";
+        if (uploadBtn) uploadBtn.disabled = true;
+        if (statusEl) statusEl.textContent = "";
+        if (!uploadPath) {
+          previewEl.src = noUpload;
+          previewEl.onclick = null;
+          viewBtn.onclick = null;
+          viewBtn.disabled = true;
+          downloadBtn.classList.add("hidden");
+          setStatusPill(
+            docStatus,
+            "status-warn",
+            "Missing",
+            "fa-triangle-exclamation",
+          );
+          $(`${type}Metric`).textContent = "Missing";
+          return;
+        }
+        const publicUrl = resolveUploadUrl(uploadPath);
+        const ref = isExternalUrl(uploadPath) ? publicUrl : uploadPath;
+        const isPdf = isPdfFile(ref);
+        const isImage =
+          isImageFile(ref) || (!isPdf && isExternalUrl(uploadPath));
+        previewEl.src = isPdf ? pdfPlaceholder : isImage ? publicUrl : noUpload;
+        previewEl.onclick = () =>
+          openPreview(publicUrl, isPdf ? "pdf" : "image");
+        viewBtn.onclick = () => openPreview(publicUrl, isPdf ? "pdf" : "image");
+        viewBtn.disabled = false;
+        downloadBtn.onclick = () => {
+          const a = document.createElement("a");
+          a.href = publicUrl;
+          a.download =
+            String(uploadPath).split("/").pop() || `${type}-document`;
+          a.target = "_blank";
+          a.click();
+        };
+        downloadBtn.classList.remove("hidden");
+        setStatusPill(docStatus, "status-good", "Available", "fa-circle-check");
+        $(`${type}Metric`).textContent = "Available";
+      }
+
+      function getChecklistItems(member) {
+        return [
+          {
+            label: "Full name captured",
+            hint: "First and last name available",
+            done: Boolean(
+              safeText(member.first_name, "") && safeText(member.last_name, ""),
+            ),
+          },
+          {
+            label: "Phone contact captured",
+            hint: "Call or WhatsApp contact available",
+            done: Boolean(safeText(member.phone, "")),
+          },
+          {
+            label: "Location mapped",
+            hint: "State, LGA/LCDA and ward complete",
+            done: Boolean(
+              safeText(member.state, "") &&
+              safeText(member.lga, "") &&
+              safeText(member.ward, ""),
+            ),
+          },
+          {
+            label: "PVC number entered",
+            hint: "VIN/PVC field is not empty",
+            done: Boolean(safeText(member.pvc_number, "")),
+          },
+          {
+            label: "APC card number entered",
+            hint: "APC card field is not empty",
+            done: Boolean(safeText(member.apc_card_number, "")),
+          },
+          {
+            label: "PVC document uploaded",
+            hint: "PVC image or PDF available",
+            done: Boolean(safeText(member.pvc_upload_path, "")),
+          },
+          {
+            label: "APC document uploaded",
+            hint: "APC card image or PDF available",
+            done: Boolean(safeText(member.apc_upload_path, "")),
+          },
+          {
+            label: "Admin verification decision",
+            hint: "Record marked verified or pending",
+            done: Boolean(member.verified),
+          },
+        ];
+      }
+      function renderChecklist(items) {
+        els.reviewChecklist.innerHTML = items
+          .map(
+            (item) =>
+              `<div class="check-row"><div><span class="label">${item.label}</span><span class="hint">${item.hint}</span></div><span class="status-pill ${item.done ? "status-good" : "status-warn"}"><i class="fas ${item.done ? "fa-check" : "fa-clock"}"></i>${item.done ? "Done" : "Open"}</span></div>`,
+          )
+          .join("");
+      }
+      function renderAuditTrail(member) {
+        if (!member) return;
+        const created = member.created_at
+          ? new Date(member.created_at).toLocaleString("en-NG", {
+              dateStyle: "medium",
+              timeStyle: "short",
+            })
+          : "Date unavailable";
+        const updated = member.updated_at
+          ? new Date(member.updated_at).toLocaleString("en-NG", {
+              dateStyle: "medium",
+              timeStyle: "short",
+            })
+          : "No update timestamp";
+        const docs = [member.pvc_upload_path, member.apc_upload_path].filter(
+          Boolean,
+        ).length;
+        const items = [
+          {
+            icon: "fa-user-plus",
+            title: "Registration captured",
+            meta: created,
+          },
+          {
+            icon:
+              docs === 2
+                ? "fa-file-circle-check"
+                : "fa-file-circle-exclamation",
+            title: `Document vault ${docs}/2`,
+            meta:
+              docs === 2
+                ? "PVC and APC documents available"
+                : "Document follow-up required",
+          },
+          {
+            icon: member.verified ? "fa-shield-circle-check" : "fa-clock",
+            title: member.verified
+              ? "Admin verified"
+              : "Pending admin verification",
+            meta: updated,
+          },
+        ];
+        els.auditTrail.innerHTML = items
+          .map(
+            (item) =>
+              `<div class="audit-row"><span class="audit-dot"><i class="fas ${item.icon}"></i></span><div><p class="font-black text-apsgDeep mb-0">${item.title}</p><p class="text-xs text-gray-500 mb-0">${item.meta}</p></div></div>`,
+          )
+          .join("");
+      }
+      function reviewNoteKey(memberId) {
+        return `apsg-review-note-${memberId}`;
+      }
+      function loadReviewNote(memberId) {
+        if (!els.reviewNote || !memberId) return;
+        els.reviewNote.value =
+          localStorage.getItem(reviewNoteKey(memberId)) || "";
+      }
+      function saveReviewNote() {
+        if (!currentMember || !els.reviewNote) return;
+        localStorage.setItem(
+          reviewNoteKey(currentMember.id),
+          els.reviewNote.value.trim(),
+        );
+        showToast("Review note saved locally");
+      }
+      function updateHealthMetrics() {
+        if (!currentMember) return;
+        const checklist = getChecklistItems(currentMember);
+        const passed = checklist.filter((item) => item.done).length;
+        const health = Math.round((passed / checklist.length) * 100);
+        const docs = [
+          currentMember.pvc_upload_path,
+          currentMember.apc_upload_path,
+        ].filter(Boolean).length;
+        els.docScore.textContent = `${docs}/2`;
+        els.healthMetric.textContent = `${health}%`;
+        els.healthProgress.style.width = `${health}%`;
+        els.checklistScore.innerHTML = `<i class="fas fa-check-double"></i>${passed}/${checklist.length}`;
+        let tier = "Needs Attention",
+          tierIcon = "fa-triangle-exclamation";
+        if (health >= 90 && currentMember.verified) {
+          tier = "Verification Complete";
+          tierIcon = "fa-shield-circle-check";
+        } else if (health >= 75) {
+          tier = "Ready for Final Review";
+          tierIcon = "fa-clipboard-check";
+        } else if (health >= 50) {
+          tier = "Partial Record";
+          tierIcon = "fa-hourglass-half";
+        }
+        els.reviewTier.textContent = tier;
+        els.reviewTierBadge.innerHTML = `<i class="fas ${tierIcon}"></i>${health}%`;
+        if (docs === 2)
+          setStatusPill(
+            els.docBadge,
+            "status-good",
+            "Documents Complete",
+            "fa-file-circle-check",
+          );
+        else if (docs === 1)
+          setStatusPill(
+            els.docBadge,
+            "status-warn",
+            "One Document Missing",
+            "fa-file-circle-exclamation",
+          );
+        else
+          setStatusPill(
+            els.docBadge,
+            "status-warn",
+            "Documents Missing",
+            "fa-file-circle-xmark",
+          );
+        renderChecklist(checklist);
+        renderAuditTrail(currentMember);
+      }
+      async function toggleVerification() {
+        if (!currentMember || pageMode !== "admin" || !canAdminWrite) return;
+        const nextVerified = !Boolean(currentMember.verified);
+        els.verifyToggleBtn.disabled = true;
+        const { error } = await supabaseClient
+          .from("members")
+          .update({ verified: nextVerified })
+          .eq("id", currentMember.id);
+        if (error) {
+          showToast("Verification update failed");
+          els.verifyToggleBtn.disabled = false;
+          return;
+        }
+        currentMember.verified = nextVerified;
+        updateVerificationUI(nextVerified);
+        updateHealthMetrics();
+        showToast(
+          nextVerified ? "Member marked verified" : "Member marked pending",
+        );
+      }
+      function handleFileSelect(type, input) {
+        const statusEl = $(`${type}Status`);
+        if (input.files && input.files[0]) {
+          const file = input.files[0];
+          const maxSize = 5 * 1024 * 1024;
+          $(`${type}FileName`).textContent = file.name;
+          if (file.size > maxSize) {
+            statusEl.textContent =
+              "File is larger than 5MB. Please choose a smaller file.";
+            statusEl.className = "mt-2 text-xs font-black text-red-600 mb-0";
+            $(`${type}UploadBtn`).disabled = true;
+            return;
+          }
+          statusEl.textContent = "Ready to upload.";
+          statusEl.className = "mt-2 text-xs font-black text-apsgGreen mb-0";
+          $(`${type}UploadBtn`).disabled = false;
+        }
+      }
+      async function uploadDocument(type) {
+        if (pageMode !== "admin" || !canAdminWrite) return;
+        const input = $(`${type}FileInput`);
+        const file = input.files[0];
+        if (!file || !currentMember) return;
+        const statusEl = $(`${type}Status`);
+        const uploadBtn = $(`${type}UploadBtn`);
+        statusEl.textContent = "Uploading document...";
+        statusEl.className = "mt-2 text-xs font-black text-gray-600 mb-0";
+        uploadBtn.disabled = true;
+        try {
+          const ext = file.name.split(".").pop();
+          const filename = `${currentMember.id}_${Date.now()}.${ext}`;
+          const path = `${type}/${filename}`;
+          const { error: uploadError } = await supabaseClient.storage
+            .from("uploads")
+            .upload(path, file, { cacheControl: "3600", upsert: true });
+          if (uploadError) throw uploadError;
+          const { error: updateError } = await supabaseClient
+            .from("members")
+            .update({ [`${type}_upload_path`]: path })
+            .eq("id", currentMember.id);
+          if (updateError) throw updateError;
+          currentMember[`${type}_upload_path`] = path;
+          statusEl.textContent = "Uploaded successfully.";
+          statusEl.className = "mt-2 text-xs font-black text-green-700 mb-0";
+          await setupDocument(path, type);
+          updateHealthMetrics();
+          input.value = "";
+          $(`${type}FileName`).textContent = "No file chosen";
+          uploadBtn.disabled = true;
+          showToast(`${type.toUpperCase()} document updated`);
+        } catch (error) {
+          statusEl.textContent = `Upload failed: ${error.message || "Please try again."}`;
+          statusEl.className = "mt-2 text-xs font-black text-red-600 mb-0";
+          uploadBtn.disabled = false;
+        }
+      }
+      function openPreview(url, type) {
+        if (!url) return;
+        currentPreviewUrl = url;
+        const frame = $("previewFrame"),
+          img = $("previewImage");
+        resetZoom();
+        if (type === "pdf") {
+          frame.src = url;
+          frame.classList.remove("d-none");
+          img.classList.add("d-none");
+          document.querySelector(".zoom-controls").style.display = "flex";
+          document
+            .querySelectorAll(".zoom-controls .zoom-btn")
+            .forEach((btn, index) => {
+              if (index < 3) btn.style.display = "none";
+              else btn.style.display = "grid";
+            });
+        } else {
+          img.src = url;
+          img.classList.remove("d-none");
+          frame.classList.add("d-none");
+          document.querySelector(".zoom-controls").style.display = "flex";
+          document
+            .querySelectorAll(".zoom-controls .zoom-btn")
+            .forEach((btn) => (btn.style.display = "grid"));
+        }
+        new bootstrap.Modal($("previewModal")).show();
+      }
+      function openDocumentInNewTab() {
+        if (currentPreviewUrl)
+          window.open(currentPreviewUrl, "_blank", "noopener");
+      }
+      window.zoomIn = () => {
+        zoomLevel += 0.18;
+        $("previewImage").style.transform = `scale(${zoomLevel})`;
+      };
+      window.zoomOut = () => {
+        if (zoomLevel > 0.3) zoomLevel -= 0.18;
+        $("previewImage").style.transform = `scale(${zoomLevel})`;
+      };
+      window.resetZoom = () => {
+        zoomLevel = 1;
+        $("previewImage").style.transform = "scale(1)";
+      };
+      function buildMemberSummary() {
+        if (!currentMember) return "";
+        const fullName =
+          `${currentMember.first_name || ""} ${currentMember.last_name || ""}`.trim() ||
+          "N/A";
+        return [
+          `APSG Member Summary`,
+          `Name: ${fullName}`,
+          `Registration Number: ${currentMember.reg_number || "—"}`,
+          `Designation: ${currentMember.designation || "Member"}`,
+          `Phone: ${currentMember.phone || "—"}`,
+          `Email: ${currentMember.email || "—"}`,
+          `Location: ${currentMember.ward || "—"}, ${currentMember.lga || "—"}, ${currentMember.state || "—"}`,
+          `PVC: ${currentMember.pvc_number || "—"}`,
+          `APC Card: ${currentMember.apc_card_number || "—"}`,
+          `Account Number: ${getAccountNumber(currentMember) || ""}`,
+          `Bank: ${getBankName(currentMember) || ""}`,
+          `Status: ${currentMember.verified ? "Verified" : "Pending"}`,
+        ].join("\n");
+      }
+      function copyMemberSummary() {
+        const summary = buildMemberSummary();
+        if (!summary) return;
+        navigator.clipboard
+          ?.writeText(summary)
+          .then(() => showToast("Member summary copied"));
+      }
+      function buildVerificationMemo() {
+        if (!currentMember) return "";
+        const docs = [
+          currentMember.pvc_upload_path,
+          currentMember.apc_upload_path,
+        ].filter(Boolean).length;
+        return `${buildMemberSummary()}\nDocuments: ${docs}/2 uploaded\nVerification Status: ${currentMember.verified ? "Verified" : "Pending"}\nOfficer Note: ${els.reviewNote?.value?.trim() || "—"}`;
+      }
+      function copyVerificationMemo() {
+        const memo = buildVerificationMemo();
+        if (!memo) return;
+        navigator.clipboard
+          ?.writeText(memo)
+          .then(() => showToast("Verification memo copied"));
+      }
+      function copyDocumentLinks() {
+        if (!currentMember) return;
+        const pvc = currentMember.pvc_upload_path
+          ? resolveUploadUrl(currentMember.pvc_upload_path)
+          : "Missing";
+        const apc = currentMember.apc_upload_path
+          ? resolveUploadUrl(currentMember.apc_upload_path)
+          : "Missing";
+        navigator.clipboard
+          ?.writeText(`PVC Document: ${pvc}\nAPC Document: ${apc}`)
+          .then(() => showToast("Document links copied"));
+      }
+      function downloadMemberJson() {
+        if (!currentMember) return;
+        const payload = {
+          exported_at: new Date().toISOString(),
+          mode: pageMode,
+          dossier_health: els.healthMetric?.textContent || "—",
+          member: currentMember,
+          review_note: els.reviewNote?.value?.trim() || "",
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], {
+          type: "application/json",
+        });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `${(currentMember.reg_number || "apsg-member").replace(/[^a-z0-9]+/gi, "-")}.json`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+        showToast("Member JSON exported");
+      }
+      function copyRegNumber() {
+        const text = els.detailRegNumber.textContent.trim();
+        if (!text || text === "—") return;
+        navigator.clipboard
+          ?.writeText(text)
+          .then(() => showToast("Registration number copied"));
+      }
+      function toggleSidebar() {
+        $("adminShell").classList.toggle("open");
+        $("adminShell").classList.toggle("-translate-x-full");
+        $("mobile-overlay").classList.toggle("hidden");
+      }
+      function closeSidebar() {
+        $("adminShell").classList.remove("open");
+        $("adminShell").classList.add("-translate-x-full");
+        $("mobile-overlay").classList.add("hidden");
+      }
+      function logoutMember() {
+        sessionStorage.removeItem("apsg_member_portal_verified");
+        sessionStorage.removeItem("apsg_member_portal_member_id");
+        sessionStorage.removeItem("apsg_member_portal_member");
+        sessionStorage.removeItem("apsg_member_portal_access_at");
+        window.location.href = "/pages/member-login.html";
+      }
+      async function logoutAdmin() {
+        if (typeof supabaseClient !== "undefined")
+          await supabaseClient.auth.signOut();
+        window.location.href = "/pages/member-login.html";
+      }
+
+      if (els.profileSelectBtn) {
+        els.profileSelectBtn.addEventListener("click", () => els.profileFileInput?.click());
+      }
+      if (els.profileFileInput) {
+        els.profileFileInput.addEventListener("change", function () {
+          handleProfileFileSelect(this);
+        });
+      }
+      if (els.profileUploadBtn) {
+        els.profileUploadBtn.addEventListener("click", uploadProfilePhoto);
+      }
+
+      ["pvc", "apc"].forEach((type) => {
+        const fileInput = $(`${type}FileInput`);
+        const uploadBtn = $(`${type}UploadBtn`);
+        if (fileInput)
+          fileInput.addEventListener("change", function () {
+            handleFileSelect(type, this);
+          });
+        if (uploadBtn)
+          uploadBtn.addEventListener("click", () => uploadDocument(type));
+      });
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll("#adminShell .sidebar-link[href]").forEach((link) => {
+          link.addEventListener("click", () => {
+            if (window.innerWidth < 768) closeSidebar();
+          });
+        });
+        boot();
+      });
+      window.toggleSidebar = toggleSidebar;
+      window.closeSidebar = closeSidebar;
+      window.logoutAdmin = logoutAdmin;
+      window.logoutMember = logoutMember;
+      window.toggleVerification = toggleVerification;
+      window.copyRegNumber = copyRegNumber;
+      window.copyMemberSummary = copyMemberSummary;
+      window.copyVerificationMemo = copyVerificationMemo;
+      window.copyDocumentLinks = copyDocumentLinks;
+      window.downloadMemberJson = downloadMemberJson;
+      window.saveReviewNote = saveReviewNote;
+      window.enableAccountEditing = enableAccountEditing;
+      window.saveAccountDetails = saveAccountDetails;
+      window.uploadProfilePhoto = uploadProfilePhoto;
+      window.openDocumentInNewTab = openDocumentInNewTab;
+    </script>
+    <script src="/assets/js/admin-unified.js" defer></script>
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

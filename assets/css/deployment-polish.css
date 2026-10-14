@@ -1,0 +1,39 @@
+/* APSG production-readiness polish: mobile, accessibility, SEO-friendly UI, and layout safety. */
+:root{
+  --apsg-deep:#05351f;--apsg-green:#0f8a4b;--apsg-gold:#d6a92b;--apsg-cream:#fffaf0;--apsg-line:rgba(5,53,31,.12);--apsg-shadow:0 18px 52px rgba(5,53,31,.12);
+  --safe-inline:clamp(1rem,4vw,2rem);
+}
+html{scroll-padding-top:96px;-webkit-text-size-adjust:100%;text-rendering:optimizeLegibility}
+body{overflow-x:hidden;min-width:320px}
+main,section,header,footer,nav,.container,.admin-main,.page,.page-shell{min-width:0}
+img,svg,video,canvas{max-width:100%;height:auto}
+img{content-visibility:auto}
+a,button,input,select,textarea{touch-action:manipulation}
+button,a,input,select,textarea,[tabindex]:not([tabindex="-1"]){outline-offset:3px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:not([tabindex="-1"]):focus-visible{outline:3px solid rgba(214,169,43,.72)!important;box-shadow:0 0 0 6px rgba(214,169,43,.16)!important}
+.skip-link{z-index:9999!important}
+.table-wrap,.premium-table-wrap,.data-table-wrap,.members-table-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{max-width:100%}
+iframe{max-width:100%;border:0}
+.hero-luxury h1,.hero-title,.section-title,.display-font{overflow-wrap:balance}
+.hero-luxury .whitespace-nowrap,.whitespace-nowrap{white-space:normal!important}
+.hero-luxury{background-position:center;background-size:cover}
+.hero-actions,.button-row,.actions{row-gap:.75rem}
+.premium-btn,.apsg-join-btn,.apsg-login-link,.btn,.icon-btn{min-width:fit-content;min-height:44px}
+.form-grid,.admin-form{min-width:0}
+.field input,.field select,.field textarea,input,select,textarea{max-width:100%}
+.receipt-box,.receipt-doc-grid,.premium-drawer-grid{min-width:0}.receipt-box *,.receipt-doc-grid *,.premium-drawer-grid *{overflow-wrap:anywhere}
+.apsg-floating-navbar{max-width:calc(100vw - 1rem)}
+.apsg-brand-copy strong,.apsg-brand-copy small{overflow:hidden;text-overflow:ellipsis}.apsg-mobile-sidebar{width:min(92vw,390px)}
+@media(max-width:1040px){.apsg-desktop-nav{display:none!important}.apsg-mobile-toggle{display:grid!important}}
+@media(max-width:767px){
+  html{scroll-padding-top:76px}.premium-hero{padding-top:clamp(6.4rem,24vw,7.5rem)!important;padding-bottom:2rem!important}.hero-title{font-size:clamp(2.05rem,13vw,3.1rem)!important;line-height:1.02!important;letter-spacing:-.045em!important}.hero-copy{font-size:.98rem!important}.section{padding:2rem var(--safe-inline)!important}.section-head{align-items:flex-start!important}.hero-actions .premium-btn,.button-row .premium-btn,.hero-actions a,.button-row button{width:100%}.form-card,.glass-card,.premium-card,.admin-card,.receipt-card{border-radius:1rem!important}.field input,.field select,.field textarea,input,select,textarea{font-size:16px!important}.amount-grid,.option-grid,.pathway-grid,.flow-grid,.stats-grid,.form-grid,.admin-form{grid-template-columns:1fr!important}.bank-row{grid-template-columns:1fr!important}.drawer{width:100%!important}.modal-card{width:100%!important;max-height:92vh!important}.premium-report-metrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}.premium-admin-table,.admin-table{min-width:760px!important}.pdf-frame{min-height:62vh!important;height:68vh!important}.receipt-document{padding:.85rem!important}.receipt-doc-footer{grid-template-columns:1fr!important}
+}
+@media(max-width:420px){
+  .apsg-floating-navbar{top:.45rem!important}.apsg-navbar-shell{padding:.45rem!important}.apsg-brand-mark{width:2.25rem!important;height:2.25rem!important}.apsg-brand-copy strong{font-size:.78rem!important}.apsg-brand-copy small{font-size:.58rem!important}.hero-luxury{min-height:auto!important}.hero-luxury h1{font-size:clamp(2rem,13vw,3.25rem)!important;line-height:1.02!important}.premium-btn,.btn{padding-inline:.8rem!important}.status-chip,.gold-chip,.badge{white-space:normal!important;line-height:1.25}.admin-stat-grid{grid-template-columns:1fr!important}.premium-report-metrics{grid-template-columns:1fr!important}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+@media(print){.apsg-floating-navbar,.apsg-mobile-overlay,.apsg-mobile-sidebar,.back-top,.no-print,.apsg-admin-quicknav{display:none!important}body{background:#fff!important;color:#111!important}}
+
+/* Accessible hidden text utility for static and non-Tailwind pages */
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;}

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content="#05351f">
+  <base href="/">
+  <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any">
+  <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="stylesheet" href="/components/navbar.css">
+  <link rel="stylesheet" href="/components/footer.css">
+  <link rel="stylesheet" href="/assets/css/leadership-directory.css">
+  <link rel="stylesheet" href="/assets/css/tailwind-static.css">
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif'],display:['Playfair Display','Georgia','serif']},colors:{apsgDeep:'#05351f',apsgForest:'#082716',apsgGreen:'#0f7a3d',apsgEmerald:'#0f766e',apsgGold:'#d8ad34',apsgCream:'#fffaf0'},boxShadow:{palace:'0 34px 110px rgba(5, 53, 31, 0.22)',gold:'0 16px 42px rgba(216, 173, 52, 0.24)',card:'0 18px 52px rgba(5, 53, 31, 0.12)'}}}}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/apsg-analytics-tracker.js"></script>
+  <title>APSG Board of Matrons & Patrons | APSG Nigeria</title>
+  <meta name="description" content="A live Supabase-powered directory of distinguished Matrons, Patrons and Advisers providing guidance, public trust and strategic support to APSG.">
+
+
+  <style id="apsg-premium-directory-upgrade">
+    :root {
+      --apsg-deep: #05351f;
+      --apsg-forest: #082716;
+      --apsg-green: #0f7a3d;
+      --apsg-gold: #d8ad34;
+      --apsg-cream: #fffaf0;
+      --apsg-ink: #07140e;
+    }
+    body.directory-page,
+    body.state-details-page {
+      background:
+        radial-gradient(circle at 8% 0%, rgba(216,173,52,.14), transparent 28rem),
+        radial-gradient(circle at 92% 8%, rgba(15,122,61,.10), transparent 30rem),
+        linear-gradient(180deg, #fffdf6 0%, #f5fbf6 42%, #ffffff 100%);
+    }
+    .directory-hero,
+    .hero-luxury {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(3,27,15,.97), rgba(5,53,31,.96) 42%, rgba(8,39,22,.95)),
+        radial-gradient(circle at top right, rgba(216,173,52,.20), transparent 28rem) !important;
+    }
+    .directory-hero::before,
+    .hero-luxury::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .18;
+      background-image:
+        linear-gradient(rgba(255,255,255,.09) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.09) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, black, transparent 84%);
+      pointer-events: none;
+    }
+    .glass-panel {
+      box-shadow: 0 30px 90px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.14) !important;
+      backdrop-filter: blur(18px);
+    }
+    .stat-card,
+    .premium-panel,
+    .chapter-card,
+    .tool-card {
+      background: linear-gradient(145deg, rgba(255,255,255,.96), rgba(255,250,240,.86)) !important;
+      border: 1px solid rgba(216,173,52,.22) !important;
+      box-shadow: 0 18px 52px rgba(5,53,31,.10), inset 0 1px 0 rgba(255,255,255,.82) !important;
+    }
+    .premium-panel { border-radius: 1.65rem !important; }
+    #directoryShell { padding: .9rem !important; }
+    #directoryShell > .grid { gap: .9rem !important; grid-template-columns: minmax(14rem,.22fr) minmax(0,.78fr) !important; }
+    .tool-card,
+    .premium-panel aside.bg-gradient-to-b {
+      border-radius: 1.35rem !important;
+      padding: .85rem !important;
+      max-height: calc(100vh - 2.5rem);
+      overflow: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(216,173,52,.75) rgba(255,255,255,.08);
+    }
+    .tool-card .mb-5, .tool-card .mb-6 { margin-bottom: .75rem !important; }
+    .tool-card .mt-6, .tool-card .mt-5 { margin-top: .78rem !important; }
+    .tool-card .rounded-3xl { border-radius: 1rem !important; padding: .72rem !important; }
+    .tool-card h3 { font-size: .95rem !important; line-height: 1.1 !important; }
+    .tool-card p { line-height: 1.35 !important; }
+    .search-input,
+    .state-select {
+      min-height: 2.65rem !important;
+      border-radius: .95rem !important;
+      border: 1px solid rgba(5,53,31,.10) !important;
+      background: rgba(255,255,255,.92) !important;
+      color: var(--apsg-deep) !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 9px 22px rgba(5,53,31,.06) !important;
+      font-weight: 800;
+    }
+    .filter-chip {
+      min-height: 2rem !important;
+      padding: .48rem .7rem !important;
+      border-radius: 999px !important;
+      font-size: .68rem !important;
+      font-weight: 900 !important;
+      border: 1px solid rgba(5,53,31,.10) !important;
+      background: rgba(255,255,255,.84) !important;
+      color: var(--apsg-deep) !important;
+    }
+    .filter-chip.active {
+      background: linear-gradient(135deg, var(--apsg-gold), #ffe08a) !important;
+      color: var(--apsg-deep) !important;
+      border-color: rgba(216,173,52,.55) !important;
+      box-shadow: 0 12px 26px rgba(216,173,52,.22) !important;
+    }
+    #directoryGrid,
+    #executiveGrid {
+      display: grid !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      gap: 1rem !important;
+    }
+    #directoryGrid > *,
+    #executiveGrid > * {
+      min-width: 0;
+    }
+    .leader-card,
+    [data-leader-card],
+    #directoryGrid article,
+    #executiveGrid article,
+    .official-card,
+    .directory-card {
+      border-radius: 1.35rem !important;
+      overflow: hidden !important;
+      background: linear-gradient(145deg, #ffffff, #fffaf0) !important;
+      border: 1px solid rgba(216,173,52,.22) !important;
+      box-shadow: 0 18px 42px rgba(5,53,31,.11) !important;
+      transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease !important;
+    }
+    .leader-card:hover,
+    [data-leader-card]:hover,
+    #directoryGrid article:hover,
+    #executiveGrid article:hover,
+    .official-card:hover,
+    .directory-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(216,173,52,.55) !important;
+      box-shadow: 0 28px 70px rgba(5,53,31,.18) !important;
+    }
+    .leader-photo-wrap,
+    #directoryGrid article > div:first-child,
+    #executiveGrid article > div:first-child {
+      min-height: 17.5rem !important;
+      height: 17.5rem !important;
+      background: #05351f;
+    }
+    .leader-photo,
+    #directoryGrid img,
+    #executiveGrid img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      object-position: top center !important;
+      display: block;
+      filter: saturate(1.05) contrast(1.02);
+    }
+    #directoryGrid article .p-5,
+    #directoryGrid article .p-6,
+    #executiveGrid article .p-5,
+    #executiveGrid article .p-6 {
+      padding: 1rem !important;
+    }
+    #directoryGrid h3,
+    #executiveGrid h3 {
+      font-size: 1.08rem !important;
+      line-height: 1.08 !important;
+      letter-spacing: -.02em;
+    }
+    #directoryGrid p,
+    #executiveGrid p { font-size: .78rem !important; line-height: 1.45 !important; }
+    .official-btn,
+    #directoryGrid button,
+    #directoryGrid a,
+    #executiveGrid button,
+    #executiveGrid a,
+    .modal-card a,
+    .modal-card button {
+      border-radius: 999px !important;
+      font-weight: 900 !important;
+    }
+    .apsg-dossier-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .45rem;
+      min-height: 2.15rem;
+      padding: .55rem .9rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--apsg-gold), #ffe08a);
+      color: var(--apsg-deep) !important;
+      font-size: .72rem;
+      font-weight: 950;
+      box-shadow: 0 12px 26px rgba(216,173,52,.22);
+      text-decoration: none !important;
+      white-space: nowrap;
+    }
+    .apsg-quick-view-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .42rem;
+      min-height: 2.15rem;
+      padding: .55rem .9rem !important;
+      font-size: .72rem !important;
+    }
+    .modal-card {
+      border-radius: 1.6rem !important;
+      max-height: 92vh;
+      overflow: auto !important;
+    }
+    .modal-card .min-h-\[24rem\] { min-height: 27rem !important; }
+    @media (max-width: 1180px) {
+      #directoryShell > .grid { grid-template-columns: 1fr !important; }
+      #directoryGrid, #executiveGrid { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+      .tool-card, .premium-panel aside.bg-gradient-to-b { max-height: none; }
+    }
+    @media (max-width: 720px) {
+      #directoryGrid, #executiveGrid { grid-template-columns: 1fr !important; }
+      .leader-photo-wrap,
+      #directoryGrid article > div:first-child,
+      #executiveGrid article > div:first-child { height: 22rem !important; min-height: 22rem !important; }
+      #directoryShell { padding: .65rem !important; }
+      .directory-hero, .hero-luxury { padding-top: 6.5rem !important; padding-bottom: 4.5rem !important; }
+    }
+    @media print {
+      #directoryGrid, #executiveGrid { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+      .no-print, #navbar, #footer { display: none !important; }
+    }
+  </style>
+
+
+  <style id="apsg-group-directory-upgrade">
+    .apsg-directory-switch{position:relative;z-index:25;margin-top:-1.65rem;margin-bottom:1.2rem}
+    .apsg-directory-switch-inner{display:flex;gap:.55rem;align-items:center;justify-content:center;flex-wrap:wrap;padding:.65rem;border-radius:1.35rem;background:rgba(255,255,255,.92);border:1px solid rgba(216,173,52,.24);box-shadow:0 18px 52px rgba(5,53,31,.12);backdrop-filter:blur(16px)}
+    .apsg-directory-switch a{display:inline-flex;align-items:center;gap:.45rem;min-height:2.35rem;padding:.58rem .9rem;border-radius:999px;border:1px solid rgba(5,53,31,.10);background:linear-gradient(180deg,#fff,#fffaf0);color:#05351f;font-size:.72rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;transition:.22s ease;white-space:nowrap}
+    .apsg-directory-switch a:hover,.apsg-directory-switch a.is-active{transform:translateY(-1px);background:linear-gradient(135deg,#d8ad34,#ffe08a);border-color:rgba(216,173,52,.55);box-shadow:0 12px 30px rgba(216,173,52,.22)}
+    .apsg-group-badge{display:inline-flex;align-items:center;gap:.38rem;border-radius:999px;padding:.35rem .58rem;font-size:.62rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em;background:rgba(216,173,52,.13);border:1px solid rgba(216,173,52,.3);color:#72530b}
+    @media(max-width:720px){.apsg-directory-switch{margin-top:-.85rem}.apsg-directory-switch-inner{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap}.apsg-directory-switch a{flex:0 0 auto;font-size:.64rem;padding:.52rem .72rem}}
+  </style>
+
+  <link rel="canonical" href="https://apsgnigeria.org/pages/mp.html">
+  <meta property="og:url" content="https://apsgnigeria.org/pages/mp.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="https://apsgnigeria.org/assets/images/logo/apsg1.png">
+  <link rel="stylesheet" href="/assets/css/deployment-polish.css">
+  <meta name="keywords" content="APSG Nigeria, APC Progressive Support Group, APC support group, grassroots mobilisation, CWDI, Nigeria politics, APSG membership">
+  <meta property="og:site_name" content="APSG Nigeria">
+  <meta property="og:title" content="APSG Board of Matrons & Patrons | APSG Nigeria">
+  <meta property="og:description" content="A live Supabase-powered directory of distinguished Matrons, Patrons and Advisers providing guidance, public trust and strategic support to APSG.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:title" content="APSG Board of Matrons & Patrons | APSG Nigeria">
+  <meta name="twitter:description" content="A live Supabase-powered directory of distinguished Matrons, Patrons and Advisers providing guidance, public trust and strategic support to APSG.">
+  <meta name="twitter:image" content="https://apsgnigeria.org/assets/images/og-image.jpg">
+  <script type="application/ld+json" data-apsg-static-schema>[{"@context":"https://schema.org","@type":"Organization","name":"APC Progressive Support Group (APSG)","alternateName":"APSG Nigeria","url":"https://apsgnigeria.org/","logo":"https://apsgnigeria.org/assets/images/logo/apsg1.png","sameAs":[]},{"@context":"https://schema.org","@type":"WebPage","name":"APSG Board of Matrons & Patrons | APSG Nigeria","description":"A live Supabase-powered directory of distinguished Matrons, Patrons and Advisers providing guidance, public trust and strategic support to APSG.","url":"https://apsgnigeria.org/pages/mp.html","isPartOf":{"@type":"WebSite","name":"APSG Nigeria","url":"https://apsgnigeria.org/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://apsgnigeria.org/"},{"@type":"ListItem","position":2,"name":"Pages","item":"https://apsgnigeria.org/pages"},{"@type":"ListItem","position":3,"name":"Mp","item":"https://apsgnigeria.org/pages/mp.html"}]}]</script>
+</head>
+<body class="directory-page min-h-screen flex flex-col overflow-x-hidden">
+  <div id="navbar" role="navigation" aria-label="Main Navigation"></div>
+  <main class="flex-grow">
+    <section class="directory-hero text-white pt-28 pb-20 md:pt-36 md:pb-28">
+      <div class="luxury-orb -top-28 -left-24"></div><div class="luxury-orb -bottom-20 -right-20"></div>
+      <div class="relative z-10 max-w-7xl mx-auto px-4 md:px-6">
+        <div class="grid lg:grid-cols-[1.08fr_.92fr] gap-8 items-center">
+          <div class="text-center lg:text-left">
+            <span class="official-chip dark"><i class="fa-solid fa-landmark text-apsgGold"></i>APSG Patronage Council</span>
+            <h1 id="directoryPageTitle" class="display-font mt-6 text-4xl md:text-6xl lg:text-7xl font-black leading-[.93] tracking-tight drop-shadow-2xl">APSG Board of Matrons & Patrons</h1>
+            <p class="mt-5 max-w-3xl mx-auto lg:mx-0 text-base md:text-xl text-white/82 leading-relaxed">A live Supabase-powered directory of distinguished Matrons, Patrons and Advisers providing guidance, public trust and strategic support to APSG.</p>
+            <div class="mt-7 flex flex-wrap justify-center lg:justify-start gap-3 no-print"><a href="#directory" class="official-btn gold"><i class="fa-solid fa-users-viewfinder"></i> View Directory</a><a href="/admin/admin-leadership.html" class="official-btn"><i class="fa-solid fa-lock"></i> Admin Leadership Desk</a><button type="button" id="copyTopBtn" class="official-btn"><i class="fa-solid fa-copy"></i> Copy List</button></div>
+          </div>
+          <aside class="glass-panel rounded-[2.25rem] p-5 md:p-6">
+            <div class="flex items-center gap-4 rounded-[1.75rem] border border-white/10 bg-white/10 p-4"><div class="grid h-20 w-20 shrink-0 place-items-center rounded-full bg-apsgGold/15 border border-apsgGold/35"><img src="/assets/images/logo/apsg1.png" alt="APSG Logo" class="h-14 w-14 object-contain" onerror="this.src='/assets/images/logo/apsg1.png';" width="96" height="96" decoding="async"></div><div><p class="text-xs uppercase tracking-[.28em] text-white/48 font-black">Dashboard Sync</p><h2 class="text-xl md:text-2xl font-black text-white">Live Register</h2><p id="sourceStatus" class="mt-1 text-xs text-white/62">Loading published members...</p></div></div>
+            <div class="mt-5 grid grid-cols-3 gap-3"><div class="rounded-3xl border border-white/10 bg-white/10 p-4 text-center"><p id="heroTotal" class="text-3xl font-black text-apsgGold">--</p><p class="mt-1 text-[10px] uppercase tracking-[.22em] text-white/58 font-black">Members</p></div><div class="rounded-3xl border border-white/10 bg-white/10 p-4 text-center"><p id="heroMatrons" class="text-3xl font-black text-apsgGold">--</p><p class="mt-1 text-[10px] uppercase tracking-[.22em] text-white/58 font-black">Matrons</p></div><div class="rounded-3xl border border-white/10 bg-white/10 p-4 text-center"><p id="heroPatrons" class="text-3xl font-black text-apsgGold">--</p><p class="mt-1 text-[10px] uppercase tracking-[.22em] text-white/58 font-black">Patrons</p></div></div>
+            <div class="gold-line my-5"></div><p class="text-xs uppercase tracking-[.25em] text-apsgGold font-black mb-3">Featured Members</p><div id="featuredDirectory" class="space-y-3"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+    <section class="relative z-20 -mt-12 px-4 no-print"><div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-3"><div class="stat-card rounded-[1.4rem] p-4"><p class="text-[10px] uppercase tracking-[.24em] text-[#73540c] font-black">Directory Status</p><p id="statusLabel" class="mt-1 text-lg font-black text-apsgDeep">Connecting</p><p class="text-xs text-gray-500">Dashboard-ready</p></div><div class="stat-card rounded-[1.4rem] p-4"><p class="text-[10px] uppercase tracking-[.24em] text-apsgGreen font-black">Publish Control</p><p class="mt-1 text-lg font-black text-apsgDeep">Admin Targets</p><p class="text-xs text-gray-500">Uses publish_targets</p></div><div class="stat-card rounded-[1.4rem] p-4"><p class="text-[10px] uppercase tracking-[.24em] text-apsgGreen font-black">Auto Hide</p><p class="mt-1 text-lg font-black text-apsgDeep">Draft Records</p><p class="text-xs text-gray-500">Only published shown</p></div><div class="stat-card rounded-[1.4rem] p-4"><p class="text-[10px] uppercase tracking-[.24em] text-apsgGreen font-black">Image Source</p><p class="mt-1 text-lg font-black text-apsgDeep">Supabase URL</p><p class="text-xs text-gray-500">Shared across pages</p></div></div></section>
+    <section id="directory" class="max-w-7xl mx-auto px-4 md:px-6 pt-10 pb-20"><div id="directoryShell" class="premium-panel rounded-[2rem] p-5 md:p-8 lg:p-9"><div class="grid lg:grid-cols-[.30fr_.70fr] gap-8"><aside class="no-print"><div class="tool-card rounded-[1.7rem] p-5 sticky top-6"><div class="flex items-center gap-3 mb-5"><div class="grid h-12 w-12 place-items-center rounded-2xl bg-apsgDeep text-apsgGold"><i class="bi bi-diagram-3-fill text-xl"></i></div><div><p class="text-[10px] uppercase tracking-[.24em] text-[#73540c] font-black">Directory Desk</p><h3 class="text-lg font-black text-apsgDeep">Tools</h3></div></div><div><p class="text-xs uppercase tracking-[.22em] text-apsgGreen font-black mb-2">Search</p><div class="relative"><i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-apsgGold"></i><input id="directorySearch" type="search" class="search-input" placeholder="Search name, role, council, state..."></div><p id="directoryCount" class="mt-3 text-sm font-bold text-gray-600">Loading members...</p></div><div class="mt-6"><p class="text-xs uppercase tracking-[.22em] text-apsgGreen font-black mb-3">Filters</p><div class="flex flex-wrap gap-2"><button type="button" class="filter-chip active" data-filter="all">All</button><button type="button" class="filter-chip" data-filter="matron">Matrons</button><button type="button" class="filter-chip" data-filter="patron">Patrons</button><button type="button" class="filter-chip" data-filter="adviser">Advisers</button></div></div><div class="mt-6 grid grid-cols-2 gap-2"><button type="button" id="gridViewBtn" class="rounded-2xl border border-apsgGold/25 bg-apsgGold/15 px-3 py-3 text-xs font-black uppercase tracking-wider text-[#73540c] hover:bg-apsgGold hover:text-apsgDeep transition"><i class="fa-solid fa-table-cells-large mr-1"></i> Grid</button><button type="button" id="listViewBtn" class="rounded-2xl border border-apsgDeep/10 bg-white px-3 py-3 text-xs font-black uppercase tracking-wider text-apsgDeep hover:bg-apsgDeep hover:text-white transition"><i class="fa-solid fa-list mr-1"></i> List</button></div><div class="mt-3 grid grid-cols-2 gap-2"><button type="button" id="copyListBtn" class="rounded-2xl border border-apsgDeep/10 bg-white px-3 py-3 text-xs font-black uppercase tracking-wider text-apsgDeep hover:bg-apsgDeep hover:text-white transition"><i class="fa-solid fa-copy mr-1"></i> Copy</button><button type="button" id="printBtn" class="rounded-2xl border border-apsgDeep/10 bg-white px-3 py-3 text-xs font-black uppercase tracking-wider text-apsgDeep hover:bg-apsgDeep hover:text-white transition"><i class="fa-solid fa-print mr-1"></i> Print</button></div><div class="mt-5 rounded-3xl border border-apsgGold/25 bg-apsgGold/10 p-4 text-sm leading-relaxed text-gray-700"><i class="fa-solid fa-circle-info text-[#73540c]"></i><p class="mt-2">This page reads only officials whose Publish Location includes this page target and whose Status is Published.</p></div></div></aside><main><div class="mb-7 flex flex-col md:flex-row md:items-end md:justify-between gap-4"><div><span class="official-chip"><i class="fa-solid fa-landmark"></i>APSG Patronage Council</span><h2 class="display-font text-3xl md:text-5xl font-black text-apsgDeep tracking-tight mt-3">Published Officials</h2><p class="mt-2 max-w-2xl text-gray-600 leading-relaxed">This public page updates automatically when the admin dashboard publishes new records to this location.</p></div><span id="visibleBadge" class="inline-flex w-fit items-center gap-2 rounded-full border border-apsgGreen/15 bg-apsgGreen/10 px-4 py-2 text-xs font-black uppercase tracking-[.18em] text-apsgDeep">Showing --</span></div><div class="mb-6 rounded-[1.7rem] border border-apsgGold/20 bg-gradient-to-r from-apsgDeep via-[#0a3b23] to-apsgEmerald p-4 md:p-5 text-white no-print"><div class="grid md:grid-cols-[1fr_auto] gap-4 items-center"><div><p class="text-[10px] uppercase tracking-[.28em] text-apsgGold font-black">Official Register</p><h3 class="mt-1 text-xl md:text-2xl font-black">Premium directory with live dashboard updates.</h3><p class="mt-2 text-sm text-white/68">Use search, filters and view toggles to review the current leadership structure.</p></div><div class="grid grid-cols-3 gap-2 text-center"><div class="rounded-2xl bg-white/10 border border-white/10 px-4 py-3"><p id="totalStat" class="text-2xl font-black text-apsgGold">--</p><p class="text-[10px] uppercase tracking-widest text-white/55 font-black">Total</p></div><div class="rounded-2xl bg-white/10 border border-white/10 px-4 py-3"><p id="matronStat" class="text-2xl font-black text-apsgGold">--</p><p class="text-[10px] uppercase tracking-widest text-white/55 font-black">Matrons</p></div><div class="rounded-2xl bg-white/10 border border-white/10 px-4 py-3"><p id="patronStat" class="text-2xl font-black text-apsgGold">--</p><p class="text-[10px] uppercase tracking-widest text-white/55 font-black">Patrons</p></div></div></div></div><div id="directoryGrid" class="grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"><div class="loading-skeleton"></div><div class="loading-skeleton hidden md:block"></div></div><div id="noResult" class="hidden mt-8 rounded-3xl border border-apsgGold/25 bg-apsgGold/10 p-8 text-center"><i class="fa-solid fa-magnifying-glass text-3xl text-apsgGold"></i><h3 class="mt-3 text-xl font-black text-apsgDeep">No record found</h3><p class="mt-1 text-sm text-gray-600">Try another name, role title, council category, or reset the filters.</p></div></main></div></div></section>
+  </main>
+  <div id="directoryModal" class="fixed inset-0 z-[100] hidden items-center justify-center px-4 py-6 no-print" aria-hidden="true"><div class="modal-backdrop absolute inset-0" data-close-modal></div><div class="modal-card relative z-10 w-full max-w-5xl overflow-hidden rounded-[2rem] bg-white shadow-palace border border-apsgGold/25"><div class="grid md:grid-cols-[.42fr_.58fr]"><div class="relative min-h-[24rem] bg-apsgDeep"><span class="apsg-logo-fallback"><img id="modalFallbackLogo" src="/assets/images/logo/apsg1.png" alt="APSG Logo" onerror="this.style.display='none';" width="96" height="96" decoding="async"></span><img id="modalPhoto" src="" alt="" class="absolute inset-0 h-full w-full object-cover object-top hidden" style="z-index:1;"><div class="absolute inset-0 bg-gradient-to-t from-black/72 via-transparent to-transparent"></div><div class="absolute left-5 bottom-5 text-white"><span id="modalIndex" class="inline-grid h-11 w-11 place-items-center rounded-full bg-apsgGold text-apsgDeep font-black shadow-gold">1</span><p class="mt-3 text-xs uppercase tracking-[.24em] text-apsgGold font-black">Official Profile</p></div></div><div class="relative p-6 md:p-8"><button type="button" class="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200" data-close-modal aria-label="Close profile modal"><i class="fa-solid fa-times"></i></button><p class="text-xs uppercase tracking-[.28em] text-apsgGold font-black">Member Dossier</p><h3 id="modalName" class="display-font mt-2 text-3xl md:text-4xl font-black text-apsgDeep leading-tight"></h3><p id="modalRole" class="mt-3 inline-flex rounded-full border border-apsgGold/30 bg-apsgGold/10 px-4 py-2 text-xs font-black uppercase tracking-[.18em] text-[#72530b]"></p><div class="gold-line my-5"></div><div class="grid grid-cols-2 gap-3 text-sm"><div class="rounded-2xl border border-apsgGreen/10 bg-gray-50 p-4"><p class="text-[10px] uppercase tracking-[.2em] text-gray-500 font-black">Category</p><p id="modalCategory" class="mt-1 font-black text-apsgDeep"></p></div><div class="rounded-2xl border border-apsgGreen/10 bg-gray-50 p-4"><p class="text-[10px] uppercase tracking-[.2em] text-gray-500 font-black">Seat</p><p id="modalSeat" class="mt-1 font-black text-apsgDeep"></p></div><div class="rounded-2xl border border-apsgGreen/10 bg-gray-50 p-4 col-span-2"><p class="text-[10px] uppercase tracking-[.2em] text-gray-500 font-black">Profile Summary / Mandate</p><p id="modalSummary" class="mt-1 text-gray-700 leading-relaxed"></p></div><div class="rounded-2xl border border-apsgGreen/10 bg-gray-50 p-4 col-span-2"><p class="text-[10px] uppercase tracking-[.2em] text-gray-500 font-black">Dashboard Source</p><p id="modalSource" class="mt-1 font-mono text-xs text-gray-700 break-all"></p></div></div><div class="mt-5 flex flex-wrap gap-2"><a id="modalDetailsLink" href="/pages/official-details.html" class="rounded-full bg-apsgDeep px-5 py-3 text-sm font-black text-white hover:bg-apsgGreen transition"><i class="fa-solid fa-arrow-up-right-from-square mr-2"></i>View Dossier</a><button type="button" id="copyMemberBtn" class="rounded-full border border-apsgGold/30 bg-apsgGold/10 px-5 py-3 text-sm font-black text-[#72530b] hover:bg-apsgGold hover:text-apsgDeep transition"><i class="fa-solid fa-copy mr-2"></i>Copy Profile</button><button type="button" id="printMemberBtn" class="rounded-full border border-apsgGold/30 bg-apsgGold/10 px-5 py-3 text-sm font-black text-[#72530b] hover:bg-apsgGold hover:text-apsgDeep transition"><i class="fa-solid fa-print mr-2"></i>Print Page</button></div></div></div></div></div>
+  <div id="footer"></div>
+  <script>window.APSG_DIRECTORY_CONFIG = { title: "APSG Board of Matrons & Patrons", copyTitle: "APSG Board of Matrons & Patrons", directory: "mp", org: "APSG", defaultSeat: "APSG Patronage Council", aliases: ["mp", "matrons_patrons", "patrons_matrons", "patronage", "matron", "patron", "adviser"] };</script>
+  <script src="/assets/js/supabase-clients.js"></script>
+  <script src="/assets/js/apsg-settings.js"></script>
+  <script src="/assets/js/leadership-data.js"></script>
+  <script src="/assets/js/leadership-public.js"></script>
+  <script type="module" src="/components/navbar.js"></script>
+  <script type="module" src="/components/footer.js"></script>
+
+
+  <script id="apsg-premium-directory-actions">
+    (function () {
+      function slugify(value) {
+        return String(value || '')
+          .toLowerCase()
+          .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '') || 'official';
+      }
+      function getText(el, selectors) {
+        for (const selector of selectors) {
+          const node = el.querySelector(selector);
+          if (node && node.textContent.trim()) return node.textContent.trim();
+        }
+        return '';
+      }
+      function getOfficialPayload(card) {
+        const existing = card.querySelector('a[href*="official-details.html"]');
+        const url = existing ? new URL(existing.getAttribute('href'), location.origin) : null;
+        const id = card.dataset.id || card.dataset.officialId || card.dataset.recordId || card.getAttribute('data-id') || (url && url.searchParams.get('id')) || '';
+        const slug = card.dataset.slug || card.dataset.officialSlug || (url && url.searchParams.get('slug')) || slugify(getText(card, ['h3', '[data-name]', '.official-name', '.leader-name']));
+        return { id, slug };
+      }
+      function buildDossierHref(card) {
+        const payload = getOfficialPayload(card);
+        const params = new URLSearchParams();
+        if (payload.id) params.set('id', payload.id);
+        params.set('slug', payload.slug || 'official');
+        return '/pages/official-details.html?' + params.toString();
+      }
+      function labelQuickView(root) {
+        root.querySelectorAll('button, a').forEach(function (node) {
+          const label = (node.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+          const href = node.getAttribute && node.getAttribute('href');
+          if (!href && (label === 'view dossier' || label === 'view profile' || label === 'open dossier' || label === 'quick view')) {
+            node.innerHTML = '<i class="fa-solid fa-eye mr-1"></i> Quick View';
+            node.classList.add('apsg-quick-view-btn');
+          }
+          if (href && href.includes('official-details.html')) {
+            node.innerHTML = '<i class="fa-solid fa-file-lines mr-1"></i> View Dossier';
+            node.setAttribute('aria-label', 'View full official dossier');
+          }
+        });
+      }
+      function enhanceCards() {
+        const cards = document.querySelectorAll('#directoryGrid article, #executiveGrid article, [data-leader-card], .official-card, .directory-card');
+        cards.forEach(function (card) {
+          labelQuickView(card);
+          const actions = Array.from(card.querySelectorAll('div')).reverse().find(function (el) {
+            return el.querySelector('button, a') && getComputedStyle(el).display !== 'none';
+          }) || card;
+          let link = card.querySelector('a.apsg-dossier-link');
+          if (!link) {
+            link = document.createElement('a');
+            link.className = 'apsg-dossier-link no-print';
+            link.innerHTML = '<i class="fa-solid fa-file-lines"></i> View Dossier';
+            actions.appendChild(link);
+          }
+          link.href = buildDossierHref(card);
+        });
+        const modalLink = document.getElementById('modalDetailsLink');
+        if (modalLink) {
+          modalLink.innerHTML = '<i class="fa-solid fa-file-lines mr-2"></i>View Dossier';
+          const active = document.querySelector('[data-leader-card].is-active, #directoryGrid article.is-active, #executiveGrid article.is-active');
+          if (active) modalLink.href = buildDossierHref(active);
+        }
+      }
+      document.addEventListener('click', function (event) {
+        const card = event.target.closest('#directoryGrid article, #executiveGrid article, [data-leader-card], .official-card, .directory-card');
+        if (card) {
+          document.querySelectorAll('.is-active').forEach(el => el.classList.remove('is-active'));
+          card.classList.add('is-active');
+          setTimeout(enhanceCards, 50);
+        }
+      }, true);
+      const run = () => enhanceCards();
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+      new MutationObserver(function () { clearTimeout(window.__apsgEnhanceTimer); window.__apsgEnhanceTimer = setTimeout(run, 80); })
+        .observe(document.documentElement, { childList: true, subtree: true });
+    })();
+  </script>
+
+
+  <script id="apsg-group-directory-guard">
+    (function () {
+      const config = window.APSG_DIRECTORY_CONFIG || {};
+      const activeKey = String(config.directory || 'leadership').toLowerCase();
+      const orgKey = String(config.org || 'all').toLowerCase();
+      const aliases = (config.aliases || []).map(v => String(v).toLowerCase());
+      const sectionWords = {
+        bot: ['bot','board','trustee','board / bot','board members'],
+        mp: ['matron','patron','adviser','patronage'],
+        executive: ['executive','director-general','director general','general secretary','secretariat','national executive','natexco','nat-exec'],
+        cwdi: ['cwdi','confident women','matron','patron','executive leadership','board']
+      };
+      function textOf(el){ return (el && el.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase(); }
+      function detectOrg(card){
+        const t = [card.dataset.org, card.dataset.organization, card.dataset.group, textOf(card)].join(' ').toLowerCase();
+        if (/cwdi|confident women/.test(t)) return 'cwdi';
+        if (/apsg|apc progressive/.test(t)) return 'apsg';
+        return '';
+      }
+      function sectionMatch(card){
+        const t = textOf(card);
+        if (activeKey === 'leadership' || activeKey === 'cwdi') return true;
+        const words = aliases.length ? aliases : (sectionWords[activeKey] || []);
+        if (!words.length) return true;
+        return words.some(w => t.includes(String(w).replace(/_/g,' ')) || t.includes(String(w)));
+      }
+      function orgMatch(card){
+        const detected = detectOrg(card);
+        if (!orgKey || orgKey === 'all') return true;
+        if (orgKey === 'cwdi') return detected === 'cwdi';
+        if (orgKey === 'apsg') return detected !== 'cwdi';
+        return true;
+      }
+      function enhanceCard(card){
+        if (card.dataset.apsgGuardEnhanced === 'true') return;
+        card.dataset.apsgGuardEnhanced = 'true';
+        const detected = detectOrg(card);
+        if (detected && !card.querySelector('.apsg-group-badge')) {
+          const body = card.querySelector('.p-5,.p-6,[class*="p-"]') || card;
+          const badge = document.createElement('span');
+          badge.className = 'apsg-group-badge no-print';
+          badge.innerHTML = '<i class="fa-solid fa-building-user"></i>' + detected.toUpperCase();
+          body.insertBefore(badge, body.firstChild);
+        }
+      }
+      function updateCounts(){
+        const cards = Array.from(document.querySelectorAll('#directoryGrid article,#executiveGrid article,[data-leader-card],.official-card,.directory-card'));
+        const visible = cards.filter(card => card.style.display !== 'none' && !card.hidden).length;
+        ['visibleBadge','directoryCount','leaderCount'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = `Showing ${visible}`; });
+      }
+      function apply(){
+        document.querySelectorAll('.apsg-directory-switch a').forEach(a => a.classList.toggle('is-active', a.dataset.switch === activeKey));
+        const cards = Array.from(document.querySelectorAll('#directoryGrid article,#executiveGrid article,[data-leader-card],.official-card,.directory-card'));
+        if (!cards.length) return;
+        cards.forEach(card => {
+          enhanceCard(card);
+          const ok = orgMatch(card) && sectionMatch(card);
+          card.style.display = ok ? '' : 'none';
+        });
+        updateCounts();
+      }
+      const run = () => window.requestAnimationFrame(apply);
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+      new MutationObserver(() => { clearTimeout(window.__apsgGroupGuard); window.__apsgGroupGuard = setTimeout(run, 120); })
+        .observe(document.documentElement, { childList:true, subtree:true });
+    })();
+  </script>
+
+  <script src="/assets/js/deployment-polish.js" defer></script>
+</body>
+</html>

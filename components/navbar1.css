@@ -1,0 +1,206 @@
+/* ===================================================
+   APSG Mega Navbar – Premium Refined Edition (2026)
+   Deep Green Dominant | Gold Accent | Elegant Motion
+   =================================================== */
+
+:root {
+  --primary: #006400;
+  --primary-light: #228B22;
+  --primary-dark: #004d00;
+  --accent: #FFD700;
+  --accent-dark: #DAA520;
+  --accent-light: #ffeb3b;
+  --dark-gray: #374151;
+  --radius: 12px;
+  --shadow: 0 14px 30px rgba(0, 70, 0, 0.25);
+  --transition: 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  --glow: 0 0 18px rgba(34, 139, 34, 0.35);
+}
+
+/* ================= NAVBAR ================= */
+.navbar {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 215, 0, 0.15);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+  position: sticky;
+  top: 0;
+  z-index: 1300;
+}
+
+/* ================= MEGA MENU – NOW MATCHES NAVBAR ================= */
+.mega-menu {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark)); /* ← SAME AS NAVBAR */
+  color: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2.2rem 2rem;
+  min-width: 720px;
+  max-width: 92vw;
+  width: max-content;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(18px) scale(0.97);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.32s ease;
+  z-index: 1200;
+}
+
+/* Arrow now matches the dark background */
+.mega-menu::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 11px solid transparent;
+  border-right: 11px solid transparent;
+  border-bottom: 11px solid var(--primary-dark); /* matches gradient bottom */
+}
+
+/* Text inside mega menu */
+.mega-grid h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);           /* Gold headings */
+  margin: 0 0 0.8rem;
+  padding-bottom: 0.4rem;
+  position: relative;
+}
+
+.mega-grid h4::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 36px;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+.mega-grid a {
+  display: block;
+  padding: 0.55rem 0;
+  color: rgba(255, 255, 255, 0.95);   /* Light white for visibility */
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.mega-grid a:hover {
+  color: var(--accent);
+  padding-left: 8px;
+}
+
+/* ================= REST OF YOUR STYLES (unchanged) ================= */
+.navbar-inner {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.brand:hover {
+  color: var(--accent);
+  transform: scale(1.03);
+}
+
+.brand img {
+  height: 48px;
+  transition: 0.35s ease;
+}
+
+.brand:hover img {
+  transform: rotate(8deg) scale(1.08);
+}
+
+.nav-links.desktop ul {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links.desktop a {
+  color: white;
+  font-weight: 600;
+  padding: 0.65rem 1.1rem;
+  border-radius: var(--radius);
+  position: relative;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.nav-links.desktop a:hover,
+.nav-links.desktop a.active {
+  background: rgba(255, 215, 0, 0.15);
+  color: var(--accent);
+  box-shadow: var(--glow);
+}
+
+.nav-links.desktop a::after {
+  content: '';
+  position: absolute;
+  left: 1.1rem;
+  right: 1.1rem;
+  bottom: 0.45rem;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 3px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.nav-links.desktop a:hover::after,
+.nav-links.desktop a.active::after {
+  transform: scaleX(1);
+}
+
+.btn-join {
+  background: var(--accent);
+  color: var(--primary-dark);
+  padding: 0.6rem 1.7rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgba(255, 215, 0, 0.35);
+  transition: var(--transition);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-join:hover {
+  background: var(--accent-light);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(255, 215, 0, 0.45);
+}
+
+/* Mobile styles remain the same (already dark green) */
+.nav-toggle { display: none; }
+@media (max-width: 1024px) {
+  .nav-links.desktop { display: none; }
+  .nav-toggle { display: block; }
+}
+
+/* Rest of your mobile sidebar, user menu, etc. stays exactly as before */

@@ -1,0 +1,1717 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="theme-color" content="#05351f" />
+    <base href="/" />
+    <title>APSG Board Members / BOT - APC Progressive Support Group</title>
+    <meta
+      name="description"
+      content="Dynamic premium APSG/CWDI leadership directory controlled from the admin dashboard."
+    />
+    <meta property="og:title" content="APSG Board Members / BOT" />
+    <meta
+      property="og:description"
+      content="Premium dynamic APSG/CWDI official directory updated from the admin dashboard."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:image"
+      content="https://apsgnigeria.org/assets/images/og-image.jpg"
+    />
+    <link rel="icon" href="/assets/images/logo/apsg1.png" sizes="any" />
+    <link rel="apple-touch-icon" href="/assets/images/logo/apsg1.png" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link rel="stylesheet" href="/components/navbar.css" />
+    <link rel="stylesheet" href="/components/footer.css" />
+    <link rel="stylesheet" href="/assets/css/leadership-directory.css" />
+    <link rel="stylesheet" href="/assets/css/tailwind-static.css" />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "system-ui", "sans-serif"],
+              display: ["Playfair Display", "Georgia", "serif"],
+            },
+            colors: {
+              apsgDeep: "#05351f",
+              apsgForest: "#082716",
+              apsgGreen: "#0f7a3d",
+              apsgEmerald: "#0f766e",
+              apsgGold: "#d8ad34",
+              apsgCream: "#fffaf0",
+            },
+            boxShadow: {
+              palace: "0 34px 110px rgba(5, 53, 31, 0.22)",
+              gold: "0 16px 42px rgba(216, 173, 52, 0.24)",
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/assets/js/apsg-analytics-tracker.js"></script>
+
+    <style id="apsg-group-directory-upgrade">
+      .apsg-directory-switch {
+        position: relative;
+        z-index: 25;
+        margin-top: -1.65rem;
+        margin-bottom: 1.2rem;
+      }
+      .apsg-directory-switch-inner {
+        display: flex;
+        gap: 0.55rem;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 0.65rem;
+        border-radius: 1.35rem;
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgba(216, 173, 52, 0.24);
+        box-shadow: 0 18px 52px rgba(5, 53, 31, 0.12);
+        backdrop-filter: blur(16px);
+      }
+      .apsg-directory-switch a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        min-height: 2.35rem;
+        padding: 0.58rem 0.9rem;
+        border-radius: 999px;
+        border: 1px solid rgba(5, 53, 31, 0.1);
+        background: linear-gradient(180deg, #fff, #fffaf0);
+        color: #05351f;
+        font-size: 0.72rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        text-decoration: none;
+        transition: 0.22s ease;
+        white-space: nowrap;
+      }
+      .apsg-directory-switch a:hover,
+      .apsg-directory-switch a.is-active {
+        transform: translateY(-1px);
+        background: linear-gradient(135deg, #d8ad34, #ffe08a);
+        border-color: rgba(216, 173, 52, 0.55);
+        box-shadow: 0 12px 30px rgba(216, 173, 52, 0.22);
+      }
+      .apsg-group-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.38rem;
+        border-radius: 999px;
+        padding: 0.35rem 0.58rem;
+        font-size: 0.62rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        background: rgba(216, 173, 52, 0.13);
+        border: 1px solid rgba(216, 173, 52, 0.3);
+        color: #72530b;
+      }
+      @media (max-width: 720px) {
+        .apsg-directory-switch {
+          margin-top: -0.85rem;
+        }
+        .apsg-directory-switch-inner {
+          justify-content: flex-start;
+          overflow-x: auto;
+          flex-wrap: nowrap;
+        }
+        .apsg-directory-switch a {
+          flex: 0 0 auto;
+          font-size: 0.64rem;
+          padding: 0.52rem 0.72rem;
+        }
+      }
+
+
+      
+    </style>
+
+
+
+    <style id="apsg-bot-leadership-exact-image-model">
+      /* Exact leadership.html image/card model applied to bot.html generated cards */
+      #directoryGrid {
+        grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+        align-items: stretch;
+      }
+      @media (min-width: 768px) {
+        #directoryGrid {
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        }
+      }
+      @media (min-width: 1180px) {
+        #directoryGrid {
+          grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+          gap: 1rem !important;
+        }
+      }
+      .leader-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 1.45rem;
+        background: linear-gradient(180deg, #ffffff 0%, #fffdf7 100%);
+        border: 1px solid rgba(5, 53, 31, 0.08);
+        box-shadow:
+          0 18px 50px rgba(5, 53, 31, 0.105),
+          inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        transition:
+          transform 0.28s ease,
+          box-shadow 0.28s ease,
+          border-color 0.28s ease;
+        cursor: pointer;
+      }
+      .leader-card:before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+          135deg,
+          rgba(216, 173, 52, 0.14),
+          transparent 32%,
+          rgba(15, 122, 61, 0.06)
+        );
+        opacity: 0.85;
+        z-index: 1;
+      }
+      .leader-card > * {
+        position: relative;
+        z-index: 2;
+      }
+      .leader-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(216, 173, 52, 0.34);
+        box-shadow: 0 30px 80px rgba(5, 53, 31, 0.18);
+      }
+      .leader-photo-wrap {
+        position: relative;
+        overflow: hidden;
+        height: 21rem;
+        min-height: 21rem;
+        border-bottom: 1px solid rgba(216, 173, 52, 0.2);
+        background: linear-gradient(135deg, #062716, #fff3c4);
+      }
+      .leader-photo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top center;
+        display: block;
+        background: #fffaf0;
+        transition: transform 0.7s ease;
+      }
+      .leader-card:hover .leader-photo {
+        transform: scale(1.04);
+      }
+      .leader-photo.is-fallback-logo {
+        object-fit: contain;
+        padding: 4.25rem;
+        background:
+          radial-gradient(circle at center, rgba(216, 173, 52, 0.18), transparent 14rem),
+          linear-gradient(135deg, #05351f, #082716);
+      }
+      .leader-index {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        z-index: 5;
+        display: grid;
+        place-items: center;
+        width: 2.65rem;
+        height: 2.65rem;
+        border-radius: 999px;
+        background: #d8ad34;
+        color: #05351f;
+        font-size: 0.86rem;
+        font-weight: 1000;
+        box-shadow: 0 12px 30px rgba(216, 173, 52, 0.25);
+      }
+      .board-ribbon {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 5;
+        max-width: 62%;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(5, 53, 31, 0.78);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 999px;
+        padding: 0.55rem 0.8rem;
+        color: #fff;
+        font-size: 0.68rem;
+        font-weight: 900;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .role-pill,
+      .board-seat-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 1000;
+      }
+      .role-pill {
+        background: rgba(216, 173, 52, 0.13);
+        border: 1px solid rgba(216, 173, 52, 0.32);
+        color: #73540c;
+        padding: 0.55rem 0.8rem;
+        max-width: 100%;
+      }
+      .board-seat-pill {
+        background: rgba(15, 122, 61, 0.08);
+        border: 1px solid rgba(15, 122, 61, 0.14);
+        color: #05351f;
+        padding: 0.5rem 0.75rem;
+      }
+      .leader-card-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+        justify-content: center;
+        align-items: center;
+      }
+      .leader-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.38rem;
+        border-radius: 999px;
+        min-height: 2.35rem;
+        padding: 0.58rem 0.78rem;
+        font-size: 0.68rem;
+        font-weight: 1000;
+        line-height: 1;
+        text-decoration: none;
+        transition: 0.2s ease;
+      }
+      .leader-action.quick {
+        background: #05351f;
+        color: #fff;
+        border: 1px solid rgba(5, 53, 31, 0.14);
+      }
+      .leader-action.quick:hover {
+        background: #0f7a3d;
+        transform: translateY(-1px);
+      }
+      .leader-action.dossier {
+        border: 1px solid rgba(216, 173, 52, 0.38);
+        background: rgba(216, 173, 52, 0.13);
+        color: #6f5109;
+      }
+      .leader-action.dossier:hover {
+        background: #d8ad34;
+        color: #05351f;
+        transform: translateY(-1px);
+      }
+      .mini-avatar {
+        border: 2px solid rgba(216, 173, 52, 0.5);
+        background: #fff;
+      }
+      #directoryModal .modal-card {
+        max-height: min(92vh, 52rem);
+        overflow: auto;
+      }
+      #directoryModal #modalPhoto {
+        object-fit: cover !important;
+        object-position: top center !important;
+        background: #fffaf0;
+      }
+      #directoryModal #modalPhoto.is-fallback-logo {
+        object-fit: contain !important;
+        padding: 4rem;
+        background: linear-gradient(135deg, #05351f, #082716);
+      }
+      .list-mode #directoryGrid {
+        display: block !important;
+      }
+      .list-mode .leader-card {
+        display: grid;
+        grid-template-columns: minmax(13rem, 18rem) 1fr;
+        margin-bottom: 1rem;
+      }
+      .list-mode .leader-photo-wrap {
+        height: 18rem;
+        min-height: 18rem;
+      }
+      @media (min-width: 1180px) {
+        .leader-photo-wrap {
+          height: 19.5rem;
+          min-height: 19.5rem;
+        }
+        .leader-card .p-5,
+        .leader-card .md\:p-6 {
+          padding: 1rem !important;
+        }
+        .leader-card h3 {
+          font-size: 1.08rem !important;
+          line-height: 1.13 !important;
+        }
+        .leader-card p {
+          font-size: 0.78rem !important;
+          line-height: 1.45 !important;
+        }
+        .role-pill {
+          font-size: 0.61rem;
+          padding: 0.42rem 0.58rem;
+        }
+        .board-seat-pill {
+          font-size: 0.61rem;
+          padding: 0.4rem 0.56rem;
+        }
+        .leader-index {
+          width: 2.15rem;
+          height: 2.15rem;
+          font-size: 0.78rem;
+        }
+        .board-ribbon {
+          font-size: 0.58rem;
+          padding: 0.42rem 0.58rem;
+        }
+      }
+      @media (max-width: 767px) {
+        .leader-photo-wrap {
+          height: 28rem;
+          min-height: 28rem;
+        }
+        .leader-card-actions {
+          justify-content: center;
+        }
+        .list-mode .leader-card {
+          display: block;
+        }
+      }
+      @media (max-width: 420px) {
+        .leader-photo-wrap {
+          height: 24rem;
+          min-height: 24rem;
+        }
+        .leader-photo.is-fallback-logo {
+          padding: 3.25rem;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .leader-card,
+        .leader-photo,
+        .leader-action {
+          transition: none !important;
+        }
+        .leader-card:hover,
+        .leader-card:hover .leader-photo,
+        .leader-action:hover {
+          transform: none !important;
+        }
+      }
+    </style>
+
+    <link rel="canonical" href="https://apsgnigeria.org/pages/bot.html" />
+    <meta property="og:url" content="https://apsgnigeria.org/pages/bot.html" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="/assets/css/deployment-polish.css" />
+    <meta
+      name="keywords"
+      content="APSG Nigeria, APC Progressive Support Group, APC support group, grassroots mobilisation, CWDI, Nigeria politics, APSG membership"
+    />
+    <meta property="og:site_name" content="APSG Nigeria" />
+    <meta
+      name="twitter:title"
+      content="APSG Board Members / BOT - APC Progressive Support Group"
+    />
+    <meta
+      name="twitter:description"
+      content="Dynamic premium APSG/CWDI leadership directory controlled from the admin dashboard."
+    />
+    <meta
+      name="twitter:image"
+      content="https://apsgnigeria.org/assets/images/og-image.jpg"
+    />
+    <script type="application/ld+json" data-apsg-static-schema>
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "APC Progressive Support Group (APSG)",
+          "alternateName": "APSG Nigeria",
+          "url": "https://apsgnigeria.org/",
+          "logo": "https://apsgnigeria.org/assets/images/logo/apsg1.png",
+          "sameAs": []
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "APSG Board Members / BOT - APC Progressive Support Group",
+          "description": "Dynamic premium APSG/CWDI leadership directory controlled from the admin dashboard.",
+          "url": "https://apsgnigeria.org/pages/bot.html",
+          "isPartOf": {
+            "@type": "WebSite",
+            "name": "APSG Nigeria",
+            "url": "https://apsgnigeria.org/"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://apsgnigeria.org/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Pages",
+              "item": "https://apsgnigeria.org/pages"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Bot",
+              "item": "https://apsgnigeria.org/pages/bot.html"
+            }
+          ]
+        }
+      ]
+    </script>
+  </head>
+  <body class="directory-page min-h-screen flex flex-col overflow-x-hidden">
+    <div id="navbar" role="navigation" aria-label="Main Navigation"></div>
+    <main class="flex-grow">
+      <section class="directory-hero text-white pt-28 pb-20 md:pt-36 md:pb-28">
+        <div class="luxury-orb -top-28 -left-24"></div>
+        <div class="luxury-orb -bottom-20 -right-20"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 md:px-6">
+          <div class="grid lg:grid-cols-[1.08fr_.92fr] gap-8 items-center">
+            <div class="text-center lg:text-left">
+              <span class="official-chip dark"
+                ><i class="fa-solid fa-landmark text-apsgGold"></i>APSG Board /
+                BOT Directory</span
+              >
+              <h1
+                class="display-font mt-6 text-4xl md:text-6xl lg:text-7xl font-black leading-[.93] tracking-tight drop-shadow-2xl"
+              >
+                APSG Board Members / BOT
+              </h1>
+              <p
+                class="mt-5 max-w-3xl mx-auto lg:mx-0 text-base md:text-xl text-white/82 leading-relaxed"
+              >
+                A premium dynamic directory for APSG board members, patrons,
+                matrons, advisers and trustees. Published names are loaded from
+                the dashboard while blank records are hidden automatically.
+              </p>
+              <div
+                class="mt-7 flex flex-wrap justify-center lg:justify-start gap-3 no-print"
+              >
+                <a href="#directory" class="official-btn gold"
+                  ><i class="fa-solid fa-users-viewfinder"></i> View
+                  Directory</a
+                >
+                <a href="/admin/admin-leadership.html" class="official-btn"
+                  ><i class="fa-solid fa-lock"></i> Admin Leadership Desk</a
+                >
+                <button type="button" id="copyTopBtn" class="official-btn">
+                  <i class="fa-solid fa-copy"></i> Copy List
+                </button>
+              </div>
+            </div>
+            <aside class="glass-panel rounded-[2.25rem] p-5 md:p-6">
+              <div
+                class="flex items-center gap-4 rounded-[1.75rem] border border-white/10 bg-white/10 p-4"
+              >
+                <div
+                  class="grid h-20 w-20 shrink-0 place-items-center rounded-full bg-apsgGold/15 border border-apsgGold/35"
+                >
+                  <img
+                    src="/assets/images/logo/apsg1.png"
+                    alt="APSG Logo"
+                    class="h-14 w-14 object-contain"
+                    onerror="this.src = '/assets/images/logo/apsg1.png'"
+                  width="96" height="96" decoding="async">
+                </div>
+                <div>
+                  <p
+                    class="text-xs uppercase tracking-[.28em] text-white/48 font-black"
+                  >
+                    Dashboard Sync
+                  </p>
+                  <h2 class="text-xl md:text-2xl font-black text-white">
+                    Live Register
+                  </h2>
+                  <p id="sourceStatus" class="mt-1 text-xs text-white/62">
+                    Loading published members...
+                  </p>
+                </div>
+              </div>
+              <div class="mt-5 grid grid-cols-3 gap-3">
+                <div
+                  class="rounded-3xl border border-white/10 bg-white/10 p-4 text-center"
+                >
+                  <p id="heroTotal" class="text-3xl font-black text-apsgGold">
+                    --
+                  </p>
+                  <p
+                    class="mt-1 text-[10px] uppercase tracking-[.22em] text-white/58 font-black"
+                  >
+                    Members
+                  </p>
+                </div>
+                <div
+                  class="rounded-3xl border border-white/10 bg-white/10 p-4 text-center"
+                >
+                  <p id="heroMatrons" class="text-3xl font-black text-apsgGold">
+                    --
+                  </p>
+                  <p
+                    class="mt-1 text-[10px] uppercase tracking-[.22em] text-white/58 font-black"
+                  >
+                    Matrons
+                  </p>
+                </div>
+                <div
+                  class="rounded-3xl border border-white/10 bg-white/10 p-4 text-center"
+                >
+                  <p id="heroPatrons" class="text-3xl font-black text-apsgGold">
+                    --
+                  </p>
+                  <p
+                    class="mt-1 text-[10px] uppercase tracking-[.22em] text-white/58 font-black"
+                  >
+                    Patrons
+                  </p>
+                </div>
+              </div>
+              <div class="gold-line my-5"></div>
+              <p
+                class="text-xs uppercase tracking-[.25em] text-apsgGold font-black mb-3"
+              >
+                Featured Members
+              </p>
+              <div id="featuredDirectory" class="space-y-3"></div>
+            </aside>
+          </div>
+        </div>
+      </section>
+      <section class="relative z-20 -mt-12 px-4 no-print">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-3">
+          <div class="stat-card rounded-[1.4rem] p-4">
+            <p
+              class="text-[10px] uppercase tracking-[.24em] text-[#73540c] font-black"
+            >
+              Directory Status
+            </p>
+            <p id="statusLabel" class="mt-1 text-lg font-black text-apsgDeep">
+              Connecting
+            </p>
+            <p class="text-xs text-gray-500">Dashboard-ready</p>
+          </div>
+          <div class="stat-card rounded-[1.4rem] p-4">
+            <p
+              class="text-[10px] uppercase tracking-[.24em] text-apsgGreen font-black"
+            >
+              Updated
+            </p>
+            <p class="mt-1 text-lg font-black text-apsgDeep">29 June 2026</p>
+            <p class="text-xs text-gray-500">Latest register</p>
+          </div>
+          <div class="stat-card rounded-[1.4rem] p-4">
+            <p
+              class="text-[10px] uppercase tracking-[.24em] text-apsgGreen font-black"
+            >
+              Auto Hide
+            </p>
+            <p class="mt-1 text-lg font-black text-apsgDeep">Blank Records</p>
+            <p class="text-xs text-gray-500">No empty cards shown</p>
+          </div>
+          <div class="stat-card rounded-[1.4rem] p-4">
+            <p
+              class="text-[10px] uppercase tracking-[.24em] text-apsgGreen font-black"
+            >
+              Image Fallback
+            </p>
+            <p class="mt-1 text-lg font-black text-apsgDeep">APSG Logo</p>
+            <p class="text-xs text-gray-500">/assets/images/logo/apsg1.png</p>
+          </div>
+        </div>
+      </section>
+      <section
+        id="directory"
+        class="max-w-7xl mx-auto px-4 md:px-6 pt-10 pb-20"
+      >
+        <div
+          id="directoryShell"
+          class="premium-panel rounded-[2rem] p-5 md:p-8 lg:p-9"
+        >
+          <div class="grid lg:grid-cols-[.30fr_.70fr] gap-8">
+            <aside class="no-print">
+              <div class="tool-card rounded-[1.7rem] p-5 sticky top-6">
+                <div class="flex items-center gap-3 mb-5">
+                  <div
+                    class="grid h-12 w-12 place-items-center rounded-2xl bg-apsgDeep text-apsgGold"
+                  >
+                    <i class="bi bi-diagram-3-fill text-xl"></i>
+                  </div>
+                  <div>
+                    <p
+                      class="text-[10px] uppercase tracking-[.24em] text-[#73540c] font-black"
+                    >
+                      Directory Desk
+                    </p>
+                    <h3 class="text-lg font-black text-apsgDeep">Tools</h3>
+                  </div>
+                </div>
+                <div>
+                  <p
+                    class="text-xs uppercase tracking-[.22em] text-apsgGreen font-black mb-2"
+                  >
+                    Search
+                  </p>
+                  <div class="relative">
+                    <i
+                      class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-apsgGold"
+                    ></i
+                    ><input
+                      id="directorySearch"
+                      type="search"
+                      class="search-input"
+                      placeholder="Search name, role, council..."
+                    />
+                  </div>
+                  <p
+                    id="directoryCount"
+                    class="mt-3 text-sm font-bold text-gray-600"
+                  >
+                    Loading members...
+                  </p>
+                </div>
+                <div class="mt-6">
+                  <p
+                    class="text-xs uppercase tracking-[.22em] text-apsgGreen font-black mb-3"
+                  >
+                    Filters
+                  </p>
+                  <div class="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      class="filter-chip active"
+                      data-filter="all"
+                    >
+                      All</button
+                    ><button
+                      type="button"
+                      class="filter-chip"
+                      data-filter="matron"
+                    >
+                      Matrons</button
+                    ><button
+                      type="button"
+                      class="filter-chip"
+                      data-filter="patron"
+                    >
+                      Patrons</button
+                    ><button
+                      type="button"
+                      class="filter-chip"
+                      data-filter="executive"
+                    >
+                      Executives</button
+                    ><button
+                      type="button"
+                      class="filter-chip"
+                      data-filter="women"
+                    >
+                      Women</button
+                    ><button
+                      type="button"
+                      class="filter-chip"
+                      data-filter="ogun"
+                    >
+                      Ogun</button
+                    ><button
+                      type="button"
+                      class="filter-chip"
+                      data-filter="board"
+                    >
+                      Board
+                    </button>
+                  </div>
+                </div>
+                <div class="mt-6 grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    id="gridViewBtn"
+                    class="rounded-2xl border border-apsgGold/25 bg-apsgGold/15 px-3 py-3 text-xs font-black uppercase tracking-wider text-[#73540c] hover:bg-apsgGold hover:text-apsgDeep transition"
+                  >
+                    <i class="fa-solid fa-table-cells-large mr-1"></i>
+                    Grid</button
+                  ><button
+                    type="button"
+                    id="listViewBtn"
+                    class="rounded-2xl border border-apsgDeep/10 bg-white px-3 py-3 text-xs font-black uppercase tracking-wider text-apsgDeep hover:bg-apsgDeep hover:text-white transition"
+                  >
+                    <i class="fa-solid fa-list mr-1"></i> List
+                  </button>
+                </div>
+                <div class="mt-3 grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    id="copyListBtn"
+                    class="rounded-2xl border border-apsgDeep/10 bg-white px-3 py-3 text-xs font-black uppercase tracking-wider text-apsgDeep hover:bg-apsgDeep hover:text-white transition"
+                  >
+                    <i class="fa-solid fa-copy mr-1"></i> Copy</button
+                  ><button
+                    type="button"
+                    id="printBtn"
+                    class="rounded-2xl border border-apsgDeep/10 bg-white px-3 py-3 text-xs font-black uppercase tracking-wider text-apsgDeep hover:bg-apsgDeep hover:text-white transition"
+                  >
+                    <i class="fa-solid fa-print mr-1"></i> Print
+                  </button>
+                </div>
+                <div
+                  class="mt-5 rounded-3xl border border-apsgGold/25 bg-apsgGold/10 p-4 text-sm leading-relaxed text-gray-700"
+                >
+                  <i class="fa-solid fa-circle-info text-[#73540c]"></i>
+                  <p class="mt-2">
+                    Dashboard records should be published/active and include a
+                    valid name. Empty records are ignored automatically.
+                  </p>
+                </div>
+              </div>
+            </aside>
+            <main>
+              <div
+                class="mb-7 flex flex-col md:flex-row md:items-end md:justify-between gap-4"
+              >
+                <div>
+                  <span class="official-chip"
+                    ><i class="fa-solid fa-landmark"></i>APSG Board / BOT
+                    Directory</span
+                  >
+                  <h2
+                    class="display-font text-3xl md:text-5xl font-black text-apsgDeep tracking-tight mt-3"
+                  >
+                    Published Members
+                  </h2>
+                  <p class="mt-2 max-w-2xl text-gray-600 leading-relaxed">
+                    This public page updates automatically when the admin
+                    dashboard publishes new records.
+                  </p>
+                </div>
+                <span
+                  id="visibleBadge"
+                  class="inline-flex w-fit items-center gap-2 rounded-full border border-apsgGreen/15 bg-apsgGreen/10 px-4 py-2 text-xs font-black uppercase tracking-[.18em] text-apsgDeep"
+                  >Showing --</span
+                >
+              </div>
+              <div
+                class="mb-6 rounded-[1.7rem] border border-apsgGold/20 bg-gradient-to-r from-apsgDeep via-[#0a3b23] to-apsgEmerald p-4 md:p-5 text-white no-print"
+              >
+                <div class="grid md:grid-cols-[1fr_auto] gap-4 items-center">
+                  <div>
+                    <p
+                      class="text-[10px] uppercase tracking-[.28em] text-apsgGold font-black"
+                    >
+                      Official Register
+                    </p>
+                    <h3 class="mt-1 text-xl md:text-2xl font-black">
+                      Premium directory with live dashboard updates.
+                    </h3>
+                    <p class="mt-2 text-sm text-white/68">
+                      Use search, filters and view toggles to review the current
+                      leadership structure.
+                    </p>
+                  </div>
+                  <div class="grid grid-cols-3 gap-2 text-center">
+                    <div
+                      class="rounded-2xl bg-white/10 border border-white/10 px-4 py-3"
+                    >
+                      <p
+                        id="totalStat"
+                        class="text-2xl font-black text-apsgGold"
+                      >
+                        --
+                      </p>
+                      <p
+                        class="text-[10px] uppercase tracking-widest text-white/55 font-black"
+                      >
+                        Total
+                      </p>
+                    </div>
+                    <div
+                      class="rounded-2xl bg-white/10 border border-white/10 px-4 py-3"
+                    >
+                      <p
+                        id="matronStat"
+                        class="text-2xl font-black text-apsgGold"
+                      >
+                        --
+                      </p>
+                      <p
+                        class="text-[10px] uppercase tracking-widest text-white/55 font-black"
+                      >
+                        Matrons
+                      </p>
+                    </div>
+                    <div
+                      class="rounded-2xl bg-white/10 border border-white/10 px-4 py-3"
+                    >
+                      <p
+                        id="patronStat"
+                        class="text-2xl font-black text-apsgGold"
+                      >
+                        --
+                      </p>
+                      <p
+                        class="text-[10px] uppercase tracking-widest text-white/55 font-black"
+                      >
+                        Patrons
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                id="directoryGrid"
+                class="grid sm:grid-cols-1 md:grid-cols-2 gap-5 md:gap-6"
+              >
+                <div class="loading-skeleton"></div>
+                <div class="loading-skeleton hidden md:block"></div>
+              </div>
+              <div
+                id="noResult"
+                class="hidden mt-8 rounded-3xl border border-apsgGold/25 bg-apsgGold/10 p-8 text-center"
+              >
+                <i
+                  class="fa-solid fa-magnifying-glass text-3xl text-apsgGold"
+                ></i>
+                <h3 class="mt-3 text-xl font-black text-apsgDeep">
+                  No record found
+                </h3>
+                <p class="mt-1 text-sm text-gray-600">
+                  Try another name, role title, council category, or reset the
+                  filters.
+                </p>
+              </div>
+            </main>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div
+      id="directoryModal"
+      class="fixed inset-0 z-[100] hidden items-center justify-center px-4 py-6 no-print"
+      aria-hidden="true"
+    >
+      <div class="modal-backdrop absolute inset-0" data-close-modal></div>
+      <div
+        class="modal-card relative z-10 w-full max-w-5xl overflow-hidden rounded-[2rem] bg-white shadow-palace border border-apsgGold/25"
+      >
+        <div class="grid md:grid-cols-[.42fr_.58fr]">
+          <div class="relative min-h-[24rem] bg-apsgDeep">
+            <span class="apsg-logo-fallback"
+              ><img
+                id="modalFallbackLogo"
+                src="/assets/images/logo/apsg1.png"
+                alt="APSG Logo"
+                onerror="this.style.display = 'none'" width="96" height="96" decoding="async"></span
+            ><img
+              id="modalPhoto"
+              src=""
+              alt=""
+              class="absolute inset-0 h-full w-full object-cover object-top hidden"
+              style="z-index: 1"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/72 via-transparent to-transparent"
+            ></div>
+            <div class="absolute left-5 bottom-5 text-white">
+              <span
+                id="modalIndex"
+                class="inline-grid h-11 w-11 place-items-center rounded-full bg-apsgGold text-apsgDeep font-black shadow-gold"
+                >1</span
+              >
+              <p
+                class="mt-3 text-xs uppercase tracking-[.24em] text-apsgGold font-black"
+              >
+                Official Profile
+              </p>
+            </div>
+          </div>
+          <div class="relative p-6 md:p-8">
+            <button
+              type="button"
+              class="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200"
+              data-close-modal
+              aria-label="Close profile modal"
+            >
+              <i class="fa-solid fa-times"></i>
+            </button>
+            <p
+              class="text-xs uppercase tracking-[.28em] text-apsgGold font-black"
+            >
+              Member Dossier
+            </p>
+            <h3
+              id="modalName"
+              class="display-font mt-2 text-3xl md:text-4xl font-black text-apsgDeep leading-tight"
+            ></h3>
+            <p
+              id="modalRole"
+              class="mt-3 inline-flex rounded-full border border-apsgGold/30 bg-apsgGold/10 px-4 py-2 text-xs font-black uppercase tracking-[.18em] text-[#72530b]"
+            ></p>
+            <div class="gold-line my-5"></div>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+              <div
+                class="rounded-2xl border border-apsgGreen/10 bg-gray-50 p-4"
+              >
+                <p
+                  class="text-[10px] uppercase tracking-[.2em] text-gray-500 font-black"
+                >
+                  Category
+                </p>
+                <p id="modalCategory" class="mt-1 font-black text-apsgDeep"></p>
+              </div>
+              <div
+                class="rounded-2xl border border-apsgGreen/10 bg-gray-50 p-4"
+              >
+                <p
+                  class="text-[10px] uppercase tracking-[.2em] text-gray-500 font-black"
+                >
+                  Seat
+                </p>
+                <p id="modalSeat" class="mt-1 font-black text-apsgDeep"></p>
+              </div>
+              <div
+                class="rounded-2xl border border-apsgGreen/10 bg-gray-50 p-4 col-span-2"
+              >
+                <p
+                  class="text-[10px] uppercase tracking-[.2em] text-gray-500 font-black"
+                >
+                  Profile Summary / Mandate
+                </p>
+                <p
+                  id="modalSummary"
+                  class="mt-1 text-gray-700 leading-relaxed"
+                ></p>
+              </div>
+              <div
+                class="rounded-2xl border border-apsgGreen/10 bg-gray-50 p-4 col-span-2"
+              >
+                <p
+                  class="text-[10px] uppercase tracking-[.2em] text-gray-500 font-black"
+                >
+                  Dashboard Source
+                </p>
+                <p
+                  id="modalSource"
+                  class="mt-1 font-mono text-xs text-gray-700 break-all"
+                ></p>
+              </div>
+            </div>
+            <div class="mt-5 flex flex-wrap gap-2">
+              <a
+                id="modalDossierLink"
+                href="/pages/official-details.html"
+                class="rounded-full bg-apsgDeep px-5 py-3 text-sm font-black text-white hover:bg-apsgGreen transition"
+              >
+                <i class="fa-solid fa-file-lines mr-2"></i>View Dossier
+              </a>
+              <button
+                type="button"
+                id="copyMemberBtn"
+                class="rounded-full border border-apsgGold/30 bg-apsgGold/10 px-5 py-3 text-sm font-black text-[#72530b] hover:bg-apsgGold hover:text-apsgDeep transition"
+              >
+                <i class="fa-solid fa-copy mr-2"></i>Copy Profile</button
+              ><button
+                type="button"
+                id="printMemberBtn"
+                class="rounded-full border border-apsgGold/30 bg-apsgGold/10 px-5 py-3 text-sm font-black text-[#72530b] hover:bg-apsgGold hover:text-apsgDeep transition"
+              >
+                <i class="fa-solid fa-print mr-2"></i>Print Page
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="footer"></div>
+    <script>
+      window.APSG_DIRECTORY_CONFIG = {
+        title: "APSG Board Members / BOT",
+        copyTitle: "APSG Board Members / BOT",
+        directory: "bot",
+        org: "APSG",
+        defaultSeat: "APSG Board / BOT",
+        aliases: [
+          "bot",
+          "board",
+          "board_bot",
+          "board members",
+          "trustee",
+          "trustees",
+        ],
+      };
+    </script>
+    <script src="/assets/js/supabase-clients.js"></script>
+    <script src="/assets/js/apsg-settings.js"></script>
+    <script src="/assets/js/leadership-data.js"></script>
+    <script id="apsg-bot-leadership-exact-render">
+      (function () {
+        "use strict";
+
+        const fallbackImage = "/assets/images/logo/apsg.png";
+        const tableCandidates = window.APSG_OFFICIALS_TABLES || [
+          "apsg_officials",
+          "officials",
+          "leadership_officials",
+        ];
+        let leaders = [];
+        let currentFilter = "all";
+        let currentModalLeader = null;
+        let currentSource = "Fallback static register";
+
+        const qs = (selector, context = document) => context.querySelector(selector);
+        const qsa = (selector, context = document) => Array.from(context.querySelectorAll(selector));
+        const esc = (value) =>
+          String(value ?? "").replace(/[&<>"']/g, (char) => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;",
+          })[char]);
+        const plain = (html) => {
+          const div = document.createElement("div");
+          div.innerHTML = String(html || "");
+          return (div.textContent || div.innerText || "").trim();
+        };
+        const slugify = (value) =>
+          String(value || "")
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "") || "official";
+        const norm = (value) =>
+          String(value || "")
+            .toLowerCase()
+            .trim()
+            .replace(/&/g, " and ")
+            .replace(/[^a-z0-9]+/g, "_")
+            .replace(/^_+|_+$/g, "");
+        function getClient() {
+          return window.apsgSupabase || window.supabaseClient || window.supabaseClientPublic || window.APSG_SUPABASE || window.sb || null;
+        }
+        function pick(row, keys) {
+          for (const key of keys) {
+            const value = row && row[key];
+            if (value !== undefined && value !== null && String(value).trim() !== "") return value;
+          }
+          return "";
+        }
+        function toArray(value) {
+          if (!value) return [];
+          if (Array.isArray(value)) return value.map((v) => String(v || "").trim()).filter(Boolean);
+          if (typeof value === "string") {
+            try {
+              const parsed = JSON.parse(value);
+              if (Array.isArray(parsed)) return parsed.map((v) => String(v || "").trim()).filter(Boolean);
+            } catch (_) {}
+            return value.split(/[|,;]/).map((v) => v.trim()).filter(Boolean);
+          }
+          return [String(value).trim()].filter(Boolean);
+        }
+        function rowTargets(row) {
+          const raw = [];
+          ["publish_targets", "page_targets", "directories"].forEach((key) => raw.push(...toArray(row[key])));
+          ["directory", "category", "level", "seat", "position", "role", "leadership_group", "section_key", "group_route_key"].forEach((key) => {
+            if (row[key]) raw.push(row[key]);
+          });
+          return raw.map(norm).filter(Boolean);
+        }
+        function organizationOf(row) {
+          return norm(pick(row, ["organization", "organization_key", "org", "group_org"])) || "apsg";
+        }
+        function leadershipGroupOf(row) {
+          return norm(pick(row, ["leadership_group", "section_key", "group", "category"]));
+        }
+        function isRealName(name) {
+          return !!String(name || "").trim() && !/^(n\/?a|none|null|undefined|-|--|---|placeholder|sample|test|name)$/i.test(String(name).trim());
+        }
+        function isPublished(row) {
+          const name = String(pick(row, ["full_name", "name", "member_name", "official_name", "title"])).trim();
+          if (!isRealName(name)) return false;
+          const position = String(pick(row, ["position", "role", "designation", "office", "portfolio", "rank"])).trim();
+          if (!position || /^[-\s]*$/.test(position)) return false;
+          const status = String(pick(row, ["status", "visibility", "publish_status"])).trim().toLowerCase();
+          if (["draft", "hidden", "private", "inactive", "unpublished", "disabled"].includes(status)) return false;
+          const publishedValue = row.is_published ?? row.published ?? row.is_active ?? row.active;
+          if (publishedValue === false || publishedValue === "false" || publishedValue === 0 || publishedValue === "0") return false;
+          return true;
+        }
+        function isBotRecord(row) {
+          const text = [
+            row.full_name,
+            row.name,
+            row.position,
+            row.role,
+            row.designation,
+            row.seat,
+            row.council,
+            row.category,
+            row.level,
+            row.leadership_group,
+            row.section_key,
+            row.directory,
+            ...rowTargets(row),
+          ].join(" ").toLowerCase().replace(/_/g, " ");
+          const org = organizationOf(row);
+          if (org === "cwdi") return false;
+          return /\bbot\b|board|trustee|trustees|board of trustees|board members/.test(text);
+        }
+        function classify(row, name, role, seat) {
+          const raw = norm(pick(row, ["category", "role_type", "member_type", "official_type", "level", "leadership_group", "section_key"]));
+          const text = `${name} ${role} ${seat} ${raw}`.toLowerCase();
+          if (/matron|grand matron|iyalode/.test(text)) return "matron";
+          if (/patron|adviser|advisor/.test(text)) return "patron";
+          if (/bot|board|trustee/.test(text)) return "bot";
+          if (/national|executive|director|secretary|coordinator|deputy/.test(text)) return "executive";
+          return raw || "bot";
+        }
+        function cleanImage(value) {
+          const src = String(value || "").trim();
+          if (!src || /^null$/i.test(src)) return "";
+          return src;
+        }
+        function iconFor(category) {
+          return {
+            matron: "fa-crown",
+            patron: "fa-landmark",
+            adviser: "fa-user-shield",
+            advisor: "fa-user-shield",
+            executive: "fa-user-tie",
+            bot: "fa-user-check",
+            board: "fa-user-check",
+            board_bot: "fa-user-check",
+          }[norm(category)] || "fa-user-check";
+        }
+        function formatCategory(category) {
+          return (
+            {
+              all: "All",
+              executive: "Executive",
+              patron: "Patron",
+              matron: "Matron",
+              bot: "Board / BOT",
+              board: "Board / BOT",
+            }[norm(category)] ||
+            String(category || "Board / BOT")
+              .replace(/_/g, " ")
+              .replace(/\b\w/g, (c) => c.toUpperCase())
+          );
+        }
+        function canonicalProfile(row, name, slug) {
+          return String(pick(row, ["profile_slug", "profile_key", "canonical_profile_key", "canonical_slug"])).trim() || slugify(slug || name);
+        }
+        function placementKey(row) {
+          return String(pick(row, ["placement_key"])).trim() || [organizationOf(row), leadershipGroupOf(row), norm(pick(row, ["position", "role", "designation"])), norm(pick(row, ["state"]))].filter(Boolean).join("_");
+        }
+        function normalizeOfficial(row, index, source) {
+          const name = String(pick(row, ["full_name", "name", "member_name", "official_name", "title"])).trim();
+          const role = String(pick(row, ["position", "role", "designation", "office", "portfolio", "rank"])).trim() || "APSG Board Official";
+          const seat = String(pick(row, ["seat", "board_seat", "council", "section", "group", "leadership_group"])).trim() || "APSG Board / BOT";
+          const slug = String(pick(row, ["slug"])).trim() || slugify(name);
+          const category = classify(row, name, role, seat);
+          const shortInfo = String(pick(row, ["short_info", "excerpt", "card_excerpt", "credentials"])).trim();
+          return {
+            raw: row,
+            id: String(pick(row, ["id", "official_id", "uuid", "local_id"])).trim(),
+            slug,
+            profile_slug: canonicalProfile(row, name, slug),
+            profile_key: canonicalProfile(row, name, slug),
+            placement_key: placementKey(row),
+            canonical_profile: row.canonical_profile === true || String(row.canonical_profile).toLowerCase() === "true",
+            index: Number(pick(row, ["display_order", "sort_order", "order_no", "position_order", "priority", "order"])) || index || 999,
+            name,
+            role,
+            category,
+            rawCategory: pick(row, ["category", "level", "leadership_group"]) || "Board / BOT",
+            seat,
+            image: cleanImage(pick(row, ["image_url", "image", "photo", "photo_url", "avatar", "avatar_url", "profile_photo", "profile_image"])) || fallbackImage,
+            summary: shortInfo,
+            short_info: shortInfo,
+            state: String(pick(row, ["state", "state_name", "chapter_state"])).trim(),
+            organization: organizationOf(row),
+            leadership_group: leadershipGroupOf(row),
+            credentials: String(pick(row, ["credentials"])).trim(),
+            biography: String(pick(row, ["biography", "profile_html", "bio", "profile"])).trim(),
+            icon: iconFor(category),
+            source,
+          };
+        }
+        function identityKey(member) {
+          return String(member.profile_slug || member.profile_key || "").trim() || slugify(member.slug || member.name);
+        }
+        function primaryRecord(records) {
+          return records.slice().sort((a, b) => {
+            const ca = a.canonical_profile ? 1 : 0;
+            const cb = b.canonical_profile ? 1 : 0;
+            if (cb !== ca) return cb - ca;
+            const oa = Number(a.index) || 999;
+            const ob = Number(b.index) || 999;
+            return oa - ob;
+          })[0] || records[0];
+        }
+        function groupPublicRows(rows) {
+          const map = new Map();
+          rows.forEach((row) => {
+            const key = identityKey(row);
+            if (!map.has(key)) map.set(key, []);
+            const exists = map.get(key).some((x) => (x.placement_key && x.placement_key === row.placement_key) || (x.id && x.id === row.id));
+            if (!exists) map.get(key).push(row);
+          });
+          return Array.from(map.values()).map((records) => {
+            const primary = primaryRecord(records);
+            return {
+              ...primary,
+              image: primary.image || records.find((r) => r.image)?.image || fallbackImage,
+              summary: primary.summary || records.find((r) => r.summary)?.summary || "",
+              roles: records,
+            };
+          });
+        }
+        function summaryText(leader) {
+          return plain(leader.short_info || leader.summary || leader.biography || leader.credentials) || "Provides leadership support, governance guidance and official board representation for APSG Nigeria.";
+        }
+        function detailUrl(leader) {
+          const params = new URLSearchParams();
+          if (leader.id) params.set("id", leader.id);
+          params.set("profile", leader.profile_slug || leader.profile_key || slugify(leader.name));
+          if (leader.profile_slug) params.set("profile_slug", leader.profile_slug);
+          if (leader.slug) params.set("slug", leader.slug);
+          return `/pages/official-details.html?${params.toString()}`;
+        }
+        function setText(id, value) {
+          const el = qs(`#${id}`);
+          if (el) el.textContent = value;
+        }
+        function tuneImage(img, index) {
+          if (!img) return;
+          img.loading = index < 2 ? "eager" : "lazy";
+          img.decoding = "async";
+          img.setAttribute("width", "720");
+          img.setAttribute("height", "920");
+          img.onerror = function () {
+            this.onerror = null;
+            this.src = fallbackImage;
+            this.classList.add("is-fallback-logo");
+            this.alt = this.alt || "APSG logo placeholder";
+          };
+        }
+        async function fetchAllRows(table, pageSize = 1000) {
+          const client = getClient();
+          const collected = [];
+          for (let from = 0; from < 5000; from += pageSize) {
+            const to = from + pageSize - 1;
+            const { data, error } = await client.from(table).select("*").range(from, to);
+            if (error) throw error;
+            if (!Array.isArray(data) || !data.length) break;
+            collected.push(...data);
+            if (data.length < pageSize) break;
+          }
+          return collected;
+        }
+        async function fetchRows() {
+          const client = getClient();
+          if (!client || typeof client.from !== "function") {
+            currentSource = "Fallback static register";
+            return (Array.isArray(window.APSG_LEADERSHIP_SEED) ? window.APSG_LEADERSHIP_SEED : [])
+              .map((row, i) => normalizeOfficial({ ...row, status: "published", is_published: true }, i + 1, currentSource))
+              .filter((leader) => isRealName(leader.name));
+          }
+          const errors = [];
+          for (const table of tableCandidates) {
+            try {
+              const rows = await fetchAllRows(table, 1000);
+              const normalized = rows
+                .filter((row) => isPublished(row) && isBotRecord(row))
+                .map((row, i) => normalizeOfficial(row, i + 1, `Supabase table: ${table}`));
+              if (normalized.length) {
+                currentSource = `Supabase table: ${table}`;
+                return normalized;
+              }
+              errors.push(`${table}: no published BOT officials`);
+            } catch (error) {
+              errors.push(`${table}: ${error.message || error}`);
+              console.warn("[APSG BOT]", table, error);
+            }
+          }
+          currentSource = errors.join(" | ") || "Fallback static register";
+          return (Array.isArray(window.APSG_LEADERSHIP_SEED) ? window.APSG_LEADERSHIP_SEED : [])
+            .filter((row) => isBotRecord(row))
+            .map((row, i) => normalizeOfficial({ ...row, status: "published", is_published: true }, i + 1, "Fallback static register"))
+            .filter((leader) => isRealName(leader.name));
+        }
+        function renderStats() {
+          const total = leaders.length;
+          const matrons = leaders.filter((l) => /matron/i.test(`${l.category} ${l.role}`)).length;
+          const patrons = leaders.filter((l) => /patron|adviser|advisor/i.test(`${l.category} ${l.role}`)).length;
+          setText("heroTotal", total);
+          setText("heroMatrons", matrons);
+          setText("heroPatrons", patrons);
+          setText("totalStat", total);
+          setText("matronStat", matrons);
+          setText("patronStat", patrons);
+          setText("statusLabel", currentSource.includes("Supabase") ? "Live Dashboard" : "Fallback / Check Setup");
+          setText("sourceStatus", currentSource.includes("Supabase") ? currentSource.replace("Supabase table: ", "Synced from ") : currentSource);
+        }
+        function renderFeaturedLeaders() {
+          const wrap = qs("#featuredDirectory");
+          if (!wrap) return;
+          const featured = leaders.slice(0, 3);
+          wrap.innerHTML = featured.length
+            ? featured.map((leader, index) => `
+                <button type="button" data-featured-index="${leader.index}" class="group flex w-full items-center gap-3 rounded-3xl border border-white/10 bg-white/10 p-3 text-left hover:bg-white/15 transition">
+                  <img src="${esc(leader.image)}" alt="${esc(leader.name)}" class="mini-avatar h-14 w-14 rounded-2xl object-cover object-top" loading="${index === 0 ? "eager" : "lazy"}" decoding="async" onerror="this.onerror=null;this.src='${fallbackImage}';this.classList.add('is-fallback-logo');">
+                  <span class="min-w-0 flex-1"><span class="block truncate text-sm font-black text-white">${esc(leader.name)}</span><span class="block truncate text-xs text-apsgGold font-bold">${esc(leader.role)}</span></span>
+                  <i class="fa-solid fa-arrow-right text-apsgGold opacity-0 group-hover:opacity-100 transition"></i>
+                </button>`).join("")
+            : '<p class="text-sm text-white/65">No published BOT profile found yet.</p>';
+        }
+        function renderLeaders() {
+          const grid = qs("#directoryGrid");
+          if (!grid) return;
+          if (!leaders.length) {
+            grid.innerHTML = `<div class="md:col-span-2 xl:col-span-3 rounded-[1.5rem] border border-apsgGold/25 bg-apsgGold/10 p-8 text-center"><i class="fa-solid fa-circle-info text-3xl text-apsgGold"></i><h3 class="mt-3 text-xl font-black text-apsgDeep">No published BOT record found</h3><p class="mt-1 text-sm text-gray-600">Publish BOT officials from Admin Leadership and assign Board/BOT target.</p><p class="mt-2 text-xs text-gray-500">${esc(currentSource)}</p></div>`;
+            return;
+          }
+          grid.innerHTML = leaders.map((leader, i) => `
+            <article class="leader-card" data-leader-card data-member-card data-index="${leader.index}" data-name="${esc(leader.name)}" data-role="${esc(leader.role)}" data-category="${esc(norm(leader.category))}" data-seat="${esc(leader.seat)}" data-state="${esc(leader.state)}" data-org="${esc(leader.organization)}">
+              <div class="leader-photo-wrap">
+                <span class="leader-index">${i + 1}</span>
+                <span class="board-ribbon">${leader.roles && leader.roles.length > 1 ? `${leader.roles.length} linked roles` : esc(leader.seat || "APSG Board / BOT")}</span>
+                <img src="${esc(leader.image)}" alt="${esc(leader.name)} - ${esc(leader.role)}" class="leader-photo" loading="${i < 2 ? "eager" : "lazy"}" decoding="async" width="720" height="920" onerror="this.onerror=null;this.src='${fallbackImage}';this.classList.add('is-fallback-logo');">
+                <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/58 to-transparent p-4"></div>
+              </div>
+              <div class="p-5 md:p-6 text-center md:text-left">
+                <span class="role-pill"><i class="fa-solid ${esc(leader.icon)}"></i> ${esc(leader.role)}</span>
+                <h3 class="mt-4 text-xl md:text-2xl font-black text-apsgDeep leading-tight">${esc(leader.name)}</h3>
+                <p class="mt-2 text-sm text-gray-600 leading-relaxed">${esc(summaryText(leader))}</p>
+                <div class="leader-card-actions mt-4 no-print">
+                  <button type="button" data-profile-index="${leader.index}" class="leader-action quick"><i class="fa-solid fa-eye"></i>Quick View</button>
+                  <a href="${detailUrl(leader)}" data-dossier-link class="leader-action dossier"><i class="fa-solid fa-file-lines"></i>View Dossier</a>
+                  <span class="board-seat-pill"><i class="fa-solid fa-briefcase"></i>${esc(formatCategory(leader.category))}</span>
+                </div>
+              </div>
+            </article>`).join("");
+          qsa(".leader-photo", grid).forEach(tuneImage);
+          updateFilter();
+        }
+        function updateFilter() {
+          const search = (qs("#directorySearch")?.value || "").trim().toLowerCase();
+          let visible = 0;
+          qsa("[data-member-card]").forEach((card) => {
+            const haystack = `${card.dataset.name || ""} ${card.dataset.role || ""} ${card.dataset.category || ""} ${card.dataset.seat || ""} ${card.dataset.state || ""}`.toLowerCase();
+            const category = card.dataset.category;
+            const matchText = !search || haystack.includes(search);
+            const matchFilter = currentFilter === "all" || category === currentFilter || (currentFilter === "board" && ["bot", "board", "executive"].includes(category));
+            const show = matchText && matchFilter;
+            card.classList.toggle("hidden", !show);
+            if (show) visible += 1;
+          });
+          ["directoryCount", "visibleBadge"].forEach((id) => {
+            const el = qs(`#${id}`);
+            if (el) el.textContent = `Showing ${visible} member${visible === 1 ? "" : "s"}`;
+          });
+          qs("#noResult")?.classList.toggle("hidden", visible !== 0);
+        }
+        function setFilter(filter) {
+          currentFilter = filter;
+          qsa("[data-filter]").forEach((button) => button.classList.toggle("active", button.dataset.filter === filter));
+          updateFilter();
+        }
+        function getLeader(index) {
+          return leaders.find((leader) => String(leader.index) === String(index));
+        }
+        function openModal(leader) {
+          if (!leader) return;
+          currentModalLeader = leader;
+          setText("modalIndex", leaders.indexOf(leader) + 1);
+          setText("modalName", leader.name);
+          setText("modalRole", leader.role);
+          setText("modalCategory", formatCategory(leader.category));
+          setText("modalSeat", leader.seat || "APSG Board / BOT");
+          setText("modalSummary", summaryText(leader));
+          setText("modalSource", leader.source || currentSource);
+          const dossier = qs("#modalDossierLink");
+          if (dossier) dossier.href = detailUrl(leader);
+          const photo = qs("#modalPhoto");
+          if (photo) {
+            photo.src = leader.image || fallbackImage;
+            photo.alt = leader.name;
+            photo.classList.remove("hidden", "is-fallback-logo");
+            tuneImage(photo, 0);
+          }
+          const fallback = qs("#modalFallbackLogo");
+          if (fallback) fallback.src = "/assets/images/logo/apsg1.png";
+          const modal = qs("#directoryModal");
+          if (!modal) return;
+          modal.classList.remove("hidden");
+          modal.classList.add("flex");
+          modal.setAttribute("aria-hidden", "false");
+          document.body.classList.add("overflow-hidden");
+          setTimeout(() => modal.querySelector("[data-close-modal],a,button")?.focus(), 30);
+        }
+        function closeModal() {
+          const modal = qs("#directoryModal");
+          if (!modal) return;
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+          modal.setAttribute("aria-hidden", "true");
+          document.body.classList.remove("overflow-hidden");
+        }
+        function showToast(message) {
+          const toast = document.createElement("div");
+          toast.className = "copy-toast";
+          toast.textContent = message;
+          document.body.appendChild(toast);
+          setTimeout(() => toast.remove(), 1600);
+        }
+        function fallbackCopy(text, done) {
+          const textarea = document.createElement("textarea");
+          textarea.value = text;
+          textarea.style.position = "fixed";
+          textarea.style.opacity = "0";
+          document.body.appendChild(textarea);
+          textarea.focus();
+          textarea.select();
+          document.execCommand("copy");
+          textarea.remove();
+          done();
+        }
+        function copyText(text, label) {
+          const done = () => showToast(label || "Copied");
+          if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+          else fallbackCopy(text, done);
+        }
+        function buildDirectoryText() {
+          return "APSG Board Members / BOT\nSource: " + currentSource + "\n\n" + leaders.map((leader, index) => `${index + 1}. ${leader.name} - ${leader.role} (${leader.seat})`).join("\n");
+        }
+        async function init() {
+          const grid = qs("#directoryGrid");
+          if (grid) {
+            grid.innerHTML = '<div class="md:col-span-2 xl:col-span-3 rounded-[1.5rem] border border-apsgGold/25 bg-apsgGold/10 p-8 text-center"><i class="fa-solid fa-spinner fa-spin text-3xl text-apsgGold"></i><p class="mt-3 font-black text-apsgDeep">Loading published BOT records...</p></div>';
+          }
+          const rows = await fetchRows();
+          leaders = groupPublicRows(rows)
+            .sort((a, b) => Number(a.index || 999) - Number(b.index || 999))
+            .map((leader, index) => ({ ...leader, index: index + 1 }));
+          renderStats();
+          renderFeaturedLeaders();
+          renderLeaders();
+          qs("#directorySearch")?.addEventListener("input", updateFilter);
+          qsa("[data-filter]").forEach((button) => button.addEventListener("click", () => setFilter(button.dataset.filter)));
+          qs("#copyListBtn")?.addEventListener("click", () => copyText(buildDirectoryText(), "BOT directory copied"));
+          qs("#copyTopBtn")?.addEventListener("click", () => copyText(buildDirectoryText(), "BOT directory copied"));
+          qs("#printBtn")?.addEventListener("click", () => window.print());
+          qs("#gridViewBtn")?.addEventListener("click", () => qs("#directoryShell")?.classList.remove("list-mode"));
+          qs("#listViewBtn")?.addEventListener("click", () => qs("#directoryShell")?.classList.add("list-mode"));
+          document.addEventListener("click", (event) => {
+            const profileButton = event.target.closest("[data-profile-index]");
+            const featuredButton = event.target.closest("[data-featured-index]");
+            const card = event.target.closest("[data-member-card]");
+            const closeButton = event.target.closest("[data-close-modal]");
+            const dossierLink = event.target.closest("[data-dossier-link]");
+            if (dossierLink) {
+              event.stopPropagation();
+              return;
+            }
+            if (profileButton) {
+              event.stopPropagation();
+              openModal(getLeader(profileButton.dataset.profileIndex));
+            } else if (featuredButton) {
+              openModal(getLeader(featuredButton.dataset.featuredIndex));
+            } else if (card) {
+              openModal(getLeader(card.dataset.index));
+            } else if (closeButton) {
+              closeModal();
+            }
+          });
+          qs("#copyMemberBtn")?.addEventListener("click", () => {
+            if (!currentModalLeader) return;
+            copyText(`${currentModalLeader.name}\n${currentModalLeader.role}\n${currentModalLeader.seat}\n${summaryText(currentModalLeader)}\n${location.origin}${detailUrl(currentModalLeader)}`, "Profile copied");
+          });
+          qs("#printMemberBtn")?.addEventListener("click", () => window.print());
+          document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") closeModal();
+          });
+        }
+        if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+        else init();
+      })();
+    </script>
+    <script type="module" src="/components/navbar.js"></script>
+    <script type="module" src="/components/footer.js"></script>
+
+    <script id="apsg-group-directory-guard">
+      (function () {
+        const config = window.APSG_DIRECTORY_CONFIG || {};
+        const activeKey = String(
+          config.directory || "leadership",
+        ).toLowerCase();
+        const orgKey = String(config.org || "all").toLowerCase();
+        const aliases = (config.aliases || []).map((v) =>
+          String(v).toLowerCase(),
+        );
+        const sectionWords = {
+          bot: ["bot", "board", "trustee", "board / bot", "board members"],
+          mp: ["matron", "patron", "adviser", "patronage"],
+          executive: [
+            "executive",
+            "director-general",
+            "director general",
+            "general secretary",
+            "secretariat",
+            "national executive",
+            "natexco",
+            "nat-exec",
+          ],
+          cwdi: [
+            "cwdi",
+            "confident women",
+            "matron",
+            "patron",
+            "executive leadership",
+            "board",
+          ],
+        };
+        function textOf(el) {
+          return ((el && el.textContent) || "")
+            .replace(/\s+/g, " ")
+            .trim()
+            .toLowerCase();
+        }
+        function detectOrg(card) {
+          const t = [
+            card.dataset.org,
+            card.dataset.organization,
+            card.dataset.group,
+            textOf(card),
+          ]
+            .join(" ")
+            .toLowerCase();
+          if (/cwdi|confident women/.test(t)) return "cwdi";
+          if (/apsg|apc progressive/.test(t)) return "apsg";
+          return "";
+        }
+        function sectionMatch(card) {
+          const t = textOf(card);
+          if (activeKey === "leadership" || activeKey === "cwdi") return true;
+          const words = aliases.length
+            ? aliases
+            : sectionWords[activeKey] || [];
+          if (!words.length) return true;
+          return words.some(
+            (w) =>
+              t.includes(String(w).replace(/_/g, " ")) || t.includes(String(w)),
+          );
+        }
+        function orgMatch(card) {
+          const detected = detectOrg(card);
+          if (!orgKey || orgKey === "all") return true;
+          if (orgKey === "cwdi") return detected === "cwdi";
+          if (orgKey === "apsg") return detected !== "cwdi";
+          return true;
+        }
+        function enhanceCard(card) {
+          if (card.dataset.apsgGuardEnhanced === "true") return;
+          card.dataset.apsgGuardEnhanced = "true";
+          const detected = detectOrg(card);
+          if (detected && !card.querySelector(".apsg-group-badge")) {
+            const body = card.querySelector('.p-5,.p-6,[class*="p-"]') || card;
+            const badge = document.createElement("span");
+            badge.className = "apsg-group-badge no-print";
+            badge.innerHTML =
+              '<i class="fa-solid fa-building-user"></i>' +
+              detected.toUpperCase();
+            body.insertBefore(badge, body.firstChild);
+          }
+        }
+        function updateCounts() {
+          const cards = Array.from(
+            document.querySelectorAll(
+              "#directoryGrid article,#executiveGrid article,[data-leader-card],.official-card,.directory-card",
+            ),
+          );
+          const visible = cards.filter(
+            (card) => card.style.display !== "none" && !card.hidden,
+          ).length;
+          ["visibleBadge", "directoryCount", "leaderCount"].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = `Showing ${visible}`;
+          });
+        }
+        function apply() {
+          document
+            .querySelectorAll(".apsg-directory-switch a")
+            .forEach((a) =>
+              a.classList.toggle("is-active", a.dataset.switch === activeKey),
+            );
+          const cards = Array.from(
+            document.querySelectorAll(
+              "#directoryGrid article,#executiveGrid article,[data-leader-card],.official-card,.directory-card",
+            ),
+          );
+          if (!cards.length) return;
+          cards.forEach((card) => {
+            enhanceCard(card);
+            const ok = orgMatch(card) && sectionMatch(card);
+            card.style.display = ok ? "" : "none";
+          });
+          updateCounts();
+        }
+        const run = () => window.requestAnimationFrame(apply);
+        if (document.readyState === "loading")
+          document.addEventListener("DOMContentLoaded", run);
+        else run();
+        new MutationObserver(() => {
+          clearTimeout(window.__apsgGroupGuard);
+          window.__apsgGroupGuard = setTimeout(run, 120);
+        }).observe(document.documentElement, {
+          childList: true,
+          subtree: true,
+        });
+      })();
+    </script>
+
+    <script src="/assets/js/deployment-polish.js" defer></script>
+  </body>
+</html>
