@@ -100,7 +100,7 @@
           <div class="access-card p-4">
             <i class="fas fa-file-shield text-apsgGold"></i>
             <p class="mt-2 text-xs uppercase tracking-[0.2em] text-white/55 font-black">Secure</p>
-            <p class="font-black">Supabase login</p>
+            <p class="font-black">Protected access</p>
           </div>
         </div>
       </div>
@@ -181,7 +181,7 @@
 
           <div id="helperNotice" class="mt-5 notice-card p-4 text-sm text-gray-700">
             <p class="font-black text-apsgDeep"><i class="fas fa-circle-info text-apsgGold mr-1"></i> Access note</p>
-            <p id="helperText" class="mt-1 leading-relaxed">Members continue to <strong>member-details.html</strong> after verification. Admins continue to the admin dashboard after Supabase authentication.</p>
+            <p id="helperText" class="mt-1 leading-relaxed">Successful verification opens your APSG member profile. Administrators continue to their dashboard after sign-in.</p>
           </div>
 
           <div class="mt-5 flex flex-wrap items-center justify-center gap-3 text-xs font-black uppercase tracking-[0.15em]">
@@ -257,7 +257,7 @@
         els.heroSubtitle.textContent = 'Sign in with your authorised APSG admin email and password to manage members, review documents and access the control dashboard.';
         els.panelTitle.textContent = 'Admin Access';
         els.panelSubtitle.textContent = 'Use your APSG administrator credentials.';
-        els.helperText.innerHTML = 'Admin access uses Supabase authentication and opens the admin dashboard. Use <strong>?portal=admin</strong> to open this tab by default.';
+        els.helperText.innerHTML = 'Admin sign-in continues to your administrator dashboard. Enter your APSG admin credentials to proceed.';
         setTimeout(() => els.emailInput.focus(), 80);
       } else {
         document.title = 'Member Login | APSG Nigeria';
@@ -265,7 +265,7 @@
         els.heroSubtitle.textContent = 'Verify your APSG Registration Number and Phone Number to open your official member details page and document record.';
         els.panelTitle.textContent = 'Member Access';
         els.panelSubtitle.textContent = 'Enter your registration number and registered phone number.';
-        els.helperText.innerHTML = 'Members continue securely to <strong>member-details.html</strong> after successful verification.';
+        els.helperText.innerHTML = 'Successful verification opens your APSG member profile.';
         setTimeout(() => els.regInput.focus(), 80);
       }
     }
@@ -319,7 +319,7 @@
       }
 
       if (typeof supabaseClient === 'undefined') {
-        showError('Supabase client is not available. Please check /assets/js/supabase-clients.js.');
+        showError('Sign-in is temporarily unavailable. Please try again shortly.');
         return;
       }
 
@@ -355,7 +355,7 @@
         sessionStorage.setItem('apsg_member_portal_access_at', new Date().toISOString());
 
         const destination = getSafeReturnUrl(MEMBER_DETAILS_URL);
-        showSuccess(`Verification successful. Opening <strong>member-details.html</strong>...`);
+        showSuccess('Verification successful. Opening your member profile...');
         setTimeout(() => { window.location.href = destination; }, 450);
       } catch (error) {
         showError('Invalid Registration Number or Phone Number. Please check and try again.');
@@ -376,7 +376,7 @@
       }
 
       if (typeof supabaseClient === 'undefined' || !supabaseClient.auth) {
-        showError('Supabase auth client is not available. Please check /assets/js/supabase-clients.js.');
+        showError('Sign-in is temporarily unavailable. Please try again shortly.');
         return;
       }
 
@@ -393,7 +393,7 @@
         showSuccess('Admin login successful. Opening dashboard...');
         setTimeout(() => { window.location.href = destination; }, 450);
       } catch (error) {
-        showError(error?.message || 'Invalid admin email or password. Please try again.');
+        showError("We couldn't sign you in. Check your details and try again.");
       } finally {
         els.adminLoginBtn.disabled = false;
         els.adminLoginBtn.innerHTML = '<i class="fas fa-right-to-bracket mr-2"></i> Sign In to Admin Dashboard';
