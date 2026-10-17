@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="/">
-    <!-- Ensures component fetches like components/navbar.html resolve to /components/navbar.html even when this page is served from /pages/. -->
-    <title>APC Progressive Support Group (APSG) Membership Registration | 2027 and Beyond</title>
+    <title>Membership Registration | APSG and CWDI</title>
     <link rel="stylesheet" href="/assets/css/tailwind-static.css">
 
     <!-- Favicon -->
@@ -15,16 +14,16 @@
     <link rel="apple-touch-icon" href="/assets/images/logo/apsg.png">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="APSG Nigeria | Progressive Unity for a Greater Nigeria">
-    <meta property="og:description" content="Grassroots mobilisation platform supporting APC across Nigeria.">
+    <meta property="og:title" content="APSG and CWDI Membership Registration | APSG Nigeria">
+    <meta property="og:description" content="Choose one APSG or CWDI membership per registration.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://apsgnigeria.org">
     <meta property="og:image" content="https://apsgnigeria.org/assets/images/og-image.jpg">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="APSG Nigeria | Progressive Unity for a Greater Nigeria">
-    <meta name="twitter:description" content="Grassroots mobilisation platform supporting APC across Nigeria.">
+    <meta name="twitter:title" content="APSG and CWDI Membership Registration | APSG Nigeria">
+    <meta name="twitter:description" content="Choose one APSG or CWDI membership per registration.">
     <meta name="twitter:image" content="https://apsgnigeria.org/assets/images/og-image.jpg">
 
     <!-- Performance -->
@@ -33,11 +32,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
    
     <link rel="stylesheet" href="/assets/css/styles.css">
-  <link rel="stylesheet" href="/components/navbar.css">
-  <link rel="stylesheet" href="/components/footer.css">
 
+    <script src="/assets/js/registration-submission.js"></script>
+    <script src="/assets/js/registration-presentation.js"></script>
     <script>
-        tailwind.config = {
+        if (typeof tailwind !== 'undefined') tailwind.config = {
             theme: {
                 extend: {
                     colors: {
@@ -240,200 +239,331 @@
             transform: translateY(-1px);
         }
 
+        .membership-option { display: block; cursor: pointer; min-width: 0; }
+        .membership-option input { position: absolute; opacity: 0; pointer-events: none; }
+        .membership-option span { display: flex; min-height: 5.5rem; flex-direction: column; align-items: flex-start; justify-content: center; gap: .35rem; border: 1px solid #e5eee8; border-radius: 1rem; background: #fff; padding: .8rem; color: #05351f; transition: border-color .18s ease, box-shadow .18s ease, background .18s ease, transform .18s ease; }
+        .membership-option:hover span { transform: translateY(-1px); border-color: #88b69a; }
+        .membership-option input:checked + span { border: 2px solid #0f8a4b; background: #f0f8f2; box-shadow: 0 0 0 3px rgba(15,138,75,.10); }
+        .membership-option input:focus-visible + span { outline: 3px solid #d6a92b; outline-offset: 3px; }
+        .membership-option strong { font-size: .82rem; line-height: 1.2; }
+        .membership-option small { color: #64746a; font-size: .7rem; font-weight: 700; }
+
+        .registration-topbar { position: relative; z-index: 2; display: flex; min-height: 76px; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 1px solid rgba(5,53,31,.08); background: rgba(255,255,255,.92); padding: .8rem clamp(1rem, 4vw, 3.5rem); box-shadow: 0 8px 28px rgba(5,53,31,.035); }
+        .registration-brand { display: inline-flex; align-items: center; gap: .7rem; color: #05351f; font-size: 1rem; font-weight: 950; text-decoration: none; }
+        .registration-brand img { width: 2.75rem; height: 2.75rem; border-radius: 50%; object-fit: contain; }
+        .registration-shortcuts { display: flex; align-items: center; gap: .45rem; color: #64746a; font-size: .82rem; font-weight: 700; }
+        .registration-home-link, .registration-login-link { display: inline-flex; min-height: 2.5rem; align-items: center; justify-content: center; border-radius: 999px; padding: .55rem .9rem; text-decoration: none; }
+        .registration-home-link { color: #315143; }
+        .registration-home-link:hover { background: #f0f8f2; color: #05351f; }
+        .registration-login-link { background: #07361f; color: #fff; font-weight: 900; }
+        .registration-login-link:hover { background: #0f8a4b; }
+        .registration-shell { display: flex; min-height: calc(100vh - 76px); padding: clamp(1rem, 3vw, 2.25rem); background: radial-gradient(ellipse at 12% 8%, rgba(214,169,43,.10), transparent 28rem), radial-gradient(ellipse at 92% 88%, rgba(15,138,75,.09), transparent 34rem), #f4f7f4; }
+        .registration-container { display: flex; width: 100%; max-width: 1280px; margin: auto; }
+        .premium-panel { display: flex; flex: 1; flex-direction: column; width: 100%; min-height: min(760px, calc(100vh - 130px)); border: 1px solid rgba(5,53,31,.10); border-radius: 2rem; background: #fff; box-shadow: 0 28px 80px rgba(5,53,31,.12); }
+        .registration-content-body { display: flex; flex: 1; flex-direction: column; width: 100%; max-width: 1120px; margin-inline: auto; }
+        #membershipChoicePage { margin-block: auto; border: 0; background: transparent; padding: 0; }
+        #membershipChoicePage > .grid { gap: 1.1rem; }
+        .organization-card { min-width: 0; border-radius: 1.5rem; border-color: #e3ece6; background: linear-gradient(145deg, #fff, #f8fbf8); box-shadow: 0 14px 34px rgba(5,53,31,.055); }
+        .organization-card legend > span { border-radius: 999px; background: #fff; padding: .25rem .65rem; box-shadow: 0 4px 14px rgba(5,53,31,.07); }
+        .cwdi-organization-card { border-color: #ece2f1; background: linear-gradient(145deg, #fff, #fbf8fc); }
+        .membership-option span { position: relative; min-height: 7rem; justify-content: flex-start; gap: .4rem; overflow: hidden; border-color: #e4ece6; border-radius: 1.15rem; padding: .85rem; box-shadow: 0 5px 15px rgba(5,53,31,.035); }
+        .membership-option span > i { display: grid; width: 1.8rem; height: 1.8rem; place-items: center; margin-bottom: .1rem; border-radius: .65rem; background: #edf6ef; color: #08703c; font-size: .78rem; }
+        .cwdi-organization-card .membership-option span > i { background: #f3edf7; color: #69347d; }
+        .membership-option input:checked + span::after { position: absolute; top: .7rem; right: .7rem; display: grid; width: 1.35rem; height: 1.35rem; place-items: center; border-radius: 50%; background: #0f8a4b; color: #fff; content: "✓"; font-size: .75rem; font-weight: 900; }
+        .cwdi-organization-card .membership-option input:checked + span { border-color: #8e5ba1; background: #faf6fc; }
+        .cwdi-organization-card .membership-option input:checked + span::after { background: #69347d; }
+
         @media (max-width: 640px) {
+            .registration-topbar { min-height: 64px; padding: .55rem .8rem; }
+            .registration-brand { gap: .45rem; font-size: .86rem; }
+            .registration-brand img { width: 2.3rem; height: 2.3rem; }
+            .registration-shortcuts { gap: .15rem; font-size: .68rem; }
+            .registration-home-link, .registration-login-link { min-height: 2.2rem; padding: .45rem .55rem; }
+            .registration-shell { min-height: calc(100vh - 64px); padding: .65rem; }
+            .premium-panel { min-height: calc(100vh - 88px); border-radius: 1.35rem; }
+            .registration-content-body { padding: 1rem; }
             .duplicate-grid { grid-template-columns: 1fr; }
             .duplicate-flow-card { border-radius: 1.25rem; }
+            .membership-option span { min-height: 6.2rem; padding: .7rem; }
+            .membership-option strong { font-size: .74rem; }
+            .membership-option small { font-size: .64rem; }
         }
+
+        .registration-topbar {
+            min-height: 72px;
+            border-bottom-color: rgba(214,169,43,.34);
+            background: linear-gradient(112deg, #062719, #0b4329 58%, #07351f);
+            box-shadow: 0 10px 30px rgba(4,31,18,.16);
+        }
+        .registration-brand { color: #fff; letter-spacing: -.02em; }
+        .registration-brand img { border: 1px solid rgba(231,199,104,.72); background: #fff; box-shadow: 0 0 0 4px rgba(255,255,255,.07); }
+        .registration-shortcuts { color: rgba(255,255,255,.68); }
+        .registration-home-link { color: rgba(255,255,255,.88); }
+        .registration-home-link:hover { background: rgba(255,255,255,.1); color: #fff; }
+        .registration-login-link { border: 1px solid rgba(255,226,145,.72); background: linear-gradient(135deg, #f0d680, #d4a92c); color: #18391f; box-shadow: 0 7px 18px rgba(214,169,43,.2); }
+        .registration-login-link:hover { background: linear-gradient(135deg, #f7e5a8, #e0bd59); color: #18391f; }
+        .registration-shell {
+            min-height: calc(100svh - 72px);
+            background: radial-gradient(ellipse at 8% 14%, rgba(214,169,43,.14), transparent 31rem), radial-gradient(ellipse at 94% 84%, rgba(15,138,75,.12), transparent 35rem), linear-gradient(145deg,#f4f6f1,#edf3ee 55%,#f8f7f1);
+        }
+        .premium-panel {
+            min-height: min(620px, calc(100svh - 140px));
+            border-color: rgba(255,255,255,.9);
+            border-radius: 2rem;
+            background: linear-gradient(145deg,rgba(255,255,255,.97),rgba(251,253,250,.98));
+            box-shadow: 0 32px 90px rgba(3,34,19,.16), 0 2px 8px rgba(5,53,31,.05);
+        }
+        .premium-panel > .flex { flex: 1; }
+        .premium-panel > .flex > header:first-child {
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(226,194,103,.5);
+            background: radial-gradient(ellipse at 50% -70%,rgba(48,148,97,.65),transparent 60%), linear-gradient(118deg,#052817,#0a5532 55%,#073920);
+        }
+        .premium-panel > .flex > header:first-child::after {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            background: linear-gradient(90deg,transparent,rgba(240,211,131,.85),transparent);
+            content: "";
+        }
+        .registration-content-body { justify-content: center; max-width: 1160px; padding-block: clamp(1.2rem,3vw,2.5rem); }
+        #membershipChoicePage { width: 100%; }
+        #membershipChoicePage > .grid { gap: 1.25rem; }
+        .organization-card {
+            border-radius: 1.55rem;
+            border-color: rgba(15,92,55,.13);
+            background: linear-gradient(145deg,#fff 0%,#fbfdfb 62%,#f4f8f4 100%);
+            box-shadow: 0 16px 38px rgba(5,53,31,.075), inset 0 1px 0 rgba(255,255,255,.95);
+        }
+        .organization-card legend > span { max-width: min(100%, 30rem); padding: .35rem .75rem; box-shadow: 0 7px 22px rgba(5,53,31,.10); }
+        .cwdi-organization-card { border-color: rgba(105,52,125,.16); background: linear-gradient(145deg,#fff 0%,#fdfbfe 62%,#f7f1fa 100%); }
+        .membership-option span {
+            min-height: 7.3rem;
+            border-color: rgba(5,53,31,.12);
+            border-radius: 1.2rem;
+            background: linear-gradient(145deg,#fff,#f8fbf8);
+            padding: 1rem;
+            box-shadow: 0 7px 20px rgba(5,53,31,.055);
+        }
+        .membership-option:hover span { transform: translateY(-3px); border-color: rgba(15,138,75,.48); box-shadow: 0 15px 28px rgba(5,53,31,.1); }
+        .membership-option span > i { width: 2.1rem; height: 2.1rem; border: 1px solid rgba(15,138,75,.1); border-radius: .75rem; }
+        .membership-option strong { font-size: .88rem; letter-spacing: -.01em; }
+        .membership-option small { font-size: .73rem; }
+        .membership-option input:checked + span { border-width: 2px; background: linear-gradient(145deg,#f5fbf6,#eaf5ed); box-shadow: 0 0 0 4px rgba(15,138,75,.08),0 14px 28px rgba(5,53,31,.08); }
+        .cwdi-organization-card .membership-option span { background: linear-gradient(145deg,#fff,#fbf8fc); }
+        .cwdi-organization-card .membership-option input:checked + span { background: linear-gradient(145deg,#fffaff,#f4ebf8); box-shadow: 0 0 0 4px rgba(105,52,125,.08),0 14px 28px rgba(45,20,58,.08); }
+        #continueRegistrationBtn {
+            min-height: 3.5rem;
+            border: 1px solid rgba(241,216,143,.65);
+            background: linear-gradient(110deg,#07512f,#0d7850 62%,#0b6140);
+            box-shadow: 0 14px 28px rgba(5,74,42,.19),inset 0 1px 0 rgba(255,255,255,.16);
+            letter-spacing: -.01em;
+        }
+        #continueRegistrationBtn:hover { background: linear-gradient(110deg,#08663b,#11865a 62%,#0c6f49); box-shadow: 0 18px 34px rgba(5,74,42,.24); }
+        @media (max-width: 640px) {
+            .registration-topbar { min-height: 64px; padding-inline: .75rem; }
+            .registration-shell { min-height: calc(100svh - 64px); padding: .7rem; }
+            .premium-panel { min-height: max(610px, calc(100svh - 88px)); border-radius: 1.4rem; }
+            .premium-panel > .flex > header:first-child { padding: 1.45rem 1rem; }
+            .premium-panel > .flex > header:first-child h1 { font-size: clamp(1.75rem,8vw,2.5rem); line-height: 1.08; }
+            .registration-content-body { justify-content: center; padding: 1.1rem .85rem; }
+            #membershipChoicePage > .grid { gap: .9rem; }
+            .organization-card { border-radius: 1.25rem; padding: .95rem .75rem; }
+            .organization-card legend > span { gap: .45rem; padding: .3rem .55rem; }
+            .organization-card legend img { width: 2.35rem; height: 2.35rem; }
+            .organization-card legend strong { font-size: .76rem; }
+            .organization-card legend span span span { font-size: .64rem; }
+            .membership-option span { min-height: 6.2rem; gap: .35rem; padding: .7rem; }
+            .membership-option strong { font-size: .74rem; }
+            .membership-option small { font-size: .64rem; }
+            #continueRegistrationBtn { max-width: none; }
+        }
+
     </style>
     <style id="future-designation-polish">
       #customDesignationWrap { position: relative; }
       #customDesignationWrap .form-icon { top: 1.25rem; }
     </style>
+    <style id="registration-premium-layout">
+      /* @spec REG-UI-001, REG-UI-002, REG-UI-003, REG-UI-004, REG-UI-005 */
+      .registration-shell { position: relative; isolation: isolate; overflow: hidden; }
+      .registration-shell::before,.registration-shell::after { position: absolute; z-index: -1; pointer-events: none; content: ""; }
+      .registration-shell::before { inset: 0; opacity: .24; background-image: radial-gradient(rgba(5,53,31,.11) .7px,transparent .7px); background-size: 18px 18px; mask-image: linear-gradient(135deg,rgba(0,0,0,.55),transparent 60%); }
+      .registration-shell::after { width: 32rem; height: 32rem; top: 10%; left: 50%; border: 1px solid rgba(5,53,31,.035); border-radius: 50%; box-shadow: 0 0 0 3rem rgba(255,255,255,.13),0 0 0 6rem rgba(255,255,255,.1); transform: translateX(-50%); }
+      .premium-panel { position: relative; overflow: hidden; }
+      .registration-content-body { gap: clamp(1.25rem,2.5vw,2rem); }
+      .registration-progress-panel { width: min(100%,760px); margin: 0 auto; padding: 1rem 1.25rem .9rem; border: 1px solid rgba(15,92,55,.1); border-radius: 1.15rem; background: linear-gradient(135deg,#fff 0%,#f7fbf8 100%); box-shadow: 0 10px 28px rgba(5,53,31,.055),inset 0 1px 0 rgba(255,255,255,.9); }
+      .registration-stepper { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); align-items: start; margin: 0; padding: 0; list-style: none; }
+      .registration-stepper li { position: relative; z-index: 0; display: flex; min-width: 0; flex-direction: column; align-items: center; gap: .48rem; color: #89958d; text-align: center; }
+      .registration-stepper li:not(:last-child)::after { position: absolute; z-index: -1; top: 1.05rem; right: calc(-50% + 1.2rem); left: calc(50% + 1.2rem); height: 2px; border-radius: 999px; background: #dfe8e1; content: ""; }
+      .registration-stepper .step-number { position: relative; z-index: 1; display: grid; width: 2.1rem; height: 2.1rem; flex: 0 0 2.1rem; place-items: center; border: 1px solid #d9e3dc; border-radius: 50%; background: #fff; color: #738078; font-size: .68rem; font-weight: 900; transition: background .2s ease,border-color .2s ease,color .2s ease,box-shadow .2s ease; }
+      .registration-stepper .step-label { max-width: 100%; font-size: .74rem; font-weight: 800; letter-spacing: .01em; line-height: 1.3; overflow-wrap: anywhere; }
+      .registration-stepper li.is-active { color: #07361f; }
+      .registration-stepper li.is-active .step-number { border-color: #0f7a46; background: linear-gradient(145deg,#0f8650,#07512f); color: #fff; box-shadow: 0 0 0 4px rgba(15,138,75,.11),0 5px 12px rgba(5,53,31,.16); }
+      .registration-stepper li.is-complete { color: #17663f; }
+      .registration-stepper li.is-complete .step-number { border-color: #b9d9c3; background: #eaf5ed; color: #0a6c3c; }
+      .registration-stepper li.is-complete:not(:last-child)::after { background: linear-gradient(90deg,#69ae7f,#dfe8e1); }
+      .organization-card { transition: transform .22s ease,box-shadow .22s ease,border-color .22s ease; }
+      .organization-card:hover { transform: translateY(-2px); box-shadow: 0 22px 45px rgba(5,53,31,.095),inset 0 1px 0 rgba(255,255,255,.95); }
+      .cwdi-organization-card:hover { box-shadow: 0 22px 45px rgba(45,20,58,.09),inset 0 1px 0 rgba(255,255,255,.95); }
+      .membership-option span { min-height: 7.6rem; }
+      .membership-option input:checked + span { transform: translateY(-1px); }
+      #selectedMembershipSummary { border-color: rgba(15,92,55,.14); background: linear-gradient(120deg,#fff,#f5faf6); box-shadow: 0 12px 30px rgba(5,53,31,.055); }
+      /* @spec REG-BRAND-001, REG-BRAND-003, REG-BRAND-004, REG-BRAND-005, REG-BRAND-006 */
+      .registration-organization-branding { display:flex; width:100%; min-width:0; flex-wrap:wrap; align-items:stretch; gap:.55rem; margin-top:.7rem; }
+      .registration-organization-brand { display:flex; flex:1 1 14rem; min-width:min(100%,12rem); max-width:100%; align-items:center; gap:.65rem; border:1px solid rgba(15,92,55,.12); border-radius:1rem; background:linear-gradient(135deg,#fff,#f7fbf8); padding:.55rem .7rem; color:#173e2b; }
+      .registration-organization-brand img { width:2.65rem; height:2.65rem; flex:0 0 auto; border:1px solid rgba(5,53,31,.08); border-radius:50%; background:#fff; object-fit:contain; padding:.12rem; }
+      .registration-organization-brand span { min-width:0; font-size:.76rem; font-weight:850; line-height:1.35; overflow-wrap:anywhere; }
+      #previewContent .registration-organization-brand { background:#fff; }
+      .registration-receipt-branding { width:100%; max-width:20rem; min-width:0; flex:0 1 20rem; }
+      .registration-receipt-branding .registration-organization-branding { margin-top:0; }
+      .registration-receipt-branding .registration-organization-brand { flex-basis:100%; border-color:rgba(214,169,43,.36); }
+      .registration-receipt-branding .registration-organization-brand img { width:3rem; height:3rem; }
+      #regForm { gap: 1.3rem; }
+      #regForm > div { position: relative; border: 0; border-bottom: 1px solid #e7eee9; border-radius: 0; background: transparent; padding: 0 0 1.15rem; box-shadow: none; }
+      #regForm .section-title { margin-bottom: .85rem; }
+      #regForm .field-card { border: 0; border-radius: .9rem; background: transparent; padding: 0; box-shadow: none; }
+      #regForm .input-with-icon { min-height: 3rem; border-color: #dce7df; border-radius: .85rem; background: linear-gradient(180deg,#fff,#fbfdfb); }
+      #regForm .input-with-icon:focus { border-color: #15804c; box-shadow: 0 0 0 4px rgba(15,138,75,.11); }
+      @media (max-width:640px) {
+        .registration-content-body { gap: 1.15rem; }
+        .registration-progress-panel { padding: .85rem .55rem .75rem; border-radius: 1rem; }
+        .registration-stepper li { gap: .4rem; }
+        .registration-stepper li:not(:last-child)::after { top: 1.05rem; right: calc(-50% + 1.05rem); left: calc(50% + 1.05rem); }
+        .registration-stepper .step-number { width: 2rem; height: 2rem; flex-basis: 2rem; }
+        .registration-stepper .step-label { max-width: 7.5rem; font-size: .68rem; line-height: 1.25; }
+        .organization-card:hover { transform: none; }
+        #regForm > div { padding-bottom: .9rem; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .organization-card,.membership-option span,.registration-stepper .step-number { transition: none; }
+        .organization-card:hover,.membership-option:hover span { transform: none; }
+      }
+    </style>
+
+    <style id="registration-document-controls">
+      /* @spec REG-FORM-008 */
+      body { zoom:1 !important; }
+      #regForm .registration-file-input { display:block; width:100%; min-width:0; min-height:3.55rem; padding:.35rem; border:1px solid #c9dbd0; border-radius:1rem; background:#f6faf7; color:#315442; font:600 .82rem/1.5 Inter,sans-serif; text-overflow:ellipsis; cursor:pointer; box-shadow:inset 0 1px 2px rgba(5,53,31,.03); }
+      #regForm .registration-file-input::file-selector-button { min-height:2.75rem; margin-right:.75rem; padding:.65rem 1rem; border:1px solid #075c35; border-radius:.72rem; background:linear-gradient(135deg,#075c35,#0b7948); color:#fff; font:800 .8rem/1.3 Inter,sans-serif; cursor:pointer; box-shadow:0 3px 8px rgba(5,74,42,.16),inset 0 1px 0 rgba(255,255,255,.2); }
+      #regForm .registration-file-input:hover::file-selector-button { background:#064b2b; }
+      #regForm .registration-file-input:focus-visible { outline:3px solid #d6a92b; outline-offset:3px; }
+      #regForm .registration-file-input:disabled { opacity:.6; cursor:wait; }
+      .registration-upload-status { margin-top:.5rem; color:#587263; font-size:.72rem; font-weight:600; overflow-wrap:anywhere; }
+      .registration-upload-status.text-red-700 { color:#b91c1c; }
+    </style>
   <link rel="canonical" href="https://apsgnigeria.org/pages/register.html">
   <link rel="stylesheet" href="/assets/css/deployment-polish.css">
-  <meta name="keywords" content="APSG Nigeria, APC Progressive Support Group, APC support group, grassroots mobilisation, CWDI, Nigeria politics, APSG membership">
+  <link rel="stylesheet" href="/assets/css/public-experience.css">
+  <link rel="stylesheet" href="/assets/css/registration-presentation.css?v=20261017-2">
+  <meta name="keywords" content="APSG Nigeria, APSG, APC Progressive Support Group, CWDI, Confident Women Development Initiative, APSG membership, CWDI membership">
   <meta property="og:site_name" content="APSG Nigeria">
-  <script type="application/ld+json" data-apsg-static-schema>[{"@context":"https://schema.org","@type":"Organization","name":"APC Progressive Support Group (APSG)","alternateName":"APSG Nigeria","url":"https://apsgnigeria.org/","logo":"https://apsgnigeria.org/assets/images/logo/apsg1.png","sameAs":[]},{"@context":"https://schema.org","@type":"WebPage","name":"APC Progressive Support Group (APSG) Membership Registration | 2027 and Beyond","description":"Official APC Progressive Support Group (APSG) Nigeria platform for mobilisation, leadership, events, membership and community support.","url":"https://apsgnigeria.org/pages/register.html","isPartOf":{"@type":"WebSite","name":"APSG Nigeria","url":"https://apsgnigeria.org/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://apsgnigeria.org/"},{"@type":"ListItem","position":2,"name":"Pages","item":"https://apsgnigeria.org/pages"},{"@type":"ListItem","position":3,"name":"Register","item":"https://apsgnigeria.org/pages/register.html"}]}]</script>
-    <meta name="description" content="Register with APSG to join the stakeholder community, support civic engagement and participate in official membership activities.">
+  <script type="application/ld+json" data-apsg-static-schema>[{"@context":"https://schema.org","@type":"Organization","name":"APC Progressive Support Group (APSG)","alternateName":"APSG Nigeria","url":"https://apsgnigeria.org/","logo":"https://apsgnigeria.org/assets/images/logo/apsg1.png","sameAs":[]},{"@context":"https://schema.org","@type":"Organization","name":"Confident Women Development Initiative (CWDI)","url":"https://apsgnigeria.org/","logo":"https://apsgnigeria.org/assets/images/logo/cwdi-registration.png","sameAs":[]},{"@context":"https://schema.org","@type":"WebPage","name":"APSG and CWDI Membership Registration","description":"Register for one APSG (APC Progressive Support Group) or CWDI (Confident Women Development Initiative) membership per submission.","url":"https://apsgnigeria.org/pages/register.html","isPartOf":{"@type":"WebSite","name":"APSG Nigeria","url":"https://apsgnigeria.org/"}},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://apsgnigeria.org/"},{"@type":"ListItem","position":2,"name":"Pages","item":"https://apsgnigeria.org/pages"},{"@type":"ListItem","position":3,"name":"Register","item":"https://apsgnigeria.org/pages/register.html"}]}]</script>
+    <meta name="description" content="Choose one APSG or CWDI membership per registration.">
 
 </head>
-<body class="min-h-screen overflow-x-hidden">
-    <!-- Navbar Component (loaded via JS) -->
-    <div id="navbar" role="navigation" aria-label="Main Navigation"></div>
-
-    <!-- Hero Header with Logo -->
-    <header class="hero text-white relative overflow-hidden pt-8 pb-20 md:pt-10 md:pb-28">
-        <div class="luxury-orb -top-24 -left-20 animate-float-soft"></div>
-        <div class="luxury-orb bottom-10 -right-28 animate-float-soft" style="animation-delay: 1.7s;"></div>
-
-        <div class="container mx-auto px-4 relative z-10">
-            <div class="max-w-5xl mx-auto grid lg:grid-cols-[1.25fr_0.75fr] gap-6 items-center">
-                <div class="text-center lg:text-left animate-fade-in">
-                    <div class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-bold shadow-lg backdrop-blur-md">
-                        <span class="h-2.5 w-2.5 rounded-full bg-secondary animate-pulse"></span>
-                        Official APSG Membership Registration
-                    </div>
-                    <h1 class="display-font mt-4 text-3xl md:text-5xl lg:text-6xl font-extrabold leading-[0.95] tracking-tight drop-shadow-2xl">
-                        APC Progressive Support Group
-                    </h1>
-                    <h2 class="mt-3 text-xl md:text-3xl font-black tracking-tight text-white/95">
-                        Membership Registration
-                    </h2>
-                    <p class="mt-3 max-w-xl mx-auto lg:mx-0 text-sm md:text-base text-white/82 leading-relaxed">
-                        A refined, secure and structured registration experience for official APSG verification, coordination and nationwide records.
-                    </p>
-                    <div class="mt-5 flex flex-wrap justify-center lg:justify-start gap-2">
-                        <div class="rounded-xl border border-white/15 bg-white/10 px-3 py-2 backdrop-blur-md">
-                            <p class="text-xs uppercase tracking-[0.22em] text-white/58">Programme</p>
-                            <p class="font-black text-secondary">2027 & Beyond</p>
-                        </div>
-                        <div class="rounded-xl border border-white/15 bg-white/10 px-3 py-2 backdrop-blur-md">
-                            <p class="text-xs uppercase tracking-[0.22em] text-white/58">Coverage</p>
-                            <p class="font-black text-secondary">Nationwide</p>
-                        </div>
-                        <div class="rounded-xl border border-white/15 bg-white/10 px-3 py-2 backdrop-blur-md">
-                            <p class="text-xs uppercase tracking-[0.22em] text-white/58">Status</p>
-                            <p class="font-black text-secondary">Verification Ready</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="government-seal rounded-[1.5rem] p-4 md:p-5 text-center animate-fade-in">
-                    <div class="mx-auto grid h-20 w-20 place-items-center rounded-full border border-secondary/60 bg-white/10 shadow-gold animate-pulse-glow">
-                        <img src="/assets/images/logo/apsg1.png" alt="APSG Logo" class="h-12 w-12 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" width="96" height="96" decoding="async">
-                        <i class="fas fa-shield-halved text-4xl text-secondary hidden"></i>
-                    </div>
-                    <div class="gold-line my-4"></div>
-                    <h3 class="text-xl font-black">Secure Registration Desk</h3>
-                    <p class="mt-2 text-xs leading-relaxed text-white/75">
-                        Enter accurate membership, location and verification details. Review your information before final submission.
-                    </p>
-                    <div class="mt-4 grid grid-cols-3 gap-2 text-center">
-                        <div class="rounded-xl bg-white/10 p-2 border border-white/10">
-                            <i class="fas fa-lock text-secondary"></i>
-                            <p class="mt-2 text-[11px] font-bold text-white/70">Secure</p>
-                        </div>
-                        <div class="rounded-xl bg-white/10 p-2 border border-white/10">
-                            <i class="fas fa-id-card text-secondary"></i>
-                            <p class="mt-2 text-[11px] font-bold text-white/70">Verified</p>
-                        </div>
-                        <div class="rounded-xl bg-white/10 p-2 border border-white/10">
-                            <i class="fas fa-map-location-dot text-secondary"></i>
-                            <p class="mt-2 text-[11px] font-bold text-white/70">Mapped</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<body class="apsg-registration min-h-screen overflow-x-hidden">
+    <header class="registration-topbar">
+        <a class="registration-brand" href="/" aria-label="APSG Nigeria home">
+            <img src="/assets/images/logo/apsg1.png" alt="" width="44" height="44" decoding="async">
+            <span>APSG Nigeria</span>
+        </a>
+        <nav class="registration-shortcuts" aria-label="Registration shortcuts">
+            <a class="registration-home-button" href="/">Home</a>
+            <a class="registration-home-link" href="/pages/contact.html">Help</a>
+            <span>Already registered?</span>
+            <a class="registration-login-link" href="/pages/member-login.html">Login</a>
+        </nav>
     </header>
 
     <!-- Form Section -->
-    <section class="px-3 md:px-4 pb-10 md:pb-14 -mt-14 md:-mt-20 relative z-20">
-        <div class="container mx-auto max-w-5xl">
-            <div class="registration-trust-strip rounded-[1.35rem] p-3 md:p-4 mb-4 animate-fade-in">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                    <div class="trust-pill">
-                        <i class="fas fa-landmark"></i>
-                        <div>
-                            <p class="text-[11px] uppercase tracking-[0.18em] text-gray-500 font-black">Official Portal</p>
-                            <p class="text-sm font-black text-government-green">APSG Membership Desk</p>
-                        </div>
-                    </div>
-                    <div class="trust-pill">
-                        <i class="fas fa-shield-halved"></i>
-                        <div>
-                            <p class="text-[11px] uppercase tracking-[0.18em] text-gray-500 font-black">Private Record</p>
-                            <p class="text-sm font-black text-government-green">Verification Use Only</p>
-                        </div>
-                    </div>
-                    <div class="trust-pill">
-                        <i class="fas fa-eye"></i>
-                        <div>
-                            <p class="text-[11px] uppercase tracking-[0.18em] text-gray-500 font-black">Review First</p>
-                            <p class="text-sm font-black text-government-green">Preview Before Submit</p>
-                        </div>
-                    </div>
-                    <div class="trust-pill">
-                        <i class="fas fa-receipt"></i>
-                        <div>
-                            <p class="text-[11px] uppercase tracking-[0.18em] text-gray-500 font-black">Instant Receipt</p>
-                            <p class="text-sm font-black text-government-green">Copy / Print Number</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <main id="main-content" class="registration-shell bg-[#f6f8f5]">
+        <div class="registration-container container mx-auto max-w-7xl">
+            <div class="premium-panel overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl shadow-emerald-950/10 md:rounded-3xl">
+                <div class="flex min-w-0 flex-1 flex-col">
+                <header class="registration-welcome-header bg-gradient-to-br from-[#052a19] via-[#073e25] to-[#0c5734] px-5 py-7 text-center text-white md:px-8 md:py-9">
+                    <p class="registration-eyebrow text-[10px] font-bold uppercase tracking-[0.3em] text-[#e8c965]">Membership registration · APSG and CWDI</p>
+                    <h1 id="membershipChoiceTitle" class="display-font mt-2 text-3xl font-extrabold tracking-tight md:text-5xl">Join your community</h1>
+                    <p id="membershipChoiceSubtitle" class="registration-welcome-copy mx-auto mt-2 max-w-xl text-sm text-white/80">Choose one organization and membership type to begin. After you finish, you can register with the other organization separately.</p>
+                </header>
 
-            <div class="premium-panel rounded-[1.5rem] md:rounded-[2rem] overflow-hidden animate-fade-in">
-                <div class="relative overflow-hidden bg-gradient-to-r from-government-green via-primary-dark to-accent text-white p-4 md:p-6">
-                    <div class="absolute -right-20 -top-24 h-56 w-56 rounded-full bg-secondary/20 blur-2xl"></div>
-                    <div class="absolute -left-12 bottom-0 h-36 w-36 rounded-full bg-white/10 blur-xl"></div>
-                    <div class="relative z-10 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-                        <div>
-                            <p class="text-xs md:text-sm uppercase tracking-[0.28em] text-secondary font-black">APSG Registration Portal</p>
-                            <h2 class="display-font mt-1 text-2xl md:text-4xl font-extrabold tracking-tight">Join Us Now</h2>
-                            <p class="mt-2 text-white/78 text-xs md:text-base max-w-2xl">Official APC Progressive Support Group (APSG) Registration Form</p>
+                <div class="registration-content-body p-4 md:p-7 lg:p-8">
+                        <div class="registration-progress-panel">
+                            <ol class="registration-stepper" aria-label="Registration progress">
+                                <li data-registration-stage="1" aria-current="step"><span class="step-number">01</span><span class="step-label">Membership</span></li>
+                                <li data-registration-stage="2"><span class="step-number">02</span><span class="step-label">Your details</span></li>
+                                <li data-registration-stage="3"><span class="step-number">03</span><span class="step-label">Review &amp; submit</span></li>
+                            </ol>
                         </div>
-                        <div class="flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-3 py-2 backdrop-blur-md">
-                            <i class="fas fa-circle-check text-secondary text-xl"></i>
-                            <div>
-                                <p class="text-xs uppercase tracking-widest text-white/55 font-bold">Step</p>
-                                <p class="font-black">Complete, Preview, Submit</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="relative z-10 mt-4 rounded-xl border border-white/15 bg-white/10 p-2 portal-mini-progress">
-                        <div class="grid grid-cols-3 gap-2 text-center text-[11px] md:text-xs font-black text-white/82">
-                            <span><i class="fas fa-pen-to-square text-secondary mr-1"></i>Complete</span>
-                            <span><i class="fas fa-magnifying-glass text-secondary mr-1"></i>Review</span>
-                            <span><i class="fas fa-certificate text-secondary mr-1"></i>Receive Number</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid lg:grid-cols-[0.30fr_0.70fr] gap-0">
-                    <aside class="bg-gradient-to-b from-[#07361f] to-[#092816] text-white p-4 md:p-6">
-                        <div class="sticky top-6">
-                            <h3 class="text-lg font-black">Before You Submit</h3>
-                            <p class="mt-2 text-xs leading-relaxed text-white/70">Use the same details on your PVC and APC card where applicable. Your registration number will be generated after successful submission.</p>
-                            <div class="mt-5 space-y-3">
-                                <div class="flex gap-3 rounded-xl border border-white/10 bg-white/10 p-3">
-                                    <div class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-secondary text-government-green font-black text-sm">1</div>
-                                    <div>
-                                        <p class="font-extrabold">Personal Details</p>
-                                        <p class="text-xs text-white/62">Name, contact and role level.</p>
-                                    </div>
-                                </div>
-                                <div class="flex gap-3 rounded-xl border border-white/10 bg-white/10 p-3">
-                                    <div class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-secondary text-government-green font-black text-sm">2</div>
-                                    <div>
-                                        <p class="font-extrabold">Location Details</p>
-                                        <p class="text-xs text-white/62">State, LGA/LCDA and ward selection.</p>
-                                    </div>
-                                </div>
-                                <div class="flex gap-3 rounded-xl border border-white/10 bg-white/10 p-3">
-                                    <div class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-secondary text-government-green font-black text-sm">3</div>
-                                    <div>
-                                        <p class="font-extrabold">Verification</p>
-                                        <p class="text-xs text-white/62">PVC, APC card and optional uploads.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mt-5 rounded-2xl border border-secondary/25 bg-secondary/10 p-4">
-                                <i class="fas fa-triangle-exclamation text-secondary"></i>
-                                <p class="mt-2 text-xs leading-relaxed text-white/75">Please review every entry carefully. Incorrect details may delay verification.</p>
-                            </div>
-                        </div>
-                    </aside>
-
-                    <div class="p-4 md:p-6 lg:p-7">
                         <div id="lagosNote" class="bg-secondary/10 border border-secondary/40 rounded-xl p-3 mb-5 hidden text-[#5a4304] text-xs md:text-sm shadow-sm">
                             <strong>Lagos State:</strong> Select your exact LGA or LCDA (all 57 shown). Wards loaded from parent LGA.
                         </div>
 
-                        <form id="regForm" class="space-y-5" novalidate>
-                            <!-- Name Row -->
+                        <section id="membershipChoicePage" class="membership-chooser rounded-2xl border border-gray-100 bg-white" aria-labelledby="membershipChoiceTitle">
+                            <div class="membership-choice-intro">
+                                <h2 id="membershipChoicesPrompt">Choose one membership</h2>
+                                <p id="membershipChoicesInstructions">Each registration covers one organization. Your residence and contact details come next.</p>
+                            </div>
+                            <!-- @spec REG-UI-037, REG-UI-039 -->
+                            <div class="membership-choice-grid grid grid-cols-1 gap-4 lg:grid-cols-2" role="radiogroup" aria-labelledby="membershipChoicesPrompt" aria-describedby="membershipChoicesInstructions">
+                                <fieldset class="organization-card rounded-2xl border border-emerald-100 bg-white p-4 md:p-5">
+                                    <legend class="px-2"><span class="inline-flex items-center gap-2 text-left text-sm font-black text-government-green"><img src="/assets/images/logo/apsg1.png" alt="" aria-hidden="true" class="h-9 w-9 shrink-0 rounded-full border border-emerald-100 bg-white object-contain p-0.5" width="72" height="72" decoding="async"><span class="min-w-0"><strong class="block uppercase tracking-[0.12em]">APSG</strong><span class="block text-xs font-semibold leading-snug text-gray-600">APC Progressive Support Group</span></span></span></legend>
+                                    <div class="membership-choice-options grid grid-cols-1 gap-2 sm:gap-3">
+                                        <label class="membership-option">
+                                            <input type="radio" name="membershipChoice" value="apsg-member" aria-label="APSG general membership">
+                                            <span><i class="fas fa-people-group" aria-hidden="true"></i><strong>APSG membership</strong><small>General membership</small></span>
+                                        </label>
+                                        <label class="membership-option">
+                                            <input type="radio" name="membershipChoice" value="apsg-youth" aria-label="APSG membership with Youth Wing classification">
+                                            <span><i class="fas fa-bolt" aria-hidden="true"></i><strong>APSG Youth Wing</strong><small>Full membership with Youth Wing classification</small></span>
+                                        </label>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="organization-card cwdi-organization-card rounded-2xl border border-violet-100 bg-white p-4 md:p-5">
+                                    <legend class="px-2"><span class="inline-flex items-center gap-2 text-left text-sm font-black text-violet-800"><img src="/assets/images/logo/cwdi-registration.png" alt="" aria-hidden="true" class="h-9 w-9 shrink-0 rounded-full border border-violet-100 bg-white object-contain p-0.5" width="72" height="72" decoding="async"><span class="min-w-0"><strong class="block uppercase tracking-[0.12em]">CWDI</strong><span class="block text-xs font-semibold leading-snug text-gray-600">Confident Women Development Initiative</span></span></span></legend>
+                                    <div class="membership-choice-options grid grid-cols-1 gap-2 sm:gap-3">
+                                        <label class="membership-option">
+                                            <input type="radio" name="membershipChoice" value="cwdi-member" aria-label="CWDI general membership">
+                                            <span><i class="fas fa-hands-holding-child" aria-hidden="true"></i><strong>CWDI membership</strong><small>General membership</small></span>
+                                        </label>
+                                        <label class="membership-option">
+                                            <input type="radio" name="membershipChoice" value="cwdi-youth" aria-label="CWDI membership with Youth Wing classification">
+                                            <span><i class="fas fa-star" aria-hidden="true"></i><strong>CWDI Youth Wing</strong><small>Full membership with Youth Wing classification</small></span>
+                                        </label>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <!-- @spec REG-UI-038 -->
+                            <aside id="membershipReturningMemberNote" class="membership-returning-note" aria-label="For existing members">
+                                <i class="fas fa-circle-info" aria-hidden="true"></i>
+                                <p><strong>Already a member?</strong> Sign in from the top of this page. To join APSG or CWDI Youth Wing with an existing membership, choose that organization; we will verify your current record first.</p>
+                            </aside>
+                            <p id="youthWingInvitation" class="mt-4 hidden rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold leading-relaxed text-amber-950" role="status">If you are between 18 - 40 years of age, we invite you to join the Movement.</p>
+                            <p id="membershipChoiceError" class="mt-3 hidden text-sm font-bold text-red-700" role="alert">Choose one membership to continue.</p>
+                            <div class="mt-6 flex justify-center">
+                                <button type="button" id="continueRegistrationBtn" class="inline-flex min-h-12 w-full max-w-md items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-accent px-6 py-3 font-black text-white shadow-royal transition hover:-translate-y-0.5">
+                                    Continue to registration <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                            <p id="membershipChoiceContinueHint" class="membership-choice-hint" role="status" aria-live="polite">Choose one option above to continue.</p>
+                        </section>
+
+                        <div id="selectedMembershipSummary" class="mb-5 hidden rounded-2xl border border-emerald-100 bg-white p-4 shadow-sm">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                <div class="min-w-0 flex-1"><p class="text-[10px] font-black uppercase tracking-[0.18em] text-emerald-700">Your membership selection</p><p id="selectedMembershipLabels" class="mt-1 font-black text-government-green"></p><div id="selectedOrganizationBranding"></div></div>
+                                <button type="button" id="changeMembershipChoiceBtn" class="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-emerald-200 px-4 py-2 text-sm font-black text-emerald-800 hover:bg-emerald-50"><i class="fas fa-pen"></i> Change</button>
+                            </div>
+                        </div>
+
+                        <form id="regForm" class="space-y-5 hidden" novalidate>
+                            <div id="registrationErrorSummary" class="registration-error-summary" role="alert" tabindex="-1" hidden></div>
+                            <!-- @spec REG-FORM-005 -->
+                            <!-- Personal information -->
                             <div>
-                                <h3 class="section-title text-base md:text-lg mb-3"><span><i class="fas fa-user"></i></span>Personal Information</h3>
+                                <h3 class="section-title text-base md:text-lg mb-3"><span><i class="fas fa-user"></i></span>Personal details</h3>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     <div class="field-card">
                                         <label for="firstName" class="block text-xs font-bold text-gray-700 mb-1.5">First Name *</label>
@@ -441,16 +571,31 @@
                                         <input type="text" id="firstName" required autocomplete="given-name" placeholder="Enter first name" class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
                                     </div>
                                     <div class="field-card">
+                                        <label for="middleName" class="block text-xs font-bold text-gray-700 mb-1.5">Middle Name</label>
+                                        <i class="fas fa-user form-icon"></i>
+                                        <input type="text" id="middleName" autocomplete="additional-name" placeholder="Enter middle name" class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                    </div>
+                                    <div class="field-card">
                                         <label for="lastName" class="block text-xs font-bold text-gray-700 mb-1.5">Last Name *</label>
                                         <i class="fas fa-user form-icon"></i>
                                         <input type="text" id="lastName" required autocomplete="family-name" placeholder="Enter last name" class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                    </div>
+                                    <div class="field-card">
+                                        <label for="sex" class="block text-xs font-bold text-gray-700 mb-1.5">Gender</label>
+                                        <i class="fas fa-venus-mars form-icon"></i>
+                                        <select id="sex" class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                            <option value="">Select gender</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Prefer not to say">Prefer not to say</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Level & Designation Row -->
                             <div>
-                                <h3 class="section-title text-base md:text-lg mb-3"><span><i class="fas fa-sitemap"></i></span>Role & Designation</h3>
+                                <h4 class="text-sm font-black uppercase tracking-wide text-emerald-900">Membership role</h4>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     <div class="field-card">
                                         <label for="level" class="block text-xs font-bold text-gray-700 mb-1.5">Level *</label>
@@ -491,14 +636,63 @@
                                 </div>
                             </div>
 
+                            <!-- Residence -->
+                            <div id="residenceDetailsGroup" class="space-y-3">
+                                <h3 class="section-title text-base md:text-lg"><span><i class="fas fa-earth-africa"></i></span>Country of Residence</h3>
+                                <div class="field-card md:col-span-2">
+                                    <label for="residenceCountry" class="block text-xs font-bold text-gray-700 mb-1.5">Current country of residence *</label>
+                                    <select id="residenceCountry" name="residence_country_code" required class="w-full px-3 py-3 border rounded-xl transition text-sm">
+                                        <option value="">Select your current country</option>
+                                    </select>
+                                    <p class="mt-1.5 text-xs text-gray-500">Choose where you currently live. This choice is separate from your phone country code.</p>
+                                </div>
+                                <div id="foreignResidenceLocation" class="hidden grid grid-cols-1 md:grid-cols-2 gap-3 md:col-span-2">
+                                    <div class="field-card">
+                                        <label for="residenceCity" class="block text-xs font-bold text-gray-700 mb-1.5">Current city *</label>
+                                        <input id="residenceCity" name="residence_city" autocomplete="address-level2" maxlength="120" class="w-full px-3 py-3 border rounded-xl transition text-sm">
+                                    </div>
+                                    <div class="field-card">
+                                        <label for="residenceStateProvince" class="block text-xs font-bold text-gray-700 mb-1.5">State / Province *</label>
+                                        <input id="residenceStateProvince" name="residence_state_province" autocomplete="address-level1" maxlength="120" class="w-full px-3 py-3 border rounded-xl transition text-sm">
+                                    </div>
+                                </div>
+
+                                <div id="nigeriaHomeLocation" class="hidden space-y-3">
+                                    <h4 id="nigeriaLocationTitle" class="text-sm font-black text-emerald-900">Current Nigerian location</h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                        <div class="field-card">
+                                            <label for="state" class="block text-xs font-bold text-gray-700 mb-1.5">State<span data-nigeria-required-marker aria-hidden="true"> *</span></label>
+                                            <i class="fas fa-map-marker-alt form-icon"></i>
+                                            <select id="state" required class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm"><option value="">Select State</option></select>
+                                        </div>
+                                        <div class="field-card">
+                                            <label for="lga" class="block text-xs font-bold text-gray-700 mb-1.5">LGA/LCDA<span data-nigeria-required-marker aria-hidden="true"> *</span></label>
+                                            <i class="fas fa-city form-icon"></i>
+                                            <select id="lga" disabled required class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm"><option value="">Select LGA/LCDA</option></select>
+                                            <div class="loading-note mt-1.5" id="lga-loading">Loading LGAs...</div>
+                                        </div>
+                                        <div class="field-card md:col-span-2 lg:col-span-1">
+                                            <label for="ward" class="block text-xs font-bold text-gray-700 mb-1.5">Ward<span data-nigeria-required-marker aria-hidden="true"> *</span></label>
+                                            <i class="fas fa-map-pin form-icon"></i>
+                                            <select id="ward" disabled required class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm"><option value="">Select Ward</option></select>
+                                            <div class="loading-note mt-1.5" id="ward-loading"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Contact -->
-                            <div>
+                            <div id="contactDetailsGroup" class="space-y-3">
                                 <h3 class="section-title text-base md:text-lg mb-3"><span><i class="fas fa-address-book"></i></span>Contact Details</h3>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     <div class="field-card">
                                         <label for="phone" class="block text-xs font-bold text-gray-700 mb-1.5">Phone Number (WhatsApp preferred) *</label>
-                                        <i class="fas fa-phone form-icon"></i>
-                                        <input type="tel" id="phone" required pattern="\+?[0-9]{10,15}" autocomplete="tel" placeholder="e.g. 08012345678" class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                        <div class="primary-phone-row grid grid-cols-[minmax(8rem,0.9fr)_minmax(0,1.5fr)] gap-2">
+                                            <select id="phoneCountryCode" aria-label="Phone country and calling code" autocomplete="tel-country-code" class="min-w-0 rounded-xl border px-2 py-2.5 text-xs font-bold"></select>
+                                            <input type="tel" id="phone" required autocomplete="tel-national" inputmode="tel" placeholder="e.g. 8031234567" class="min-w-0 w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                        </div>
+                                        <p id="phoneValidationMessage" class="mt-1 hidden text-xs font-semibold text-red-700" role="alert"></p>
+                                        <p id="registrationLookupStatus" class="mt-2 hidden rounded-xl border px-3 py-2 text-xs font-semibold" role="status" aria-live="polite" aria-atomic="true"></p>
                                     </div>
                                     <div class="field-card">
                                         <label for="email" class="block text-xs font-bold text-gray-700 mb-1.5">Email Address</label>
@@ -506,35 +700,25 @@
                                         <input type="email" id="email" autocomplete="email" placeholder="name@example.com" class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
                                     </div>
                                 </div>
-                            </div>
-
-                            <!-- Location -->
-                            <div class="space-y-3">
-                                <h3 class="section-title text-base md:text-lg"><span><i class="fas fa-map-location-dot"></i></span>Location Details</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                    <div class="field-card">
-                                        <label for="state" class="block text-xs font-bold text-gray-700 mb-1.5">State *</label>
-                                        <i class="fas fa-map-marker-alt form-icon"></i>
-                                        <select id="state" required class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
-                                            <option value="">Select State</option>
-                                        </select>
+                                <div id="diasporaContactGroup" class="hidden field-card md:col-span-2 space-y-3">
+                                    <div>
+                                        <label for="nigerianPhone" class="block text-xs font-bold text-gray-700 mb-1.5">Nigerian contact number <span class="font-medium text-gray-500">(optional)</span></label>
+                                        <div class="nigerian-phone-row grid grid-cols-[auto_minmax(0,1fr)] gap-2">
+                                            <span class="inline-flex min-h-11 items-center rounded-xl border border-emerald-200 bg-emerald-50 px-3 text-sm font-black text-emerald-900" aria-label="Nigeria calling code plus 234">NG&nbsp;+234</span>
+                                            <input type="tel" id="nigerianPhone" inputmode="tel" autocomplete="tel-national" placeholder="08012345678 or +2348012345678" aria-describedby="nigerianPhoneHint nigerianPhoneValidationMessage" class="w-full min-w-0 rounded-xl border px-3 py-2.5 text-sm">
+                                        </div>
+                                        <p id="nigerianPhoneHint" class="mt-1 text-xs text-gray-500">Use a Nigerian number you also keep, if applicable. Your primary phone remains the registration and sign-in number. A valid number reveals the preferred-contact choice.</p>
+                                        <p id="nigerianPhoneValidationMessage" class="mt-1 hidden text-xs font-semibold text-red-700" role="alert" aria-live="polite"></p>
                                     </div>
-                                    <div class="field-card">
-                                        <label for="lga" class="block text-xs font-bold text-gray-700 mb-1.5">LGA/LCDA *</label>
-                                        <i class="fas fa-city form-icon"></i>
-                                        <select id="lga" disabled required class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
-                                            <option value="">Select LGA/LCDA</option>
-                                        </select>
-                                        <div class="loading-note mt-1.5" id="lga-loading">Loading LGAs...</div>
-                                    </div>
-                                    <div class="field-card">
-                                        <label for="ward" class="block text-xs font-bold text-gray-700 mb-1.5">Ward *</label>
-                                        <i class="fas fa-map-pin form-icon"></i>
-                                        <select id="ward" disabled required class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
-                                            <option value="">Select Ward</option>
-                                        </select>
-                                        <div class="loading-note mt-1.5" id="ward-loading"></div>
-                                    </div>
+                                    <fieldset id="preferredContactGroup" class="border-0 p-0" aria-describedby="preferredContactHint preferredContactError">
+                                        <legend class="block text-xs font-bold text-gray-700">Preferred contact number</legend>
+                                        <p id="preferredContactHint" class="mt-1 text-xs text-gray-500">Choose which number coordinators should try first.</p>
+                                        <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                            <label class="flex min-h-11 items-center gap-2 rounded-xl border border-gray-200 px-3 py-2 text-sm font-semibold"><input type="radio" name="preferred_contact_type" value="primary">Primary phone</label>
+                                            <label class="flex min-h-11 items-center gap-2 rounded-xl border border-gray-200 px-3 py-2 text-sm font-semibold"><input type="radio" name="preferred_contact_type" value="nigerian">Nigerian contact number</label>
+                                        </div>
+                                        <p id="preferredContactError" class="mt-1 hidden text-xs font-semibold text-red-700" role="alert" aria-live="polite"></p>
+                                    </fieldset>
                                 </div>
                             </div>
 
@@ -543,14 +727,14 @@
                                 <h3 class="section-title text-base md:text-lg mb-3"><span><i class="fas fa-id-card"></i></span>Verification Numbers</h3>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     <div class="field-card">
-                                        <label for="pvc" class="block text-xs font-bold text-gray-700 mb-1.5">PVC Number (VIN) *</label>
+                                        <label for="pvc" class="block text-xs font-bold text-gray-700 mb-1.5">PVC Number (VIN)</label>
                                         <i class="fas fa-id-card form-icon"></i>
-                                        <input type="text" id="pvc" required placeholder="Enter your PVC/VIN number" class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                        <input type="text" id="pvc" placeholder="Enter your PVC/VIN number" class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
                                     </div>
                                     <div class="field-card">
-                                        <label for="apcCard" class="block text-xs font-bold text-gray-700 mb-1.5">APC Card Number *</label>
+                                        <label for="apcCard" class="block text-xs font-bold text-gray-700 mb-1.5">APC Card Number</label>
                                         <i class="fas fa-id-badge form-icon"></i>
-                                        <input type="text" id="apcCard" required placeholder="Enter APC card number" class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
+                                        <input type="text" id="apcCard" placeholder="Enter APC card number" class="input-with-icon w-full px-3 py-2.5 border rounded-xl transition text-sm">
                                     </div>
                                 </div>
                             </div>
@@ -561,13 +745,13 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     <div class="field-card">
                                         <label for="pvcUpload" class="block text-xs font-bold text-gray-700 mb-1.5">Upload PVC (Recommended)</label>
-                                        <input type="file" id="pvcUpload" accept="image/*,application/pdf" class="w-full px-3 py-2.5 border rounded-xl text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:bg-primary file:text-white file:font-bold hover:file:bg-primary-dark cursor-pointer transition">
-                                        <p class="text-[11px] text-gray-500 mt-1.5">JPEG, PNG, PDF (max 5MB)</p>
+                                        <input type="file" id="pvcUpload" accept="image/jpeg,image/png,application/pdf" aria-describedby="pvcUploadStatus" class="registration-file-input">
+                                        <p id="pvcUploadStatus" class="registration-upload-status" role="status">JPG, PNG or PDF · Up to 5 MB</p>
                                     </div>
                                     <div class="field-card">
                                         <label for="apcUpload" class="block text-xs font-bold text-gray-700 mb-1.5">Upload APC Card (Recommended)</label>
-                                        <input type="file" id="apcUpload" accept="image/*,application/pdf" class="w-full px-3 py-2.5 border rounded-xl text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:bg-primary file:text-white file:font-bold hover:file:bg-primary-dark cursor-pointer transition">
-                                        <p class="text-[11px] text-gray-500 mt-1.5">JPEG, PNG, PDF (max 5MB)</p>
+                                        <input type="file" id="apcUpload" accept="image/jpeg,image/png,application/pdf" aria-describedby="apcUploadStatus" class="registration-file-input">
+                                        <p id="apcUploadStatus" class="registration-upload-status" role="status">JPG, PNG or PDF · Up to 5 MB</p>
                                     </div>
                                 </div>
                             </div>
@@ -577,7 +761,7 @@
                                 <div class="flex items-start gap-3">
                                     <input type="checkbox" id="consent" required class="mt-1 w-5 h-5 text-primary rounded focus:ring-primary">
                                     <label for="consent" class="text-xs md:text-sm text-gray-700 leading-relaxed">
-                                        I consent to APSG/APC using my details for official verification and mobilization only. Data is confidential.
+                                        I consent to the selected organisation using my details for official membership administration and verification. Data is confidential.
                                     </label>
                                 </div>
                             </div>
@@ -585,7 +769,7 @@
                             <!-- Buttons -->
                             <div class="flex flex-col md:flex-row gap-3 pt-1">
                                 <button type="button" id="previewBtn" class="group flex-1 bg-secondary hover:bg-[#c79718] text-government-green font-black py-3 rounded-xl transition text-base shadow-gold hover:-translate-y-0.5">
-                                    <i class="fas fa-eye mr-2 group-hover:scale-110 transition"></i>Preview Details
+                                    <i class="fas fa-eye mr-2 group-hover:scale-110 transition"></i>Review details
                                 </button>
                                 <button type="button" id="directSubmitBtn" class="group flex-1 bg-gradient-to-r from-primary to-accent hover:from-primary-dark hover:to-primary text-white font-black py-3 rounded-xl transition flex items-center justify-center gap-2 text-base shadow-royal hover:-translate-y-0.5">
                                     <span class="spinner"><i class="fas fa-spinner fa-spin"></i></span>
@@ -600,28 +784,30 @@
                 </div>
             </div>
         </div>
-    </section>
+    </main>
 
     <!-- Detailed Preview Modal -->
-    <div id="previewModal" class="fixed inset-0 bg-[#03170d]/80 backdrop-blur-sm flex items-center justify-center z-50 hidden px-3">
+    <dialog id="registrationDialog" class="registration-dialog hidden" aria-labelledby="registrationReviewTitle" hidden inert>
+    <section id="previewModal" class="registration-dialog-section hidden" hidden inert aria-labelledby="registrationReviewTitle">
         <div class="bg-white rounded-[1.5rem] max-w-3xl w-full my-6 shadow-2xl max-h-[90vh] overflow-hidden animate-fade-in border border-secondary/25">
             <div class="relative overflow-hidden bg-gradient-to-r from-government-green via-primary-dark to-accent text-white p-4 md:p-5 text-center">
                 <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px); background-size: 34px 34px;"></div>
                 <div class="relative z-10">
                     <p class="text-xs uppercase tracking-[0.28em] text-secondary font-black">Review Before Submission</p>
-                    <h3 class="display-font text-2xl md:text-3xl font-extrabold mt-1">Registration Preview</h3>
+                    <h3 id="registrationReviewTitle" data-dialog-heading tabindex="-1" class="display-font text-2xl md:text-3xl font-extrabold mt-1">Review your registration</h3>
                     <p class="opacity-80 mt-2">Please review your details carefully before submitting</p>
                 </div>
             </div>
-            <div class="p-4 md:p-6 overflow-y-auto max-h-[60vh]">
+            <div class="registration-dialog-body p-4 md:p-6 overflow-y-auto">
+                <div id="registrationReviewError" role="alert" tabindex="-1" hidden></div>
                 <div id="previewContent" class="space-y-5 text-gray-700">
                     <!-- Content populated dynamically -->
                 </div>
                 <div class="mt-5 p-4 bg-accent-light rounded-xl border border-primary/15">
-                    <p class="text-center font-bold text-primary">Your unique APSG Registration Number will be generated upon successful submission.</p>
+                    <p class="text-center font-bold text-primary">One registration is submitted at a time. A Youth Wing membership keeps the selected organization’s existing ID or receives its regular organization ID.</p>
                 </div>
             </div>
-            <div class="p-4 border-t border-gray-200 flex flex-col md:flex-row gap-3 bg-gray-50">
+            <div class="registration-dialog-actions">
                 <button onclick="closePreview()" class="flex-1 bg-white hover:bg-gray-100 border border-gray-200 text-gray-800 font-black py-3 rounded-xl transition">Edit Details</button>
                 <button onclick="submitForm()" class="flex-1 bg-gradient-to-r from-primary to-accent hover:from-primary-dark hover:to-primary text-white font-black py-3 rounded-xl transition flex items-center justify-center gap-3 shadow-royal">
                     <span class="spinner"><i class="fas fa-spinner fa-spin"></i></span>
@@ -629,18 +815,18 @@
                 </button>
             </div>
         </div>
-    </div>
+    </section>
 
 
     <!-- Duplicate Phone / Existing Member Confirmation Modal -->
-    <div id="duplicateMemberModal" class="duplicate-modal-shell hidden" aria-live="polite" aria-modal="true" role="dialog">
+    <section id="duplicateMemberModal" class="registration-dialog-section hidden" hidden inert aria-labelledby="duplicateModalTitle">
         <div class="duplicate-flow-card">
             <div class="duplicate-flow-head">
                 <div class="relative z-10 flex items-start justify-between gap-3">
                     <div>
                         <span class="duplicate-flow-chip"><i class="fas fa-phone-volume"></i> Existing Phone Check</span>
-                        <h3 class="display-font mt-2 text-2xl md:text-3xl font-extrabold">Possible Existing APSG Record</h3>
-                        <p class="mt-1 text-sm text-white/72">This phone number is already connected to an APSG record. Please confirm before creating a new registration.</p>
+                        <h3 data-dialog-heading tabindex="-1" id="duplicateModalTitle" class="display-font mt-2 text-2xl md:text-3xl font-extrabold">Possible Existing Member Record</h3>
+                        <p id="duplicateModalDescription" class="mt-1 text-sm text-white/72">This phone number is already connected to a member record. Please confirm before continuing.</p>
                     </div>
                     <button type="button" onclick="closeDuplicateMemberModal()" class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/90 text-government-green shadow hover:bg-secondary/20 transition" aria-label="Close existing member check">
                         <i class="fas fa-xmark"></i>
@@ -671,11 +857,11 @@
 
                 <div id="duplicateRevealStep" class="duplicate-step hidden space-y-4">
                     <div class="duplicate-success">
-                        <i class="fas fa-fingerprint mr-1"></i> Your APSG ID has been found. Please verify your phone number again to login.
+                        <i class="fas fa-fingerprint mr-1"></i> <span id="duplicateVerifiedIntro">Your registration ID has been found. Verify your phone number to continue.</span>
                     </div>
                     <div class="rounded-2xl border border-secondary/30 bg-white p-4">
-                        <p class="text-xs uppercase tracking-[0.22em] text-secondary font-black mb-2">Your APSG ID is</p>
-                        <span id="duplicateRecoveredApsgId" class="duplicate-apsg-id"><i class="fas fa-fingerprint text-secondary"></i>-</span>
+                        <p id="duplicateRecoveredIdLabel" class="text-xs uppercase tracking-[0.22em] text-secondary font-black mb-2">Your registration ID is</p>
+                        <span id="duplicateRecoveredRegId" class="duplicate-apsg-id"><i class="fas fa-fingerprint text-secondary"></i>-</span>
                     </div>
                     <div class="duplicate-grid">
                         <div class="duplicate-id-card"><p>Full Name</p><strong id="duplicateRecoveredName">-</strong></div>
@@ -685,12 +871,15 @@
                     </div>
                     <div>
                         <label for="duplicatePhoneVerifyInput" class="block text-xs font-black uppercase tracking-[0.16em] text-gray-600 mb-2">Enter Your Phone Number To Login</label>
-                        <div class="relative">
+                        <div class="grid grid-cols-[minmax(8rem,0.9fr)_minmax(0,1.5fr)] gap-2">
+                            <select id="duplicatePhoneCountryCode" aria-label="Phone country and calling code" autocomplete="tel-country-code" class="min-w-0 rounded-xl border px-2 py-3 text-xs font-bold"></select>
+                            <div class="relative">
                             <i class="fas fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-primary"></i>
-                            <input type="tel" id="duplicatePhoneVerifyInput" placeholder="Re-enter your registered phone number" class="input-with-icon w-full px-3 py-3 border rounded-xl transition text-sm pl-11">
+                            <input type="tel" id="duplicatePhoneVerifyInput" inputmode="tel" placeholder="Re-enter your registered phone number" class="input-with-icon w-full px-3 py-3 border rounded-xl transition text-sm pl-11">
+                            </div>
                         </div>
                     </div>
-                    <p id="duplicateVerifyError" class="duplicate-error hidden"></p>
+                    <p id="duplicateVerifyError" class="duplicate-error hidden" role="alert" aria-live="assertive" tabindex="-1"></p>
                     <div class="flex flex-col sm:flex-row gap-2">
                         <button type="button" id="duplicateLoginBtn" class="flex-1 bg-gradient-to-r from-primary to-accent hover:from-primary-dark hover:to-primary text-white font-black py-3 rounded-full transition shadow-royal">
                             <i class="fas fa-right-to-bracket mr-1"></i> Login To My Portal
@@ -707,42 +896,45 @@
                     </div>
                     <div class="rounded-2xl border border-secondary/30 bg-white p-4 text-sm text-gray-700">
                         <p class="font-black text-government-green"><i class="fas fa-circle-info text-secondary mr-1"></i> Next step</p>
-                        <p class="mt-1 leading-relaxed">Ask your APSG coordinator to confirm your registration number, phone number, state, LGA and ward before trying again.</p>
+                        <p id="duplicateContactText" class="mt-1 leading-relaxed">Ask your organization coordinator to confirm your registration number, phone number, state, LGA and ward before trying again.</p>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2">
                         <button type="button" id="duplicateChangePhoneBtn" class="flex-1 bg-secondary hover:bg-[#c79718] text-government-green font-black py-3 rounded-full transition shadow-gold">
                             <i class="fas fa-pen mr-1"></i> Change Phone Number
                         </button>
                         <a href="/pages/contact.html" class="duplicate-secondary-btn flex-1 text-center no-underline">
-                            <i class="fas fa-address-book mr-1"></i> Contact APSG
+                            <i class="fas fa-address-book mr-1"></i> <span id="duplicateContactLinkText">Contact coordinator</span>
                         </a>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
+                </div>
+                </div>
+                </section>
 
     <!-- Premium Success Pop-out Modal -->
-    <div id="successModal" class="fixed inset-0 bg-[#03170d]/85 backdrop-blur-md flex items-center justify-center z-[60] hidden px-3">
+    <section id="successModal" class="registration-dialog-section hidden" hidden inert aria-labelledby="registrationSuccessTitle">
         <div class="success-popout rounded-[1.6rem] max-w-3xl w-full my-6 max-h-[92vh] overflow-hidden animate-fade-in relative">
-            <button type="button" onclick="closeSuccessModal()" class="absolute right-4 top-4 z-20 grid h-9 w-9 place-items-center rounded-full bg-white/90 text-government-green shadow hover:bg-secondary/20 transition" aria-label="Close success message">
-                <i class="fas fa-xmark"></i>
-            </button>
             <div class="relative overflow-hidden bg-gradient-to-r from-government-green via-primary-dark to-accent text-white px-5 py-5 md:px-7 text-center">
                 <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px); background-size: 30px 30px;"></div>
                 <div class="relative z-10">
                     <div class="success-logo-shell">
-                        <img src="/assets/images/logo/apsg1.png" alt="APSG Logo" onerror="this.onerror=null;this.src='/assets/images/logo/apsg.png';" width="96" height="96" decoding="async">
+                        <img id="successModalOrgLogo" src="/assets/images/logo/apsg1.png" alt="APSG Logo" onerror="this.onerror=null;this.src='/assets/images/logo/apsg.png';" width="96" height="96" decoding="async">
                         <span class="success-check-badge"><i class="fas fa-check"></i></span>
                     </div>
                     <p class="mt-3 text-xs uppercase tracking-[0.30em] text-secondary font-black">Official Registration Certificate</p>
-                    <h3 class="display-font mt-1 text-3xl md:text-4xl font-extrabold">Congratulations</h3>
-                    <p class="mt-2 text-sm md:text-base text-white/78">Your APSG membership record has been captured successfully.</p>
+                    <h3 id="registrationSuccessTitle" data-dialog-heading tabindex="-1" class="display-font mt-1 text-3xl md:text-4xl font-extrabold">Membership confirmed</h3>
+                    <p id="successModalOrgText" class="mt-2 text-sm md:text-base text-white/78">Your membership record has been captured successfully.</p>
                 </div>
             </div>
-            <div id="successContent" class="p-4 md:p-6 overflow-y-auto max-h-[66vh]"></div>
+            <div id="successContent" class="p-4 md:p-6 overflow-y-auto"></div>
+            <div class="registration-dialog-actions">
+                <button type="button" id="copyReceiptRegNumber" class="success-action-btn bg-white border border-secondary/35 text-government-green"><i class="fas fa-copy"></i><span id="copyRegText">Copy ID</span></button>
+                <button type="button" onclick="printSuccessReceipt()" class="success-action-btn bg-secondary text-government-green"><i class="fas fa-print"></i>Print</button>
+                <button type="button" onclick="closeSuccessModal()" class="success-action-btn bg-primary text-white">Done</button>
+            </div>
         </div>
-    </div>
+    </section>
+    </dialog>
     <div class="floating-help-card hidden lg:block rounded-2xl p-4">
         <p class="text-xs uppercase tracking-[0.20em] text-secondary font-black">Need Help?</p>
         <p class="mt-1 text-sm font-black text-government-green">Use accurate PVC/APC details before submitting.</p>
@@ -751,8 +943,7 @@
         </a>
     </div>
 
-    <!-- Footer Component (loaded via JS) -->
-    <div id="footer"></div>
+<div id="registrationActionBar" role="region" class="registration-action-bar" aria-label="Registration action" hidden></div>
 
 <!-- Full Scripts -->
 <script>
@@ -939,10 +1130,246 @@
 </script>
 
 <script src="/assets/js/supabase-clients.js"></script>
+<script src="/assets/js/member-portal-api.js"></script>
+<script src="/assets/js/vendor/libphonenumber-max.js"></script>
+<script src="/assets/js/phone-utils.js"></script>
   <script src="/assets/js/apsg-settings.js"></script>
 <script type="module">
+    const phoneUtils = window.APSGPhoneUtils;
+    const countryMetadata = await phoneUtils.load();
+    const residenceCountrySelect = document.getElementById('residenceCountry');
+    const phoneCountrySelect = document.getElementById('phoneCountryCode');
+    const phoneInput = document.getElementById('phone');
+    const phoneValidationMessage = document.getElementById('phoneValidationMessage');
+    const residenceCityInput = document.getElementById('residenceCity');
+    const residenceStateProvinceInput = document.getElementById('residenceStateProvince');
+    const foreignResidenceLocation = document.getElementById('foreignResidenceLocation');
+    const nigeriaHomeLocation = document.getElementById('nigeriaHomeLocation');
+    const nigerianPhoneInput = document.getElementById('nigerianPhone');
+    const nigerianPhoneMessage = document.getElementById('nigerianPhoneValidationMessage');
+    const diasporaContactGroup = document.getElementById('diasporaContactGroup');
+    const preferredContactGroup = document.getElementById('preferredContactGroup');
+    const preferredContactRadios = [...document.querySelectorAll('input[name="preferred_contact_type"]')];
+    const preferredContactError = document.getElementById('preferredContactError');
+    // @spec REG-FORM-009
+    await phoneUtils.populate(residenceCountrySelect, { blankLabel: 'Select your current country', defaultAlpha2: 'NG' });
+    await phoneUtils.populate(phoneCountrySelect, { defaultAlpha2: 'NG', callingOnly: true });
+    await phoneUtils.populate(document.getElementById('duplicatePhoneCountryCode'), { defaultAlpha2: 'NG', callingOnly: true });
+
     const form = document.getElementById('regForm');
+    let registrationPresentation = null;
+    let registrationCandidateBusy = false;
+    const isLocalRegistrationPreview = ['localhost', '127.0.0.1', '::1'].includes(location.hostname);
+    const membershipChoicePage = document.getElementById('membershipChoicePage');
+    const membershipChoiceError = document.getElementById('membershipChoiceError');
+    const youthWingInvitation = document.getElementById('youthWingInvitation');
+    const selectedMembershipSummary = document.getElementById('selectedMembershipSummary');
+    const selectedMembershipLabels = document.getElementById('selectedMembershipLabels');
+    const selectedOrganizationBranding = document.getElementById('selectedOrganizationBranding');
+    const membershipChoiceTitle = document.getElementById('membershipChoiceTitle');
+    const membershipChoiceSubtitle = document.getElementById('membershipChoiceSubtitle');
+    const membershipChoiceContinueHint = document.getElementById('membershipChoiceContinueHint');
+    const membershipWelcomeCopy = 'Choose one organization and membership type to begin. After you finish, you can register with the other organization separately.';
+    let selectedMemberships = [];
+
+    // @spec REG-UI-036, REG-UI-039
+    function showMembershipWelcome() {
+        membershipChoiceTitle.textContent = 'Join your community';
+        membershipChoiceSubtitle.textContent = membershipWelcomeCopy;
+        membershipChoiceSubtitle.hidden = false;
+        membershipChoiceSubtitle.classList.remove('hidden');
+    }
+
+    let previousResidenceAlpha2 = residenceCountrySelect.value;
+
+    // @spec REG-FORM-019, REG-FORM-020, REG-FORM-021, REG-UI-042, REG-UI-043
+    function updateResidenceFields() {
+        const isSelected = Boolean(residenceCountrySelect.value);
+        const isNigeria = residenceCountrySelect.value === 'NG';
+        const crossedNigeriaBoundary = previousResidenceAlpha2 && ((previousResidenceAlpha2 === 'NG') !== isNigeria);
+        if (crossedNigeriaBoundary) {
+            stateSelect.value = '';
+            lgaSelect.innerHTML = '<option value="">Select LGA/LCDA</option>';
+            wardSelect.innerHTML = '<option value="">Select Ward</option>';
+            lgaSelect.disabled = true;
+            wardSelect.disabled = true;
+        }
+        if (previousResidenceAlpha2 && previousResidenceAlpha2 !== residenceCountrySelect.value) {
+            residenceCityInput.value = '';
+            residenceStateProvinceInput.value = '';
+        }
+        foreignResidenceLocation.classList.toggle('hidden', !isSelected || isNigeria);
+        nigeriaHomeLocation.classList.toggle('hidden', !isSelected);
+        diasporaContactGroup.classList.toggle('hidden', !isSelected || isNigeria);
+        const currentNigeria = isNigeria;
+        stateSelect.required = currentNigeria;
+        lgaSelect.required = currentNigeria;
+        wardSelect.required = currentNigeria;
+        document.querySelectorAll('[data-nigeria-required-marker]').forEach(marker => {
+            marker.classList.toggle('hidden', !currentNigeria);
+        });
+        residenceCityInput.required = isSelected && !isNigeria;
+        residenceStateProvinceInput.required = isSelected && !isNigeria;
+        const title = document.getElementById('nigeriaLocationTitle');
+        if (title) title.lastChild.textContent = isNigeria ? 'Current Nigerian location' : 'Nigerian home location (optional)';
+        syncNigerianContact(false);
+        if (document.activeElement && document.activeElement.closest('#foreignResidenceLocation, #nigeriaHomeLocation, #diasporaContactGroup') && document.activeElement.closest('.hidden')) {
+            residenceCountrySelect.focus({ preventScroll: true });
+        }
+        previousResidenceAlpha2 = residenceCountrySelect.value;
+    }
+
+    // @spec REG-FORM-018, REG-FORM-022, REG-FORM-023, REG-UI-043
+    function syncNigerianContact(showErrors = false) {
+        if (!residenceCountrySelect.value || residenceCountrySelect.value === 'NG') {
+            preferredContactGroup.classList.add('hidden');
+            preferredContactRadios.forEach(radio => { radio.required = false; radio.checked = false; radio.setCustomValidity(''); });
+            preferredContactError.textContent = '';
+            preferredContactError.classList.add('hidden');
+            nigerianPhoneInput.setCustomValidity('');
+            nigerianPhoneInput.setAttribute('aria-invalid', 'false');
+            nigerianPhoneMessage.textContent = '';
+            nigerianPhoneMessage.classList.add('hidden');
+            return { e164: '', valid: true, preference: '' };
+        }
+        const value = nigerianPhoneInput.value.trim();
+        let e164 = '';
+        let error = '';
+        if (value) {
+            try {
+                e164 = phoneUtils.toE164(value, 'NG', countryMetadata);
+                if (!/^\+234\d{7,13}$/.test(e164)) throw new Error('Enter a valid Nigerian phone number.');
+                if (e164 === getRegistrationPhoneE164()) throw new Error('The Nigerian contact number must differ from your primary phone.');
+            } catch (caught) { error = caught.message || 'Enter a valid Nigerian phone number.'; }
+        }
+        const validOptionalNumber = Boolean(value && e164 && !error);
+        if (!validOptionalNumber) preferredContactRadios.forEach(radio => { radio.checked = false; });
+        const selected = preferredContactRadios.some(radio => radio.checked);
+        preferredContactGroup.classList.toggle('hidden', !validOptionalNumber);
+        preferredContactRadios.forEach((radio, index) => {
+            radio.required = validOptionalNumber && index === 0;
+            radio.setCustomValidity(validOptionalNumber && !selected && index === 0 ? 'Choose a preferred contact number.' : '');
+        });
+        preferredContactError.textContent = validOptionalNumber && !selected && showErrors ? 'Choose which number coordinators should try first.' : '';
+        preferredContactError.classList.toggle('hidden', !preferredContactError.textContent);
+        nigerianPhoneInput.setCustomValidity(error);
+        nigerianPhoneMessage.textContent = error;
+        nigerianPhoneMessage.classList.toggle('hidden', !error || !showErrors);
+        nigerianPhoneInput.setAttribute('aria-invalid', error && showErrors ? 'true' : 'false');
+        return { e164: validOptionalNumber ? e164 : '', valid: !value || validOptionalNumber, preference: validOptionalNumber ? (preferredContactRadios.find(radio => radio.checked)?.value || '') : '' };
+    }
+
+    function getRegistrationPhoneE164() {
+        try {
+            const value = phoneUtils.toE164(phoneInput.value, phoneCountrySelect.value, countryMetadata);
+            phoneInput.setCustomValidity('');
+            phoneValidationMessage.classList.add('hidden');
+            phoneValidationMessage.textContent = '';
+            return value;
+        } catch (error) {
+            phoneInput.setCustomValidity(error.message);
+            phoneValidationMessage.textContent = error.message;
+            phoneValidationMessage.classList.toggle('hidden', !phoneInput.value.trim());
+            return '';
+        }
+    }
+
+    await updateResidenceFields();
+    residenceCountrySelect.addEventListener('change', () => { updateResidenceFields(); /* transition clears location values whose meaning changed */ });
+    nigerianPhoneInput.addEventListener('input', () => syncNigerianContact(true));
+    preferredContactRadios.forEach(radio => radio.addEventListener('change', () => syncNigerianContact(true)));
+    [phoneInput, phoneCountrySelect].forEach(control => control.addEventListener('input', () => {
+        phoneInput.setCustomValidity('');
+        phoneValidationMessage.classList.add('hidden');
+    }));
+
+    function setRegistrationStage(stage) {
+        registrationPresentation?.setStage(stage);
+        document.querySelectorAll('li[data-registration-stage]').forEach(item => {
+            const itemStage = Number(item.dataset.registrationStage);
+            item.classList.toggle('is-active', itemStage === stage);
+            item.classList.toggle('is-complete', itemStage < stage);
+            if (itemStage === stage) item.setAttribute('aria-current', 'step');
+            else item.removeAttribute('aria-current');
+        });
+    }
+
+
+    const REGISTRATION_MEMBERSHIP_CHOICES = Object.freeze({
+        'apsg-member': Object.freeze({ organization: 'APSG', table: 'members', youthWing: false, label: 'APSG — APC Progressive Support Group' }),
+        'apsg-youth': Object.freeze({ organization: 'APSG', table: 'members', youthWing: true, label: 'YOUTH WING APSG — APC Progressive Support Group' }),
+        'cwdi-member': Object.freeze({ organization: 'CWDI', table: 'cwdi_members', youthWing: false, label: 'CWDI — Confident Women Development Initiative' }),
+        'cwdi-youth': Object.freeze({ organization: 'CWDI', table: 'cwdi_members', youthWing: true, label: 'YOUTH WING CWDI — Confident Women Development Initiative' })
+    });
+
+    function readMembershipChoices() {
+        const choice = document.querySelector('input[name="membershipChoice"]:checked');
+        const membership = choice && REGISTRATION_MEMBERSHIP_CHOICES[choice.value];
+        return membership ? [{ ...membership }] : [];
+    }
+
+    // @spec REG-UI-037, REG-UI-039
+    function updateMembershipChoices() {
+        const choices = readMembershipChoices();
+        document.getElementById('continueRegistrationBtn').disabled = choices.length !== 1;
+        membershipChoiceContinueHint.textContent = choices.length === 1
+            ? 'Selected. Continue when you are ready.'
+            : 'Choose one option above to continue.';
+        youthWingInvitation.classList.toggle('hidden', !choices.some(choice => choice.youthWing));
+        document.querySelectorAll('.membership-option').forEach(option => {
+            const input = option.querySelector('input');
+            option.classList.toggle('is-selected', Boolean(input?.checked));
+        });
+    }
+
+    document.querySelectorAll('input[name="membershipChoice"]').forEach(input => {
+        input.addEventListener('change', () => {
+            membershipChoiceError.classList.add('hidden');
+            invalidateRegistrationLookup();
+            updateMembershipChoices();
+        });
+    });
+
+    // @spec REG-SUBMIT-001
+    document.getElementById('continueRegistrationBtn').addEventListener('click', () => {
+        selectedMemberships = readMembershipChoices();
+        if (selectedMemberships.length !== 1) {
+            membershipChoiceError.classList.remove('hidden');
+            return;
+        }
+        invalidateRegistrationLookup();
+        renderSelectedMembershipSummary(selectedMemberships);
+        membershipChoicePage.classList.add('hidden');
+        selectedMembershipSummary.classList.remove('hidden');
+        form.classList.remove('hidden');
+        membershipChoiceTitle.textContent = 'Your details';
+        membershipChoiceSubtitle.textContent = 'Complete your registration details.';
+        membershipChoiceSubtitle.hidden = false;
+        membershipChoiceSubtitle.classList.remove('hidden');
+        setRegistrationStage(2);
+        document.getElementById('firstName').focus({ preventScroll: true });
+        form.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    });
+
+    document.getElementById('changeMembershipChoiceBtn').addEventListener('click', () => {
+        if (registrationActionBusy || registrationSubmitBusy || registrationCandidateBusy) return;
+        closeDuplicateMemberModal();
+        duplicateMembership = null;
+        selectedDuplicateMember = null;
+        selectedMemberships = [];
+        invalidateRegistrationLookup();
+        form.classList.add('hidden');
+        selectedMembershipSummary.classList.add('hidden');
+        membershipChoicePage.classList.remove('hidden');
+        showMembershipWelcome();
+        setRegistrationStage(1);
+        membershipChoicePage.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    });
+
+    updateMembershipChoices();
+    setRegistrationStage(1);
     const messageDiv = document.getElementById('formMessage');
+    const registrationLookupStatus = document.getElementById('registrationLookupStatus');
     const directSubmitBtn = document.getElementById('directSubmitBtn');
     const previewBtn = document.getElementById('previewBtn');
     const previewModal = document.getElementById('previewModal');
@@ -950,59 +1377,100 @@
     const successModal = document.getElementById('successModal');
     const successContent = document.getElementById('successContent');
     let formData = null;
+    let reviewedSnapshot = null;
     let currentSlide = 0;
+    let registrationLookupCache = null;
+    let registrationLookupFlight = null;
+    let registrationLookupRevision = 0;
+    let registrationActionBusy = false;
 
-    // Concise validation
+    const REGISTRATION_ORGANIZATION_BRANDS = Object.freeze({
+        APSG: Object.freeze({ key: 'APSG', name: 'APSG — APC Progressive Support Group', logo: '/assets/images/logo/apsg1.png' }),
+        CWDI: Object.freeze({ key: 'CWDI', name: 'CWDI — Confident Women Development Initiative', logo: '/assets/images/logo/cwdi-registration.png' })
+    });
+
+    function getRegistrationOrganizationBrands(memberships = []) {
+        const selectedOrganizations = new Set((Array.isArray(memberships) ? memberships : []).map(membership => membership?.organization));
+        return Object.values(REGISTRATION_ORGANIZATION_BRANDS).filter(brand => selectedOrganizations.has(brand.key));
+    }
+
+    // @spec REG-BRAND-005, REG-BRAND-006
+    function registrationOrganizationBranding(memberships = []) {
+        const brands = getRegistrationOrganizationBrands(memberships);
+        if (!brands.length) return '';
+
+        return `<div class="registration-organization-branding" role="list" aria-label="Selected organization logos">
+            ${brands.map(brand => `<div class="registration-organization-brand" role="listitem"><img src="${brand.logo}" alt="${brand.key} logo" width="48" height="48" decoding="async"><span>${brand.name}</span></div>`).join('')}
+        </div>`;
+    }
+
+    // @spec REG-UI-034
+    function currentReviewedState() {
+        return {
+            fields: JSON.stringify([...form.querySelectorAll('input,select,textarea')].map(control => [control.id,
+                control.type === 'file' ? null : ['checkbox','radio'].includes(control.type) ? control.checked : String(control.value || '').trim()])),
+            membership: JSON.stringify({ selected: selectedMemberships, choice: document.querySelector('input[name="membershipChoice"]:checked')?.value || '' }),
+            files: ['pvcUpload','apcUpload'].map(id => document.getElementById(id).files[0] || null)
+        };
+    }
+
+    // @spec REG-BRAND-001, REG-BRAND-004
+    function renderSelectedMembershipSummary(memberships) {
+        selectedMembershipLabels.textContent = memberships.map(choice => choice.label).join(' + ');
+        selectedOrganizationBranding.innerHTML = registrationOrganizationBranding(memberships);
+    }
+
+    // @spec REG-UI-014, REG-UI-016, REG-UI-017, REG-UI-022, REG-UI-023
     function validateForm() {
-        let valid = true;
-        const fields = form.querySelectorAll('[required]');
-        fields.forEach(f => {
-            const isValid = f.value.trim() && (!f.pattern || new RegExp(f.pattern).test(f.value.trim()));
-            f.classList.toggle('invalid-input', !isValid);
-            valid = valid && isValid;
-        });
-        const consent = document.getElementById('consent');
-        consent.classList.toggle('invalid-input', !consent.checked);
-        valid = valid && consent.checked;
-        return valid;
+        validateRegistrationFiles();
+        getRegistrationPhoneE164();
+        const optionalContact = syncNigerianContact(true);
+        if (!optionalContact.valid) nigerianPhoneInput.focus({ preventScroll: true });
+        if (optionalContact.valid && optionalContact.e164 && !optionalContact.preference) preferredContactRadios[0].focus({ preventScroll: true });
+        return selectedMemberships.length === 1 && registrationPresentation.validate();
     }
 
     previewBtn.addEventListener('click', async () => {
-        if (validateForm()) {
-            const canContinue = await ensurePhoneIsNotAlreadyRegistered();
-            if (!canContinue) return;
+        if (!validateForm()) return;
+        await runRegistrationAction(previewBtn, async () => {
             populatePreview();
-            previewModal.classList.remove('hidden');
-        } else {
-            messageDiv.innerHTML = '<div class="bg-red-50 text-red-800 p-4 rounded-xl">Please correct the highlighted fields before previewing.</div>';
-        }
+            setRegistrationStage(3);
+            registrationPresentation.open('previewModal');
+        });
     });
-
+    form.addEventListener('submit', event => { event.preventDefault(); if (!registrationActionBusy && !registrationSubmitBusy) previewBtn.click(); });
+    form.addEventListener('keydown', event => {
+        if (event.key !== 'Enter' || event.isComposing || event.repeat || event.target.matches('textarea,select,button,a,input[type="file"],input[type="checkbox"],input[type="radio"]')) return;
+        event.preventDefault();
+        if (!registrationActionBusy && !registrationSubmitBusy) previewBtn.click();
+    });
     directSubmitBtn.addEventListener('click', async () => {
-        if (validateForm()) {
-            const canContinue = await ensurePhoneIsNotAlreadyRegistered();
-            if (!canContinue) return;
+        if (!validateForm()) return;
+        await runRegistrationAction(directSubmitBtn, async () => {
             formData = null;
-            submitForm(true); // true for direct submit
-        } else {
-            messageDiv.innerHTML = '<div class="bg-red-50 text-red-800 p-4 rounded-xl">Please correct the highlighted fields before submitting.</div>';
-        }
+            await submitForm(true);
+        });
     });
-
-    function closePreview() {
-        previewModal.classList.add('hidden');
+    function closePreview({ edit = true, field } = {}) {
+        if (registrationSubmitBusy) return;
+        setRegistrationStage(2);
+        registrationPresentation.close('previewModal', { target: document.getElementById(field || (edit ? 'firstName' : 'previewBtn')) });
     }
 
-
-    const MEMBER_DETAILS_URL = '/admin/member-details.html?mode=member';
+    const MEMBER_DETAILS_URL_BY_ORGANIZATION = Object.freeze({
+        APSG: '/admin/member-details.html?mode=member&source=members',
+        CWDI: '/admin/member-details.html?mode=member&source=cwdi_members'
+    });
     let duplicateMatches = [];
     let duplicateIndex = 0;
     let duplicateNoCount = 0;
     let selectedDuplicateMember = null;
-    let duplicateCheckBusy = false;
+    let duplicateMembership = null;
 
     const duplicateEls = {
         modal: document.getElementById('duplicateMemberModal'),
+        title: document.getElementById('duplicateModalTitle'),
+        description: document.getElementById('duplicateModalDescription'),
         confirmStep: document.getElementById('duplicateConfirmStep'),
         revealStep: document.getElementById('duplicateRevealStep'),
         contactStep: document.getElementById('duplicateContactStep'),
@@ -1013,30 +1481,28 @@
         attemptText: document.getElementById('duplicateAttemptText'),
         yesBtn: document.getElementById('duplicateYesBtn'),
         noBtn: document.getElementById('duplicateNoBtn'),
-        recoveredApsgId: document.getElementById('duplicateRecoveredApsgId'),
+        recoveredIdLabel: document.getElementById('duplicateRecoveredIdLabel'),
+        recoveredId: document.getElementById('duplicateRecoveredRegId'),
+        verifiedIntro: document.getElementById('duplicateVerifiedIntro'),
         recoveredName: document.getElementById('duplicateRecoveredName'),
         recoveredState: document.getElementById('duplicateRecoveredState'),
         recoveredLga: document.getElementById('duplicateRecoveredLga'),
         recoveredWard: document.getElementById('duplicateRecoveredWard'),
         phoneVerifyInput: document.getElementById('duplicatePhoneVerifyInput'),
+        phoneCountryCode: document.getElementById('duplicatePhoneCountryCode'),
         loginBtn: document.getElementById('duplicateLoginBtn'),
         startOverBtn: document.getElementById('duplicateStartOverBtn'),
         changePhoneBtn: document.getElementById('duplicateChangePhoneBtn'),
+        contactText: document.getElementById('duplicateContactText'),
+        contactLinkText: document.getElementById('duplicateContactLinkText'),
         verifyError: document.getElementById('duplicateVerifyError')
     };
 
     function normalizePhone(value) {
-        return String(value || '').replace(/[\s\-()]/g, '').trim();
-    }
-
-    function phoneCandidates(value) {
-        const raw = normalizePhone(value);
-        const digits = raw.replace(/\D/g, '');
-        const list = [raw, digits];
-        if (digits.startsWith('234')) list.push('0' + digits.slice(3), '+234' + digits.slice(3));
-        if (digits.startsWith('0')) list.push('234' + digits.slice(1), '+234' + digits.slice(1));
-        if (digits.length === 10 && /^[789]/.test(digits)) list.push('0' + digits, '234' + digits, '+234' + digits);
-        return [...new Set(list.filter(Boolean))];
+        const raw = String(value || '').trim();
+        if (!raw) return '';
+        try { return phoneUtils.toE164(raw, phoneCountrySelect.value, countryMetadata); }
+        catch { return ''; }
     }
 
     function textKey(value) {
@@ -1049,14 +1515,19 @@
     }
 
     function fullName(member) {
-        return `${member?.first_name || ''} ${member?.last_name || ''}`.trim() || 'Unnamed Member';
+        return [member?.first_name, member?.middle_name, member?.last_name].map(value => String(value || '').trim()).filter(Boolean).join(' ') || 'Unnamed Member';
     }
 
-    function saveDuplicateMemberSession(member) {
+    function saveDuplicateMemberSession(member, organization, token = '') {
+        const table = REGISTRATION_REGISTRY_BY_ORGANIZATION[organization];
+        const portalMember = { ...member, _sourceTable: table };
         sessionStorage.setItem('apsg_member_portal_verified', '1');
         sessionStorage.setItem('apsg_member_portal_member_id', member.id || '');
-        sessionStorage.setItem('apsg_member_portal_member', JSON.stringify(member));
+        sessionStorage.setItem('apsg_member_portal_source', table);
+        sessionStorage.setItem('apsg_member_portal_member', JSON.stringify(portalMember));
         sessionStorage.setItem('apsg_member_portal_access_at', new Date().toISOString());
+      if (token) sessionStorage.setItem('apsg_member_portal_token', token);
+      else sessionStorage.removeItem('apsg_member_portal_token');
     }
 
     function memberLocalScore(member) {
@@ -1083,44 +1554,75 @@
         });
     }
 
-    async function fetchExistingMembersByPhone(phone) {
-        const rpcResult = await supabaseClient.rpc('apsg_find_members_by_phone', { p_phone: phone });
-        if (!rpcResult.error && Array.isArray(rpcResult.data)) {
-            return dedupeMembers(rpcResult.data);
-        }
+    const REGISTRATION_REGISTRY_BY_ORGANIZATION = Object.freeze({ APSG: 'members', CWDI: 'cwdi_members' });
 
-        const candidates = phoneCandidates(phone);
-        if (!candidates.length) return [];
-        const { data, error } = await supabaseClient
-            .from('members')
-            .select('*')
-            .in('phone', candidates)
-            .order('created_at', { ascending: false })
-            .limit(20);
-        if (error) throw error;
-        return dedupeMembers(data);
+    function isMissingYouthWingColumn(error) {
+        const code = String(error?.code || '').toUpperCase();
+        const message = String(error?.message || error?.details || '').toLowerCase();
+        return ['42703', 'PGRST204'].includes(code) || (
+            message.includes('is_youth_wing_member') &&
+            /(column|schema cache).*(missing|not found|does not exist|could not find)|could not find.*column/i.test(message)
+        );
     }
 
-    async function findMemberByRegAndPhone(regNumber, phone) {
-        const rpcResult = await supabaseClient.rpc('apsg_member_login_by_reg_phone', {
+    // @spec REG-MATCH-001, REG-MATCH-009, REG-MATCH-011
+    async function fetchExistingMembersByPhone(membership, phone) {
+        const table = REGISTRATION_REGISTRY_BY_ORGANIZATION[membership?.organization];
+        if (!table) throw new Error('Unknown membership organization');
+        const canonicalPhone = normalizePhone(phone);
+        if (!canonicalPhone) throw new Error('Enter a valid international phone number before checking membership.');
+        const client = window.supabaseClient || window.apsgSupabase || window.APSG_SUPABASE || window.supabaseClientPublic;
+        if (!client || typeof client.rpc !== 'function') throw new Error('Membership database client is unavailable');
+
+        const rpcName = membership.organization === 'APSG'
+            ? 'apsg_find_members_by_phone'
+            : 'cwdi_find_members_by_phone';
+        const rpcResult = await client.rpc(rpcName, { p_phone: canonicalPhone });
+        if (!rpcResult.error) {
+            const rpcRows = Array.isArray(rpcResult.data) ? rpcResult.data : (rpcResult.data ? [rpcResult.data] : []);
+            return dedupeMembers(rpcRows.map(member => ({
+                id: member.id,
+                reg_number: member.reg_number,
+                first_name: member.first_name,
+                last_name: member.last_name,
+                state: member.state,
+                lga: member.lga,
+                lcda: member.lcda,
+                ward: member.ward,
+                created_at: member.created_at,
+                is_youth_wing_member: member.is_youth_wing_member
+            })));
+        }
+        const failure = new Error(rpcResult.error.message || `${membership.organization} member lookup is unavailable`);
+        failure.code = rpcResult.error.code || '';
+        throw failure;
+    }
+
+    // @spec REG-MATCH-004, REG-MATCH-012, REG-MATCH-018
+    async function findMemberByRegAndPhone(regNumber, phone, organization) {
+        const table = REGISTRATION_REGISTRY_BY_ORGANIZATION[organization];
+        const client = window.supabaseClient || window.apsgSupabase || window.APSG_SUPABASE || window.supabaseClientPublic;
+        if (!table || !client || typeof client.rpc !== 'function') throw new Error('Member verification is unavailable');
+        const rpcName = organization === 'APSG'
+            ? 'apsg_member_login_by_reg_phone'
+            : 'cwdi_member_login_by_reg_phone';
+        const canonicalPhone = normalizePhone(phone);
+        if (!canonicalPhone) throw new Error('Enter a valid phone number with its country calling code.');
+        const rpcResult = await client.rpc(rpcName, {
             p_reg_number: regNumber,
-            p_phone: phone
+            p_phone: canonicalPhone
         });
-        if (!rpcResult.error && Array.isArray(rpcResult.data) && rpcResult.data[0]) {
-            return rpcResult.data[0];
+        const rpcMember = Array.isArray(rpcResult.data) ? rpcResult.data[0] : rpcResult.data;
+        if (!rpcResult.error && rpcMember) {
+            return { ...rpcMember, _sourceTable: table };
         }
 
-        const candidates = phoneCandidates(phone);
-        for (const candidate of candidates) {
-            const { data } = await supabaseClient
-                .from('members')
-                .select('*')
-                .eq('reg_number', regNumber)
-                .eq('phone', candidate)
-                .maybeSingle();
-            if (data) return data;
+        if (rpcResult.error) {
+            const failure = new Error(rpcResult.error.message || `${organization} member verification is unavailable`);
+            failure.code = rpcResult.error.code || '';
+            throw failure;
         }
-        throw new Error('Phone number does not match this APSG record');
+        throw new Error(`The phone number does not match this ${organization} record`);
     }
 
     function showDuplicateStep(step) {
@@ -1128,16 +1630,15 @@
         duplicateEls.revealStep.classList.toggle('hidden', step !== 'reveal');
         duplicateEls.contactStep.classList.toggle('hidden', step !== 'contact');
         duplicateEls.verifyError?.classList.add('hidden');
+        registrationPresentation?.focusDialogStep(`duplicate${step[0].toUpperCase()}${step.slice(1)}Step`);
     }
 
     function openDuplicateMemberModal() {
-        duplicateEls.modal.classList.remove('hidden');
-        document.body.classList.add('overflow-hidden');
+        registrationPresentation.open('duplicateMemberModal');
     }
 
     function closeDuplicateMemberModal() {
-        duplicateEls.modal.classList.add('hidden');
-        document.body.classList.remove('overflow-hidden');
+        registrationPresentation.close('duplicateMemberModal', { target: document.getElementById('phone') });
     }
 
     function renderDuplicateCandidate() {
@@ -1154,10 +1655,46 @@
         showDuplicateStep('confirm');
     }
 
+    function openDuplicateConfirmation(result) {
+        const selectedMembership = (selectedMemberships.length ? selectedMemberships : readMembershipChoices())[0];
+        const conflict = result?.results?.find(item =>
+            item.membership.organization === selectedMembership?.organization && item.conflict && item.rows?.length
+        );
+        if (!conflict) return false;
+
+        duplicateMatches = dedupeMembers(conflict.rows)
+            .map(member => ({ member, score: memberLocalScore(member) }))
+            .sort((a, b) => b.score - a.score)
+            .map(item => ({ ...item.member, _sourceTable: conflict.membership.table }))
+            .slice(0, 3);
+        if (!duplicateMatches.length) return false;
+
+        duplicateMembership = { ...conflict.membership };
+        duplicateIndex = 0;
+        duplicateNoCount = 0;
+        selectedDuplicateMember = null;
+        const organization = duplicateMembership.organization;
+        duplicateEls.title.textContent = `Possible Existing ${organization} Record`;
+        duplicateEls.description.textContent = `This phone number is already connected to a ${organization} record. Confirm the member before continuing.`;
+        duplicateEls.contactText.textContent = `Ask your ${organization} coordinator to confirm the registration number, phone number, state, LGA and ward before trying again.`;
+        duplicateEls.contactLinkText.textContent = `Contact ${organization}`;
+        duplicateEls.loginBtn.innerHTML = duplicateMembership.youthWing
+            ? `<i class="fas fa-people-group mr-1"></i> Join ${organization} Youth Wing`
+            : '<i class="fas fa-right-to-bracket mr-1"></i> Login To My Portal';
+        renderDuplicateCandidate();
+        openDuplicateMemberModal();
+        return true;
+    }
+
     function confirmDuplicateYes() {
         selectedDuplicateMember = duplicateMatches[duplicateIndex];
         if (!selectedDuplicateMember) return;
-        duplicateEls.recoveredApsgId.innerHTML = `<i class="fas fa-fingerprint text-secondary"></i>${safeText(selectedDuplicateMember.reg_number)}`;
+        const organization = duplicateMembership?.organization || 'APSG';
+        duplicateEls.recoveredIdLabel.textContent = `Your ${organization} ID is`;
+        duplicateEls.recoveredId.innerHTML = `<i class="fas fa-fingerprint text-secondary"></i>${safeText(selectedDuplicateMember.reg_number)}`;
+        duplicateEls.verifiedIntro.textContent = duplicateMembership?.youthWing
+            ? `Verify the phone number linked to your ${organization} record to join its Youth Wing.`
+            : `Your ${organization} ID has been found. Verify your phone number to open your member portal.`;
         duplicateEls.recoveredName.textContent = fullName(selectedDuplicateMember);
         duplicateEls.recoveredState.textContent = safeText(selectedDuplicateMember.state);
         duplicateEls.recoveredLga.textContent = safeText(selectedDuplicateMember.lga || selectedDuplicateMember.lcda);
@@ -1177,194 +1714,469 @@
         renderDuplicateCandidate();
     }
 
+    async function addVerifiedMemberToYouthWing(membership, member, phone) {
+        if (!membership?.youthWing || !member?.reg_number) throw new Error('A verified Youth Wing membership is required');
+        if (!String(member.reg_number).toUpperCase().startsWith(`${membership.organization}/`)) {
+            throw new Error(`The verified ID does not belong to ${membership.organization}`);
+        }
+        if (member.is_youth_wing_member === true) {
+            return { organization: membership.organization, label: membership.label, youthWing: true, regNumber: member.reg_number, status: 'already-youth-member' };
+        }
+
+        const client = window.supabaseClient || window.apsgSupabase || window.APSG_SUPABASE || window.supabaseClientPublic;
+        if (!client) throw new Error('Membership database client is unavailable');
+        if (membership.organization === 'CWDI') {
+            const { data, error } = await client.rpc('cwdi_add_youth_wing_by_reg_phone', {
+                p_reg_number: member.reg_number,
+                p_phone: phone
+            });
+            if (error) throw error;
+            const result = Array.isArray(data) ? data[0] : data;
+            if (!result?.reg_number) throw new Error('CWDI did not confirm the Youth Wing update');
+            return {
+                organization: membership.organization,
+                label: membership.label,
+                youthWing: true,
+                regNumber: result.reg_number,
+                status: result.status === 'already-youth-member' ? 'already-youth-member' : 'youth-wing-added'
+            };
+        }
+
+        const { data, error } = await client.rpc('apsg_add_youth_wing_by_reg_phone', {
+            p_reg_number: member.reg_number,
+            p_phone: phone
+        });
+        if (error) throw error;
+        const result = Array.isArray(data) ? data[0] : data;
+        if (!result?.reg_number) throw new Error('APSG did not confirm the Youth Wing update. Please retry.');
+        return { organization: membership.organization, label: membership.label, youthWing: true, regNumber: result.reg_number, status: result.status === 'already-youth-member' ? 'already-youth-member' : 'youth-wing-added' };
+    }
+
+    function makeRegistrationConflictError(organization) {
+        const error = new Error(`A ${organization} record with this phone number needs identity confirmation before registration can continue.`);
+        error.code = 'REGISTRATION_CONFLICT';
+        return error;
+    }
+
+    // @spec REG-MATCH-004, REG-MATCH-007, REG-MATCH-012, REG-MATCH-018, REG-SUBMIT-004, REG-SUBMIT-005, REG-SUBMIT-011, REG-SUBMIT-012
     async function verifyDuplicateMemberLogin() {
+        if (registrationCandidateBusy) return;
         if (!selectedDuplicateMember) {
             showDuplicateStep('confirm');
             return;
         }
-        const phone = duplicateEls.phoneVerifyInput.value.trim();
-        if (!phone) {
-            duplicateEls.verifyError.textContent = 'Please enter your phone number to continue.';
+        let phone;
+        try { phone = phoneUtils.toE164(duplicateEls.phoneVerifyInput.value, duplicateEls.phoneCountryCode.value, countryMetadata); }
+        catch (error) {
+            duplicateEls.verifyError.textContent = error.message;
             duplicateEls.verifyError.classList.remove('hidden');
             return;
         }
-        const defaultHtml = '<i class="fas fa-right-to-bracket mr-1"></i> Login To My Portal';
-        duplicateEls.loginBtn.disabled = true;
+        const membership = (selectedMemberships.length ? selectedMemberships : readMembershipChoices())[0];
+        if (!membership || membership.organization !== duplicateMembership?.organization) {
+            duplicateEls.verifyError.textContent = 'Your membership choice changed. Close this check and retry the lookup.';
+            duplicateEls.verifyError.classList.remove('hidden');
+            return;
+        }
+        const defaultHtml = membership.youthWing
+            ? `<i class="fas fa-people-group mr-1"></i> Join ${membership.organization} Youth Wing`
+            : '<i class="fas fa-right-to-bracket mr-1"></i> Login To My Portal';
+        const candidate = { ...selectedDuplicateMember };
+        const lookupRevision = registrationLookupRevision;
+        registrationCandidateBusy = true;
+        const candidateControls = [...duplicateEls.modal.querySelectorAll('button,input,select')].map(control => [control, control.disabled]);
+        candidateControls.forEach(([control]) => { control.disabled = true; });
+        duplicateEls.loginBtn.setAttribute('aria-busy', 'true');
         duplicateEls.loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Checking...';
         try {
-            const member = await findMemberByRegAndPhone(selectedDuplicateMember.reg_number, phone);
-            saveDuplicateMemberSession(member);
+            const member = await findMemberByRegAndPhone(candidate.reg_number, phone, membership.organization);
+            if (lookupRevision !== registrationLookupRevision) throw new Error('Your registration details changed. Close this check and retry.');
+            if (membership.youthWing && isLocalRegistrationPreview) {
+                throw new Error(`${membership.organization} member verified. Local preview cannot update Youth Wing membership; no database changes were made.`);
+            }
             duplicateEls.verifyError.classList.add('hidden');
-            window.location.href = MEMBER_DETAILS_URL;
+            if (membership.youthWing) {
+                const outcome = await addVerifiedMemberToYouthWing(membership, member, phone);
+                showSuccessModal(outcome.regNumber, '<p class="mt-3 text-center text-sm text-gray-600">Your existing member profile and registration ID have been kept.</p>', {
+                    fullName: fullName(member),
+                    memberships: [outcome],
+                    designation: member.designation || 'Member',
+                    phone: member.phone || phone,
+                    savedContact: registrationReceiptContact(member),
+                    state: member.state,
+                    lga: member.lga || member.lcda,
+                    ward: member.ward,
+                    submittedAt: new Date().toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' })
+                });
+                return;
+            }
+            if (isLocalRegistrationPreview) {
+                saveDuplicateMemberSession(member, membership.organization);
+            } else {
+                const session = await window.memberPortalApi.verifyMember(
+                    membership.organization,
+                    candidate.reg_number,
+                    phone
+                );
+                if (lookupRevision !== registrationLookupRevision) throw new Error('Your registration details changed. Close this check and retry.');
+                saveDuplicateMemberSession(session.member, membership.organization, session.token);
+            }
+            window.location.href = MEMBER_DETAILS_URL_BY_ORGANIZATION[membership.organization];
         } catch (error) {
-            duplicateEls.verifyError.textContent = 'The phone number does not match this APSG record. Please try again or contact your coordinator.';
+            const code = error?.code ? ` (${error.code})` : '';
+            const errorCode = String(error?.code || '').toUpperCase();
+            if (membership.organization === 'CWDI' && ['PGRST202', 'PGRST205', '42883'].includes(errorCode)) {
+                duplicateEls.verifyError.textContent = `CWDI verification is unavailable because the cwdi_members registry or its secure function is not ready. Ask the administrator to finish the CWDI database setup${code}.`;
+            } else {
+                duplicateEls.verifyError.textContent = `${error?.message || `The phone number does not match this ${membership.organization} record.`}${code}`;
+            }
             duplicateEls.verifyError.classList.remove('hidden');
         } finally {
-            duplicateEls.loginBtn.disabled = false;
+            registrationCandidateBusy = false;
+            candidateControls.forEach(([control, disabled]) => { control.disabled = disabled; });
+            duplicateEls.loginBtn.removeAttribute('aria-busy');
             duplicateEls.loginBtn.innerHTML = defaultHtml;
+            registrationPresentation.refresh();
         }
     }
 
-    async function ensurePhoneIsNotAlreadyRegistered() {
-        const phone = document.getElementById('phone').value.trim();
-        if (!phone || duplicateCheckBusy) return true;
-        duplicateCheckBusy = true;
-        try {
-            const matches = await fetchExistingMembersByPhone(phone);
-            if (!matches.length) return true;
+    function registrationLookupSnapshot() {
+        const memberships = (selectedMemberships.length ? selectedMemberships : readMembershipChoices())
+            .map(choice => ({ organization: choice.organization, youthWing: Boolean(choice.youthWing) }));
+        const phone = normalizePhone(document.getElementById('phone').value);
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        const key = JSON.stringify({
+            memberships,
+            phone,
+            firstName: textKey(firstName),
+            lastName: textKey(lastName)
+        });
+        return { memberships, phone, firstName, lastName, key };
+    }
 
-            duplicateMatches = matches
-                .map(member => ({ member, score: memberLocalScore(member) }))
-                .sort((a, b) => b.score - a.score)
-                .map(item => item.member)
-                .slice(0, 3);
-            duplicateIndex = 0;
-            duplicateNoCount = 0;
-            selectedDuplicateMember = null;
-            renderDuplicateCandidate();
-            openDuplicateMemberModal();
-            messageDiv.innerHTML = '<div class="bg-yellow-50 text-yellow-900 p-4 rounded-xl border border-yellow-200 font-bold">This phone number already exists in the APSG database. Please confirm the existing record instead of creating a duplicate.</div>';
-            return false;
-        } catch (error) {
-            messageDiv.innerHTML = '<div class="bg-red-50 text-red-800 p-4 rounded-xl">Unable to check duplicate phone number right now. Please try again.</div>';
-            return false;
+    function setRegistrationLookupStatus(message, state = 'info') {
+        if (!registrationLookupStatus) return;
+        if (!message) {
+            registrationLookupStatus.textContent = '';
+            registrationLookupStatus.className = 'mt-2 hidden rounded-xl border px-3 py-2 text-xs font-semibold';
+            registrationLookupStatus.setAttribute('aria-live', 'polite');
+            return;
+        }
+        const styles = {
+            checking: 'border-blue-200 bg-blue-50 text-blue-900',
+            success: 'border-emerald-200 bg-emerald-50 text-emerald-900',
+            conflict: 'border-amber-300 bg-amber-50 text-amber-950',
+            error: 'border-red-200 bg-red-50 text-red-800',
+            info: 'border-slate-200 bg-slate-50 text-slate-700'
+        };
+        registrationLookupStatus.className = `mt-2 rounded-xl border px-3 py-2 text-xs font-semibold ${styles[state] || styles.info}`;
+        registrationLookupStatus.textContent = message;
+        registrationLookupStatus.setAttribute('aria-live', state === 'error' || state === 'conflict' ? 'assertive' : 'polite');
+        registrationLookupStatus.tabIndex = -1;
+    }
+
+    function invalidateRegistrationLookup() {
+        registrationLookupRevision += 1;
+        registrationLookupCache = null;
+        registrationLookupFlight = null;
+        setRegistrationLookupStatus('');
+    }
+
+    function registrationLookupMessage(results) {
+        return results.map(result => {
+            const organization = result.membership.organization;
+            if (result.error) {
+                const code = [
+                    result.error.code || result.error.status,
+                    result.error.rpcCode ? `RPC ${result.error.rpcCode}` : ''
+                ].filter(Boolean).join(', ');
+                const primaryCode = String(result.error.code || result.error.status || '').toUpperCase();
+                if (organization === 'CWDI' && ['PGRST202', 'PGRST205', '42883'].includes(primaryCode)) {
+                    return `CWDI: the cwdi_members registry or its secure lookup function is unavailable. Ask the administrator to finish the CWDI database setup${code ? ` (${code})` : ''}.`;
+                }
+                return `${organization}: the existing-member lookup could not be completed${code ? ` (database error ${code})` : ''}.`;
+            }
+            if (result.conflict) return `${organization}: a record uses this phone number. Confirm whether it is yours before continuing.`;
+            if (!result.member) return `${organization}: no matching registration was found.`;
+
+            let message = `${organization}: an existing member record was found and will be reused.`;
+            if (result.membership.youthWing && !result.member.is_youth_wing_member) {
+                message += ' The Youth Wing selection will be added to this record when submitted.';
+            } else if (result.membership.youthWing && result.member.is_youth_wing_member) {
+                message += ' This record is already classified as Youth Wing.';
+            }
+            return message;
+        }).join(' ');
+    }
+
+    // @spec REG-MATCH-001, REG-MATCH-002, REG-MATCH-004, REG-MATCH-005, REG-MATCH-006, REG-MATCH-007, REG-MATCH-008, REG-MATCH-019
+    async function ensurePhoneIsNotAlreadyRegistered({ promptDuplicate = false } = {}) {
+        const snapshot = registrationLookupSnapshot();
+        if (!/^\+[1-9]\d{6,14}$/.test(snapshot.phone)) {
+            setRegistrationLookupStatus('');
+            return { ok: false, incomplete: true };
+        }
+        if (!snapshot.firstName || !snapshot.lastName || snapshot.memberships.length !== 1) {
+            setRegistrationLookupStatus('Enter your first and last name to check the selected membership registries.', 'info');
+            return { ok: false, incomplete: true };
+        }
+        if (registrationLookupCache?.key === snapshot.key) {
+            const result = registrationLookupCache.result;
+            if (promptDuplicate) openDuplicateConfirmation(result);
+            return result;
+        }
+        if (registrationLookupFlight?.key === snapshot.key) {
+            const result = await registrationLookupFlight.promise;
+            if (promptDuplicate) openDuplicateConfirmation(result);
+            return result;
+        }
+
+        const revision = ++registrationLookupRevision;
+        setRegistrationLookupStatus(`Checking ${snapshot.memberships[0].organization} membership record…`, 'checking');
+        const promise = (async () => {
+            const results = await Promise.all(snapshot.memberships.map(async membership => {
+                try {
+                    const rows = await fetchExistingMembersByPhone(membership, snapshot.phone);
+                    const member = rows.find(candidate =>
+                        textKey(candidate.first_name) === textKey(snapshot.firstName) &&
+                        textKey(candidate.last_name) === textKey(snapshot.lastName)
+                    ) || null;
+                    return { membership, member, rows, conflict: rows.length > 0 && !member, error: null };
+                } catch (error) {
+                    return { membership, member: null, rows: [], conflict: false, error };
+                }
+            }));
+
+            const currentSnapshot = registrationLookupSnapshot();
+            if (revision !== registrationLookupRevision || currentSnapshot.key !== snapshot.key) {
+                return { ok: false, stale: true };
+            }
+
+            const failures = results.filter(result => result.error);
+            const conflicts = results.filter(result => result.conflict);
+            const result = { ok: failures.length === 0 && conflicts.length === 0, results };
+            if (failures.length) {
+                setRegistrationLookupStatus(`${registrationLookupMessage(results)} Please retry the lookup before reviewing or submitting.`, 'error');
+            } else if (conflicts.length) {
+                setRegistrationLookupStatus(registrationLookupMessage(results), 'conflict');
+            } else {
+                setRegistrationLookupStatus(registrationLookupMessage(results), 'success');
+            }
+            if (!failures.length) registrationLookupCache = { key: snapshot.key, result };
+            return result;
+        })();
+        registrationLookupFlight = { key: snapshot.key, promise };
+        try {
+            const result = await promise;
+            if (promptDuplicate) openDuplicateConfirmation(result);
+            return result;
         } finally {
-            duplicateCheckBusy = false;
+            if (registrationLookupFlight?.promise === promise) registrationLookupFlight = null;
+        }
+    }
+
+    async function runRegistrationAction(button, action) {
+        if (registrationActionBusy || registrationSubmitBusy || !validateRegistrationFiles()) return;
+        registrationActionBusy = true;
+        const actionButtons = [previewBtn, directSubmitBtn, document.getElementById('changeMembershipChoiceBtn')];
+        actionButtons.forEach(item => { item.disabled = true; });
+        button.setAttribute('aria-busy', 'true');
+        try {
+            const lookup = await ensurePhoneIsNotAlreadyRegistered({ promptDuplicate: true });
+            if (lookup.ok) await action();
+            else if (!lookup.stale && !registrationPresentation.activeDialog()) registrationPresentation.focus(registrationLookupStatus);
+        } finally {
+            button.removeAttribute('aria-busy');
+            actionButtons.forEach(item => { item.disabled = false; });
+            registrationActionBusy = false;
         }
     }
 
     window.closeDuplicateMemberModal = closeDuplicateMemberModal;
 
+    // @spec REG-BRAND-001, REG-BRAND-004, REG-FORM-006, REG-UI-034, REG-UI-035
+    // @spec REG-FORM-017, REG-FORM-018, REG-FORM-023, REG-FORM-024, REG-UI-040, REG-UI-041, REG-UI-042
     function populatePreview() {
+        const residenceCountry = countryMetadata.countries.find(country => country.alpha2 === residenceCountrySelect.value);
         formData = {
+            memberships: selectedMemberships.map(choice => ({ ...choice })),
             firstName: document.getElementById('firstName').value.trim(),
             lastName: document.getElementById('lastName').value.trim(),
+            middleName: document.getElementById('middleName').value.trim(),
+            sex: document.getElementById('sex').value,
             level: levelSelect.options[levelSelect.selectedIndex].text,
             designation: (window.getDesignationValue ? window.getDesignationValue() : designationSelect.value),
-            phone: document.getElementById('phone').value.trim(),
+            phone: getRegistrationPhoneE164(),
+            residenceCountryCode: residenceCountry?.alpha3 || '',
+            residenceCountryLabel: residenceCountry?.name || '',
+            residenceCity: residenceCityInput.value.trim(),
+            residenceStateProvince: residenceStateProvinceInput.value.trim(),
             email: document.getElementById('email').value.trim() || 'Not provided',
             state: stateSelect.value,
             lga: lgaSelect.value,
             ward: wardSelect.value,
+            nigerianPhone: residenceCountry?.alpha3 === 'NGA' ? '' : syncNigerianContact(false).e164,
+            preferredContact: residenceCountry?.alpha3 === 'NGA' ? '' : syncNigerianContact(false).preference,
             pvc: document.getElementById('pvc').value.trim(),
             apcCard: document.getElementById('apcCard').value.trim(),
             pvcFile: document.getElementById('pvcUpload').files[0]?.name || 'No file selected',
             apcFile: document.getElementById('apcUpload').files[0]?.name || 'No file selected'
         };
 
+        reviewedSnapshot = currentReviewedState();
         previewContent.innerHTML = `
             <div class="space-y-5">
+                <div class="rounded-xl border border-emerald-100 bg-emerald-50 p-4"><strong class="text-primary">Organization membership</strong><br><span class="text-sm font-semibold">${formData.memberships.map(choice => choice.label).join(' + ')}</span><div class="mt-3">${registrationOrganizationBranding(formData.memberships)}</div></div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">First Name</strong><br><span class="text-sm font-semibold">${formData.firstName}</span></div>
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">Last Name</strong><br><span class="text-sm font-semibold">${formData.lastName}</span></div>
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">Level</strong><br><span class="text-sm font-semibold">${formData.level}</span></div>
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">Designation</strong><br><span class="text-sm font-semibold">${formData.designation}</span></div>
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">Phone</strong><br><span class="text-sm font-semibold">${formData.phone}</span></div>
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">Email</strong><br><span class="text-sm font-semibold">${formData.email}</span></div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">First Name</strong><br><span class="text-sm font-semibold">${escapeRegistrationHtml(formData.firstName)}</span></div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">Middle Name</strong><br><span class="text-sm font-semibold">${escapeRegistrationHtml(formData.middleName || 'Not provided')}</span></div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">Last Name</strong><br><span class="text-sm font-semibold">${escapeRegistrationHtml(formData.lastName)}</span></div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">Gender</strong><br><span class="text-sm font-semibold">${escapeRegistrationHtml(formData.sex || 'Not provided')}</span></div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">Level</strong><br><span class="text-sm font-semibold">${escapeRegistrationHtml(formData.level)}</span></div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">Designation</strong><br><span class="text-sm font-semibold">${escapeRegistrationHtml(formData.designation)}</span></div>
                 </div>
                 <div class="bg-accent-light p-4 rounded-xl border border-primary/10">
-                    <h4 class="font-black text-primary text-base mb-3 text-center">Location Details</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-center">
-                        <div class="bg-white p-3 rounded-xl shadow-sm border border-white"><strong>State</strong><br><span class="text-sm font-black">${formData.state}</span></div>
-                        <div class="bg-white p-3 rounded-xl shadow-sm border border-white"><strong>LGA/LCDA</strong><br><span class="text-sm font-black">${formData.lga}</span></div>
-                        <div class="bg-white p-3 rounded-xl shadow-sm border border-white"><strong>Ward</strong><br><span class="text-sm font-black">${formData.ward}</span></div>
+                    <h4 class="font-black text-primary text-base mb-3 text-center">Current Residence</h4>
+                    <div class="grid grid-cols-1 ${formData.residenceCountryCode === 'NGA' ? 'md:grid-cols-4' : 'md:grid-cols-3'} gap-3 text-center">
+                        <div class="bg-white p-3 rounded-xl shadow-sm border border-white"><strong>Country</strong><br><span class="text-sm font-black">${escapeRegistrationHtml(formData.residenceCountryLabel)} (${escapeRegistrationHtml(formData.residenceCountryCode)})</span></div>
+                        ${formData.residenceCountryCode === 'NGA' ? `<div class="bg-white p-3 rounded-xl shadow-sm border border-white"><strong>State</strong><br><span class="text-sm font-black">${escapeRegistrationHtml(formData.state)}</span></div><div class="bg-white p-3 rounded-xl shadow-sm border border-white"><strong>LGA / Ward</strong><br><span class="text-sm font-black">${escapeRegistrationHtml([formData.lga, formData.ward].filter(Boolean).join(' / '))}</span></div>` : `<div class="bg-white p-3 rounded-xl shadow-sm border border-white"><strong>City</strong><br><span class="text-sm font-black">${escapeRegistrationHtml(formData.residenceCity)}</span></div><div class="bg-white p-3 rounded-xl shadow-sm border border-white"><strong>State / Province</strong><br><span class="text-sm font-black">${escapeRegistrationHtml(formData.residenceStateProvince)}</span></div>`}
                     </div>
                 </div>
+                ${formData.residenceCountryCode !== 'NGA' && [formData.state, formData.lga, formData.ward].some(Boolean) ? `<section class="rounded-xl border border-gray-100 bg-gray-50 p-4"><h4 class="mb-3 font-black text-primary">Nigerian home location</h4><div class="grid grid-cols-1 md:grid-cols-3 gap-3"><div><strong>State</strong><br>${escapeRegistrationHtml(formData.state || 'Not provided')}</div><div><strong>LGA/LCDA</strong><br>${escapeRegistrationHtml(formData.lga || 'Not provided')}</div><div><strong>Ward</strong><br>${escapeRegistrationHtml(formData.ward || 'Not provided')}</div></div></section>` : ''}
+                <section class="rounded-xl border border-emerald-100 bg-white p-4"><h4 class="mb-3 font-black text-primary">Contact details</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><div><strong>Primary phone</strong><br>${escapeRegistrationHtml(formData.phone)}</div><div><strong>Email</strong><br>${escapeRegistrationHtml(formData.email)}</div>${formData.nigerianPhone ? `<div><strong>Nigerian contact number</strong><br>${escapeRegistrationHtml(formData.nigerianPhone)}</div><div><strong>Preferred contact</strong><br>${formData.preferredContact === 'nigerian' ? 'Nigerian contact number' : 'Primary phone'}</div>` : ''}</div></section>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">PVC Number</strong><br><span class="text-sm font-semibold">${formData.pvc}</span></div>
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">APC Card Number</strong><br><span class="text-sm font-semibold">${formData.apcCard}</span></div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">PVC Number</strong><br><span class="text-sm font-semibold">${escapeRegistrationHtml(formData.pvc || 'Not provided')}</span></div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">APC Card Number</strong><br><span class="text-sm font-semibold">${escapeRegistrationHtml(formData.apcCard || 'Not provided')}</span></div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">PVC Upload</strong><br><span class="text-sm font-semibold">${formData.pvcFile}</span></div>
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">APC Card Upload</strong><br><span class="text-sm font-semibold">${formData.apcFile}</span></div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">PVC Upload</strong><br><span class="text-sm font-semibold">${escapeRegistrationHtml(formData.pvcFile)}</span></div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100"><strong class="text-primary">APC Card Upload</strong><br><span class="text-sm font-semibold">${escapeRegistrationHtml(formData.apcFile)}</span></div>
                 </div>
             </div>
         `;
     }
 
+    let registrationSubmissionService = null;
+    let registrationSubmitBusy = false;
+
+    // @spec REG-SUBMIT-002, REG-SUBMIT-003, REG-SUBMIT-005, REG-SUBMIT-006, REG-SUBMIT-007, REG-SUBMIT-013, REG-SUBMIT-014, REG-SUBMIT-015, REG-SUBMIT-016, REG-SUBMIT-017
+    async function submitOrganizationMembership(membership, memberData, files) {
+        if (!registrationSubmissionService) registrationSubmissionService = window.APSGRegistrationSubmission.createSubmissionService({
+            getClient: () => window.supabaseClient || window.apsgSupabase || window.APSG_SUPABASE || window.supabaseClientPublic,
+            findMembers: fetchExistingMembersByPhone,
+            verifyMember: findMemberByRegAndPhone
+        });
+        const result = await registrationSubmissionService.submit(membership, memberData, files);
+        return { ...result, organization: membership.organization, label: membership.label, youthWing: Boolean(membership.youthWing) };
+    }
+
+    // @spec REG-FORM-007, REG-FORM-008
+    function validateRegistrationFiles() {
+        let valid = true;
+        for (const type of ['pvc', 'apc']) {
+            const input = document.getElementById(`${type}Upload`);
+            const status = document.getElementById(`${type}UploadStatus`);
+            try {
+                window.APSGRegistrationSubmission.validateFiles({ [type]: input.files[0] });
+                input.setCustomValidity('');
+                status.textContent = input.files[0] ? input.files[0].name : 'JPG, PNG or PDF · Up to 5 MB';
+                status.classList.remove('text-red-700');
+            } catch (error) {
+                valid = false;
+                input.setCustomValidity(error.message);
+                status.textContent = error.message;
+                status.classList.add('text-red-700');
+            }
+        }
+        return valid;
+    }
+    ['pvcUpload', 'apcUpload'].forEach(id => document.getElementById(id).addEventListener('change', validateRegistrationFiles));
+    form.addEventListener('reset', () => setTimeout(validateRegistrationFiles, 0));
+
+    // @spec REG-FORM-006, REG-SUBMIT-001, REG-SUBMIT-002, REG-SUBMIT-003, REG-SUBMIT-004, REG-SUBMIT-005, REG-SUBMIT-006, REG-SUBMIT-007, REG-SUBMIT-010, REG-SUBMIT-011, REG-SUBMIT-013, REG-SUBMIT-014
+    // @spec REG-UI-034, REG-UI-025, REG-UI-026, REG-UI-031
     async function submitForm(isDirect = false) {
+        if (registrationSubmitBusy) return;
+        if (!isDirect) {
+            const current = currentReviewedState();
+            if (!reviewedSnapshot || reviewedSnapshot.fields !== current.fields || reviewedSnapshot.membership !== current.membership || reviewedSnapshot.files.some((file,index) => file !== current.files[index])) {
+                closePreview({ edit:true }); formData = null; reviewedSnapshot = null;
+                registrationPresentation.announce('Your details or documents have changed since this review. Please review your details again before submitting.', { review:false });
+                return;
+            }
+        }
+        if (!validateRegistrationFiles()) return;
         const spinner = isDirect ? directSubmitBtn.querySelector('.spinner') : previewModal.querySelector('.spinner');
+        if (isLocalRegistrationPreview) {
+            registrationPresentation.announce('Local preview only. Registration submissions are disabled and no database records are changed.', { review: !isDirect });
+            if (isDirect) setRegistrationStage(2);
+            return;
+        }
+        registrationSubmitBusy = true;
+        const submitActionControl = spinner.closest('button');
+        submitActionControl?.setAttribute('aria-busy', 'true');
+        const lockedControls = [...new Set([...form.querySelectorAll('input, select, button'), ...previewModal.querySelectorAll('button'), document.getElementById('changeMembershipChoiceBtn')])].map(control => [control, control.disabled]);
+        lockedControls.forEach(([control]) => { control.disabled = true; });
         spinner.style.display = 'inline-block';
         messageDiv.innerHTML = '';
 
         try {
-            const canContinue = await ensurePhoneIsNotAlreadyRegistered();
-            if (!canContinue) return;
             let pvcPath = null;
             let apcPath = null;
 
-            const pvcFile = document.getElementById('pvcUpload').files[0];
-            if (pvcFile) {
-                const fileExt = pvcFile.name.split('.').pop();
-                const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
-                const { data, error } = await supabaseClient.storage.from('uploads').upload(`pvc/${fileName}`, pvcFile);
-                if (error) throw error;
-                const { data: urlData } = supabaseClient.storage.from('uploads').getPublicUrl(`pvc/${fileName}`);
-                pvcPath = urlData.publicUrl;
-            }
-
-            const apcFile = document.getElementById('apcUpload').files[0];
-            if (apcFile) {
-                const fileExt = apcFile.name.split('.').pop();
-                const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
-                const { data, error } = await supabaseClient.storage.from('uploads').upload(`apc/${fileName}`, apcFile);
-                if (error) throw error;
-                const { data: urlData } = supabaseClient.storage.from('uploads').getPublicUrl(`apc/${fileName}`);
-                apcPath = urlData.publicUrl;
-            }
-
             const selectedState = formData ? formData.state : stateSelect.value;
             const selectedLga = formData ? formData.lga : lgaSelect.value;
-            const stateCode = stateCodes[selectedState] || 'XX';
+            const selectedResidenceCountry = formData
+                ? formData.residenceCountryCode
+                : (countryMetadata.countries.find(country => country.alpha2 === residenceCountrySelect.value)?.alpha3 || '');
+            const residenceIsNigeria = selectedResidenceCountry === 'NGA';
+            const stateCode = residenceIsNigeria ? (stateCodes[selectedState] || 'XX') : '';
             const parentLga = selectedState === 'Lagos' && lagosMapping[selectedLga] ? lagosMapping[selectedLga] : selectedLga;
-            const lgaCode = parentLga.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 3) || 'XXX';
+            const lgaCode = residenceIsNigeria ? (parentLga.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 3) || 'XXX') : '';
             const year = new Date().getFullYear();
-            const prefix = `APSG/${stateCode}/${lgaCode}/${year}/`;
-
-            let seq = 1;
-            const { data: existing, error: qError } = await supabaseClient
-                .from('members')
-                .select('reg_number')
-                .like('reg_number', `${prefix}%`)
-                .order('reg_number', { ascending: false })
-                .limit(1);
-            if (qError) throw qError;
-            if (existing && existing.length > 0) {
-                const lastNum = parseInt(existing[0].reg_number.split('/')[4] || '0', 10);
-                seq = lastNum + 1;
-            }
-            const regNumber = `${prefix}${seq.toString().padStart(6, '0')}`;
-
             const firstName = formData ? formData.firstName : document.getElementById('firstName').value.trim();
             const lastName = formData ? formData.lastName : document.getElementById('lastName').value.trim();
-
-            const insertData = {
-                reg_number: regNumber,
+            const middleName = formData ? formData.middleName : document.getElementById('middleName').value.trim();
+            const sex = formData ? formData.sex : document.getElementById('sex').value;
+            const memberData = {
+                organizationCode: '',
+                stateCode,
+                lgaCode,
+                year,
+                fields: {
                 first_name: firstName,
                 last_name: lastName,
+                middle_name: middleName || null,
+                sex: sex || null,
                 designation: formData ? formData.designation : (window.getDesignationValue ? window.getDesignationValue() : designationSelect.value),
-                phone: formData ? formData.phone : document.getElementById('phone').value.trim(),
+                phone: formData ? formData.phone : getRegistrationPhoneE164(),
                 email: formData ? (formData.email === 'Not provided' ? null : formData.email) : (document.getElementById('email').value.trim() || null),
                 state: formData ? formData.state : stateSelect.value,
                 lga: formData ? formData.lga : lgaSelect.value,
                 ward: formData ? formData.ward : wardSelect.value,
-                pvc_number: formData ? formData.pvc : document.getElementById('pvc').value.trim(),
-                apc_card_number: formData ? formData.apcCard : document.getElementById('apcCard').value.trim(),
+                residence_country_code: selectedResidenceCountry,
+                residence_city: residenceIsNigeria ? null : (formData ? formData.residenceCity : residenceCityInput.value.trim()),
+                residence_state_province: residenceIsNigeria ? null : (formData ? formData.residenceStateProvince : residenceStateProvinceInput.value.trim()),
+                nigerian_phone_e164: residenceIsNigeria ? null : (formData ? (formData.nigerianPhone || null) : (syncNigerianContact(false).e164 || null)),
+                preferred_contact_type: residenceIsNigeria ? null : (formData ? (formData.preferredContact || null) : (syncNigerianContact(false).preference || null)),
+                pvc_number: String((formData ? formData.pvc : document.getElementById('pvc').value) || '').trim(),
+                apc_card_number: String((formData ? formData.apcCard : document.getElementById('apcCard').value) || '').trim(),
                 pvc_upload_path: pvcPath,
                 apc_upload_path: apcPath,
                 state_code: stateCode,
                 lga_code: lgaCode
+                }
             };
 
-            const { data: inserted, error: insertError } = await supabaseClient
-                .from('members')
-                .insert(insertData)
-                .select()
-                .single();
-
-            if (insertError) throw insertError;
-
-            if (!isDirect) closePreview();
+            if (selectedMemberships.length !== 1) throw new Error('Choose exactly one membership and retry.');
+            const membership = selectedMemberships[0];
+            memberData.organizationCode = membership.organization;
+            const registrationResults = [await submitOrganizationMembership(membership, memberData, { pvc: document.getElementById('pvcUpload').files[0], apc: document.getElementById('apcUpload').files[0] })];
+            const savedProfile = registrationResults[0].member || memberData.fields;
+            pvcPath = registrationResults[0].uploads.find(upload => upload.type === 'pvc')?.url || null;
+            apcPath = registrationResults[0].uploads.find(upload => upload.type === 'apc')?.url || null;
+            const regNumber = registrationResults[0].regNumber;
 
             // Enhanced success with uploads preview and slider
             let uploadsHTML = '';
@@ -1401,84 +2213,150 @@
             }
 
             const successRecord = {
-                fullName: `${firstName} ${lastName}`.trim() || 'APSG Member',
-                designation: formData ? formData.designation : (window.getDesignationValue ? window.getDesignationValue() : designationSelect.value),
-                phone: formData ? formData.phone : document.getElementById('phone').value.trim(),
-                state: selectedState,
-                lga: selectedLga,
-                ward: formData ? formData.ward : wardSelect.value,
+                fullName: [savedProfile.first_name, savedProfile.middle_name, savedProfile.last_name].filter(Boolean).join(' ') || 'Member',
+                memberships: registrationResults,
+                designation: savedProfile.designation || 'Member',
+                phone: savedProfile.phone,
+                savedContact: registrationReceiptContact(registrationResults[0].member),
+                state: savedProfile.state,
+                lga: savedProfile.lga,
+                ward: savedProfile.ward,
                 submittedAt: new Date().toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' })
             };
 
             messageDiv.innerHTML = '';
             showSuccessModal(regNumber, uploadsHTML, successRecord);
-            form.reset();
-            formData = null;
-            levelSelect.dispatchEvent(new Event('change'));
-            lgaSelect.disabled = true;
-            wardSelect.disabled = true;
-
             // Initialize slider if exists
             if (uploads.length > 1) {
                 currentSlide = 0;
             }
         } catch (err) {
             console.error(err);
-            messageDiv.innerHTML = `<div class="bg-red-50 text-red-800 p-6 rounded-xl">Error: ${err.message || 'Submission failed. Please try again.'}</div>`;
+            if (err.code === 'REGISTRATION_CONFLICT') {
+                invalidateRegistrationLookup();
+                await ensurePhoneIsNotAlreadyRegistered({ promptDuplicate: true });
+                messageDiv.innerHTML = '<div class="bg-amber-50 text-amber-900 p-4 rounded-xl" role="status">A matching phone record appeared during submission. Confirm the existing member before continuing.</div>';
+            } else {
+                registrationPresentation.announce(err.message || 'Submission failed. Please try again.', { review: !isDirect });
+                if (isDirect) setRegistrationStage(2);
+            }
         } finally {
             spinner.style.display = 'none';
+            submitActionControl?.removeAttribute('aria-busy');
+            lockedControls.forEach(([control, wasDisabled]) => { control.disabled = wasDisabled; });
+            registrationSubmitBusy = false;
         }
     }
 
 
+    function escapeRegistrationHtml(value) {
+        return String(value ?? '').replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
+    }
+
+    // @spec REG-SUBMIT-010, REG-SUBMIT-011, REG-SUBMIT-033, REG-SUBMIT-034, REG-SUBMIT-035, REG-SUBMIT-036, REG-SUBMIT-037
+    function registrationReceiptContact(member) {
+        if (!member) return null;
+        const primary = String(member.phone || '').trim();
+        const secondary = String(member.nigerian_phone_e164 || '').trim();
+        const preference = String(member.preferred_contact_type || '').trim();
+        const validSecondary = /^\+[1-9]\d{6,14}$/.test(secondary)
+            && /^\+234\d{7,13}$/.test(secondary)
+            && secondary !== primary
+            && ['primary', 'nigerian'].includes(preference)
+            && String(member.residence_country_code || '').trim().toUpperCase() !== 'NGA';
+        return {
+            primary,
+            secondary: validSecondary ? secondary : '',
+            preferred: validSecondary ? (preference === 'nigerian' ? 'Nigerian contact number' : 'Primary phone') : ''
+        };
+    }
+
+    function membershipOutcomeText(membership) {
+        const organization = membership.organization || 'APSG';
+        if (membership.status === 'youth-wing-added') return `Successfully joined YOUTH WING ${organization}. Your existing ${organization} ID and saved contact details were kept.`;
+        if (membership.status === 'already-youth-member') return `Your existing ${organization} membership is already part of its Youth Wing. Its saved contact details were kept.`;
+        if (membership.status === 'already-member') return `Your existing ${organization} membership and saved contact details are confirmed.`;
+        if (membership.youthWing) return `You are now a full member of ${organization} and a member of its Youth Wing.`;
+        return `Your ${organization} membership registration is complete.`;
+    }
+
+    // @spec REG-BRAND-003, REG-SUBMIT-008
     function showSuccessModal(regNumber, uploadsHTML, record = {}) {
+        const memberships = Array.isArray(record.memberships) ? record.memberships.slice(0, 1) : [];
+        const membership = memberships[0] || { organization: 'APSG', label: REGISTRATION_ORGANIZATION_BRANDS.APSG.name, status: 'registered' };
+        const brand = REGISTRATION_ORGANIZATION_BRANDS[membership.organization] || REGISTRATION_ORGANIZATION_BRANDS.APSG;
+        const receiptLogo = document.getElementById('successModalOrgLogo');
+        receiptLogo.src = brand.logo;
+        receiptLogo.alt = `${brand.key} logo`;
+        receiptLogo.onerror = () => { receiptLogo.hidden = true; };
+        receiptLogo.hidden = false;
+        document.getElementById('successModalOrgText').textContent = membershipOutcomeText(membership);
+        const receiptOrganization = brand.name;
+        const safeRegNumber = escapeRegistrationHtml(regNumber || membership.regNumber || '');
+        const safeLabel = escapeRegistrationHtml(membership.label || brand.name);
+        const safeName = escapeRegistrationHtml(record.fullName || 'Member');
+        const safeDesignation = escapeRegistrationHtml(record.designation || 'Member');
+        const safeState = escapeRegistrationHtml(record.state || '—');
+        const safeLga = escapeRegistrationHtml(record.lga || '—');
+        const safeSubmittedAt = escapeRegistrationHtml(record.submittedAt || 'Just now');
+        const savedContact = record.savedContact;
+        const savedContactHTML = savedContact ? `
+            <div class="mt-4 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-4 text-left">
+                <p class="font-black text-government-green">Saved contact details</p>
+                <p class="mt-1 text-sm text-gray-700">Primary phone: ${escapeRegistrationHtml(savedContact.primary || 'Not available')}</p>
+                ${savedContact.secondary ? `<p class="mt-1 text-sm text-gray-700">Nigerian contact: ${escapeRegistrationHtml(savedContact.secondary)}</p><p class="mt-1 text-sm text-gray-700">Preferred contact: ${escapeRegistrationHtml(savedContact.preferred)}</p>` : ''}
+                ${membership.status !== 'registered' ? '<p class="mt-2 text-xs text-gray-600">These are the saved values from your verified profile.</p>' : ''}
+            </div>` : '';
+        const statusText = membership.status === 'youth-wing-added'
+            ? 'Youth Wing added to existing membership'
+            : membership.status === 'already-youth-member'
+                ? 'Already a Youth Wing member'
+                : membership.status === 'already-member'
+                    ? 'Existing membership confirmed'
+                    : membership.youthWing
+                        ? 'Full membership and Youth Wing confirmed'
+                        : 'New membership registered';
         successContent.innerHTML = `
             <div class="text-center relative">
-                <img src="/assets/images/logo/apsg1.png" alt="APSG watermark" class="success-print-watermark" onerror="this.onerror=null;this.src='/assets/images/logo/apsg.png';" width="96" height="96" decoding="async">
+                <img src="${brand.logo}" alt="${brand.key} watermark" class="success-print-watermark" width="96" height="96" decoding="async" onerror="this.hidden=true">
 
                 <div class="official-receipt-brand rounded-2xl p-4 md:p-5 mb-4 text-left">
                     <div class="relative z-10 flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
-                        <div class="receipt-logo-small shrink-0">
-                            <img src="/assets/images/logo/apsg1.png" alt="APSG Logo" onerror="this.onerror=null;this.src='/assets/images/logo/apsg.png';" width="96" height="96" decoding="async">
-                        </div>
+                        <div class="registration-receipt-branding shrink-0">${registrationOrganizationBranding(memberships)}</div>
                         <div class="flex-1">
-                            <p class="text-[11px] uppercase tracking-[0.28em] text-secondary font-black">APC Progressive Support Group</p>
-                            <h4 class="display-font mt-1 text-2xl md:text-3xl font-extrabold text-government-green">Official Membership Certificate</h4>
-                            <p class="mt-1 text-xs md:text-sm text-gray-600">Issued by APSG Nigeria Registration Portal for membership identification and verification record.</p>
+                            <p class="text-[11px] uppercase tracking-[0.15em] text-secondary font-black">${escapeRegistrationHtml(receiptOrganization)}</p>
+                            <h4 class="display-font mt-1 text-2xl md:text-3xl font-extrabold text-government-green">Official Membership Confirmation</h4>
+                            <p class="mt-1 text-xs md:text-sm text-gray-600">${escapeRegistrationHtml(membershipOutcomeText(membership))}</p>
                         </div>
                         <div class="print-auth-stamp rounded-xl px-3 py-2 text-center">
                             <p class="text-[10px] uppercase tracking-widest text-government-green font-black">Status</p>
-                            <p class="text-sm font-black text-primary">Captured</p>
+                            <p class="text-sm font-black text-primary">Complete</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="success-reg-card rounded-2xl p-4 md:p-5 text-white text-center">
-                    <p class="text-[11px] md:text-xs uppercase tracking-[0.24em] text-secondary font-black">Official APSG Registration Number</p>
-                    <h3 class="mt-2 text-xl sm:text-2xl md:text-3xl font-black break-all px-2">${regNumber}</h3>
-                    <button type="button" onclick="copyRegistrationNumber('${regNumber}')" class="mt-3 inline-flex items-center justify-center gap-2 rounded-full bg-secondary px-4 py-2 text-sm font-black text-government-green shadow-gold hover:bg-[#c79718] transition">
-                        <i class="fas fa-copy"></i><span id="copyRegText">Copy Number</span>
-                    </button>
-                    <p class="mt-3 text-xs text-white/65">Save or screenshot this number. It is your unique APSG membership identifier.</p>
+                <div class="success-reg-card rounded-2xl p-4 md:p-5 text-white">
+                    <p class="text-center text-[11px] md:text-xs uppercase tracking-[0.24em] text-secondary font-black">${escapeRegistrationHtml(brand.key)} registration number</p>
+                    <div class="mt-3 rounded-xl border border-white/15 bg-white/10 p-4 text-center">
+                        <p class="text-[10px] uppercase tracking-[0.16em] text-white/70 font-black">${safeLabel}</p>
+                        <p class="mt-1 text-xl md:text-2xl font-black break-all">${safeRegNumber}</p>
+                        <p class="mt-2 text-[11px] font-bold text-secondary">${statusText}</p>
+                    </div>
+                    <p class="mt-3 text-center text-xs text-white/65">Save your ${escapeRegistrationHtml(brand.key)} ID for future updates and events.</p>
                 </div>
 
                 <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
-                    <div class="receipt-mini-card"><p class="text-[11px] uppercase tracking-widest text-gray-500 font-black">Member</p><p class="mt-1 font-black text-government-green">${record.fullName || 'APSG Member'}</p></div>
-                    <div class="receipt-mini-card"><p class="text-[11px] uppercase tracking-widest text-gray-500 font-black">Designation</p><p class="mt-1 font-black text-government-green">${record.designation || 'Member'}</p></div>
-                    <div class="receipt-mini-card"><p class="text-[11px] uppercase tracking-widest text-gray-500 font-black">Location</p><p class="mt-1 font-black text-government-green">${record.state || '—'} • ${record.lga || '—'}</p></div>
-                    <div class="receipt-mini-card"><p class="text-[11px] uppercase tracking-widest text-gray-500 font-black">Submitted</p><p class="mt-1 font-black text-government-green">${record.submittedAt || 'Just now'}</p></div>
+                    <div class="receipt-mini-card"><p class="text-[11px] uppercase tracking-widest text-gray-500 font-black">Member</p><p class="mt-1 font-black text-government-green">${safeName}</p></div>
+                    <div class="receipt-mini-card"><p class="text-[11px] uppercase tracking-widest text-gray-500 font-black">Designation</p><p class="mt-1 font-black text-government-green">${safeDesignation}</p></div>
+                    <div class="receipt-mini-card"><p class="text-[11px] uppercase tracking-widest text-gray-500 font-black">Location</p><p class="mt-1 font-black text-government-green">${safeState} • ${safeLga}</p></div>
+                    <div class="receipt-mini-card"><p class="text-[11px] uppercase tracking-widest text-gray-500 font-black">Submitted</p><p class="mt-1 font-black text-government-green">${safeSubmittedAt}</p></div>
                 </div>
 
+                ${savedContactHTML}
+
                 <div class="mt-4 rounded-2xl border border-secondary/30 bg-white p-4 text-left">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                        <div class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-accent-light text-primary border border-primary/15">
-                            <i class="fas fa-shield-halved"></i>
-                        </div>
-                        <div>
-                            <p class="font-black text-government-green">Authenticity Notice</p>
-                            <p class="mt-1 text-xs md:text-sm text-gray-600">This receipt carries the APSG logo, official registration number, member details and submission time. Keep a printed or digital copy for future verification.</p>
-                        </div>
-                    </div>
+                    <p class="font-black text-government-green"><i class="fas fa-shield-halved mr-2 text-primary"></i>Keep this confirmation</p>
+                    <p class="mt-1 text-xs md:text-sm text-gray-600">This receipt shows the selected organization, membership type, and registration number.</p>
                 </div>
 
                 ${uploadsHTML}
@@ -1486,32 +2364,44 @@
                 <div class="compact-luxury-note mt-4 rounded-2xl p-4 text-left">
                     <p class="font-black text-primary flex items-center gap-2"><i class="fas fa-list-check text-secondary"></i>Next Steps</p>
                     <div class="mt-3 grid gap-2 text-sm text-gray-700">
-                        <p><strong>1.</strong> Your details will be reviewed by APSG coordinators.</p>
+                        <p><strong>1.</strong> Your details will be reviewed by ${escapeRegistrationHtml(brand.key)} coordinators.</p>
                         <p><strong>2.</strong> Confirmation may be sent through WhatsApp or email.</p>
-                        <p><strong>3.</strong> Keep your registration number safe for future updates and events.</p>
+                        <p><strong>3.</strong> Keep your registration number safe.</p>
                     </div>
-                </div>
-
-                <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <button type="button" onclick="copyRegistrationNumber('${regNumber}')" class="success-action-btn bg-white border border-secondary/35 text-government-green shadow hover:bg-secondary/10">
-                        <i class="fas fa-copy"></i>Copy
-                    </button>
-                    <button type="button" onclick="printSuccessReceipt()" class="success-action-btn bg-secondary text-government-green shadow-gold hover:bg-[#c79718]">
-                        <i class="fas fa-print"></i>Print
-                    </button>
-                    <button type="button" onclick="closeSuccessModal()" class="success-action-btn bg-gradient-to-r from-primary to-accent text-white shadow-royal hover:from-primary-dark hover:to-primary">
-                        Done
-                    </button>
                 </div>
             </div>
         `;
-        successModal.classList.remove('hidden');
-        document.body.classList.add('overflow-hidden');
+        document.getElementById('copyReceiptRegNumber').onclick = () => window.copyRegistrationNumber(regNumber || membership.regNumber || '');
+        setRegistrationStage(3);
+        registrationPresentation.open('successModal');
     }
 
+    // @spec REG-SUBMIT-009
     function closeSuccessModal() {
-        successModal.classList.add('hidden');
-        document.body.classList.remove('overflow-hidden');
+        if (registrationSubmitBusy || registrationCandidateBusy) return;
+        registrationPresentation.close('successModal', { restore: false });
+        form.reset();
+        formData = null;
+        selectedMemberships = [];
+        document.querySelectorAll('input[name="membershipChoice"]').forEach(input => { input.checked = false; });
+        levelSelect.dispatchEvent(new Event('change'));
+        lgaSelect.disabled = true;
+        wardSelect.disabled = true;
+        selectedMembershipLabels.textContent = '';
+        selectedOrganizationBranding.innerHTML = '';
+        selectedMembershipSummary.classList.add('hidden');
+        form.classList.add('hidden');
+        membershipChoicePage.classList.remove('hidden');
+        membershipChoiceError.classList.add('hidden');
+        showMembershipWelcome();
+        messageDiv.innerHTML = '';
+        duplicateMembership = null;
+        selectedDuplicateMember = null;
+        invalidateRegistrationLookup();
+        updateMembershipChoices();
+        setRegistrationStage(1);
+        registrationPresentation.focus(document.querySelector('input[name="membershipChoice"]'), false);
+        membershipChoicePage.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
     }
 
     window.copyRegistrationNumber = async function(regNumber) {
@@ -1560,10 +2450,16 @@
     duplicateEls.phoneVerifyInput?.addEventListener('keydown', event => {
         if (event.key === 'Enter') verifyDuplicateMemberLogin();
     });
+    ['phone', 'firstName', 'lastName'].forEach(id => {
+        document.getElementById(id)?.addEventListener('input', invalidateRegistrationLookup);
+    });
+    phoneCountrySelect.addEventListener('change', invalidateRegistrationLookup);
+    duplicateEls.phoneCountryCode.value = phoneCountrySelect.value;
+    phoneCountrySelect.addEventListener('change', () => { duplicateEls.phoneCountryCode.value = phoneCountrySelect.value; });
     document.getElementById('phone')?.addEventListener('blur', async () => {
-        const phone = document.getElementById('phone').value.trim();
-        if (phone && phone.replace(/\D/g, '').length >= 10) {
-            await ensurePhoneIsNotAlreadyRegistered();
+        const phone = getRegistrationPhoneE164();
+        if (phone) {
+            await ensurePhoneIsNotAlreadyRegistered({ promptDuplicate: true });
         }
     });
 
@@ -1593,14 +2489,21 @@
     document.addEventListener('DOMContentLoaded', applyRegistrationQueryPrefill);
     applyRegistrationQueryPrefill();
 
+    registrationPresentation = window.APSGRegistrationPresentation.create({
+        window, form,
+        isBusy: () => registrationSubmitBusy || registrationCandidateBusy,
+        onDismiss: {
+            previewModal: (detail = {}) => closePreview({ edit: false, ...detail }),
+            duplicateMemberModal: () => closeDuplicateMemberModal()
+        }
+    });
+    messageDiv.setAttribute('role', 'status');
+    messageDiv.setAttribute('aria-live', 'polite');
     window.closePreview = closePreview;
     window.submitForm = submitForm;
 </script>
 
 
-    <!-- Navbar & Footer Component JS -->
-    <script type="module" src="/components/navbar.js"></script>
-    <script type="module" src="/components/footer.js"></script>
   <script src="/assets/js/deployment-polish.js" defer></script>
 </body>
 </html>
