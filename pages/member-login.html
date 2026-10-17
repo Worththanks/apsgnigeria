@@ -793,7 +793,7 @@
         renderRecoveryCandidate();
         showRecoveryStep('confirm');
       } catch (error) {
-        showRecoveryError(els.recoveryLookupError, 'Unable to check Supabase right now. Please try again.');
+        showRecoveryError(els.recoveryLookupError, "We couldn't look up your APSG ID right now. Please try again shortly.");
       } finally {
         setButtonLoading(
           els.findApsgIdBtn,

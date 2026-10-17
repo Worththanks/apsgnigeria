@@ -37,3 +37,404 @@ iframe{max-width:100%;border:0}
 
 /* Accessible hidden text utility for static and non-Tailwind pages */
 .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;}
+
+/* Premium access-page presentation, scoped through each page's existing form ID. */
+body:has(#memberForm) .login-hero {
+  min-height: 100svh;
+  padding-block: clamp(2rem, 6vh, 4.5rem);
+  background:
+    radial-gradient(circle at 15% 18%, rgba(214,169,43,.24), transparent 28rem),
+    radial-gradient(circle at 84% 78%, rgba(15,138,75,.24), transparent 32rem),
+    linear-gradient(115deg, rgba(5,53,31,.94), rgba(3,29,16,.9) 54%, rgba(15,118,110,.8)),
+    url("/assets/images/hero/hero1.jpg") center/cover no-repeat;
+}
+body:has(#memberForm) .login-hero::before {
+  opacity: .1;
+  background-image: linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+body:has(#memberForm) .login-hero::after { display: none; }
+body:has(#memberForm) .login-hero > section {
+  width: min(100%, 82rem);
+  min-width: 0;
+  min-height: calc(100svh - 5rem);
+  column-gap: clamp(2rem, 5vw, 5rem);
+  row-gap: 2rem;
+}
+body:has(#memberForm) .login-hero > section > div:first-child { min-width: 0; }
+body:has(#memberForm) #heroTitle {
+  max-width: 12ch;
+  margin-inline: auto;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(2.75rem, 5.1vw, 5.25rem);
+  line-height: .99;
+  letter-spacing: -.045em;
+  text-wrap: balance;
+}
+body:has(#memberForm) #heroSubtitle {
+  max-width: 38rem;
+  color: rgba(255,255,255,.82);
+  font-size: clamp(1rem, 1.2vw, 1.12rem);
+}
+body:has(#memberForm) .access-card {
+  min-width: 0;
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 1.2rem;
+  background: rgba(255,255,255,.075);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+body:has(#memberForm) .access-card p:last-child { color: rgba(255,255,255,.88); }
+body:has(#memberForm) .premium-panel {
+  width: 100%;
+  max-width: 46rem;
+  min-width: 0;
+  margin-inline: auto;
+  border: 1px solid rgba(214,169,43,.3);
+  border-radius: 1.8rem;
+  background: linear-gradient(155deg, rgba(255,255,255,.98), rgba(250,252,248,.96));
+  box-shadow: 0 34px 90px rgba(0,0,0,.28), 0 2px 0 rgba(255,255,255,.7) inset;
+}
+body:has(#memberForm) .premium-panel h2 {
+  color: var(--apsg-deep);
+  font-family: "Playfair Display", Georgia, serif;
+  letter-spacing: -.025em;
+}
+body:has(#memberForm) .premium-panel .text-gray-600,
+body:has(#memberForm) .premium-panel .text-gray-700 { color: #53645a; }
+body:has(#memberForm) .portal-tab {
+  min-height: 3rem;
+  border-radius: 999px;
+  color: #53645a;
+  transition: background-color .18s ease, color .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+body:has(#memberForm) .portal-tab.active {
+  border-color: rgba(214,169,43,.62);
+  background: linear-gradient(135deg, #f8e7aa, #e7c65d);
+  color: #173b29;
+  box-shadow: 0 8px 22px rgba(136,101,13,.16);
+}
+body:has(#memberForm) .form-input {
+  min-width: 0;
+  min-height: 3.35rem;
+  padding-left: 2.75rem;
+  border-radius: .95rem;
+  border-color: rgba(5,53,31,.17);
+  background: #fff;
+  color: #15271d;
+  box-shadow: 0 3px 12px rgba(5,53,31,.035);
+  transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+body:has(#memberForm) .form-input::placeholder { color: #839087; }
+body:has(#memberForm) .form-input:focus {
+  border-color: #b98e1d;
+  box-shadow: 0 0 0 4px rgba(214,169,43,.18);
+  outline: 0;
+  transform: none;
+}
+body:has(#memberForm) .portal-btn {
+  min-height: 3.2rem;
+  border-radius: .95rem;
+  box-shadow: 0 12px 24px rgba(5,53,31,.15);
+  transition: transform .18s ease, filter .18s ease, box-shadow .18s ease;
+}
+body:has(#memberForm) .portal-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+  box-shadow: 0 16px 28px rgba(5,53,31,.19);
+}
+body:has(#memberForm) .portal-btn:disabled { box-shadow: none; }
+body:has(#memberForm) .notice-card {
+  border-color: rgba(5,53,31,.1);
+  background: linear-gradient(135deg, #f8faf6, #fffdf7);
+}
+body:has(#memberForm) #helperNotice { color: #526158; }
+body:has(#memberForm) #loginError {
+  border-color: rgba(185,28,28,.2);
+  background: #fff5f4;
+  color: #9b2525;
+}
+body:has(#memberForm) #togglePasswordBtn,
+body:has(#singleLoginForm) #toggleSecretBtn {
+  display: inline-flex;
+  width: auto;
+  min-width: 6rem;
+  height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  padding-inline: .55rem;
+  border: 1px solid rgba(5,53,31,.13);
+  border-radius: 999px;
+  background: rgba(255,255,255,.94);
+  color: #315b42;
+  font-size: .62rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+body:has(#memberForm) #togglePasswordBtn::after,
+body:has(#singleLoginForm) #toggleSecretBtn::after {
+  content: "Show / hide";
+}
+body:has(#memberForm) #passwordInput { padding-right: 7rem; }
+body:has(#memberForm) .hidden { display: none !important; }
+body:has(#memberForm) :is(button, a, input, select, textarea):focus-visible {
+  outline: 3px solid rgba(214,169,43,.82);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(214,169,43,.18);
+}
+
+@media (max-width: 1023px) {
+  body:has(#memberForm) .login-hero > section {
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr) !important;
+    max-width: 54rem;
+  }
+  body:has(#memberForm) #heroTitle { max-width: 16ch; }
+}
+@media (max-width: 639px) {
+  body:has(#memberForm) .login-hero { padding-block: 5.25rem 1.5rem; }
+  body:has(#memberForm) .login-hero > section { row-gap: 1rem; }
+  body:has(#memberForm) #heroTitle {
+    max-width: 16ch;
+    font-size: clamp(2.1rem, 10.5vw, 3rem);
+    line-height: 1;
+  }
+  body:has(#memberForm) #heroSubtitle { margin-top: .85rem; font-size: .94rem; line-height: 1.5; }
+  body:has(#memberForm) .login-hero > section > div:first-child > .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .5rem;
+    margin-top: 1rem;
+  }
+  body:has(#memberForm) .access-card { padding: .65rem .4rem; border-radius: .9rem; text-align: center; }
+  body:has(#memberForm) .access-card p.mt-2 { margin-top: .3rem; font-size: .56rem; letter-spacing: .09em; }
+  body:has(#memberForm) .access-card p:last-child { font-size: .76rem; line-height: 1.25; }
+  body:has(#memberForm) .premium-panel { padding: 1rem !important; border-radius: 1.25rem; }
+  body:has(#memberForm) .premium-panel > .mt-6 { margin-top: 1rem !important; }
+  body:has(#memberForm) .premium-panel .mt-5 { margin-top: 1rem !important; }
+  body:has(#memberForm) .premium-panel .portal-btn { min-height: 3rem; }
+  body:has(#memberForm) .premium-panel .mt-5 a { min-height: 44px; display: inline-flex; align-items: center; padding-inline: .3rem; }
+}
+@media (max-width: 360px) {
+  body:has(#memberForm) .portal-tab { padding-inline: .45rem; font-size: .68rem; }
+  body:has(#memberForm) #togglePasswordBtn { min-width: 5.6rem; padding-inline: .35rem; font-size: .58rem; }
+  body:has(#memberForm) .login-hero > section > div:first-child > .grid { gap: .35rem; }
+  body:has(#memberForm) .access-card { padding-inline: .25rem; }
+}
+
+body:has(#singleLoginForm) .login-hero {
+  min-height: 100svh;
+  padding-block: clamp(2rem, 6vh, 4.5rem);
+  background:
+    radial-gradient(circle at 12% 10%, rgba(214,169,43,.2), transparent 28rem),
+    radial-gradient(circle at 88% 86%, rgba(15,138,75,.16), transparent 30rem),
+    linear-gradient(115deg, rgba(5,53,31,.9), rgba(3,29,16,.84) 54%, rgba(15,118,110,.76)),
+    url("/assets/images/hero/hero1.jpg") center/cover no-repeat;
+}
+body:has(#singleLoginForm) .login-hero::before {
+  opacity: .38;
+  background-image: linear-gradient(rgba(5,53,31,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(5,53,31,.035) 1px, transparent 1px);
+  background-size: 52px 52px;
+}
+body:has(#singleLoginForm) .luxury-orb {
+  width: 20rem;
+  height: 20rem;
+  background: radial-gradient(circle, rgba(214,169,43,.24), rgba(15,138,75,.07) 58%, transparent 72%);
+  filter: blur(38px);
+}
+body:has(#singleLoginForm) .premium-panel {
+  width: 100%;
+  max-width: 47rem;
+  min-width: 0;
+  border: 1px solid rgba(5,53,31,.1);
+  border-radius: 1.85rem;
+  background: rgba(255,255,255,.96);
+  box-shadow: 0 28px 78px rgba(5,53,31,.14), 0 2px 0 #fff inset;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+body:has(#singleLoginForm) .premium-panel > div:first-child > div:first-child {
+  border-radius: 1.45rem;
+  box-shadow: 0 14px 30px rgba(5,53,31,.1);
+}
+body:has(#singleLoginForm) .premium-panel h1 {
+  color: var(--apsg-deep);
+  font-family: "Playfair Display", Georgia, serif;
+  letter-spacing: -.035em;
+}
+body:has(#singleLoginForm) .premium-panel .text-gray-600,
+body:has(#singleLoginForm) .premium-panel .text-gray-700 { color: #53645a; }
+body:has(#singleLoginForm) #singleLoginForm { min-width: 0; }
+body:has(#singleLoginForm) .form-input {
+  min-width: 0;
+  min-height: 3.35rem;
+  padding-left: 2.75rem;
+  border-color: rgba(5,53,31,.15);
+  background: #fff;
+  color: #15271d;
+  box-shadow: 0 4px 14px rgba(5,53,31,.04);
+  transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+body:has(#singleLoginForm) .form-input::placeholder { color: #839087; }
+body:has(#singleLoginForm) .form-input:focus {
+  border-color: #b98e1d;
+  box-shadow: 0 0 0 4px rgba(214,169,43,.17);
+  outline: 0;
+  transform: none;
+}
+body:has(#singleLoginForm) .portal-btn {
+  min-height: 3.15rem;
+  border-radius: .95rem;
+  box-shadow: 0 12px 24px rgba(5,53,31,.14);
+  transition: transform .18s ease, filter .18s ease, box-shadow .18s ease;
+}
+body:has(#singleLoginForm) .portal-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+  box-shadow: 0 15px 26px rgba(5,53,31,.18);
+}
+body:has(#singleLoginForm) .portal-btn:disabled { box-shadow: none; }
+body:has(#singleLoginForm) .forgot-link,
+body:has(#singleLoginForm) .secondary-btn { transition: color .18s ease, background-color .18s ease, border-color .18s ease, transform .18s ease; }
+body:has(#singleLoginForm) .forgot-link,
+body:has(#singleLoginForm) .secondary-btn { min-height: 44px; }
+body:has(#singleLoginForm) .forgot-link:focus-visible,
+body:has(#singleLoginForm) .secondary-btn:focus-visible { outline: 3px solid rgba(214,169,43,.82); outline-offset: 3px; }
+body:has(#singleLoginForm) .recovery-panel {
+  border-color: rgba(5,53,31,.12);
+  border-radius: 1.45rem;
+  background: linear-gradient(145deg, #f8faf6, #fffdf8);
+  box-shadow: 0 16px 44px rgba(5,53,31,.08);
+}
+body:has(#singleLoginForm) .recovery-head {
+  background: linear-gradient(120deg, #06351f, #0b6840 68%, #0d7669);
+}
+body:has(#singleLoginForm) .recovery-step { min-width: 0; }
+body:has(#singleLoginForm) .recovery-grid { min-width: 0; gap: .8rem; }
+body:has(#singleLoginForm) .identity-card {
+  min-width: 0;
+  border-color: rgba(5,53,31,.1);
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(5,53,31,.035);
+  overflow-wrap: anywhere;
+}
+body:has(#singleLoginForm) .identity-card strong { min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+body:has(#singleLoginForm) .apsg-id-pill {
+  width: fit-content;
+  max-width: 100%;
+  align-items: flex-start;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+body:has(#singleLoginForm) #identityInput,
+body:has(#singleLoginForm) #recoveryPhoneInput,
+body:has(#singleLoginForm) #recoveryLocalInput,
+body:has(#singleLoginForm) #recoveredPhoneVerifyInput { max-width: 100%; }
+body:has(#singleLoginForm) #secretInput { padding-right: 7rem; }
+body:has(#singleLoginForm) .notice-card {
+  border-color: rgba(5,53,31,.1);
+  background: linear-gradient(135deg, #f8faf6, #fffdf7);
+}
+body:has(#singleLoginForm) .recovery-error {
+  border-color: rgba(185,28,28,.18);
+  background: #fff5f4;
+  color: #922727;
+  overflow-wrap: anywhere;
+}
+body:has(#singleLoginForm) .recovery-success {
+  border-color: rgba(15,122,61,.18);
+  background: #eff8f1;
+  color: #165536;
+}
+body:has(#singleLoginForm) .hidden { display: none !important; }
+body:has(#singleLoginForm) :is(button, a, input, select, textarea):focus-visible {
+  outline: 3px solid rgba(214,169,43,.82);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(214,169,43,.16);
+}
+
+html.carbon body:has(#memberForm) .login-hero {
+  background:
+    radial-gradient(circle at 15% 18%, rgba(214,169,43,.12), transparent 28rem),
+    radial-gradient(circle at 84% 78%, rgba(15,138,75,.16), transparent 32rem),
+    linear-gradient(115deg, rgba(4,24,15,.94), rgba(4,24,15,.88) 54%, rgba(6,56,47,.78)),
+    url("/assets/images/hero/hero1.jpg") center/cover no-repeat;
+}
+html.carbon body:has(#memberForm) .premium-panel {
+  border-color: rgba(214,169,43,.22);
+  background: linear-gradient(155deg, rgba(11,30,20,.98), rgba(7,23,15,.97));
+  box-shadow: 0 34px 90px rgba(0,0,0,.4);
+}
+html.carbon body:has(#memberForm) .premium-panel h2,
+html.carbon body:has(#memberForm) .premium-panel .text-gray-600,
+html.carbon body:has(#memberForm) .premium-panel .text-gray-700 { color: #eff8f1; }
+html.carbon body:has(#memberForm) .portal-tab { color: #d0ded4; background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.11); }
+html.carbon body:has(#memberForm) .portal-tab.active { color: #173b29; background: linear-gradient(135deg, #f8e7aa, #e7c65d); }
+html.carbon body:has(#memberForm) .form-input { border-color: rgba(255,255,255,.16); background: rgba(255,255,255,.075); color: #fff; }
+html.carbon body:has(#memberForm) .form-input::placeholder { color: rgba(255,255,255,.5); }
+html.carbon body:has(#memberForm) .notice-card { border-color: rgba(255,255,255,.11); background: rgba(255,255,255,.06); color: #dce9df; }
+html.carbon body:has(#memberForm) #helperNotice,
+html.carbon body:has(#memberForm) #helperNotice .text-apsgDeep { color: #e7f0e9; }
+html.carbon body:has(#memberForm) #loginError { border-color: rgba(252,165,165,.24); background: rgba(127,29,29,.24); color: #fecaca; }
+html.carbon body:has(#memberForm) #togglePasswordBtn,
+html.carbon body:has(#singleLoginForm) #toggleSecretBtn { border-color: rgba(255,255,255,.16); background: #173425; color: #f2f7f3; }
+
+html.carbon body:has(#singleLoginForm) .login-hero {
+  background:
+    radial-gradient(circle at 12% 10%, rgba(214,169,43,.1), transparent 28rem),
+    radial-gradient(circle at 88% 86%, rgba(15,138,75,.14), transparent 30rem),
+    linear-gradient(115deg, rgba(4,24,15,.93), rgba(4,24,15,.86) 54%, rgba(6,56,47,.78)),
+    url("/assets/images/hero/hero1.jpg") center/cover no-repeat;
+}
+html.carbon body:has(#singleLoginForm) .login-hero::before {
+  background-image: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+}
+html.carbon body:has(#singleLoginForm) .premium-panel {
+  border-color: rgba(214,169,43,.22);
+  background: linear-gradient(155deg, rgba(11,30,20,.98), rgba(7,23,15,.97));
+  color: #eef7f0;
+  box-shadow: 0 32px 88px rgba(0,0,0,.4);
+}
+html.carbon body:has(#singleLoginForm) .premium-panel h1,
+html.carbon body:has(#singleLoginForm) .premium-panel .text-gray-600,
+html.carbon body:has(#singleLoginForm) .premium-panel .text-gray-700 { color: #eaf4ed; }
+html.carbon body:has(#singleLoginForm) .form-input { border-color: rgba(255,255,255,.16); background: rgba(255,255,255,.075); color: #fff; }
+html.carbon body:has(#singleLoginForm) .form-input::placeholder { color: rgba(255,255,255,.48); }
+html.carbon body:has(#singleLoginForm) .recovery-panel { border-color: rgba(255,255,255,.1); background: #10291c; }
+html.carbon body:has(#singleLoginForm) .identity-card { border-color: rgba(255,255,255,.1); background: rgba(255,255,255,.055); }
+html.carbon body:has(#singleLoginForm) .identity-card p { color: #b8c9bd; }
+html.carbon body:has(#singleLoginForm) .identity-card strong,
+html.carbon body:has(#singleLoginForm) .premium-panel h4 { color: #eff8f1; }
+html.carbon body:has(#singleLoginForm) .apsg-id-pill { border-color: rgba(214,169,43,.5); background: #173425; color: #fff4cc; }
+html.carbon body:has(#singleLoginForm) .notice-card { border-color: rgba(255,255,255,.1); background: rgba(255,255,255,.055); color: #dce9df; }
+html.carbon body:has(#singleLoginForm) .notice-card .text-apsgDeep { color: #f1f7f2; }
+html.carbon body:has(#singleLoginForm) .recovery-error { border-color: rgba(252,165,165,.2); background: rgba(127,29,29,.24); color: #fecaca; }
+html.carbon body:has(#singleLoginForm) .recovery-success { border-color: rgba(134,239,172,.18); background: rgba(20,83,45,.3); color: #bbf7d0; }
+html.carbon body:has(#singleLoginForm) .secondary-btn { border-color: rgba(255,255,255,.15); background: rgba(255,255,255,.07); color: #eef7f0; }
+
+@media (max-width: 767px) {
+  body:has(#singleLoginForm) .recovery-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 480px) {
+  body:has(#singleLoginForm) .login-hero { padding-block: 1.25rem; }
+  body:has(#singleLoginForm) .premium-panel { padding: 1rem !important; border-radius: 1.3rem; }
+  body:has(#singleLoginForm) .premium-panel > div:first-child > div:first-child { width: 4rem; height: 4rem; border-radius: 1.15rem; }
+  body:has(#singleLoginForm) .premium-panel > div:first-child > div:first-child img { width: 3rem; height: 3rem; }
+  body:has(#singleLoginForm) #singleLoginForm { margin-top: 1rem !important; }
+  body:has(#singleLoginForm) #singleLoginForm > :not([hidden]) ~ :not([hidden]) { margin-top: .8rem !important; }
+  body:has(#singleLoginForm) .recovery-panel { margin-top: 1rem; }
+  body:has(#singleLoginForm) .recovery-head { padding: 1rem; }
+  body:has(#singleLoginForm) .recovery-step { padding: .9rem; }
+  body:has(#singleLoginForm) .forgot-link { gap: .3rem; font-size: .72rem; }
+  body:has(#singleLoginForm) .premium-panel > .mt-5 { margin-top: .8rem !important; }
+  body:has(#singleLoginForm) #toggleSecretBtn { min-width: 5.6rem; padding-inline: .35rem; font-size: .58rem; }
+}
+@media (max-width: 360px) {
+  body:has(#singleLoginForm) .premium-panel { padding: .85rem !important; }
+  body:has(#singleLoginForm) .premium-panel h1 { font-size: 1.65rem; }
+  body:has(#singleLoginForm) #singleLoginForm > .flex.items-center.justify-between { align-items: flex-start; }
+  body:has(#singleLoginForm) #singleLoginForm > .flex.items-center.justify-between > span { max-width: 10rem; }
+}
