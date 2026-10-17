@@ -1,0 +1,154 @@
+/* @spec REG-UI-006, REG-UI-007, REG-UI-009, REG-UI-010, REG-UI-011, REG-UI-017, REG-UI-019, REG-UI-030, REG-UI-033, REG-UI-036, REG-UI-037, REG-UI-038 */
+:root { --registration-action-space:0px; --registration-viewport-height:100dvh; }
+html { scroll-behavior:auto!important; scroll-padding-block:1.5rem calc(var(--registration-action-space) + 1.5rem); }
+body { zoom:1!important; }
+.registration-shell { padding:1.5rem 24px calc(2rem + var(--registration-action-space))!important; overflow:clip; }
+.registration-container { width:100%!important; max-width:960px!important; padding:0!important; }
+.registration-content-body { padding:1.5rem!important; }
+.registration-topbar { max-width:1008px; margin-inline:auto; }
+#membershipChoiceTitle { scroll-margin-top:1.5rem; }
+#regForm input,#regForm select,#regForm textarea { scroll-margin-block:4rem calc(var(--registration-action-space) + 2rem); }
+.registration-action-bar { position:fixed; inset:auto 0 0; z-index:35; display:flex; justify-content:center; padding:12px max(16px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left)); border-top:1px solid #dbe6df; background:rgba(255,255,255,.96); box-shadow:0 -8px 28px rgba(5,53,31,.07); backdrop-filter:blur(18px); }
+.registration-action-bar[hidden] { display:none!important; }
+.registration-action-bar>button { width:100%; max-width:680px; min-height:48px; margin:0!important; border-radius:14px; }
+#directSubmitBtn { background:#fff; color:#075c35; border:1px solid #b8d0c1; box-shadow:none; }
+#directSubmitBtn:hover { background:#eef7f1; }
+#consent { flex-shrink:0; width:20px; min-width:20px; height:20px; }
+label[for="consent"] { min-height:44px; cursor:pointer; }
+#continueRegistrationBtn:disabled, #regForm button:disabled { opacity:.6; cursor:wait; transform:none; }
+.registration-error-summary { border:1px solid #e6b6ad!important; border-left:4px solid #ad321e!important; border-radius:14px!important; background:#fff6f3!important; color:#842716; padding:1rem!important; margin-bottom:1.5rem; font-size:.875rem; line-height:1.55; }
+.registration-error-summary[hidden] { display:none!important; }
+.registration-error-summary ul { margin:.5rem 0 0; padding-left:1.25rem; list-style:disc; }
+.registration-error-summary a, #registrationReviewError a { color:inherit; text-decoration:underline; text-underline-offset:3px; font-weight:700; }
+.registration-field-error { color:#a52c1c; font-size:.8rem; line-height:1.5; margin-top:.4rem; overflow-wrap:anywhere; }
+#regForm [aria-invalid="true"] { border-color:#b43522!important; box-shadow:0 0 0 1px rgba(180,53,34,.08); }
+#formMessage:not(:empty), #registrationReviewError { padding:1rem; border:1px solid #e4c28b; border-radius:14px; background:#fffaef; color:#735013; font-size:.875rem; line-height:1.5; overflow-wrap:anywhere; }
+#registrationReviewError[hidden] { display:none; }
+.registration-dialog { position:fixed!important; inset:0!important; margin:auto!important; padding:0!important; border:1px solid rgba(214,169,43,.25)!important; border-radius:24px; width:min(760px,calc(100vw - 24px)); max-width:calc(100vw - 24px); max-height:calc(var(--registration-viewport-height) - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); color:#183b2a; background:#fff; overflow:hidden!important; box-shadow:0 32px 100px rgba(0,20,10,.3); }
+.registration-dialog:not([open]), .registration-dialog.hidden { display:none!important; }
+.registration-dialog[open] { display:flex; flex-direction:column; }
+.registration-modal-scroll { overflow:hidden; }
+.registration-dialog-section { display:flex; flex-direction:column; width:100%; min-height:0; max-height:inherit; }
+.registration-dialog-section[hidden],.registration-dialog-section.hidden { display:none!important; }
+.registration-dialog-section>div { display:flex; flex-direction:column; width:100%; min-height:0; max-height:inherit!important; margin:0!important; border:0; border-radius:inherit; overflow:hidden; }
+.registration-dialog-section>div>div:first-child { flex-shrink:0; }
+.registration-dialog-section>div>div:first-child { background:#05351f!important; }
+.apsg-registration { background:#f7f8f4!important; color:#14251c; font:400 16px/1.6 Inter,system-ui,sans-serif; }
+.apsg-registration :is(input,select,textarea) { font-size:16px!important; }
+.apsg-registration :is(button,a) { touch-action:manipulation; }
+.apsg-registration .registration-content-body button,.registration-dialog button { min-height:48px; border-radius:12px; }
+.apsg-registration .membership-option { border-radius:16px!important; box-shadow:none!important; }
+.apsg-registration .premium-panel { box-shadow:0 12px 40px #05351f0a!important; }
+.apsg-registration .registration-shortcuts { gap:16px; }
+.apsg-registration .registration-shortcuts>span { display:none; }
+.apsg-registration .registration-shortcuts a { min-height:48px; display:inline-flex; align-items:center; }
+.apsg-registration .registration-home-button { min-height:48px; justify-content:center; padding-inline:18px; border:1px solid rgba(231,199,104,.72); border-radius:999px; background:rgba(255,255,255,.08); color:#fff; font-weight:800; text-decoration:none; transition:background-color .18s ease,border-color .18s ease,transform .18s ease; }
+.apsg-registration .registration-home-button:hover { border-color:#f0d680; background:rgba(255,255,255,.16); color:#fff; transform:translateY(-1px); }
+.apsg-registration .registration-home-button:focus-visible { outline:3px solid #f0d680; outline-offset:3px; }
+.registration-dialog::backdrop { background:rgba(2,24,13,.76); backdrop-filter:blur(7px); }
+.registration-dialog[role="dialog"] { z-index:100; }
+.registration-fallback-backdrop { position:fixed; inset:0; z-index:90; background:rgba(2,24,13,.76); backdrop-filter:blur(7px); }
+.registration-fallback-backdrop[hidden] { display:none; }
+.registration-dialog>div { display:flex; flex-direction:column; width:100%; min-height:0; max-height:inherit!important; margin:0!important; border:0; border-radius:inherit; overflow:hidden; }
+.registration-dialog>div>div:first-child { flex-shrink:0; }
+.registration-dialog .registration-dialog-body, #successContent, .registration-dialog .duplicate-flow-body { flex:1 1 auto; min-height:0; max-height:none!important; overflow-y:auto; overscroll-behavior:contain; }
+.registration-dialog .registration-dialog-actions { flex-shrink:0; display:flex; gap:.75rem; padding:1rem; border-top:1px solid #e4eae6; background:#f7faf8; }
+.registration-dialog-actions>button { flex:1; min-height:44px; }
+.registration-dialog [data-dialog-heading]:focus { outline:none!important; box-shadow:none!important; }
+#registrationReviewError { margin-bottom:1rem; }
+.registration-dialog button { min-height:44px; }
+@media(max-width:767px) {
+  .apsg-registration .registration-shortcuts { gap:8px; }
+  .apsg-registration .registration-home-button { padding-inline:12px; }
+  .registration-shell { padding:1rem 16px calc(1.5rem + var(--registration-action-space))!important; }
+  .registration-content-body { padding:1rem!important; }
+  .registration-topbar { padding-inline:16px; }
+  #regForm .grid { grid-template-columns:minmax(0,1fr)!important; }
+  .registration-dialog { border-radius:20px; }
+  .registration-dialog .registration-dialog-actions { padding:.75rem; gap:.5rem; }
+  .registration-dialog-actions>button { font-size:.85rem; padding:.75rem .5rem; }
+}
+@media(max-height:600px) {
+  .registration-dialog-section>div>div:first-child { padding:.75rem 1rem!important; }
+  .registration-dialog .success-logo-shell { width:48px; height:48px; }
+  .registration-dialog .success-logo-shell img { width:44px; height:44px; }
+  .registration-dialog-section>div>div:first-child h3 { font-size:1.25rem!important; }
+  .registration-dialog-section>div>div:first-child p { margin-top:.2rem; font-size:.7rem; }
+  .registration-dialog .registration-dialog-actions { padding:.5rem .75rem; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .apsg-registration *,.apsg-registration *::before,.apsg-registration *::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
+  html { scroll-behavior:auto!important; }
+  .registration-dialog,.registration-dialog *, .registration-action-bar, .registration-action-bar * { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
+}
+@media print {
+  #registrationDialog:has(#successModal:not([hidden])) { position:static!important; max-height:none!important; width:100%; box-shadow:none; }
+  #successModal:not([hidden]),#successModal>div { max-height:none!important; display:block; overflow:visible; }
+  .registration-action-bar,.registration-dialog-actions { display:none!important; }
+  #successModal[open] { position:static!important; max-height:none!important; width:100%; box-shadow:none; }
+  #successContent { max-height:none!important; overflow:visible; }
+}
+
+/* @spec REG-UI-036, REG-UI-037, REG-UI-038, REG-UI-039 */
+.registration-welcome-header { padding-inline:clamp(1rem,5vw,3rem)!important; }
+.registration-eyebrow { letter-spacing:.2em!important; }
+.registration-welcome-header h1 { max-width:14ch; margin-inline:auto; text-wrap:balance; }
+.registration-welcome-copy { max-width:38rem; line-height:1.65; text-wrap:pretty; }
+.membership-chooser { width:100%; max-width:760px; margin-inline:auto; border:0!important; background:transparent!important; }
+.membership-choice-intro { margin:0 auto 1.15rem; max-width:48rem; text-align:center; }
+.membership-choice-intro h2 { color:#123c29; font-size:clamp(1.1rem,2vw,1.35rem); font-weight:850; letter-spacing:-.02em; line-height:1.3; }
+.membership-choice-intro p { margin:.3rem 0 0; color:#5b6c61; font-size:.88rem; line-height:1.55; }
+.membership-choice-grid { grid-template-columns:minmax(0,1fr)!important; gap:1rem!important; }
+.membership-choice-grid .organization-card { min-width:0; margin:0; border-radius:1.25rem; padding:1rem!important; }
+.membership-choice-grid .organization-card legend { max-width:100%; }
+.membership-choice-grid .membership-choice-options { grid-template-columns:minmax(0,1fr); gap:.65rem; }
+.membership-choice-grid .membership-option { min-width:0; }
+.membership-choice-grid .membership-option span { min-height:5.75rem; gap:.45rem; border-radius:1rem; padding:.85rem; }
+.membership-choice-grid .membership-option strong { font-size:.92rem; line-height:1.25; }
+.membership-choice-grid .membership-option small { max-width:32ch; font-size:.78rem; line-height:1.45; }
+.membership-returning-note { display:flex; align-items:flex-start; gap:.7rem; margin:1rem 0 0; border:1px solid #e8ddb7; border-radius:1rem; background:linear-gradient(120deg,#fffcf2,#fff); padding:.85rem 1rem; color:#534719; font-size:.8rem; line-height:1.55; }
+.membership-returning-note>i { flex:0 0 auto; margin-top:.2rem; color:#8a6b12; }
+.membership-returning-note p { min-width:0; margin:0; }
+.membership-returning-note strong { color:#3d3516; }
+.membership-choice-hint { margin:.55rem 0 0; color:#59695f; font-size:.78rem; font-weight:650; line-height:1.4; text-align:center; }
+.membership-option input:focus-visible+span { outline:3px solid #805e00!important; outline-offset:3px!important; }
+#continueRegistrationBtn:disabled { cursor:not-allowed; }
+@media(min-width:40rem) {
+  .membership-choice-grid .membership-choice-options { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(min-width:64rem) {
+  .membership-choice-grid { grid-template-columns:repeat(2,minmax(0,1fr))!important; }
+}
+@media(max-width:39.999rem) {
+  .registration-welcome-header h1 { max-width:12ch; }
+  .registration-eyebrow { font-size:.59rem!important; letter-spacing:.14em!important; }
+  .membership-choice-intro { margin-bottom:.9rem; text-align:left; }
+  .membership-choice-grid .organization-card { padding:.85rem .7rem!important; }
+  .membership-choice-grid .organization-card legend { padding-inline:.2rem; }
+  .membership-choice-grid .organization-card legend img { width:2.2rem; height:2.2rem; }
+  .membership-choice-grid .organization-card legend strong { font-size:.8rem; }
+  .membership-choice-grid .organization-card legend span span span { font-size:.67rem; }
+  .membership-choice-grid .membership-option span { min-height:5.4rem; }
+  .membership-returning-note { font-size:.76rem; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .membership-choice-grid .membership-option span { transition:none; }
+}
+
+/* @spec REG-FORM-017, REG-FORM-018, REG-UI-040 */
+#regForm .primary-phone-row {
+  display:grid!important;
+  grid-template-columns:minmax(13rem,.9fr) minmax(0,1.5fr)!important;
+  align-items:stretch;
+  gap:.5rem;
+}
+#regForm .nigerian-phone-row {
+  display:grid!important;
+  grid-template-columns:max-content minmax(0,1fr)!important;
+  align-items:stretch;
+  gap:.5rem;
+}
+#diasporaContactGroup .nigerian-phone-row>span { white-space:nowrap; }
+@media(max-width:39.999rem) {
+  #regForm .primary-phone-row { grid-template-columns:minmax(0,1fr)!important; }
+}
