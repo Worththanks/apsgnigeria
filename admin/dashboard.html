@@ -21,7 +21,7 @@
 
   
       
-        <link rel="stylesheet" href="/assets/css/dashboard.css">
+        <link rel="stylesheet" href="/assets/css/dashboard.css?v=20261016-command-center-2">
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -186,20 +186,7 @@
                 background: #fff !important;
             }
         }
-
-
         /* Premium APSG command center enhancement layer */
-        .sidebar-heading { padding: .5rem .55rem .3rem; color: rgba(255,255,255,.42); font-size: .55rem; font-weight: 950; text-transform: uppercase; letter-spacing: .27em; }
-        .sidebar-heading.gold { color: rgba(214,169,43,.86); }
-        .sidebar-link { display:flex; align-items:center; gap:.62rem; min-height:2.35rem; padding:.58rem .72rem; border-radius:1rem; color:rgba(255,255,255,.82); font-size:.74rem; font-weight:900; line-height:1; text-decoration:none; transition:background .18s ease,color .18s ease,transform .18s ease; }
-        .sidebar-link:hover,.sidebar-link.active,.sidebar-link:focus-visible { background:rgba(214,169,43,.14); color:#ffe7a3; transform:translateX(2px); outline:0; }
-        .danger-link { color:#fecaca!important; background:rgba(239,68,68,.08); border:0; }
-        .danger-link:hover { background:rgba(239,68,68,.16)!important; color:#fff!important; }
-        .role-chip { margin-left:auto; border-radius:999px; border:1px solid rgba(214,169,43,.28); background:rgba(214,169,43,.10); color:#f8dc7a; padding:.14rem .4rem; font-size:.5rem; font-weight:950; text-transform:uppercase; letter-spacing:.1em; }
-        .role-chip.editor { border-color:rgba(187,247,208,.22); background:rgba(16,185,129,.10); color:#bbf7d0; }
-        .role-level { display:grid; place-items:center; min-height:1.45rem; border-radius:999px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.05); color:rgba(255,255,255,.55); font-size:.54rem; font-weight:950; text-transform:uppercase; letter-spacing:.08em; }
-        .role-level.active { border-color:rgba(214,169,43,.38); background:rgba(214,169,43,.18); color:#f8dc7a; }
-        .locked-by-role { opacity:.46; filter:grayscale(.35); }
         .top-role-badge { display:inline-flex; align-items:center; gap:.4rem; min-height:2rem; border:1px solid rgba(214,169,43,.24); border-radius:999px; background:rgba(214,169,43,.12); color:#8a6616; padding:.42rem .7rem; font-size:.65rem; font-weight:950; text-transform:uppercase; letter-spacing:.05em; }
         .dark .top-role-badge { color:#f8dc7a; background:rgba(214,169,43,.14); }
         .hero-title { margin-top:.65rem; color:#05351f; font-family:'Playfair Display',Georgia,serif; font-size:clamp(2rem,4vw,4.2rem); line-height:.96; letter-spacing:-.045em; font-weight:900; }
@@ -218,19 +205,12 @@
         .dark .toolbar-btn { background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.10); color:#f8fafc; }
         .dashboard-toast { position:fixed; right:1rem; bottom:1rem; z-index:999; transform:translateY(1rem); opacity:0; pointer-events:none; transition:.2s ease; border:1px solid rgba(214,169,43,.24); border-radius:1rem; background:#05351f; color:#fff; box-shadow:0 20px 56px rgba(5,53,31,.22); padding:.75rem .9rem; font-weight:850; font-size:.8rem; }
         .dashboard-toast.show { transform:translateY(0); opacity:1; }
-        @media (max-width: 767px) { .top-role-badge{display:none}.hero-title{font-size:2rem}.sidebar-link{min-height:2.55rem} }
+        @media (max-width: 767px) { .top-role-badge{display:none}.hero-title{font-size:2rem} }
 
 
 
-        /* Compact premium command-center layer: denser layout, full sidebar retained */
+        /* Compact premium command-center layer */
         .dashboard-compact-pro { background: radial-gradient(circle at 96% 0, rgba(214,169,43,.12), transparent 26rem), linear-gradient(180deg,#f7fbf6 0%,#edf6ee 100%); }
-        .dashboard-compact-pro #sidebar { width: 15.25rem; }
-        .dashboard-compact-pro .sidebar-heading { padding: .36rem .48rem .2rem; font-size: .48rem; letter-spacing: .25em; }
-        .dashboard-compact-pro .sidebar-link { min-height: 2.05rem; padding: .46rem .6rem; border-radius: .78rem; gap: .5rem; font-size: .68rem; }
-        .dashboard-compact-pro .role-chip { padding: .1rem .32rem; font-size: .45rem; }
-        .dashboard-compact-pro .apsg-role-card { margin: .45rem .55rem .55rem; padding: .58rem; border-radius: .9rem; }
-        .dashboard-compact-pro .role-level { min-height: 1.2rem; font-size: .45rem; }
-        .dashboard-compact-pro .md\:ml-64 { margin-left: 15.25rem; }
         .dashboard-compact-pro header .px-3\.5 { padding-left: .75rem!important; padding-right: .75rem!important; }
         .dashboard-compact-pro header .py-2 { padding-top: .42rem!important; padding-bottom: .42rem!important; }
         .dashboard-compact-pro main { padding: .65rem!important; }
@@ -296,8 +276,6 @@
         .dashboard-compact-pro footer { padding: .42rem!important; font-size: .58rem!important; }
         .dashboard-compact-pro .dashboard-toast { right:.65rem; bottom:.65rem; padding:.55rem .7rem; border-radius:.82rem; font-size:.72rem; }
         @media (max-width: 767px) {
-          .dashboard-compact-pro #sidebar { width: 16rem; }
-          .dashboard-compact-pro .md\:ml-64 { margin-left: 0!important; }
           .dashboard-compact-pro main { padding: .52rem!important; }
           .dashboard-compact-pro .command-shell { padding: .65rem!important; }
           .dashboard-compact-pro .compact-hero-title { font-size: 1.42rem; }
@@ -318,6 +296,7 @@
   </div>
 
   <div class="flex min-h-screen">
+    <!-- @spec DASH-UI-012 -->
     <!-- Sidebar -->
     <aside
       id="sidebar"
@@ -429,7 +408,17 @@
       </header>
 
             <main class="flex-1 p-2.5 md:p-4 lg:p-5 overflow-auto">
-                <!-- @spec DASH-UI-001, DASH-UI-002, DASH-UI-003, DASH-UI-004, DASH-UI-005, DASH-UI-006, DASH-UI-007, DASH-UI-008, DASH-UI-009, DASH-UI-010, DASH-UI-011, DASH-UI-012, DASH-UI-013, DASH-UI-014, DASH-UI-015, DASH-UI-016 -->
+                <div id="dashboardDataStatus" class="dashboard-data-status" data-state="loading" role="status" aria-live="polite">
+                    <div class="dashboard-data-status-copy">
+                        <span class="dashboard-data-status-dot" aria-hidden="true"></span>
+                        <div>
+                            <p data-status-message>Preparing APSG member data…</p>
+                            <p class="dashboard-data-status-note">Totals describe rows visible to your account. Offset pagination is a best-effort read while records may change.</p>
+                        </div>
+                    </div>
+                    <button id="dashboardRetryButton" class="toolbar-btn" type="button" onclick="APSGDashboard.reload()" hidden>Retry</button>
+                </div>
+                <!-- @spec DASH-UI-001, DASH-UI-002, DASH-UI-003, DASH-UI-004, DASH-UI-005, DASH-UI-006, DASH-UI-007, DASH-UI-008, DASH-UI-009, DASH-UI-011, DASH-UI-012, DASH-UI-013, DASH-UI-014, DASH-UI-015, DASH-UI-016, DASH-UI-017 -->
                 <section class="command-shell rounded-[1.45rem] p-3.5 md:p-4 mb-3.5 overflow-hidden">
                     <div class="absolute -right-16 -top-20 h-44 w-44 rounded-full bg-warning/20 blur-2xl"></div>
                     <div class="absolute -left-12 bottom-0 h-32 w-32 rounded-full bg-primary/10 blur-2xl"></div>
@@ -448,10 +437,9 @@
                                 <summary class="toolbar-btn"><i class="fas fa-ellipsis"></i>Actions</summary>
                                 <div class="dashboard-action-panel">
                                     <a class="toolbar-btn" href="/admin/account-details.html"><i class="fas fa-building-columns text-warning"></i>Account Details</a>
-                                    <button onclick="exportAccountCsv()" class="toolbar-btn" type="button"><i class="fas fa-file-invoice-dollar text-warning"></i>Account Report</button>
-                                    <button onclick="exportCsv()" class="toolbar-btn" type="button"><i class="fas fa-file-arrow-down text-warning"></i>Export CSV</button>
-                                    <button onclick="exportFilteredCsv('missing-docs')" class="toolbar-btn" type="button"><i class="fas fa-triangle-exclamation text-warning"></i>Missing Docs</button>
-                                    <button onclick="window.print()" class="toolbar-btn" type="button"><i class="fas fa-print text-warning"></i>Print</button>
+                                    <button onclick="exportAccountCsv()" class="toolbar-btn" type="button" data-member-export disabled aria-disabled="true"><i class="fas fa-file-invoice-dollar text-warning"></i>Account Report</button>
+                                    <button onclick="exportCsv()" class="toolbar-btn" type="button" data-member-export disabled aria-disabled="true"><i class="fas fa-file-arrow-down text-warning"></i>Export CSV</button>
+                                    <button onclick="exportFilteredCsv('missing-docs')" class="toolbar-btn" type="button" data-member-export disabled aria-disabled="true"><i class="fas fa-triangle-exclamation text-warning"></i>Missing Docs</button>
                                 </div>
                             </details>
                         </div>
@@ -461,10 +449,10 @@
                 </section>
                 <section class="dashboard-primary-section mb-3.5" aria-label="Primary membership indicators">
     <div class="dashboard-primary-grid">
-        <article class="metric-card dashboard-kpi-card"><div class="relative z-10 flex items-start justify-between gap-3"><div><p class="dashboard-kpi-label">Total Members</p><p class="dashboard-kpi-value" id="totalMembers">0</p><p class="dashboard-kpi-note">All captured records</p></div><span class="metric-icon"><i class="fas fa-users"></i></span></div></article>
+        <article class="metric-card dashboard-kpi-card"><div class="relative z-10 flex items-start justify-between gap-3"><div><p class="dashboard-kpi-label">Visible APSG Members</p><p class="dashboard-kpi-value" id="totalMembers">0</p><p class="dashboard-kpi-note">Rows returned to this account under database access rules.</p></div><span class="metric-icon"><i class="fas fa-users"></i></span></div></article>
         <article class="metric-card dashboard-kpi-card"><div class="relative z-10 flex items-start justify-between gap-3"><div><p class="dashboard-kpi-label">Last 7 Days</p><p class="dashboard-kpi-value" id="weekRegistrations">0</p><p class="dashboard-kpi-note">New registrations</p></div><span class="metric-icon"><i class="fas fa-calendar-week"></i></span></div></article>
         <article class="metric-card dashboard-kpi-card"><div class="relative z-10 flex items-start justify-between gap-3"><div><p class="dashboard-kpi-label">Data Quality</p><p class="dashboard-kpi-value" id="dataQualityRate">0%</p><p class="dashboard-kpi-note">Average completeness</p></div><span class="metric-icon"><i class="fas fa-shield-heart"></i></span></div></article>
-        <article class="metric-card dashboard-kpi-card"><div class="relative z-10 flex items-start justify-between gap-3"><div><p class="dashboard-kpi-label">Pending Actions</p><p class="dashboard-kpi-value" id="pendingActionsCount">0</p><p class="dashboard-kpi-note">Items for admin follow-up</p></div><span class="metric-icon"><i class="fas fa-list-check"></i></span></div></article>
+        <article class="metric-card dashboard-kpi-card"><div class="relative z-10 flex items-start justify-between gap-3"><div><p class="dashboard-kpi-label">Open Data Gaps</p><p class="dashboard-kpi-value" id="pendingActionsCount">0</p><p class="dashboard-kpi-note">Missing details and duplicate-phone records; one member may have several gaps.</p></div><span class="metric-icon"><i class="fas fa-list-check"></i></span></div></article>
     </div>
 </section>
                 <section class="dashboard-action-center grid grid-cols-1 xl:grid-cols-[1fr_.95fr] gap-2.5 mt-3.5" aria-label="Data quality and pending action center">
@@ -541,7 +529,7 @@
                         <div class="relative z-10 flex items-start justify-between gap-3 mb-3">
                             <div>
                                 <h3 class="text-sm font-black text-primary-dark dark:text-white">Latest Members</h3>
-                                <p class="text-[11px] text-gray-500 dark:text-gray-400">Newest registrations with document and account status.</p>
+                                <p class="text-[11px] text-gray-500 dark:text-gray-400">Preview of up to 8 newest registrations with document and account status.</p>
                             </div>
                             <a href="/admin/members.html" class="status-pill"><i class="fas fa-arrow-up-right-from-square"></i> Open</a>
                         </div>
@@ -689,6 +677,7 @@
                                     Content Publishing Desk
                                    </div>
                                    <h3 class="compact-section-title">Publish, review and manage APSG updates</h3>
+                                   <p id="publishingModuleStatus" class="dashboard-module-status" data-state="loading">Loading publishing data…</p>
                                    </div>
                             <div class="flex flex-wrap gap-2 dashboard-report-controls no-print">
                                 <a href="/admin/admin-blog.html" class="toolbar-btn gold"><i class="fas fa-newspaper"></i>News Desk</a>
@@ -765,6 +754,7 @@
             <div>
                 <h3 class="text-sm font-black text-primary-dark dark:text-white">Website Intelligence Overview</h3>
                 <p class="text-[11px] text-gray-500 dark:text-gray-400">Live visibility into public website visits, page views, CTA clicks and strongest pages.</p>
+                <p id="websiteAnalyticsModuleStatus" class="dashboard-module-status" data-state="loading">Loading website analytics…</p>
             </div>
             <span class="rounded-full bg-primary/10 text-primary dark:text-warning px-2.5 py-1 text-[9px] font-black uppercase tracking-widest">Analytics</span>
         </div>
@@ -818,7 +808,7 @@
                         <div class="relative z-10 flex items-start justify-between gap-3 mb-3">
                             <div>
                                 <h3 class="text-sm font-black text-primary-dark dark:text-white">Recent Activity</h3>
-                                <p class="text-[11px] text-gray-500 dark:text-gray-400">Latest records and system highlights.</p>
+                                <p class="text-[11px] text-gray-500 dark:text-gray-400">Preview of up to 5 newest APSG member records.</p>
                             </div>
                             <span class="status-pill"><i class="fas fa-clock"></i> Timeline</span>
                         </div>
@@ -830,9 +820,9 @@
                         <div class="relative z-10 flex items-start justify-between gap-3 mb-3">
                             <div>
                                 <h3 class="text-sm font-black text-primary-dark dark:text-white">Incomplete Records</h3>
-                                <p class="text-[11px] text-gray-500 dark:text-gray-400">Members with missing critical details.</p>
+                                <p class="text-[11px] text-gray-500 dark:text-gray-400">Preview of up to 10 APSG members with missing critical details.</p>
                             </div>
-                            <button onclick="exportFilteredCsv('incomplete')" class="status-pill warn no-print" type="button"><i class="fas fa-file-arrow-down"></i> Export</button>
+                            <button onclick="exportFilteredCsv('incomplete')" class="status-pill warn no-print" type="button" data-member-export disabled aria-disabled="true"><i class="fas fa-file-arrow-down"></i> Export</button>
                         </div>
                         <div class="relative z-10 table-scroll">
                             <table class="overview-table">
@@ -879,7 +869,7 @@
     <script src="/assets/js/supabase-clients.js"></script>
   <script src="/assets/js/apsg-settings.js"></script>
   <script src="/assets/js/admin-auth.js"></script>
-    <script src="/assets/js/dashboard.js"></script>
+    <script src="/assets/js/dashboard.js?v=20261016-command-center-2"></script>
   <script src="/assets/js/admin-unified.js" defer></script>
   <script src="/assets/js/deployment-polish.js" defer></script>
 </body>

@@ -1,4 +1,6 @@
 let cachedMembers = [];
+let hasSuccessfulMemberLoad = false;
+let memberDataStatus = 'idle';
 
         const els = {
             sidebar: document.getElementById('sidebar'),
@@ -18,6 +20,10 @@ let cachedMembers = [];
             accountCoverage: document.getElementById('accountCoverage'),
             lastRegistered: document.getElementById('lastRegistered'),
             lastUpdatedLabel: document.getElementById('lastUpdatedLabel'),
+            dashboardDataStatus: document.getElementById('dashboardDataStatus'),
+            dashboardRetryButton: document.getElementById('dashboardRetryButton'),
+            publishingModuleStatus: document.getElementById('publishingModuleStatus'),
+            websiteAnalyticsModuleStatus: document.getElementById('websiteAnalyticsModuleStatus'),
             weekMiniLabel: document.getElementById('weekMiniLabel'),
             pendingMiniLabel: document.getElementById('pendingMiniLabel'),
             weekRegistrations: document.getElementById('weekRegistrations'),
@@ -202,6 +208,14 @@ let cachedMembers = [];
             if (el) el.textContent = value;
         }
 
+        function setReportModuleStatus(el, message) {
+            if (!el) return;
+            el.textContent = message;
+            el.dataset.state = /loading/i.test(message) ? 'loading' : /unavailable|failed/i.test(message) ? 'error' : 'ready';
+            el.setAttribute('role', 'status');
+            el.setAttribute('aria-live', 'polite');
+        }
+
         function setProgress(bar, value) {
             if (bar) bar.style.width = `${Math.max(0, Math.min(100, value))}%`;
         }
@@ -226,6 +240,17 @@ let cachedMembers = [];
         function isOnOrAfter(dateInput, threshold) {
             const d = new Date(dateInput || 0);
             return !Number.isNaN(d.getTime()) && d >= threshold;
+        }
+
+        // @spec DASH-DATA-010
+        function isWithinLocalPeriod(dateInput, startInclusive, endExclusive, now = new Date()) {
+            const date = new Date(dateInput);
+            const current = new Date(now);
+            return !Number.isNaN(date.getTime())
+                && !Number.isNaN(current.getTime())
+                && date >= startInclusive
+                && date < endExclusive
+                && date <= current;
         }
 
         function getMissingFields(member) {
@@ -265,28 +290,64 @@ let cachedMembers = [];
             URL.revokeObjectURL(url);
         }
 
+        // @spec DASH-DATA-013
+        function getFreshMembersForExport() {
+            if (memberDataStatus !== 'fresh' && memberDataStatus !== 'empty') {
+                alert('Fresh APSG dashboard data is unavailable. Refresh successfully before exporting member records.');
+                return null;
+            }
+            return cachedMembers;
+        }
+
+        function setDashboardDataStatus(status, message) {
+            memberDataStatus = status;
+            const statusElement = els.dashboardDataStatus;
+            if (statusElement) {
+                statusElement.dataset.state = status;
+                statusElement.setAttribute('role', status === 'error' ? 'alert' : 'status');
+                const messageElement = statusElement.querySelector('[data-status-message]');
+                if (messageElement) messageElement.textContent = message;
+            }
+
+            const retryButton = els.dashboardRetryButton;
+            if (retryButton) {
+                retryButton.hidden = status !== 'error' && status !== 'stale';
+                retryButton.disabled = status === 'loading';
+            }
+
+            const exportsEnabled = status === 'fresh' || status === 'empty';
+            document.querySelectorAll('[data-member-export]').forEach(button => {
+                button.disabled = !exportsEnabled;
+                button.setAttribute('aria-disabled', String(!exportsEnabled));
+            });
+        }
+
         function exportFilteredCsvFile(type = 'all') {
+            const members = getFreshMembersForExport();
+            if (!members) return;
             logDashboardActivity('export_filtered_csv', 'members', `Exported ${type} member report.`, { report_type: type });
             const baseColumns = ['reg_number', 'full_name', 'phone', 'email', 'state', 'lga', 'ward', 'pvc_number', 'apc_card_number', 'account_number', 'bank_name', 'missing_fields', 'created_at'];
-            let rows = cachedMembers;
+            let rows = members;
             let filename = `apsg-members-${type}-${toLocalDateString(new Date())}.csv`;
 
-            if (type === 'missing-docs') rows = cachedMembers.filter(member => !hasDocuments(member));
-            if (type === 'missing-accounts') rows = cachedMembers.filter(member => !hasValue(member.account_number));
-            if (type === 'incomplete') rows = cachedMembers.filter(member => getMissingFields(member).length > 0);
+            if (type === 'missing-docs') rows = members.filter(member => !hasDocuments(member));
+            if (type === 'missing-accounts') rows = members.filter(member => !hasValue(member.account_number));
+            if (type === 'incomplete') rows = members.filter(member => getMissingFields(member).length > 0);
 
             buildCsv(rows, baseColumns, filename);
         }
 
         function exportCsvFile() {
+            const members = getFreshMembersForExport();
+            if (!members) return;
             logDashboardActivity('export_members_csv', 'members', 'Exported all member records from dashboard.', {});
-            if (!cachedMembers.length) {
-                alert('No dashboard data available to export yet.');
+            if (!members.length) {
+                alert('No matching records available for this export.');
                 return;
             }
             const columns = ['reg_number', 'first_name', 'last_name', 'account_number', 'bank_name', 'designation', 'phone', 'email', 'state', 'lga', 'ward', 'pvc_number', 'apc_card_number', 'created_at'];
             const rows = [columns.join(',')];
-            cachedMembers.forEach(member => {
+            members.forEach(member => {
                 rows.push(columns.map(col => escapeCsv(member[col])).join(','));
             });
             const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
@@ -301,8 +362,10 @@ let cachedMembers = [];
         }
 
         function exportAccountCsvFile() {
+            const members = getFreshMembersForExport();
+            if (!members) return;
             logDashboardActivity('export_account_csv', 'members', 'Exported member account details report.', {});
-            const accountMembers = cachedMembers.filter(member => String(member.account_number || '').trim());
+            const accountMembers = members.filter(member => String(member.account_number || '').trim());
             if (!accountMembers.length) {
                 alert('No member account details are available yet.');
                 return;
@@ -340,43 +403,48 @@ let cachedMembers = [];
                 .select('id', { count: 'exact', head: true });
 
             if (error) throw error;
-            return Number(count || 0);
+            if (count === null || count === undefined) throw new Error('The APSG member count could not be verified.');
+            const totalCount = Number(count);
+            if (!Number.isSafeInteger(totalCount) || totalCount < 0) throw new Error('The APSG member count could not be verified.');
+            return totalCount;
         }
 
+        // @spec DASH-DATA-001, DASH-DATA-002, DASH-DATA-003, DASH-DATA-006, DASH-DATA-007
         async function fetchAllMembers({ orderColumn = 'id', ascending = true, pageSize = 1000 } = {}) {
             const totalCount = await getMembersExactCount();
             const allRows = [];
-
-            if (els.totalMembers) {
-                els.totalMembers.textContent = totalCount.toLocaleString();
-            }
-
             if (!totalCount) return allRows;
 
             for (let from = 0; from < totalCount; from += pageSize) {
                 const to = Math.min(from + pageSize - 1, totalCount - 1);
-                let query = supabaseClient
-                    .from('members')
-                    .select('*')
-                    .range(from, to);
-
+                let query = supabaseClient.from('members').select('*').range(from, to);
                 if (orderColumn) query = query.order(orderColumn, { ascending });
 
                 const { data, error } = await query;
                 if (error) throw error;
+                if (!Array.isArray(data)) throw new Error('An APSG member page returned an invalid response.');
 
-                const batch = Array.isArray(data) ? data : [];
-                allRows.push(...batch);
+                const expectedPageSize = Math.min(pageSize, totalCount - from);
+                if (data.length !== expectedPageSize) throw new Error('The APSG member list changed during pagination. Retry the dashboard load.');
+                allRows.push(...data);
             }
 
+            const ids = allRows.map(member => String(member?.id ?? '').trim());
+            const uniqueIds = new Set(ids);
+            if (allRows.length !== totalCount || ids.some(id => !id) || uniqueIds.size !== totalCount) {
+                throw new Error('The APSG member list changed during pagination. Retry the dashboard load.');
+            }
+
+            // Offset pagination is a best-effort read; this detects shifts but cannot provide a snapshot.
             return allRows;
         }
 
 
         function renderEmptyOverview() {
             const zeroEls = [
+                els.totalMembers, els.todaysRegistrations, els.activeStates, els.accountMembers,
                 els.weekMiniLabel, els.pendingMiniLabel, els.weekRegistrations, els.monthRegistrations,
-                els.pendingActionsCount, els.accountMembers
+                els.pendingActionsCount
             ];
             zeroEls.forEach(el => setText(el, '0'));
             [els.growthRate, els.dataQualityRate, els.pvcCoverageCard, els.apcCoverageCard, els.phoneCoverageCard, els.emailCoverageCard, els.documentCoverage, els.accountCoverage]
@@ -384,6 +452,14 @@ let cachedMembers = [];
             [els.pvcCoverageBar, els.apcCoverageBar, els.phoneCoverageBar, els.emailCoverageBar].forEach(bar => setProgress(bar, 0));
             setText(els.topStateCard, 'No data');
             setText(els.topStateMeta, 'Highest coverage');
+            setText(els.topStatesValue, 'No data');
+            setText(els.topLgasValue, 'No data');
+            setText(els.lastRegistered, 'No data');
+            setText(els.donutValue, '0');
+            if (els.donutLegend) els.donutLegend.innerHTML = '';
+            els.donutSegments.forEach(segment => { segment.style.strokeDasharray = '0 100'; });
+            document.querySelectorAll('.bar').forEach(bar => { bar.style.height = '4px'; bar.title = '0 registrations'; });
+            document.querySelectorAll('.count-label').forEach(label => { label.textContent = '0'; });
             if (els.dataHealthList) els.dataHealthList.innerHTML = '';
             if (els.pendingActionsList) els.pendingActionsList.innerHTML = '<div class="action-row"><span class="status-pill">Clean</span><span class="font-bold text-gray-600 dark:text-gray-300">No data yet.</span></div>';
             if (els.recentActivityList) els.recentActivityList.innerHTML = '<div class="activity-row"><i class="fas fa-inbox text-warning"></i><span class="font-bold text-gray-600 dark:text-gray-300">No recent activity.</span></div>';
@@ -475,6 +551,7 @@ let cachedMembers = [];
             `).join('');
         }
 
+        // @spec DASH-DATA-012
         function renderLatestMembers(sortedByDate) {
             if (!els.latestMembersTable) return;
             const rows = sortedByDate.slice(0, 8);
@@ -495,6 +572,7 @@ let cachedMembers = [];
             `).join('');
         }
 
+        // @spec DASH-DATA-012
         function renderIncompleteRecords(members) {
             if (!els.incompleteRecordsTable) return;
             const rows = members
@@ -555,13 +633,16 @@ let cachedMembers = [];
         }
 
         async function loadPublishingOverview() {
+            setReportModuleStatus(els.publishingModuleStatus, 'Loading publishing data…');
             const contentTables = ['site_content', 'content_items'];
             let loaded = false;
+            let contentCount = 0;
             for (const table of contentTables) {
                 try {
                     const { data, error } = await supabaseClient.from(table).select('*').limit(500);
                     if (error || !Array.isArray(data)) continue;
                     loaded = true;
+                    contentCount = data.length;
                     const isPublished = item => ['published', 'publish', 'live', true].includes(item.status) || item.is_published === true || item.published === true;
                     const isDraft = item => String(item.status || '').toLowerCase() === 'draft' || item.is_published === false;
                     const typeOf = item => String(item.type || item.content_type || item.category || item.kind || '').toLowerCase();
@@ -594,6 +675,10 @@ let cachedMembers = [];
             }
             const galleryCount = await getContentCount('gallery_albums').catch(() => 0);
             setText(els.galleryAlbumCount, galleryCount.toLocaleString());
+            setReportModuleStatus(
+                els.publishingModuleStatus,
+                !loaded ? 'Publishing content is unavailable.' : contentCount === 0 && galleryCount === 0 ? 'No publishing content is available yet.' : 'Publishing summaries are current.'
+            );
         }
 
 
@@ -630,6 +715,7 @@ async function logDashboardActivity(action, entityType = 'dashboard', descriptio
 }
 
 async function loadWebsiteAnalyticsOverview() {
+    setReportModuleStatus(els.websiteAnalyticsModuleStatus, 'Loading website analytics…');
     try {
         if (typeof supabaseClient === 'undefined') throw new Error('Supabase client unavailable');
 
@@ -658,6 +744,7 @@ async function loadWebsiteAnalyticsOverview() {
         }
 
         const rows = Array.isArray(dailyRows) ? dailyRows : [];
+        setReportModuleStatus(els.websiteAnalyticsModuleStatus, rows.length ? 'Website analytics are current.' : 'No website activity in the last seven days.');
         const todayRows = rows.filter(row => String(row.event_day) === today);
         const todayPageViews = todayRows.reduce((sum, row) => sum + safeNumber(row.page_views), 0);
         const todayVisitors = todayRows.reduce((sum, row) => sum + safeNumber(row.unique_visitors), 0);
@@ -707,6 +794,7 @@ async function loadWebsiteAnalyticsOverview() {
         }
     } catch (error) {
         console.info('Website analytics overview skipped:', error?.message || error);
+        setReportModuleStatus(els.websiteAnalyticsModuleStatus, 'Website analytics are unavailable.');
         setText(els.visitorsTodayCount, '0');
         setText(els.pageViewsTodayCount, '0');
         setText(els.pageViewsWeekCount, '0');
@@ -718,23 +806,37 @@ async function loadWebsiteAnalyticsOverview() {
 }
 
         const data = {
+            // @spec DASH-UI-011, DASH-DATA-002, DASH-DATA-004, DASH-DATA-005, DASH-DATA-008, DASH-DATA-009, DASH-DATA-011
             async loadDashboard() {
-                const moduleResults = await Promise.allSettled([loadPublishingOverview(), loadWebsiteAnalyticsOverview()]);
-                moduleResults.forEach((result, index) => {
-                    if (result.status === 'rejected') console.info(['Publishing','Analytics'][index] + ' module failed independently:', result.reason?.message || result.reason);
+                const hadSuccessfulLoad = hasSuccessfulMemberLoad;
+                setDashboardDataStatus('loading', hadSuccessfulLoad ? 'Refreshing APSG member data… exports are paused until refresh completes.' : 'Loading APSG member data…');
+                const memberLoad = fetchAllMembers({ orderColumn: 'id', ascending: true });
+                const moduleLoad = Promise.allSettled([loadPublishingOverview(), loadWebsiteAnalyticsOverview()]);
+                moduleLoad.then(results => {
+                    results.forEach((result, index) => {
+                        if (result.status === 'rejected') {
+                            const label = ['Publishing', 'Website analytics'][index];
+                            const target = index === 0 ? els.publishingModuleStatus : els.websiteAnalyticsModuleStatus;
+                            setReportModuleStatus(target, `${label} data is unavailable.`);
+                            console.info(label + ' module failed independently:', result.reason?.message || result.reason);
+                        }
+                    });
                 });
                 try {
-                    const members = await fetchAllMembers({ orderColumn: 'id', ascending: true });
-
-                    cachedMembers = members || [];
-                    setText(els.lastUpdatedLabel, new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }));
+                    const members = await memberLoad;
 
                     if (!members || members.length === 0) {
                         els.noDataMessage.classList.remove('hidden');
-                        setText(els.topStatesValue, 'No data');
-                        setText(els.topLgasValue, 'No data');
-                        setText(els.lastRegistered, 'No data');
+                        const emptyHeading = els.noDataMessage.querySelector('p');
+                        if (emptyHeading) emptyHeading.textContent = 'No registrations yet.';
+                        const emptyNote = els.noDataMessage.querySelector('p.text-xs');
+                        if (emptyNote) emptyNote.textContent = 'Data will appear here once APSG members start registering.';
                         renderEmptyOverview();
+                        cachedMembers = [];
+                        hasSuccessfulMemberLoad = true;
+                        const updatedAt = new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+                        setText(els.lastUpdatedLabel, updatedAt);
+                        setDashboardDataStatus('empty', `APSG member data loaded successfully at ${updatedAt}. No records are currently visible to this account.`);
                         return;
                     }
 
@@ -742,18 +844,18 @@ async function loadWebsiteAnalyticsOverview() {
                     els.donutLegend.innerHTML = '';
 
                     const total = members.length;
-                    const today = toLocalDateString(new Date());
+                    const now = new Date();
+                    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    const tomorrowStart = new Date(todayStart);
+                    tomorrowStart.setDate(tomorrowStart.getDate() + 1);
                     const weekStart = daysAgoStart(6);
                     const previousWeekStart = daysAgoStart(13);
                     const monthStart = startOfMonth();
 
-                    const todaysCount = members.filter(m => toLocalDateString(m.created_at) === today).length;
-                    const weekCount = members.filter(m => isOnOrAfter(m.created_at, weekStart)).length;
-                    const previousWeekCount = members.filter(m => {
-                        const d = new Date(m.created_at || 0);
-                        return !Number.isNaN(d.getTime()) && d >= previousWeekStart && d < weekStart;
-                    }).length;
-                    const monthCount = members.filter(m => isOnOrAfter(m.created_at, monthStart)).length;
+                    const todaysCount = members.filter(m => isWithinLocalPeriod(m.created_at, todayStart, tomorrowStart, now)).length;
+                    const weekCount = members.filter(m => isWithinLocalPeriod(m.created_at, weekStart, tomorrowStart, now)).length;
+                    const previousWeekCount = members.filter(m => isWithinLocalPeriod(m.created_at, previousWeekStart, weekStart, now)).length;
+                    const monthCount = members.filter(m => isWithinLocalPeriod(m.created_at, monthStart, tomorrowStart, now)).length;
                     const growth = previousWeekCount === 0 ? (weekCount > 0 ? 100 : 0) : Math.round(((weekCount - previousWeekCount) / previousWeekCount) * 100);
 
                     setText(els.totalMembers, total.toLocaleString());
@@ -870,15 +972,16 @@ async function loadWebsiteAnalyticsOverview() {
                     const dayNames = [];
 
                     for (let i = 6; i >= 0; i--) {
-                        const date = new Date();
+                        const date = new Date(todayStart);
                         date.setDate(date.getDate() - i);
-                        const dateStr = toLocalDateString(date);
-                        last7Days.push(dateStr);
+                        const end = new Date(date);
+                        end.setDate(end.getDate() + 1);
+                        last7Days.push([date, end]);
                         dayNames.push(i === 0 ? 'Today' : date.toLocaleDateString(undefined, { weekday: 'short' }));
                     }
 
-                    const counts = last7Days.map(dateStr =>
-                        members.filter(m => toLocalDateString(m.created_at) === dateStr).length
+                    const counts = last7Days.map(([start, end]) =>
+                        members.filter(m => isWithinLocalPeriod(m.created_at, start, end, now)).length
                     );
 
                     const maxCount = Math.max(...counts, 1);
@@ -902,16 +1005,26 @@ async function loadWebsiteAnalyticsOverview() {
                         label.textContent = counts[i] || 0;
                     });
 
+                    cachedMembers = members;
+                    hasSuccessfulMemberLoad = true;
+                    const updatedAt = new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+                    setText(els.lastUpdatedLabel, updatedAt);
+                    setDashboardDataStatus('fresh', `APSG member data is current as of ${updatedAt}.`);
+
                 } catch (error) {
                     console.error('Error loading dashboard member data:', error);
-                    els.noDataMessage?.classList.remove('hidden');
-                    if (els.noDataMessage) {
-                        els.noDataMessage.querySelector('p') && (els.noDataMessage.querySelector('p').textContent = 'Member data could not be loaded.');
-                        const note = els.noDataMessage.querySelector('p.text-xs');
-                        if (note) note.textContent = /row-level security|permission|42501/i.test(String(error?.message || error)) ? 'Supabase RLS blocked the members query. Confirm admin profile policies.' : 'The dashboard remains available while this module is repaired.';
+                    if (hasSuccessfulMemberLoad) {
+                        setDashboardDataStatus('stale', 'Refresh failed. The previous APSG data is retained as stale; member exports are disabled until a fresh load succeeds.');
+                    } else {
+                        els.noDataMessage?.classList.remove('hidden');
+                        if (els.noDataMessage) {
+                            const heading = els.noDataMessage.querySelector('p');
+                            if (heading) heading.textContent = 'Member data could not be loaded.';
+                            const note = els.noDataMessage.querySelector('p.text-xs');
+                            if (note) note.textContent = /row-level security|permission|42501/i.test(String(error?.message || error)) ? 'Supabase blocked access to the APSG member registry. Check access and retry.' : 'The dashboard could not load the APSG registry. Check the connection and retry.';
+                        }
+                        setDashboardDataStatus('error', 'APSG member data failed to load. Retry to check the registry again.');
                     }
-                    renderEmptyOverview();
-                    setText(els.lastUpdatedLabel, 'Partial data');
                 }
             }
 
